@@ -7,7 +7,6 @@ import PageTransition from "./Component/PageTransition";
 import Project from "./Component/Project";
 import Navbar from "./Component/Navbar";
 import About from "./Component/About";
-// import Contribution from "./Component/Contribution";
 import ContactForm from "./Component/Contact";
 export default function Home() {
   return (
@@ -18,7 +17,6 @@ export default function Home() {
         <SkillsCloud />
         <Project />
         <About />
-        {/* <Contribution /> */}
         <ContactForm />
       </PageTransition>
     </AnimatePresence>

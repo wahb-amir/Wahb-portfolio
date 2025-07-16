@@ -18,26 +18,58 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://yourdomain.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://wahb.buttnetworks.com"
   ),
-  title: "Wahb | Full-Stack Dev",
+  title: "Wahb Amir | Full-Stack Web Developer & Next.js Expert",
   description:
-    "15 y/o full-stack dev building modern web apps with Next.js, MongoDB, and more.",
+    "Wahb Amir is a 15 y/o full-stack developer building blazing-fast, modern web apps using Next.js, MongoDB, Tailwind CSS, and more. Explore my portfolio and projects.",
+  keywords: [
+    "Wahb Amir",
+    "Wahb developer",
+    "Next.js developer",
+    "Full stack web developer",
+    "Portfolio website",
+    "React developer",
+    "Freelance developer",
+    "Tailwind CSS portfolio",
+    "MongoDB projects",
+    "Wahb portfolio",
+  ],
+  authors: [{ name: "Wahb Amir", url: "https://wahb.buttnetworks.com" }],
+  creator: "Wahb Amir",
+  publisher: "Wahb Amir",
   openGraph: {
-    title: "Wahb | Full-Stack Dev",
+    type: "website",
+    url: "https://wahb.buttnetworks.com",
+    title: "Wahb Amir | Full-Stack Web Developer & Next.js Expert",
     description:
-      "15 y/o full-stack dev building modern web apps with Next.js, MongoDB, and more.",
-    images: ["/preview.png"],
+      "I'm Wahb Amir, a 15-year-old full-stack web dev building sleek, high-performance apps with the modern web stack. Check out my portfolio!",
+    siteName: "Wahb's Dev Portfolio",
+    images: [
+      {
+        url: "/preview.png",
+        width: 1200,
+        height: 630,
+        alt: "Wahb Amir Portfolio Preview",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wahb | Full-Stack Dev",
+    title: "Wahb Amir | Full-Stack Web Dev",
     description:
-      "15 y/o full-stack dev building modern web apps with Next.js, MongoDB, and more.",
+      "Wahb Amir's portfolio – showcasing modern full-stack projects with Next.js, Tailwind CSS, and MongoDB.",
     images: ["/preview.png"],
   },
+  alternates: {
+    canonical: "https://wahb.buttnetworks.com",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+  },
 };
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
