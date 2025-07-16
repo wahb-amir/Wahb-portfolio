@@ -1,0 +1,39 @@
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        primary: "#7f5af0",
+        secondary: "#00dfd8",
+        bgDark: "#0f0f14",
+        textLight: "#2d3436",
+        textDark: "#e4e4e7",
+      },
+      screens: {
+        xs: "480px", // your custom small breakpoint
+        "3xl": "1920px", // extra huge screen breakpoint
+        // Add more custom ones as you want
+      },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+      },
+      keyframes: {
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+      },
+      animation: {
+        float: "float 6s ease-in-out infinite",
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+};
