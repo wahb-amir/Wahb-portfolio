@@ -1,0 +1,6 @@
+# Redirect www.wahb.buttnetworks.com to wahb.buttnetworks.com
+https://www.wahb.buttnetworks.com/* https://wahb.buttnetworks.com/:splat 301!
+
+# Redirect HTTP to HTTPS
+http://wahb.buttnetworks.com/* https://wahb.buttnetworks.com/:splat 301!
+http://www.wahb.buttnetworks.com/* https://wahb.buttnetworks.com/:splat 301!
