@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://wahb.buttnetworks.com
+
+# Sitemaps
+Sitemap: https://wahb.buttnetworks.com/sitemap.xml

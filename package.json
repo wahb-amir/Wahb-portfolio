@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:css": "tailwindcss -i ./app/globals.css -o ./app/tailwind-out.css --watch"
+    "build:css": "tailwindcss -i ./app/globals.css -o ./app/tailwind-out.css --watch",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -22,6 +23,7 @@
     "keen-slider": "^6.8.6",
     "lottie-react": "^2.4.1",
     "next": "15.3.5",
+    "next-sitemap": "^4.2.3",
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
