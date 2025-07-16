@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import { motion, useInView } from "framer-motion";
+import dynamic from "next/dynamic";
 import {
   SiHtml5,
   SiCss3,
@@ -23,12 +24,20 @@ const getMinHeight = () => {
   if (typeof window === "undefined") return "100vh";
   return window.innerHeight > 900 ? "90vh" : "min(100vh, 900px)";
 };
-
+const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+  ssr: false,
+  loading: () => null,
+});
 const allSkills = [
   { name: "HTML", icon: SiHtml5, color: "#E34F26", type: "frontend" },
   { name: "CSS", icon: SiCss3, color: "#1572B6", type: "frontend" },
   { name: "Tailwind", icon: SiTailwindcss, color: "#38B2AC", type: "frontend" },
-  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", type: "frontend" },
+  {
+    name: "JavaScript",
+    icon: SiJavascript,
+    color: "#F7DF1E",
+    type: "frontend",
+  },
   { name: "React", icon: SiReact, color: "#61DAFB", type: "frontend" },
   { name: "Next.js", icon: SiNextdotjs, color: "#000000", type: "frontend" },
   { name: "Node.js", icon: SiNodedotjs, color: "#339933", type: "backend" },
@@ -112,7 +121,7 @@ export default function SkillsCloud() {
           : {}
       }
     >
-      <BackgroundEffect />
+      <LazyBackgroundEffect />
 
       <h2
         className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${
@@ -257,8 +266,7 @@ export default function SkillsCloud() {
         <button
           onClick={() => {
             const nextSection = document.getElementById("project-section");
-            if (nextSection)
-              nextSection.scrollIntoView({ behavior: "smooth" });
+            if (nextSection) nextSection.scrollIntoView({ behavior: "smooth" });
           }}
           aria-label="Scroll Down"
           className="animate-pulse hover:scale-110 transition-transform"

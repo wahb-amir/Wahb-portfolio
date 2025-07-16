@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import Avatar from "./Avatar";
-import CustomParticles from "./CustomParticles";
 import BackgroundEffect from "./BackgroundEffect";
 import dynamic from "next/dynamic";
 
@@ -18,8 +17,12 @@ const Hero = () => {
     }
   };
   const LazyParticles = dynamic(() => import("./CustomParticles"), {
-    ssr: false, 
-    loading: () => null, 
+    ssr: false,
+    loading: () => null,
+  });
+  const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+    ssr: false,
+    loading: () => null,
   });
 
   return (
@@ -37,7 +40,7 @@ const Hero = () => {
         colors={["#00dfd8", "#00bfff", "#00aaff", "#66fcf1", "#ffffff"]}
       />
 
-      <BackgroundEffect />
+      <LazyBackgroundEffect />
 
       <motion.div
         initial={{ y: 30, opacity: 0 }}

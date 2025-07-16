@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import BackgroundEffect from "./BackgroundEffect";
 import { useTheme } from "next-themes";
-
+import dynamic from "next/dynamic";
 export default function ContactForm() {
   const { theme, systemTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
@@ -20,7 +20,10 @@ export default function ContactForm() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
+  const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+    ssr: false,
+    loading: () => null,
+  });
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -51,7 +54,7 @@ export default function ContactForm() {
       <h2 className="text-3xl font-semibold mb-6 text-center tracking-tight text-black dark:text-white">
         Contact
       </h2>
-      <BackgroundEffect />
+      <LazyBackgroundEffect />
       <form
         onSubmit={handleSubmit}
         className="space-y-5 relative z-10 max-w-xl w-full"

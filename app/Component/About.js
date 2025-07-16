@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import BackgroundEffect from "./BackgroundEffect";
 import { useTheme } from "next-themes";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import dynamic from "next/dynamic";
 
 const About = () => {
   const [timeSinceStart, setTimeSinceStart] = useState("");
@@ -15,7 +16,10 @@ const About = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
-
+  const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+    ssr: false,
+    loading: () => null,
+  });
   useEffect(() => {
     const startDate = new Date("2025-03-22T00:00:00Z");
 
@@ -49,7 +53,7 @@ const About = () => {
         backgroundColor: isDark ? "#0f172a" : "#f9fafb",
       }}
     >
-      <BackgroundEffect />
+      <LazyBackgroundEffect />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -62,10 +66,10 @@ const About = () => {
         </h2>
 
         <p className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-12">
-          I&#39;m a 15-year-old self-taught full-stack dev passionate about building
-          high-performance web apps. In just 115 days, I’ve gone from HTML
-          basics to deploying full-stack apps with React, Next.js, Node.js &
-          MongoDB—hosted on Linux VPS.
+          I&#39;m a 15-year-old self-taught full-stack dev passionate about
+          building high-performance web apps. In just 115 days, I’ve gone from
+          HTML basics to deploying full-stack apps with React, Next.js, Node.js
+          & MongoDB—hosted on Linux VPS.
         </p>
 
         {/* Timer */}
@@ -141,9 +145,7 @@ const About = () => {
         {/* 👉 Moved INSIDE #about and using relative positioning */}
         <div className="relative z-10 flex justify-center items-center gap-6 mt-12">
           <button
-            onClick={() =>
-              window.scrollTo({ top: 0, behavior: "smooth" })
-            }
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Scroll Up"
             className="hover:scale-110 transition-transform"
           >

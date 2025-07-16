@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 
 const Navbar = () => {
-  const { resolvedTheme, setTheme, theme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [smallWidth, setSmallWidth] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,26 +24,9 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 🔥 Set default theme on first load
-  useEffect(() => {
-    if (!mounted) return;
-
-    const storedTheme = localStorage.getItem("theme");
-
-    if (!storedTheme) {
-      // Default to dark if nothing is stored
-      setTheme("dark");
-      localStorage.setItem("theme", JSON.stringify("dark"));
-    } else {
-      setTheme(storedTheme);
-    }
-  }, [mounted]);
-
-  // 🔁 Save theme on toggle
+  // toggle theme and let next-themes handle storage
   const toggleTheme = () => {
-    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    localStorage.setItem("theme", JSON.stringify(newTheme));
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
   if (!mounted) return null;

@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import BackgroundEffect from "./BackgroundEffect";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import ProjectCard from "./ProjectCard";
-
+import dynamic from "next/dynamic";
 const Project = () => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -16,7 +16,10 @@ const Project = () => {
 
   // only true *after* hydration
   const isDark = mounted && theme === "dark";
-
+  const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+    ssr: false,
+    loading: () => null,
+  });
   // inline styles only once mounted
   const sectionStyle = mounted
     ? {
@@ -43,7 +46,7 @@ const Project = () => {
         `}
         style={sectionStyle}
       >
-        <BackgroundEffect />
+        <LazyBackgroundEffect />
 
         <h1
           className={`text-[45px] font-bold mb-8 top-5 ${
