@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { motion, useInView } from "framer-motion";
 
-// Lazy-load background effects (optional visual flair)
+// Lazy background effect
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
@@ -13,16 +13,14 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
 export default function Footer() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const ref = useRef(null); // ✅ called outside condition
+  const inView = useInView(ref, { once: true, margin: "-100px" }); // ✅ same
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Prevent rendering until mounted (fixes theme mismatch on reload)
-  if (!mounted) return null;
-
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  if (!mounted) return <footer ref={ref} className="h-0" />; // 👀 renders something minimal to keep hooks happy
 
   return (
     <motion.footer
