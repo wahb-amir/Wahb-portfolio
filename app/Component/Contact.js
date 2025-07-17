@@ -43,6 +43,7 @@ export default function ContactForm() {
 
   return (
     <div
+      id="contact"
       className="relative w-full min-h-screen py-24 px-6 overflow-hidden flex flex-col items-center justify-center"
       style={{
         backgroundImage: isDark

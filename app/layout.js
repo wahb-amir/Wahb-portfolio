@@ -25,12 +25,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <title>Wahb Amir | Full-Stack Web Developer & Next.js Expert</title>
+        <meta name="description" content="Wahb Amir is a 15 y/o full-stack developer building blazing-fast, modern web apps using Next.js, MongoDB, Tailwind CSS, and more. Explore my portfolio and projects." />
         <link
           rel="icon"
           type="image/png"
           href="/favicon-96x96.png"
           sizes="96x96"
         />
+
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link
@@ -42,16 +45,17 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/site.webmanifest" />
 
         {/* JSON-LD Person Schema */}
-        <Script id="jsonld-person" type="application/ld+json" strategy="afterInteractive">
+        <Script
+          id="jsonld-person"
+          type="application/ld+json"
+          strategy="afterInteractive"
+        >
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
             name: "Wahb Amir",
             url: "https://wahb.buttnetworks.com",
-            sameAs: [
-              "https://github.com/wahb",
-              "https://linkedin.com/in/wahb"
-            ],
+            sameAs: ["https://github.com/wahb", "https://linkedin.com/in/wahb"],
             jobTitle: "Full-Stack Web Developer",
           })}
         </Script>

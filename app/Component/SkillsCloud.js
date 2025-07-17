@@ -78,7 +78,7 @@ export default function SkillsCloud() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isInView = useInView(containerRef, { margin: "-150px" });
+  const isInView = useInView(containerRef, { margin: "-150px", once: true });
   const { width } = useWindowSize();
   const containerSize = width < 480 ? 260 : width < 768 ? 320 : 420;
   const radius = containerSize / 2.5;
@@ -185,7 +185,7 @@ export default function SkillsCloud() {
                   : { opacity: 0, scale: 0.3, x: 0, y: 0 }
               }
               transition={{
-                delay: isInView ? i * 0.01 : 0,
+                delay: isInView ? i * 0.1 : 0,
                 type: "spring",
                 stiffness: 140,
                 damping: 20,

@@ -8,16 +8,26 @@ import Project from "./Component/Project";
 import Navbar from "./Component/Navbar";
 import About from "./Component/About";
 import ContactForm from "./Component/Contact";
+import Footer from './Component/Footer'
 export default function Home() {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <PageTransition>
-        <Navbar />
-        <Hero />
-        <SkillsCloud />
-        <Project />
-        <About />
-        <ContactForm />
+        <header>
+          <Navbar />
+        </header>
+
+        <main>
+          <Hero />
+          <SkillsCloud />
+          <Project />
+          <About />
+          <ContactForm />
+        </main>
+
+        <footer>
+          <Footer />
+        </footer>
       </PageTransition>
     </AnimatePresence>
   );
