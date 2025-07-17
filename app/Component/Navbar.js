@@ -29,7 +29,7 @@ const Navbar = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
-  if (!mounted) return null ;//use to prevent hydration issue
+  if (!mounted) return null ;
 
   const darkMode = resolvedTheme === "dark";
 
