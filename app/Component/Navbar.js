@@ -29,7 +29,7 @@ const Navbar = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
-  if (!mounted) return null ;
+  if (!mounted) return null;
 
   const darkMode = resolvedTheme === "dark";
 
@@ -55,6 +55,7 @@ const Navbar = () => {
           className="rounded-full cursor-pointer"
         />
 
+        {/* Desktop menu */}
         {!smallWidth && (
           <ul className="hidden md:flex flex-row items-center">
             {["skills", "projects", "about", "contribution", "contact"].map(
@@ -75,6 +76,7 @@ const Navbar = () => {
           </ul>
         )}
 
+        {/* Mobile hamburger */}
         {smallWidth && (
           <button
             className="md:hidden block focus:outline-none"
@@ -99,6 +101,7 @@ const Navbar = () => {
         )}
       </div>
 
+      {/* Mobile menu */}
       {smallWidth && menuOpen && (
         <ul
           className={`md:hidden flex flex-col items-start rounded-xl px-4 py-2 absolute top-full left-0 w-full z-50 transition-all duration-300 ${
@@ -107,7 +110,13 @@ const Navbar = () => {
         >
           {["skills", "projects", "about", "contribution", "contact"].map(
             (id) => (
-              <li key={id} onClick={() => setMenuOpen(false)}>
+              <li
+                key={id}
+                onClick={() => {
+                  handleClick(id);
+                  setMenuOpen(false);
+                }}
+              >
                 {id.charAt(0).toUpperCase() + id.slice(1)}
               </li>
             )
@@ -127,6 +136,13 @@ const Navbar = () => {
           </li>
         </ul>
       )}
+
+      {/* Optional: prevent sticky nav from covering content */}
+      <style jsx global>{`
+        html {
+          scroll-padding-top: 70px; /* adjust to your nav height */
+        }
+      `}</style>
 
       <style jsx>{`
         li {
