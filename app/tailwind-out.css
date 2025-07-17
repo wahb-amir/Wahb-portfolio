@@ -1133,9 +1133,6 @@ select {
 .max-w-screen-3xl {
   max-width: 1920px;
 }
-.max-w-screen {
-  max-width: 100vw;
-}
 
 .max-w-xl {
   max-width: 36rem;
