@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 
+// Lazy-load background effects (optional visual flair)
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
@@ -12,9 +12,15 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
 
 export default function Footer() {
   const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const [mounted, setMounted] = useState(false);
 
-  // Animate once on view
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent rendering until mounted (fixes theme mismatch on reload)
+  if (!mounted) return null;
+
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -24,23 +30,20 @@ export default function Footer() {
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="
-        max-w-full w-screen px-6 py-10 text-center text-sm md:text-base
+      className={`
+        w-full px-6 py-10 text-center text-sm md:text-base
+        bg-[#f9fafb] dark:bg-[#0f172a]
+        text-black dark:text-white
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
         backdrop-blur-[100px]
-        dark:text-white
-        text-black
-      "
-      style={{
-        backgroundColor: isDark ? "#0f172a" : "#f9fafb",
-      }}
+      `}
       role="contentinfo"
       aria-label="Footer"
     >
       <LazyBackgroundEffect />
 
       <nav
-        className="mb-4 flex justify-center gap-6 flex-wrap max-w-full w-screen"
+        className="mb-4 flex justify-center gap-6 flex-wrap w-full"
         aria-label="Footer links"
       >
         <a
