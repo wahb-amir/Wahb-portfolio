@@ -24,19 +24,20 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // toggle theme and let next-themes handle storage
   const toggleTheme = () => {
-    if (!mounted) return;
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
-  const darkMode = mounted && resolvedTheme === "dark";
+  if (!mounted) return null;
+
+  const darkMode = resolvedTheme === "dark";
 
   const handleClick = (id) => {
     const elm = document.getElementById(id);
     if (elm) {
       elm.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-    setMenuOpen(false); // auto close menu on click (mobile)
   };
 
   return (
@@ -54,52 +55,51 @@ const Navbar = () => {
           className="rounded-full cursor-pointer"
         />
 
-        {/* Desktop Nav */}
-        <ul className="hidden md:flex flex-row items-center">
-          {["skills", "projects", "about", "contribution", "contact"].map(
-            (id) => (
-              <li key={id} onClick={() => handleClick(id)}>
-                {id.charAt(0).toUpperCase() + id.slice(1)}
-              </li>
-            )
-          )}
-          <li>
-            {mounted && (
-              <button onClick={toggleTheme}>
+        {!smallWidth && (
+          <ul className="hidden md:flex flex-row items-center">
+            {["skills", "projects", "about", "contribution", "contact"].map(
+              (id) => (
+                <li key={id} onClick={() => handleClick(id)}>
+                  {id.charAt(0).toUpperCase() + id.slice(1)}
+                </li>
+              )
+            )}
+            <li onClick={toggleTheme}>
+              <button>
                 <FontAwesomeIcon
                   icon={darkMode ? faSun : faMoon}
                   className="scale-150"
                 />
               </button>
-            )}
-          </li>
-        </ul>
+            </li>
+          </ul>
+        )}
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden block focus:outline-none"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          <svg
-            width="32"
-            height="32"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            className={`${darkMode ? "text-white" : "text-black"}`}
+        {smallWidth && (
+          <button
+            className="md:hidden block focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
           >
-            <path
-              d="M3 6h14M3 10h14M3 14h14"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
+            <svg
+              width="32"
+              height="32"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              className={`${darkMode ? "text-white" : "text-black"}`}
+            >
+              <path
+                d="M3 6h14M3 10h14M3 14h14"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        )}
       </div>
 
-      {/* Mobile Dropdown Nav */}
-      {menuOpen && (
+      {smallWidth && menuOpen && (
         <ul
           className={`md:hidden flex flex-col items-start rounded-xl px-4 py-2 absolute top-full left-0 w-full z-50 transition-all duration-300 ${
             darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
@@ -107,20 +107,23 @@ const Navbar = () => {
         >
           {["skills", "projects", "about", "contribution", "contact"].map(
             (id) => (
-              <li key={id} onClick={() => handleClick(id)}>
+              <li key={id} onClick={() => setMenuOpen(false)}>
                 {id.charAt(0).toUpperCase() + id.slice(1)}
               </li>
             )
           )}
-          <li>
-            {mounted && (
-              <button onClick={toggleTheme}>
-                <FontAwesomeIcon
-                  icon={darkMode ? faSun : faMoon}
-                  className="scale-150"
-                />
-              </button>
-            )}
+          <li
+            onClick={() => {
+              toggleTheme();
+              setMenuOpen(false);
+            }}
+          >
+            <button>
+              <FontAwesomeIcon
+                icon={darkMode ? faSun : faMoon}
+                className="scale-150"
+              />
+            </button>
           </li>
         </ul>
       )}

@@ -1,17 +1,18 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 
-const Avatar = () => {
+export default function Avatar() {
   return (
-    <Image
-      src="/Avatar.svg"
-      alt="Animated Avatar"
-      width={200}
-      height={200}
-      priority
-      className="rounded-full border-4 border-cyan-400 shadow-lg"
-    />
+    <figure aria-hidden="true" className="mx-auto">
+      <Image
+        src="/Avatar.svg"
+        alt=""
+        width={200}
+        height={200}
+        priority
+        className="rounded-full border-4 border-cyan-400 shadow-lg"
+      />
+    </figure>
   );
-};
-
-export default Avatar;
+}

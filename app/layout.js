@@ -26,7 +26,10 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <title>Wahb Amir | Full-Stack Web Developer & Next.js Expert</title>
-        <meta name="description" content="Wahb Amir is a 15 y/o full-stack developer building blazing-fast, modern web apps using Next.js, MongoDB, Tailwind CSS, and more. Explore my portfolio and projects." />
+        <meta
+          name="description"
+          content="Wahb Amir is a 15 y/o full-stack developer building blazing-fast, modern web apps using Next.js, MongoDB, Tailwind CSS, and more. Explore my portfolio and projects."
+        />
         <link
           rel="icon"
           type="image/png"
@@ -62,7 +65,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} transition-colors duration-500 ease-in-out min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} transition-colors duration-500 ease-in-out min-h-screen overflow-x-hidden`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LayoutClient>{children}</LayoutClient>

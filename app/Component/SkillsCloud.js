@@ -78,7 +78,7 @@ export default function SkillsCloud() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isInView = useInView(containerRef, { margin: "-150px", once: true });
+  const isInView = useInView(containerRef, { margin: "-150px" });
   const { width } = useWindowSize();
   const containerSize = width < 480 ? 260 : width < 768 ? 320 : 420;
   const radius = containerSize / 2.5;

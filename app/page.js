@@ -1,18 +1,22 @@
 "use client";
-
+import React from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
+import Navbar from "./Component/Navbar";
 import Hero from "./Component/Hero";
 import SkillsCloud from "./Component/SkillsCloud";
-import PageTransition from "./Component/PageTransition";
 import Project from "./Component/Project";
-import Navbar from "./Component/Navbar";
 import About from "./Component/About";
 import ContactForm from "./Component/Contact";
-import Footer from './Component/Footer'
+import Footer from "./Component/Footer";
+import PageTransition from "./Component/PageTransition";
+
 export default function Home() {
+  const path = usePathname();
+
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <PageTransition>
+      <PageTransition key={path}>
         <header>
           <Navbar />
         </header>
@@ -25,7 +29,7 @@ export default function Home() {
           <ContactForm />
         </main>
 
-        <footer>
+        <footer className="w-fit h-fit overflow-hidden">
           <Footer />
         </footer>
       </PageTransition>

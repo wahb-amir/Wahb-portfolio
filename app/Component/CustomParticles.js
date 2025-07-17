@@ -1,71 +1,44 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import React from "react";
+import { useRef } from "react";
 import dynamic from "next/dynamic";
-import { loadLinksPreset } from "tsparticles-preset-links";
+import { useTheme } from "next-themes";
+import { useReducedMotion } from "framer-motion";
+import { useInView } from "framer-motion";
 
-// Load react-tsparticles only on client
+// Dynamically import tsparticles on client only
 const Particles = dynamic(
   () => import("react-tsparticles").then((mod) => mod.Particles),
   { ssr: false, loading: () => null }
 );
 
 export default function CustomParticles({
-  colors = ["#00dfd8", "#00bfff", "#00aaff", "#FFA509", "#FF0000"],
+  colors = ["#00dfd8", "#00bfff", "#00aaff", "#66fcf1", "#ffffff"],
   fullScreen = false,
   className = "",
 }) {
-  const [mounted, setMounted] = useState(false);
-  const [docHeight, setDocHeight] = useState(0);
-  const [isDark, setIsDark] = useState(false);
+  const { theme } = useTheme();
+  const reduceMotion = useReducedMotion();
+  const containerRef = useRef(null);
+  const inView = useInView(containerRef, { once: true, margin: "-50px" });
 
-  // Detect dark mode for adaptive colors
-  useEffect(() => {
-    const matchDark = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(matchDark.matches);
-    const handler = (e) => setIsDark(e.matches);
-    matchDark.addEventListener("change", handler);
-    return () => matchDark.removeEventListener("change", handler);
-  }, []);
+  // Skip animation entirely if user prefers reduced motion
+  if (reduceMotion || !inView) return null;
 
-  // Track document height and update on resize or scroll (to handle dynamic content)
-  useEffect(() => {
-    const updateHeight = () => {
-      setDocHeight(document.body.scrollHeight);
-    };
-    updateHeight();
-    window.addEventListener("resize", updateHeight);
-    window.addEventListener("scroll", updateHeight);
-    return () => {
-      window.removeEventListener("resize", updateHeight);
-      window.removeEventListener("scroll", updateHeight);
-    };
-  }, []);
-
-  // Mount on scroll (once only)
-  useEffect(() => {
-    const handleScroll = () => {
-      setMounted(true);
-      window.removeEventListener("scroll", handleScroll);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Adapt colors for dark mode
+  const particleColors =
+    theme === "dark"
+      ? ["#00fff7", "#00bfff", "#0099ff", "#00ddff", "#00ffaa"]
+      : colors;
 
   const particlesInit = async (engine) => {
+    const { loadLinksPreset } = await import("tsparticles-preset-links");
     await loadLinksPreset(engine);
   };
 
-  if (!mounted) return null;
-
-  // Adaptive colors for dark mode
-  const particleColors = isDark
-    ? ["#00fff7", "#00bfff", "#0099ff", "#00ddff", "#00ffaa"]
-    : colors;
-
   const options = {
     preset: "links",
-    fullScreen, // respect prop
+    fullScreen,
     background: { color: "transparent" },
     fpsLimit: 30,
     detectRetina: false,
@@ -82,7 +55,6 @@ export default function CustomParticles({
       move: {
         enable: true,
         speed: 0.5,
-        direction: "none",
         outModes: { default: "bounce" },
       },
       size: { value: { min: 1.5, max: 2.5 } },
@@ -90,17 +62,17 @@ export default function CustomParticles({
       opacity: { value: 0.4 },
     },
     interactivity: {
-      events: {
-        onHover: { enable: false },
-        onClick: { enable: false },
-      },
+      events: { onHover: { enable: false }, onClick: { enable: false } },
     },
   };
 
   return (
     <div
-      className={`absolute top-0 left-0 w-full pointer-events-none z-0 ${className}`}
-      style={{ height: fullScreen ? "100vh" : `${docHeight}px` }}
+      ref={containerRef}
+      className={`absolute top-0 left-0 w-full h-${
+        fullScreen ? "[100vh]" : "full"
+      } pointer-events-none z-0 ${className}`}
+      aria-hidden="true"
     >
       <Particles id="tsparticles" init={particlesInit} options={options} />
     </div>

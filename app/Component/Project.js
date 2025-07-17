@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-
+import BackgroundEffect from "./BackgroundEffect";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import ProjectCard from "./ProjectCard";
 import dynamic from "next/dynamic";
@@ -20,7 +20,7 @@ const Project = () => {
     ssr: false,
     loading: () => null,
   });
-
+  // inline styles only once mounted
   const sectionStyle = mounted
     ? {
         backgroundImage: isDark
@@ -30,7 +30,8 @@ const Project = () => {
       }
     : {};
 
-
+  // if you wanna hide until ready, you can uncomment this:
+  // if (!mounted) return null;
 
   return (
     <>
