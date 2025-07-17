@@ -8,12 +8,12 @@ import { useTheme } from "next-themes";
 
 const Navbar = () => {
   const { resolvedTheme, setTheme } = useTheme();
-  // const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [smallWidth, setSmallWidth] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // setMounted(true);
+    setMounted(true);
 
     const handleResize = () => {
       setSmallWidth(window.innerWidth < 768);
@@ -29,7 +29,7 @@ const Navbar = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
-  // if (!mounted) return <nav></nav>;
+  if (!mounted) return null ;//use to prevent hydration issue
 
   const darkMode = resolvedTheme === "dark";
 
