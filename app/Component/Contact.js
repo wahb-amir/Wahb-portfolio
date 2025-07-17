@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
@@ -18,21 +17,35 @@ export default function ContactForm() {
     message: "",
   });
 
-  // Animate the form into view once
-  const ref = React.useRef(null);
+  const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   const handleChange = (e) =>
-    setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Something went wrong 😬");
+
       setStatus("sent");
       setFormData({ name: "", email: "", message: "" });
+
       setTimeout(() => setStatus("idle"), 3000);
-    }, 2500);
+    } catch (error) {
+      alert(error.message || "Failed to send message.");
+      setStatus("idle");
+    }
   };
 
   return (
@@ -117,15 +130,13 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={status === "sending"}
-            className={`
-              w-full py-3 rounded-full font-medium tracking-wide transition
+            className={`w-full py-3 rounded-full font-medium tracking-wide transition
               ${
                 status === "sending"
                   ? "bg-cyan-400 dark:bg-cyan-800 cursor-not-allowed text-gray-900 dark:text-gray-100"
                   : "bg-cyan-500 hover:bg-cyan-600 dark:bg-cyan-700 dark:hover:bg-cyan-600 text-white"
               }
-              focus:outline-none focus:ring-2 focus:ring-cyan-500
-            `}
+              focus:outline-none focus:ring-2 focus:ring-cyan-500`}
             aria-live="polite"
             aria-busy={status === "sending"}
           >
@@ -157,7 +168,7 @@ export default function ContactForm() {
             transition={{ duration: 0.4 }}
             role="status"
           >
-            Thanks — I’ll get back to you soon!
+            Thanks — I’ll get back to you soon! 🙌
           </motion.p>
         )}
       </motion.form>

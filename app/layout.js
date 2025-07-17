@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
           href="/favicon-96x96.png"
           sizes="96x96"
         />
-
+        <meta name="theme-color"></meta>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link
