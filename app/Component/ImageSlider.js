@@ -9,6 +9,8 @@ const ImageSlider = ({ images = [] }) => {
     slides: { perView: 1 },
   });
 
+  const flatImages = images.flat();
+
   return (
     <div className="relative mx-auto max-w-full px-4 sm:px-6 md:px-8">
       <div
@@ -16,10 +18,14 @@ const ImageSlider = ({ images = [] }) => {
         className="keen-slider rounded-xl overflow-hidden w-full"
         style={{ height: "200px", maxWidth: "100%", margin: "0 auto" }}
       >
-        {images.map((src, i) => (
-          <div key={i} className="keen-slider__slide relative">
+        {flatImages.map((src, i) => (
+          <div
+            key={i}
+            className="keen-slider__slide relative"
+            style={{ height: "200px", overflow: "hidden" }}
+          >
             <Image
-              src={src[i]}
+              src={src}
               alt={`Slide ${i + 1}`}
               className="object-cover rounded-lg"
               fill
@@ -31,7 +37,6 @@ const ImageSlider = ({ images = [] }) => {
         ))}
       </div>
 
-      {/* Prev Button */}
       <button
         onClick={() => slider.current?.prev()}
         className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full z-10"
@@ -41,7 +46,6 @@ const ImageSlider = ({ images = [] }) => {
         ◀
       </button>
 
-      {/* Next Button */}
       <button
         onClick={() => slider.current?.next()}
         className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full z-10"

@@ -66,11 +66,19 @@ const Project = () => {
 
         <ProjectCard
           title="Modern E-Commerce Store"
-          image={[["/image1.jpeg", "/image1.jpeg", "/image1.jpeg"]]}
+          image={[
+            [
+              "/Project/light-shop.png",
+              "/Project/light-men.png",
+              "/Project/light-women.png",
+              "/Project/light-product.png",
+              "/Project/stripe.png",
+            ],
+          ]}
           tech="Next.js • Stripe • OAuth • Tailwind • MongoDB"
           description="A fully functional e-commerce platform with OAuth, fake Stripe checkout, and a client-safe read-only admin dashboard."
-          liveLink="https://ecom-store.vercel.app"
-          githubLink="https://github.com/wahb/ecom-store"
+          liveLink="https://boltform.buttnetworks.com/"
+          githubLink="https://github.com/coder101-js/Wahb-portfolio"
         />
 
         <div className="relative z-10 flex flex-row items-center justify-center gap-6 mt-8">
