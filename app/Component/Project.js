@@ -41,7 +41,7 @@ const Project = () => {
       />
       <div
         id="project-section"
-        className={`relative flex flex-col items-center min-h-screen px-4 sm:px-6 pt-[env(safe-area-inset-top)] pb-12 text-center overflow-hidden z-[10]
+        className={`relative flex flex-col items-center h-fit pb-12 px-4 sm:px-6 pt-[env(safe-area-inset-top)] text-center overflow-hidden z-[10]
           ${isDark ? "bg-[#0a0f1a] text-white" : "bg-white text-black"}
         `}
         style={sectionStyle}

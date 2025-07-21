@@ -30,7 +30,7 @@ const Hero = () => {
       id="hero-section"
       className="
         relative flex flex-col justify-start items-center
-        min-h-screen px-4 xs:px-6 text-center
+        h-fit px-4 xs:px-6 text-center pb-[6.25rem]
        bg-gray-200 dark:bg-gray-900 text-gray-900
       dark:text-gray-700
         overflow-hidden pt-[env(safe-area-inset-top)]

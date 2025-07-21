@@ -52,7 +52,7 @@ export default function ContactForm() {
     <section
       id="contact"
       ref={ref}
-      className="relative w-full min-h-screen py-24 px-6 flex flex-col items-center justify-center overflow-hidden bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+      className="relative w-full h-fit pb-12 py-16 px-6 flex flex-col items-center justify-center overflow-hidden bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
       aria-labelledby="contact-heading"
     >
       <LazyBackgroundEffect />
