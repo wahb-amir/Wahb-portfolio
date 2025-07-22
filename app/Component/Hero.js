@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import Avatar from "./Avatar";
-import BackgroundEffect from "./BackgroundEffect";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 const Hero = () => {
@@ -24,17 +25,30 @@ const Hero = () => {
     ssr: false,
     loading: () => null,
   });
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
   return (
     <main
       id="hero-section"
       className="
-        relative flex flex-col justify-start items-center
-        h-fit px-4 xs:px-6 text-center pb-[6.25rem]
-       bg-gray-200 dark:bg-gray-900 text-gray-900
-      dark:text-gray-700
-        overflow-hidden pt-[env(safe-area-inset-top)]
-      "
+    relative flex flex-col justify-start items-center
+    h-fit px-4 xs:px-6 text-center pb-[6.25rem]
+    text-gray-900 dark:text-gray-100
+    overflow-hidden pt-[env(safe-area-inset-top)]
+  "
+      style={{
+        backgroundImage: isDark
+          ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
+          : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
+        backgroundColor: isDark ? "#0f172a" : "#f9fafb",
+      }}
     >
       <LazyParticles
         colors={["#00dfd8", "#00bfff", "#00aaff", "#66fcf1", "#ffffff"]}

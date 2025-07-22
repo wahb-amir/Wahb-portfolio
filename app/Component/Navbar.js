@@ -43,9 +43,14 @@ const Navbar = () => {
   return (
     <nav className="relative">
       <div
-        className={`flex justify-between items-center rounded-xl px-4 py-2 ${
-          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
-        }`}
+        className="flex justify-between items-center rounded-xl px-4 py-2"
+        style={{
+          backgroundImage: darkMode
+            ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
+            : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
+          backgroundColor: darkMode ? "#0f172a" : "#f9fafb",
+          color: darkMode ? "#ffffff" : "#000000",
+        }}
       >
         <Image
           src="/logo.png"
@@ -79,7 +84,14 @@ const Navbar = () => {
         {/* Mobile hamburger */}
         {smallWidth && (
           <button
-            className="md:hidden block focus:outline-none"
+            className="md:hidden flex flex-col items-start rounded-xl px-4 py-2 absolute top-full left-0 w-full z-50 transition-all duration-300"
+            style={{
+              backgroundImage: darkMode
+                ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
+                : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
+              backgroundColor: darkMode ? "#0f172a" : "#f9fafb",
+              color: darkMode ? "#ffffff" : "#000000",
+            }}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
@@ -104,9 +116,14 @@ const Navbar = () => {
       {/* Mobile menu */}
       {smallWidth && menuOpen && (
         <ul
-          className={`md:hidden flex flex-col items-start rounded-xl px-4 py-2 absolute top-full left-0 w-full z-50 transition-all duration-300 ${
-            darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
-          }`}
+          className="md:hidden flex flex-col items-start rounded-xl px-4 py-2 absolute top-full left-0 w-full z-50 transition-all duration-300"
+          style={{
+            backgroundImage: darkMode
+              ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
+              : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
+            backgroundColor: darkMode ? "#0f172a" : "#f9fafb",
+            color: darkMode ? "#ffffff" : "#000000",
+          }}
         >
           {["skills", "projects", "about", "contribution", "contact"].map(
             (id) => (

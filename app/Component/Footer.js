@@ -54,13 +54,6 @@ export default function Footer() {
           GitHub
         </a>
         <a
-          href="mailto:wahb@buttnetworks.com?subject=Hello%20Wahb"
-          aria-label="Send me an email"
-          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400"
-        >
-          Email Me
-        </a>
-        <a
           href="#contact"
           aria-label="Go to contact section"
           className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400"

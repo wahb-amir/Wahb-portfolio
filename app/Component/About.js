@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import BackgroundEffect from "./BackgroundEffect";
 import { useTheme } from "next-themes";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
