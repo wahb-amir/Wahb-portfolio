@@ -4,7 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import LayoutClient from "./layout-client";
 import { ThemeProvider } from "next-themes";
 import Script from "next/script";
-import Preloader from "./component/Preloader"; 
+import Preloader from "./Component/Preloader";
 
 const geistSans = Geist({
   subsets: ["latin"],
