@@ -20,7 +20,8 @@ export default function Footer() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <footer ref={ref} className="h-0" />;
+  // 👇 reserve space to avoid layout jump before mount
+  if (!mounted) return <footer className="h-32 w-full" />;
 
   return (
     <motion.footer
@@ -29,8 +30,7 @@ export default function Footer() {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`
-        w-screen left-1/2 -translate-x-1/2 relative
-        px-6 py-10 text-center text-sm md:text-base
+        w-full px-6 py-10 text-center text-sm md:text-base
         bg-[#f9fafb] dark:bg-[#0f172a]
         text-black dark:text-white
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
