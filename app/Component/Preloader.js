@@ -6,7 +6,7 @@ export default function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2200);
+    const timer = setTimeout(() => setIsLoading(false), 1800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -32,7 +32,8 @@ export default function Preloader() {
             }}
             className="text-4xl font-extrabold tracking-wide"
           >
-            🚀 Wahb Dev
+            Welcome to My Portfolio
+            <span className="text-cyan-400">!</span>
           </motion.div>
 
           {/* Spinner animation */}

@@ -12,3 +12,6 @@ body {
 svg {
   background: transparent !important;
 }
+.max-w-screen {
+  max-width: 100dvw;
+}
