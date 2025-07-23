@@ -28,8 +28,7 @@ export default function Home() {
           <About />
           <ContactForm />
         </main>
-
-        <footer className=" h-fit overflow-hidden">
+        <footer className="h-fit overflow-hidden">
           <Footer />
         </footer>
       </PageTransition>

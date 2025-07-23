@@ -21,20 +21,6 @@ export default function Preloader() {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="fixed inset-0 z-[9999] flex flex-col gap-4 items-center justify-center bg-[#0f172a] text-white"
         >
-          {/* Pulse animation */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: [0.8, 1, 0.8] }}
-            transition={{
-              repeat: Infinity,
-              duration: 1.5,
-              ease: "easeInOut",
-            }}
-            className="text-4xl font-extrabold tracking-wide"
-          >
-            Welcome to My Portfolio
-            <span className="text-cyan-400">!</span>
-          </motion.div>
 
           {/* Spinner animation */}
           <motion.div
