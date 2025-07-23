@@ -3,7 +3,8 @@ import "./tailwind-out.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import LayoutClient from "./layout-client";
 import { ThemeProvider } from "next-themes";
-import Script from "next/script"; // <- import Script
+import Script from "next/script";
+import Preloader from "@/components/Preloader"; 
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -50,7 +51,7 @@ export const metadata = {
     siteName: "Wahb Amir Portfolio",
     images: [
       {
-        url: "/og-image.png", // ← You should make this! 1200x630 recommended
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Wahb Amir | Web Developer Portfolio",
@@ -90,7 +91,6 @@ export default function RootLayout({ children }) {
           href="/favicon-96x96.png"
           sizes="96x96"
         />
-
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link
@@ -112,7 +112,10 @@ export default function RootLayout({ children }) {
             "@type": "Person",
             name: "Wahb Amir",
             url: "https://wahb.buttnetworks.com",
-            sameAs: ["https://github.com/wahb", "https://linkedin.com/in/wahb"],
+            sameAs: [
+              "https://github.com/wahb",
+              "https://linkedin.com/in/wahb",
+            ],
             jobTitle: "Full-Stack Web Developer",
           })}
         </Script>
@@ -122,6 +125,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} transition-colors duration-500 ease-in-out min-h-screen overflow-x-hidden`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Preloader /> {/* 🚀 Add your animated preloader here */}
           <LayoutClient>{children}</LayoutClient>
         </ThemeProvider>
       </body>
