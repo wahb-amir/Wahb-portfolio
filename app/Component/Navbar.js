@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
@@ -24,7 +25,10 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // toggle theme and let next-themes handle storage
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+  }, [menuOpen]);
+
   const toggleTheme = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
@@ -41,7 +45,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative">
+    <nav className="relative z-50">
       <div
         className="flex justify-between items-center rounded-xl px-4 py-2"
         style={{
@@ -63,13 +67,23 @@ const Navbar = () => {
         {/* Desktop menu */}
         {!smallWidth && (
           <ul className="hidden md:flex flex-row items-center">
-            {["skills", "projects", "about", "contribution", "contact"].map(
-              (id) => (
-                <li key={id} onClick={() => handleClick(id)}>
-                  {id.charAt(0).toUpperCase() + id.slice(1)}
-                </li>
-              )
-            )}
+            {["skills", "projects", "about", "contact"].map((id) => (
+              <li key={id} onClick={() => handleClick(id)}>
+                {id.charAt(0).toUpperCase() + id.slice(1)}
+              </li>
+            ))}
+
+            <li>
+              <a
+                href="https://github.com/coder101-js"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-accent transition-colors"
+              >
+                <FontAwesomeIcon icon={faGithub} className="scale-150" />
+              </a>
+            </li>
+
             <li onClick={toggleTheme}>
               <button>
                 <FontAwesomeIcon
@@ -81,17 +95,10 @@ const Navbar = () => {
           </ul>
         )}
 
-        {/* Mobile hamburger */}
+        {/* Hamburger Button */}
         {smallWidth && (
           <button
-            className="md:hidden flex flex-col items-start rounded-xl px-4 py-2 absolute top-full left-0 w-full z-50 transition-all duration-300"
-            style={{
-              backgroundImage: darkMode
-                ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
-                : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
-              backgroundColor: darkMode ? "#0f172a" : "#f9fafb",
-              color: darkMode ? "#ffffff" : "#000000",
-            }}
+            className="md:hidden flex items-center justify-center p-2 rounded"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
@@ -113,10 +120,10 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu - fixed to viewport */}
       {smallWidth && menuOpen && (
         <ul
-          className="md:hidden flex flex-col items-start rounded-xl px-4 py-2 absolute top-full left-0 w-full z-50 transition-all duration-300"
+          className="fixed top-[64px] left-0 w-full flex flex-col items-start px-4 py-4 z-40 rounded-b-xl transition-all duration-300 shadow-lg md:hidden"
           style={{
             backgroundImage: darkMode
               ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
@@ -138,6 +145,17 @@ const Navbar = () => {
               </li>
             )
           )}
+
+          <li>
+            <a
+              href="https://github.com/coder101-js"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FontAwesomeIcon icon={faGithub} className="scale-150" />
+            </a>
+          </li>
+
           <li
             onClick={() => {
               toggleTheme();
@@ -154,10 +172,10 @@ const Navbar = () => {
         </ul>
       )}
 
-      {/* Optional: prevent sticky nav from covering content */}
+      {/* Optional: sticky nav padding */}
       <style jsx global>{`
         html {
-          scroll-padding-top: 70px; /* adjust to your nav height */
+          scroll-padding-top: 70px;
         }
       `}</style>
 
@@ -178,9 +196,6 @@ const Navbar = () => {
         }
 
         @media (max-width: 768px) {
-          ul {
-            width: 100%;
-          }
           li {
             margin: 8px 0;
             width: 100%;
