@@ -30,7 +30,6 @@ export default function Footer() {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`
         max-w-screen w-screen px-6 py-10 text-center text-sm md:text-base overflow-x-hidden
-        
         bg-[#f9fafb] dark:bg-[#0f172a]
         text-black dark:text-white
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
