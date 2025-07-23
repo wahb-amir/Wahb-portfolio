@@ -29,7 +29,8 @@ export default function Footer() {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`
-        max-w-full w-full px-6 py-10 text-center text-sm md:text-base
+        w-screen left-1/2 -translate-x-1/2 relative
+        px-6 py-10 text-center text-sm md:text-base
         bg-[#f9fafb] dark:bg-[#0f172a]
         text-black dark:text-white
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
@@ -42,7 +43,7 @@ export default function Footer() {
       <LazyBackgroundEffect />
 
       <nav
-        className="mb-4 flex justify-center gap-6 flex-wrap max-w-full w-full"
+        className="mb-4 flex justify-center gap-6 flex-wrap"
         aria-label="Footer links"
       >
         <a
