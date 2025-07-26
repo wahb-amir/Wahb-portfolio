@@ -15,10 +15,12 @@ const About = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
   const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
     ssr: false,
     loading: () => null,
   });
+
   useEffect(() => {
     const startDate = new Date("2025-03-22T00:00:00Z");
 
@@ -30,7 +32,7 @@ const About = () => {
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
 
-      setTimeSinceStart(`${days}d ${hours}h ${minutes}m `);
+      setTimeSinceStart(`${days}d ${hours}h ${minutes}m`);
     };
 
     updateTimer();
@@ -64,14 +66,16 @@ const About = () => {
         </h2>
 
         <p className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-12">
-          I&apos;m a self-taught full-stack developer focused on building high-performance, modern web apps. I specialize in React, Next.js, Node.js & MongoDB — deployed on Linux VPS and optimized for speed and scalability.
+          I&apos;m a self-taught full-stack developer focused on building
+          high-performance, modern web apps. I specialize in React, Next.js,
+          Node.js & MongoDB — deployed on Linux VPS and optimized for speed and
+          scalability.
         </p>
-
 
         {/* Timer */}
         <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-6 text-center mb-16 border border-white/10 dark:border-slate-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-slate-200 mb-2">
-            ⏳ Time Since I Started Coding
+            ⏳ Active Dev Journey
           </h3>
           <p className="text-cyan-400 text-xl font-mono">{timeSinceStart}</p>
         </div>
@@ -79,7 +83,7 @@ const About = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-16">
           <StatCard
-            label="Days of Learning"
+            label="Days in Dev Flow"
             value={(() => {
               const startDate = new Date("2025-03-22T00:00:00Z");
               const now = new Date();
@@ -101,7 +105,7 @@ const About = () => {
             <li>Frontend: React, Next.js, Tailwind, Framer Motion</li>
             <li>Backend: Node.js, Express, MongoDB, Mongoose</li>
             <li>Deployment: Linux VPS (manual + CLI-based)</li>
-            <li>Learning by doing — shipping every step of the way</li>
+            <li>Building real-world apps — learning by shipping</li>
           </ul>
         </div>
 
@@ -112,24 +116,24 @@ const About = () => {
           </h3>
           <div className="space-y-4 border-l-2 border-cyan-400 pl-4">
             <TimelineItem
-              title="Mar 2025"
-              desc="Started with HTML & CSS basics"
+              title="Early 2025"
+              desc="Started with frontend foundations (HTML/CSS)"
             />
             <TimelineItem
-              title="Apr 2025"
-              desc="Learned JavaScript and built mini projects"
+              title="Spring 2025"
+              desc="Built small projects with JavaScript"
             />
             <TimelineItem
-              title="May 2025"
-              desc="Dived into React, Tailwind & Next.js"
+              title="Mid 2025"
+              desc="Shifted to React, Tailwind & Next.js"
             />
             <TimelineItem
-              title="Jun 2025"
-              desc="Completed & deployed 3 full-stack apps"
+              title="Summer 2025"
+              desc="Deployed 3 full-stack projects"
             />
             <TimelineItem
               title="Now"
-              desc="Exploring more backend concepts & scaling"
+              desc="Exploring backend architecture & deployment strategies"
             />
           </div>
         </div>
@@ -138,7 +142,6 @@ const About = () => {
           “Still early in the journey — but building like I mean it.”
         </blockquote>
 
-        {/* 👉 Moved INSIDE #about and using relative positioning */}
         <div className="relative z-10 flex justify-center items-center gap-6 mt-12">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -146,8 +149,9 @@ const About = () => {
             className="hover:scale-110 transition-transform"
           >
             <ChevronUpIcon
-              className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"
-                }`}
+              className={`w-8 h-8 ${
+                isDark ? "text-cyan-300" : "text-cyan-600"
+              }`}
             />
           </button>
           <button
@@ -160,8 +164,9 @@ const About = () => {
             className="animate-pulse hover:scale-110 transition-transform"
           >
             <ChevronDownIcon
-              className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"
-                }`}
+              className={`w-8 h-8 ${
+                isDark ? "text-cyan-300" : "text-cyan-600"
+              }`}
             />
           </button>
         </div>
