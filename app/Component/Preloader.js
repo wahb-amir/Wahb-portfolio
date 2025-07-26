@@ -6,7 +6,7 @@ export default function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1800);
+    const timer = setTimeout(() => setIsLoading(false), 900);
     return () => clearTimeout(timer);
   }, []);
 
@@ -21,8 +21,6 @@ export default function Preloader() {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="fixed inset-0 z-[9999] flex flex-col gap-4 items-center justify-center bg-[#0f172a] text-white"
         >
-
-          {/* Spinner animation */}
           <motion.div
             className="w-10 h-10 border-4 border-white border-t-transparent rounded-full"
             animate={{ rotate: 360 }}

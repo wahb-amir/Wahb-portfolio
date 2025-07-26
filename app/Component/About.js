@@ -64,11 +64,9 @@ const About = () => {
         </h2>
 
         <p className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-12">
-          I&#39;m a 15-year-old self-taught full-stack dev passionate about
-          building high-performance web apps. In just 115 days, I’ve gone from
-          HTML basics to deploying full-stack apps with React, Next.js, Node.js
-          & MongoDB—hosted on Linux VPS.
+          I&apos;m a self-taught full-stack developer focused on building high-performance, modern web apps. I specialize in React, Next.js, Node.js & MongoDB — deployed on Linux VPS and optimized for speed and scalability.
         </p>
+
 
         {/* Timer */}
         <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-6 text-center mb-16 border border-white/10 dark:border-slate-700">
@@ -148,9 +146,8 @@ const About = () => {
             className="hover:scale-110 transition-transform"
           >
             <ChevronUpIcon
-              className={`w-8 h-8 ${
-                isDark ? "text-cyan-300" : "text-cyan-600"
-              }`}
+              className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"
+                }`}
             />
           </button>
           <button
@@ -163,9 +160,8 @@ const About = () => {
             className="animate-pulse hover:scale-110 transition-transform"
           >
             <ChevronDownIcon
-              className={`w-8 h-8 ${
-                isDark ? "text-cyan-300" : "text-cyan-600"
-              }`}
+              className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"
+                }`}
             />
           </button>
         </div>

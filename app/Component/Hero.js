@@ -63,42 +63,42 @@ const Hero = () => {
         className="z-10 mt-8 max-w-xl mx-auto"
         // style={{ marginTop: "max(1rem, 10vh)" }}
       >
-        <div className="mx-auto w-[150px] xs:w-[200px] 3xl:w-[300px] p-2">
-          <Avatar />
-        </div>
+       <div className="mx-auto w-[150px] xs:w-[200px] 3xl:w-[300px] p-2">
+  <Avatar />
+</div>
 
-        <h1 className="text-3xl xs:text-4xl sm:text-6xl font-extrabold tracking-tight drop-shadow-lg mt-4 text-gray-900 dark:text-white">
-          Hey, I&apos;m{" "}
-          <span className="text-4xl xs:text-5xl sm:text-7xl text-cyan-300 font-black drop-shadow-lg">
-            ~ Wahb
-          </span>
-        </h1>
+<h1 className="text-3xl xs:text-4xl sm:text-6xl font-extrabold tracking-tight drop-shadow-lg mt-4 text-gray-900 dark:text-white">
+  Hey, I&apos;m{" "}
+  <span className="text-4xl xs:text-5xl sm:text-7xl text-cyan-300 font-black drop-shadow-lg">
+    ~ Wahb
+  </span>
+</h1>
 
-        <h2 className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md">
-          <Typewriter
-            words={[
-              "15 y/o Full-Stack Developer 💻",
-              "Deploying on Linux VPS like a boss 🐧",
-              "React, Next.js, MongoDB = ❤️",
-              "Building fast, sleek web apps 🚀",
-              "Learning, breaking, building again 🔁",
-            ]}
-            loop
-            cursor
-            cursorStyle="_"
-            typeSpeed={60}
-            deleteSpeed={40}
-            delaySpeed={1500}
-          />
-        </h2>
+<h2 className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md">
+  <Typewriter
+    words={[
+      "Full-Stack Web Developer 💻",
+      "Deploying on Linux VPS like a boss 🐧",
+      "React, Next.js, MongoDB = ❤️",
+      "Building fast, sleek web apps 🚀",
+      "Learning, breaking, building again 🔁",
+    ]}
+    loop
+    cursor
+    cursorStyle="_"
+    typeSpeed={60}
+    deleteSpeed={40}
+    delaySpeed={1500}
+  />
+</h2>
 
-        <p className="text-base mt-6 max-w-2xl mx-auto text-black dark:text-slate-400 drop-shadow-sm">
-          Fast, secure, scalable web apps — built to ship, built to last
-        </p>
-        <p className="text-cyan-400 mt-2 text-sm sm:text-base drop-shadow-sm">
-          Just a teen turning ideas into full-stack apps — from my room to the
-          cloud ☁️💻
-        </p>
+<p className="text-base mt-6 max-w-2xl mx-auto text-black dark:text-slate-400 drop-shadow-sm">
+  Fast, secure, scalable web apps — built to ship, built to last
+</p>
+<p className="text-cyan-400 mt-2 text-sm sm:text-base drop-shadow-sm">
+  Turning ideas into full-stack apps — from my terminal to the cloud ☁️💻
+</p>
+
       </motion.div>
 
       {/* Scroll down chevron */}
