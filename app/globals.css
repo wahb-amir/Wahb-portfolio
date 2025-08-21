@@ -15,3 +15,20 @@ svg {
 .max-w-screen {
   max-width: 100dvw;
 }
+/* globals.css */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #9ca3af; /* gray-400 */
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* gray-600 */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}

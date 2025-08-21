@@ -16,7 +16,7 @@ const ImageSlider = ({ images = [] }) => {
       <div
         ref={sliderRef}
         className="keen-slider rounded-xl overflow-hidden w-full"
-        style={{ height: "200px", maxWidth: "100%", margin: "0 auto" }}
+        style={{ height: "200px", margin: "0 auto" }}
       >
         {flatImages.map((src, i) => (
           <div
@@ -30,7 +30,7 @@ const ImageSlider = ({ images = [] }) => {
               className="object-cover rounded-lg"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-              quality={100}
+              quality={80}
               loading="lazy"
             />
           </div>

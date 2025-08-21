@@ -37,7 +37,7 @@ const Project = () => {
     <>
       <div
         id="projects"
-        className="h-1 bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] backdrop-blur-[100px]"
+        // className="h-1 bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] backdrop-blur-[100px]"
       />
       <div
         id="project-section"

@@ -29,13 +29,13 @@ export default function Footer() {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`
-        max-w-screen w-screen px-6 py-10 text-center text-sm md:text-base overflow-x-hidden
-        bg-[#f9fafb] dark:bg-[#0f172a]
-        text-black dark:text-white
-        bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
-        backdrop-blur-[100px]
-        overflow-hidden
-      `}
+    w-full px-6 py-10 text-center text-sm md:text-base
+    bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+    text-black dark:text-white
+    backdrop-blur-[100px]
+    overflow-hidden
+  `}
       role="contentinfo"
       aria-label="Footer"
     >
