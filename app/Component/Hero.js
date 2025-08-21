@@ -42,13 +42,12 @@ const Hero = () => {
     h-fit px-4 xs:px-6 text-center pb-[6.25rem]
     text-gray-900 dark:text-gray-100
     overflow-hidden pt-[env(safe-area-inset-top)]
-   
   "
       style={{
         backgroundImage: isDark
           ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
           : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
-        backgroundColor: isDark ? "#0f172a" : " bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]",
+        backgroundColor: isDark ? "#0f172a" : "#f9fafb",
       }}
     >
       <LazyParticles
