@@ -66,14 +66,8 @@ export default function ContactForm() {
     <section
       id="contact"
       ref={ref}
-      className="relative w-full h-fit pb-12 py-16 px-6 flex flex-col items-center justify-center overflow-hidden text-gray-900 dark:text-gray-100"
+      className="relative w-full h-fit pb-12 py-16 px-6 flex flex-col items-center justify-center overflow-hidden text-gray-900 dark:text-gray-100 bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]  bg-[#f9fafb] dark:bg-[#0f172a]"
       aria-labelledby="contact-heading"
-      style={{
-        backgroundImage: isDark
-          ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
-          : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
-        backgroundColor: isDark ? "#0f172a" : "#f9fafb",
-      }}
     >
       <LazyBackgroundEffect />
 
@@ -102,7 +96,7 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
+          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
         />
         <input
           id="email"
@@ -112,7 +106,7 @@ export default function ContactForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
+          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
         />
         <textarea
           id="message"
@@ -122,10 +116,9 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           required
-          className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
+          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
         />
 
-        {/* Button with smooth status transitions */}
         <div className="relative h-14 overflow-hidden rounded-full">
           <button
             type="submit"
@@ -133,7 +126,7 @@ export default function ContactForm() {
             className={`w-full h-full py-3 rounded-full font-medium tracking-wide transition
               ${
                 status === "sending"
-                  ? "bg-gray-200 dark:bg-gray-800 cursor-not-allowed text-gray-900 dark:text-gray-100"
+                  ? "bg-gray-200 cursor-not-allowed text-gray-900 dark:text-gray-100"
                   : "bg-cyan-500 hover:bg-cyan-600 dark:bg-cyan-700 dark:hover:bg-cyan-600 text-white"
               }
               focus:outline-none focus:ring-2 focus:ring-cyan-500 relative`}

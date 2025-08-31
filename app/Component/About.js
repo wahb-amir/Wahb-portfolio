@@ -45,13 +45,11 @@ const About = () => {
   return (
     <section
       id="about"
-      className="relative w-full min-h-screen py-24 px-6 overflow-hidden flex items-center justify-center"
-      style={{
-        backgroundImage: isDark
-          ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
-          : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
-        backgroundColor: isDark ? "#0f172a" : "#f9fafb",
-      }}
+      className={`relative w-full min-h-screen py-24 px-6 overflow-hidden flex items-center justify-center
+        bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+    text-black dark:text-white`}
+
     >
       <LazyBackgroundEffect />
 
@@ -138,7 +136,7 @@ const About = () => {
           </div>
         </div>
 
-        <blockquote className="text-center italic text-cyan-400 text-xl">
+        <blockquote className="text-center italic dark:text-cyan-400 text-blue-600text-xl">
           “Still early in the journey — but building like I mean it.”
         </blockquote>
 
@@ -149,9 +147,8 @@ const About = () => {
             className="hover:scale-110 transition-transform"
           >
             <ChevronUpIcon
-              className={`w-8 h-8 ${
-                isDark ? "text-cyan-300" : "text-cyan-600"
-              }`}
+              className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"
+                }`}
             />
           </button>
           <button
@@ -164,9 +161,8 @@ const About = () => {
             className="animate-pulse hover:scale-110 transition-transform"
           >
             <ChevronDownIcon
-              className={`w-8 h-8 ${
-                isDark ? "text-cyan-300" : "text-cyan-600"
-              }`}
+              className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"
+                }`}
             />
           </button>
         </div>

@@ -78,7 +78,7 @@ export default function SkillsCloud() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isInView = useInView(containerRef, { margin: "-150px", once: true});
+  const isInView = useInView(containerRef, { margin: "-150px", once: true });
   const { width } = useWindowSize();
   const containerSize = width < 480 ? 260 : width < 768 ? 320 : 420;
   const radius = containerSize / 2.5;
@@ -108,25 +108,17 @@ export default function SkillsCloud() {
     <section
       id="skills"
       className={`relative flex flex-col items-center justify-center px-4 sm:px-6 pb-12 text-center overflow-hidden
-        ${isDark ? "bg-[#0a0f1a] text-white" : "bg-white text-black"}
+        backdrop-blur-md bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+    text-black dark:text-white
+     
       `}
-      style={
-        mounted
-          ? {
-              backgroundImage: isDark
-                ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
-                : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
-              backgroundColor: isDark ? "#0f172a" : "#f9fafb",
-            }
-          : {}
-      }
     >
       <LazyBackgroundEffect />
 
       <h2
-        className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${
-          isDark ? "text-white" : "text-black"
-        }`}
+        className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${isDark ? "text-white" : "text-black"
+          }`}
       >
         What I Work With
       </h2>
@@ -134,34 +126,31 @@ export default function SkillsCloud() {
       <div className="z-20 flex gap-3 mt-2 mb-6">
         <button
           onClick={() => setView("cloud")}
-          className={`px-4 py-1 rounded ${
-            view === "cloud"
-              ? "bg-cyan-500 text-black"
-              : isDark
+          className={`px-4 py-1 rounded ${view === "cloud"
+            ? "bg-cyan-500 text-black"
+            : isDark
               ? "bg-gray-700 text-white"
               : "bg-gray-300 text-black"
-          }`}
+            }`}
         >
           Cloud
         </button>
         <button
           onClick={() => setView("grid")}
-          className={`px-4 py-1 rounded ${
-            view === "grid"
-              ? "bg-cyan-500 text-black"
-              : isDark
+          className={`px-4 py-1 rounded ${view === "grid"
+            ? "bg-cyan-500 text-black"
+            : isDark
               ? "bg-gray-700 text-white"
               : "bg-gray-300 text-black"
-          }`}
+            }`}
         >
           Grid
         </button>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className={`rounded px-2 ${
-            isDark ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
-          }`}
+          className={`rounded px-2 ${isDark ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
+            }`}
         >
           <option value="all">All</option>
           <option value="frontend">Frontend</option>
@@ -227,23 +216,20 @@ export default function SkillsCloud() {
         </div>
       ) : (
         <div
-          className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20 ${
-            isDark ? "bg-transparent" : ""
-          }`}
+          className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20 ${isDark ? "bg-transparent" : ""
+            }`}
         >
           {skills.map(({ name, icon: Icon, color }) => (
             <div
               key={name}
-              className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${
-                isDark ? "bg-gray-800" : "bg-gray-300"
-              }`}
+              className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"
+                }`}
               title={name}
             >
               <Icon className="text-3xl" style={{ color }} />
               <span
-                className={`mt-2 text-sm ${
-                  isDark ? "text-white" : "text-black"
-                }`}
+                className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"
+                  }`}
               >
                 {name}
               </span>

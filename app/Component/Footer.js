@@ -36,10 +36,11 @@ export default function Footer() {
     backdrop-blur-[100px]
     overflow-hidden
   `}
+      
       role="contentinfo"
       aria-label="Footer"
     >
-      <LazyBackgroundEffect />
+      {/* <LazyBackgroundEffect /> */}
 
       <nav
         className="mb-4 flex justify-center gap-6 flex-wrap"

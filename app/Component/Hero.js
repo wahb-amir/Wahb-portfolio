@@ -40,19 +40,13 @@ const Hero = () => {
       className="
     relative flex flex-col justify-start items-center
     h-fit px-4 xs:px-6 text-center pb-[6.25rem]
-    text-gray-900 dark:text-gray-100
+    bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+    text-black dark:text-white
     overflow-hidden pt-[env(safe-area-inset-top)]
   "
-      style={{
-        backgroundImage: isDark
-          ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
-          : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
-        backgroundColor: isDark ? "#0f172a" : "#f9fafb",
-      }}
     >
-      <LazyParticles
-        colors={["#00dfd8", "#00bfff", "#00aaff", "#66fcf1", "#ffffff"]}
-      />
+
 
       <LazyBackgroundEffect />
 
@@ -61,7 +55,6 @@ const Hero = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
         className="z-10 mt-8 max-w-xl mx-auto"
-      // style={{ marginTop: "max(1rem, 10vh)" }}
       >
         <div className="mx-auto w-[150px] xs:w-[200px] 3xl:w-[300px] p-2">
           <Avatar />
@@ -95,7 +88,7 @@ const Hero = () => {
         <p className="text-base mt-6 max-w-2xl mx-auto text-black dark:text-slate-400 drop-shadow-sm">
           Fast, secure, scalable web apps — built to ship, built to last
         </p>
-        <p className="text-cyan-400 mt-2 text-sm sm:text-base drop-shadow-sm">
+        <p className="text-blue-700 dark:text-cyan-300 mt-2 text-sm sm:text-base drop-shadow-sm">
           Turning ideas into full-stack apps — from my terminal to the cloud ☁️💻
         </p>
 

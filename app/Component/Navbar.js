@@ -47,15 +47,14 @@ const Navbar = () => {
   return (
     <nav className="relative z-50">
       <div
-        className="flex justify-between items-center rounded-xl px-4 py-2"
-        style={{
-          backgroundImage: darkMode
-            ? "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)"
-            : "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
-          backgroundColor: darkMode ? "#0f172a" : "#f9fafb",
-          color: darkMode ? "#ffffff" : "#000000",
-        }}
-      >
+  className={`
+    flex justify-between items-center rounded-xl px-4 py-2
+    backdrop-blur-md bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+    text-black dark:text-white
+  `}
+>
+
         <Image
           src="/logo.png"
           alt="wahb logo"
@@ -120,10 +119,9 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Mobile menu - fixed to viewport */}
       {smallWidth && menuOpen && (
         <ul
-          className="fixed top-[64px] left-0 w-full flex flex-col items-start px-4 py-4 z-40 rounded-b-xl transition-all duration-300 shadow-lg md:hidden" 
+          className="fixed top-[64px] left-0 w-full flex flex-col items-start px-4 py-4 z-40 rounded-b-xl transition-all duration-300 shadow-lg md:hidden"
         >
           {["skills", "projects", "about", "contribution", "contact"].map(
             (id) => (

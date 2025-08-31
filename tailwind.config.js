@@ -6,7 +6,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: "class",
+  darkMode: "class", // keep it here, no need to repeat inside theme
   theme: {
     extend: {
       colors: {
@@ -16,7 +16,6 @@ module.exports = {
         textLight: "#2d3436",
         textDark: "#e4e4e7",
       },
-      darkMode: "class",
       screens: {
         xs: "480px",
         "3xl": "1920px",
@@ -35,7 +34,19 @@ module.exports = {
       animation: {
         float: "float 6s ease-in-out infinite",
       },
+
+      // ✅ Gradient backgrounds (now you can use bg-light-gradient / bg-dark-gradient)
+      backgroundImage: {
+        "light-gradient":
+          "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",
+        "dark-gradient":
+          "radial-gradient(circle at top left, #00b1ff33, transparent 70%), radial-gradient(circle at bottom right, #00dfd033, transparent 70%)",
+      },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography"), require('tailwind-scrollbar')],
+  plugins: [
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+    require("tailwind-scrollbar"),
+  ],
 };

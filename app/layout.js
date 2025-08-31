@@ -1,3 +1,4 @@
+// app/layout.js
 import "./globals.css";
 import "./tailwind-out.css";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -22,18 +23,6 @@ export const metadata = {
   title: "Wahb Amir | Full-Stack Web Developer & Next.js Expert",
   description:
     "Wahb Amir is a 15 y/o full-stack developer building blazing-fast, modern web apps using Next.js, MongoDB, Tailwind CSS, and more. Explore my portfolio and projects.",
-  keywords: [
-    "Wahb Amir",
-    "full stack developer",
-    "Next.js developer",
-    "portfolio",
-    "MongoDB",
-    "Tailwind CSS",
-    "React",
-    "JavaScript",
-    "web development",
-    "young developer",
-  ],
   authors: [
     {
       name: "Wahb Amir",
@@ -80,11 +69,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Wahb Amir | Full-Stack Web Developer & Next.js Expert</title>
-        <meta
-          name="description"
-          content="Wahb Amir is a 15 y/o full-stack developer building blazing-fast, modern web apps using Next.js, MongoDB, Tailwind CSS, and more. Explore my portfolio and projects."
-        />
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
         <link
           rel="icon"
           type="image/png"
@@ -98,7 +84,7 @@ export default function RootLayout({ children }) {
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <meta name="apple-mobile-web-app-title" content="wahb amir " />
+        <meta name="apple-mobile-web-app-title" content="Wahb Amir" />
         <link rel="manifest" href="/site.webmanifest" />
 
         {/* JSON-LD Person Schema */}
@@ -112,22 +98,27 @@ export default function RootLayout({ children }) {
             "@type": "Person",
             name: "Wahb Amir",
             url: "https://wahb.buttnetworks.com",
+            image: "https://wahb.buttnetworks.com/og-image.png",
             sameAs: [
               "https://github.com/wahb",
               "https://linkedin.com/in/wahb",
             ],
             jobTitle: "Full-Stack Web Developer",
+            knowsAbout: ["Next.js", "React", "Tailwind CSS", "MongoDB", "JavaScript"],
           })}
         </Script>
       </head>
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} transition-colors duration-500 ease-in-out min-h-screen overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} transition-colors duration-500 ease-in-out min-h-screen overflow-x-hidden text-gray-900 dark:text-gray-100`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Preloader /> {/* 🚀 Add your animated preloader here */}
-          <LayoutClient>{children}</LayoutClient>
-        </ThemeProvider>
+        
+        <div className="min-h-screen w-full bg-light-gradient dark:bg-dark-gradient bg-gray-50 dark:bg-slate-900">
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {/* <Preloader /> */}
+            <LayoutClient>{children}</LayoutClient>
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );

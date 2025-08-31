@@ -26,7 +26,10 @@ const ProjectCard = ({
   return (
     <div
       className={`mt-8 flex flex-col items-center rounded-lg shadow-md p-4 sm:p-6 w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto
-        ${isDark ? "bg-gray-900 text-white" : "bg-white text-black"}
+        
+        bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#ffffff88]
+    text-black dark:text-white
       `}
     >
       <div className="w-full h-40 sm:h-48 relative mb-4">
@@ -38,17 +41,15 @@ const ProjectCard = ({
       </h2>
 
       <p
-        className={`mb-2 text-center text-sm sm:text-base ${
-          isDark ? "text-gray-400" : "text-gray-600"
-        }`}
+        className={`mb-2 text-center text-sm sm:text-base ${isDark ? "text-gray-400" : "text-gray-600"
+          }`}
       >
         {tech}
       </p>
 
       <p
-        className={`mb-4 text-center text-sm sm:text-base ${
-          isDark ? "text-gray-300" : "text-gray-700"
-        }`}
+        className={`mb-4 text-center text-sm sm:text-base ${isDark ? "text-gray-300" : "text-gray-700"
+          }`}
       >
         {description}
       </p>

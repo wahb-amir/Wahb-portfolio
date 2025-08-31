@@ -19,7 +19,7 @@ export default function Preloader() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[9999] flex flex-col gap-4 items-center justify-center bg-[#0f172a] text-white"
+          className="fixed inset-0 z-[9999] flex flex-col gap-4 items-center justify-center bg-[#3664d0] text-white"
         >
           <motion.div
             className="w-10 h-10 border-4 border-white border-t-transparent rounded-full"
