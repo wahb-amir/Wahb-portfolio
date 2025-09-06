@@ -24,7 +24,7 @@ export default function Footer() {
       className={`
         relative w-full px-6 py-10 text-center
         bg-[#f9fafb] dark:bg-[#0f172a]
-        bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+        bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
         text-black dark:text-white
         backdrop-blur-[100px]
         overflow-hidden
