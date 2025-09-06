@@ -53,21 +53,48 @@ export default function SkillsCloud() {
   const [view, setView] = useState("cloud"); // cloud or grid
   const [filter, setFilter] = useState("all");
   const containerRef = useRef(null);
-
-  useEffect(() => setMounted(true), []);
-
+  const [containerSize, setContainerSize] = useState(420); // px
+  const [dotSize, setDotSize] = useState(56); // px
   const isDark = mounted && theme === "dark";
   const isInView = useInView(containerRef, { margin: "-150px", once: true });
-  const radius = 180;
-  const centerOffset = radius;
 
-  const skillsFiltered = coreSkills.filter(skill =>
-    filter === "all" ? true : skill.type === filter
-  );
+  // responsive container + dot sizing
+  useEffect(() => {
+    setMounted(true);
+    const calc = () => {
+      const w = window.innerWidth;
+      // pick container size based on viewport width
+      if (w < 420) {
+        setContainerSize(Math.max(220, Math.floor(w * 0.82))); // mobile: ~82% of width
+        setDotSize(44);
+      } else if (w < 640) {
+        setContainerSize(320);
+        setDotSize(50);
+      } else if (w < 900) {
+        setContainerSize(380);
+        setDotSize(56);
+      } else {
+        setContainerSize(420);
+        setDotSize(64);
+      }
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
 
+  // compute center offset (top/left where each dot animation starts from)
+  const centerOffset = containerSize / 2 - dotSize / 2;
+  const radius = containerSize / 2.2; // a bit smaller than half to avoid clipping
+
+  const skillsFiltered = coreSkills.filter((skill) => (filter === "all" ? true : skill.type === filter || skill.type === "backend" && filter === "backend" ? true : filter === "frontend" ? skill.type === "frontend" : false));
+
+  // map with positions
   const skillsWithPos = skillsFiltered.map((skill, i) => {
     const angle = (i / skillsFiltered.length) * 2 * Math.PI;
-    return { ...skill, x: radius * Math.cos(angle), y: radius * Math.sin(angle) };
+    const x = Math.round(radius * Math.cos(angle));
+    const y = Math.round(radius * Math.sin(angle));
+    return { ...skill, x, y };
   });
 
   return (
@@ -75,8 +102,8 @@ export default function SkillsCloud() {
       id="skills"
       className={`relative flex flex-col items-center justify-center px-4 sm:px-6 pb-12 text-center overflow-hidden
         bg-[#f9fafb] dark:bg-[#0f172a]
-    bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
-    text-black dark:text-white`}
+        bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+        text-black dark:text-white`}
     >
       {/* <LazyBackgroundEffect /> */}
 
@@ -85,7 +112,7 @@ export default function SkillsCloud() {
       </h2>
 
       {/* View & Filter Controls */}
-      <div className="z-20 flex gap-3 mt-2 mb-6">
+      <div className="z-20 flex flex-wrap gap-3 mt-2 mb-6 justify-center">
         <button
           onClick={() => setView("cloud")}
           className={`px-4 py-1 rounded ${view === "cloud" ? "bg-cyan-500 text-black" : isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-black"}`}
@@ -112,40 +139,71 @@ export default function SkillsCloud() {
 
       {/* Cloud View */}
       {view === "cloud" ? (
-        <div ref={containerRef} className="relative z-20 flex items-center justify-center mx-auto" style={{ width: radius * 2, height: radius * 2 }}>
+        <div
+          ref={containerRef}
+          className="relative z-20 flex items-center justify-center mx-auto"
+          style={{
+            width: `${containerSize}px`,
+            height: `${containerSize}px`,
+            maxWidth: "92vw",
+            maxHeight: "92vw",
+          }}
+        >
           {skillsWithPos.map(({ name, icon: Icon, x, y, color }, i) => (
             <motion.div
               key={name}
               initial={{ opacity: 0, scale: 0.3, x: 0, y: 0 }}
               animate={isInView ? { opacity: 1, scale: 1, x, y } : { opacity: 0, scale: 0.3, x: 0, y: 0 }}
-              transition={{ delay: i * 0.1, type: "spring", stiffness: 140, damping: 20 }}
-              whileHover={{ scale: 1.3 }}
-              className="absolute flex flex-col items-center justify-center cursor-pointer p-2 rounded-full shadow-xl"
-              style={{ top: centerOffset, left: centerOffset, backgroundColor: isDark ? "#1f2937" : "#e2e8f0" }}
+              transition={{ delay: i * 0.08, type: "spring", stiffness: 120, damping: 18 }}
+              whileHover={{ scale: 1.18 }}
+              className="absolute flex flex-col items-center justify-center cursor-pointer rounded-full shadow-xl"
+              style={{
+                top: centerOffset,
+                left: centerOffset,
+                width: dotSize,
+                height: dotSize,
+                borderRadius: dotSize / 2,
+                backgroundColor: isDark ? "#1f2937" : "#e2e8f0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               title={name}
+              aria-hidden={false}
             >
-              <Icon className="text-[35px]" style={{ color }} />
+              <Icon className={dotSize < 50 ? "text-[22px]" : "text-[28px] md:text-[35px]"} style={{ color }} />
             </motion.div>
           ))}
 
-          {/* Learning / ML */}
-          {learningSkills.map(({ name, icon: Icon, color }, i) => (
-            <motion.div
-              key={name}
-              initial={{ opacity: 0, scale: 0.3, x: 0, y: 0 }}
-              animate={isInView ? { opacity: 1, scale: 1, x: radius * 0.5 * Math.cos(i / learningSkills.length * 2 * Math.PI), y: radius * 0.5 * Math.sin(i / learningSkills.length * 2 * Math.PI) } : { opacity: 0, scale: 0.3, x: 0, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.15 }}
-              className="absolute flex items-center justify-center cursor-help rounded-full w-10 h-10"
-              style={{ top: centerOffset, left: centerOffset, backgroundColor: isDark ? "#374151" : "#cbd5e1" }}
-              title={`Learning: ${name}`}
-            >
-              <Icon className="text-[25px]" style={{ color }} />
-            </motion.div>
-          ))}
+          {/* Learning / ML positioned closer to center */}
+          {learningSkills.map(({ name, icon: Icon, color }, i) => {
+            const angle = (i / learningSkills.length) * 2 * Math.PI;
+            const lx = Math.round((radius * 0.45) * Math.cos(angle));
+            const ly = Math.round((radius * 0.45) * Math.sin(angle));
+            return (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, scale: 0.2, x: 0, y: 0 }}
+                animate={isInView ? { opacity: 1, scale: 1, x: lx, y: ly } : { opacity: 0, scale: 0.2, x: 0, y: 0 }}
+                transition={{ delay: 0.15 + i * 0.12 }}
+                className="absolute flex items-center justify-center cursor-help rounded-full"
+                style={{
+                  top: centerOffset,
+                  left: centerOffset,
+                  width: Math.round(dotSize * 0.7),
+                  height: Math.round(dotSize * 0.7),
+                  backgroundColor: isDark ? "#374151" : "#cbd5e1",
+                }}
+                title={`Learning: ${name}`}
+              >
+                <Icon className={dotSize < 50 ? "text-[16px]" : "text-[20px] md:text-[25px]"} style={{ color }} />
+              </motion.div>
+            );
+          })}
         </div>
       ) : (
         // Grid View
-        <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20`}>
+        <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20 px-2 max-w-6xl`}>
           {skillsFiltered.map(({ name, icon: Icon, color }) => (
             <div key={name} className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`} title={name}>
               <Icon className="text-3xl" style={{ color }} />
@@ -162,7 +220,7 @@ export default function SkillsCloud() {
       )}
 
       {/* Navigation Arrows */}
-      <div className="relative z-10 flex flex-row items-center justify-center gap-6 mt-[3rem]">
+      <div className="relative z-10 flex flex-row items-center justify-center gap-6 mt-12">
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Scroll Up" className="hover:scale-110 transition-transform">
           <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
         </button>

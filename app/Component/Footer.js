@@ -1,10 +1,9 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { motion, useInView } from "framer-motion";
 
-// Lazy load the background effect to prevent SSR issues
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
@@ -12,15 +11,9 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
 
 export default function Footer() {
   const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const isDark = theme === "dark";
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return <footer className="h-32 w-full" />;
 
   return (
     <motion.footer
@@ -30,17 +23,19 @@ export default function Footer() {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`
         relative w-full px-6 py-10 text-center
-       bg-[#f9fafb] dark:bg-[#0f172a]
-    bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
-    text-black dark:text-white
+        bg-[#f9fafb] dark:bg-[#0f172a]
+        bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+        text-black dark:text-white
         backdrop-blur-[100px]
         overflow-hidden
       `}
       role="contentinfo"
       aria-label="Footer"
     >
-      {/* Optional background effect */}
-      <LazyBackgroundEffect />
+      {/* Reserve space for background effect */}
+      <div className="absolute inset-0 -z-10">
+        <LazyBackgroundEffect />
+      </div>
 
       <nav
         className="mb-4 flex justify-center gap-6 flex-wrap"

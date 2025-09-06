@@ -8,8 +8,8 @@ export default function Avatar() {
       <Image
         src="/Avatar.svg"
         alt=""
-        width={200}
-        height={200}
+        width={300}
+        height={300}
         priority
         className="rounded-full border-4 border-cyan-400 shadow-lg"
       />

@@ -1,14 +1,32 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import Avatar from "./Avatar";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-const Hero = () => {
+const LazyParticles = dynamic(() => import("./CustomParticles"), {
+  ssr: false,
+  loading: () => null,
+});
+const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+  ssr: false,
+  loading: () => null,
+});
+
+export default function Hero() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    // mark client hydrate timing — used to enable client-only bits
+    setHydrated(true);
+  }, []);
+
   const handleScrollToSkills = () => {
     const skillsSection = document.getElementById("skills");
     if (skillsSection) {
@@ -17,46 +35,65 @@ const Hero = () => {
       console.warn("Skills section not found!");
     }
   };
-  const LazyParticles = dynamic(() => import("./CustomParticles"), {
-    ssr: false,
-    loading: () => null,
-  });
-  const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
-    ssr: false,
-    loading: () => null,
-  });
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // --- CONSTANTS for fallbacks so layout is consistent ---
+  const HERO_MIN_HEIGHT = "min-h-[60vh] sm:min-h-[68vh]"; // reserve vertical space
+  const AVATAR_SIZE = {
+    // explicit pixel sizes to prevent resizing flashes
+    mobile: 150, // matches w-[150px]
+    tablet: 200, // xs:w-[200px]
+    large: 300, // 3xl:w-[300px]
+  };
 
-  if (!mounted) return null;
   return (
     <main
       id="hero-section"
-      className="
-    relative flex flex-col justify-start items-center
-    h-fit px-4 xs:px-6 text-center pb-[6.25rem]
-    bg-[#f9fafb] dark:bg-[#0f172a]
-    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
-    text-black dark:text-white
-    overflow-hidden pt-[env(safe-area-inset-top)]
-  "
+      className={`
+        relative flex flex-col justify-start items-center
+        ${HERO_MIN_HEIGHT} px-4 xs:px-6 text-center pb-[6.25rem]
+        bg-[#f9fafb] dark:bg-[#0f172a]
+        bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+        text-black dark:text-white
+        overflow-hidden pt-[env(safe-area-inset-top)]
+      `}
+      aria-label="Hero"
     >
+      {/* Background placeholder (server-rendered) — keeps same visual baseline while bg effects load */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          // subtle overlay that matches final visual; this prevents jump when BackgroundEffect mounts
+          background:
+            "linear-gradient(to bottom, rgba(0,191,255,0.08), rgba(0,177,255,0.12))",
+        }}
+      />
 
-
-      <LazyBackgroundEffect />
+      {/* Client-only fancy background (particles/effect) — hydrates after mount */}
+      {hydrated && (
+        <>
+          <LazyBackgroundEffect />
+          <LazyParticles />
+        </>
+      )}
 
       <motion.div
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.9 }}
         className="z-10 mt-8 max-w-xl mx-auto"
       >
-        <div className="mx-auto w-[150px] xs:w-[200px] 3xl:w-[300px] p-2">
+        {/* Avatar container: explicit sizing so image space is reserved on SSR */}
+        <div
+          className="mx-auto p-2"
+          style={{
+            width: AVATAR_SIZE.mobile,
+            height: AVATAR_SIZE.mobile,
+            maxWidth: "92vw",
+          }}
+        >
+          {/* Avatar should itself be stable (use next/image inside Avatar). If Avatar is client-only, it's ok —
+              the container reserves exact space so Avatar's later mount won't shift layout. */}
           <Avatar />
         </div>
 
@@ -71,24 +108,28 @@ const Hero = () => {
           </span>
         </h1>
 
-
-
+        {/* Typewriter: show a static fallback until hydrated to avoid changing height */}
         <h2 className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md">
-          <Typewriter
-            words={[
-              "Full-Stack Web Developer 💻",
-              "Building Scalable Web Apps 🚀",
-              "Optimizing Performance & UX ⚡",
-              "Deploying Apps on Linux VPS 🐧",
-              "Turning Ideas into Production 🔁",
-            ]}
-            loop
-            cursor
-            cursorStyle="_"
-            typeSpeed={60}
-            deleteSpeed={40}
-            delaySpeed={1500}
-          />
+          {hydrated ? (
+            <Typewriter
+              words={[
+                "Full-Stack Web Developer 💻",
+                "Building Scalable Web Apps 🚀",
+                "Optimizing Performance & UX ⚡",
+                "Deploying Apps on Linux VPS 🐧",
+                "Turning Ideas into Production 🔁",
+              ]}
+              loop
+              cursor
+              cursorStyle="_"
+              typeSpeed={60}
+              deleteSpeed={40}
+              delaySpeed={1500}
+            />
+          ) : (
+            // Fallback text has same approximate length to avoid reflow
+            "Full-Stack Web Developer 💻 — Building Scalable Web Apps 🚀"
+          )}
         </h2>
 
         <p className="text-base mt-6 max-w-2xl mx-auto text-black dark:text-slate-400 drop-shadow-sm">
@@ -97,7 +138,6 @@ const Hero = () => {
         <p className="text-blue-700 dark:text-cyan-300 mt-2 text-sm sm:text-base drop-shadow-sm">
           Turning ideas into full-stack apps — from my terminal to the cloud ☁️💻
         </p>
-
       </motion.div>
 
       {/* Scroll down chevron */}
@@ -114,9 +154,6 @@ const Hero = () => {
           Scroll to see my skills 👇
         </span>
       </motion.div>
-
     </main>
   );
-};
-
-export default Hero;
+}
