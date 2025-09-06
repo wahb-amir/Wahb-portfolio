@@ -85,9 +85,11 @@ export default function RootLayout({ children }) {
           href="/apple-touch-icon.png"
         />
         <meta name="apple-mobile-web-app-title" content="Wahb Amir" />
+        <meta name="keywords" content="Full-Stack Web Developer, Next.js, React, Tailwind CSS, MongoDB, JavaScript, ML, Python" />
+
         <link rel="manifest" href="/site.webmanifest" />
 
-        {/* JSON-LD Person Schema */}
+
         <Script
           id="jsonld-person"
           type="application/ld+json"
@@ -100,19 +102,36 @@ export default function RootLayout({ children }) {
             url: "https://wahb.buttnetworks.com",
             image: "https://wahb.buttnetworks.com/og-image.png",
             sameAs: [
-              "https://github.com/wahb",
-              "https://linkedin.com/in/wahb",
+              "https://github.com/coder101-js",
             ],
             jobTitle: "Full-Stack Web Developer",
             knowsAbout: ["Next.js", "React", "Tailwind CSS", "MongoDB", "JavaScript"],
           })}
         </Script>
+        <Script
+          id="jsonld-website"
+          type="application/ld+json"
+          strategy="afterInteractive"
+        >
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            url: "https://wahb.buttnetworks.com",
+            name: "Wahb Amir Portfolio",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "https://wahb.buttnetworks.com/?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </Script>
+
       </head>
 
       <body
         className={`${geistSans.variable} ${geistMono.variable} transition-colors duration-500 ease-in-out min-h-screen overflow-x-hidden text-gray-900 dark:text-gray-100`}
       >
-        
+
         <div className="min-h-screen w-full bg-light-gradient dark:bg-dark-gradient bg-gray-50 dark:bg-slate-900">
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Preloader />

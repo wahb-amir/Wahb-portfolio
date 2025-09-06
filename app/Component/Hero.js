@@ -60,21 +60,27 @@ const Hero = () => {
           <Avatar />
         </div>
 
-        <h1 className="text-3xl xs:text-4xl sm:text-6xl font-extrabold tracking-tight drop-shadow-lg mt-4 text-gray-900 dark:text-white">
+        <h1 className="font-sans text-4xl xs:text-5xl sm:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white drop-shadow-lg mt-6">
           Hey, I&apos;m{" "}
-          <span className="text-4xl xs:text-5xl sm:text-7xl text-cyan-300 font-black drop-shadow-lg">
-            ~ Wahb
+          <span className="font-serif text-5xl xs:text-6xl sm:text-8xl text-cyan-400 font-black drop-shadow-lg">
+            Wahb
+          </span>
+          <br />
+          <span className="mt-4 block text-lg xs:text-xl sm:text-2xl font-medium text-gray-700 dark:text-slate-300 drop-shadow-sm">
+            — I Build Fast & Scalable Web Apps 🚀
           </span>
         </h1>
+
+
 
         <h2 className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md">
           <Typewriter
             words={[
               "Full-Stack Web Developer 💻",
-              "Deploying on Linux VPS like a boss 🐧",
-              "React, Next.js, MongoDB = ❤️",
-              "Building fast, sleek web apps 🚀",
-              "Learning, breaking, building again 🔁",
+              "Building Scalable Web Apps 🚀",
+              "Optimizing Performance & UX ⚡",
+              "Deploying Apps on Linux VPS 🐧",
+              "Turning Ideas into Production 🔁",
             ]}
             loop
             cursor
@@ -86,7 +92,7 @@ const Hero = () => {
         </h2>
 
         <p className="text-base mt-6 max-w-2xl mx-auto text-black dark:text-slate-400 drop-shadow-sm">
-          Fast, secure, scalable web apps — built to ship, built to last
+          I turn complex ideas into elegant, fast, and reliable web applications.
         </p>
         <p className="text-blue-700 dark:text-cyan-300 mt-2 text-sm sm:text-base drop-shadow-sm">
           Turning ideas into full-stack apps — from my terminal to the cloud ☁️💻
@@ -97,14 +103,18 @@ const Hero = () => {
       {/* Scroll down chevron */}
       <motion.div
         initial={{ y: 0 }}
-        animate={{ y: [0, 10, 0] }}
+        animate={{ y: [0, 20, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
-        className="absolute bottom-8 cursor-pointer z-10 hover:scale-110 transition"
+        className="absolute bottom-8 flex flex-col items-center cursor-pointer z-10 hover:scale-110 transition"
         onClick={handleScrollToSkills}
         aria-label="Scroll to skills section"
       >
-        <ChevronDownIcon className="w-8 h-8 text-cyan-300 animate-pulse mt-10" />
+        <ChevronDownIcon className="w-8 h-8 text-cyan-300 animate-pulse" />
+        <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300 drop-shadow-sm">
+          Scroll to see my skills 👇
+        </span>
       </motion.div>
+
     </main>
   );
 };

@@ -46,8 +46,8 @@ const About = () => {
     <section
       id="about"
       className={`relative w-full min-h-screen py-24 px-6 overflow-hidden flex items-center justify-center
-        bg-[#f9fafb] dark:bg-[#0f172a]
-    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+       bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
     text-black dark:text-white`}
 
     >
@@ -64,11 +64,11 @@ const About = () => {
         </h2>
 
         <p className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-12">
-          I&apos;m a self-taught full-stack developer focused on building
-          high-performance, modern web apps. I specialize in React, Next.js,
-          Node.js & MongoDB — deployed on Linux VPS and optimized for speed and
-          scalability.
+          I&apos;m Wahb, a self-taught developer building high-performance web apps and exploring machine learning.
+          Currently diving deep into Python, Pandas, NumPy, and scikit-learn to integrate intelligent features into my projects.
+          My journey spans full-stack web development, deploying apps on Linux VPS, and now venturing into data-driven solutions.
         </p>
+
 
         {/* Timer */}
         <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-6 text-center mb-16 border border-white/10 dark:border-slate-700">
@@ -94,7 +94,7 @@ const About = () => {
           <StatCard label="Self-Hosted on VPS" value="Yes 🐧" />
         </div>
 
-        {/* Quick Facts */}
+        {/* quick Facts */}
         <div className="mb-16">
           <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
             ⚡ Quick Facts
@@ -102,9 +102,11 @@ const About = () => {
           <ul className="list-disc pl-6 text-gray-700 dark:text-slate-300 space-y-2">
             <li>Frontend: React, Next.js, Tailwind, Framer Motion</li>
             <li>Backend: Node.js, Express, MongoDB, Mongoose</li>
+            <li>Machine Learning: Python, NumPy, Pandas, scikit-learn</li>
             <li>Deployment: Linux VPS (manual + CLI-based)</li>
-            <li>Building real-world apps — learning by shipping</li>
+            <li>Building real-world apps — learning by shipping & experimenting</li>
           </ul>
+
         </div>
 
         {/* Learning Timeline */}
@@ -127,16 +129,16 @@ const About = () => {
             />
             <TimelineItem
               title="Summer 2025"
-              desc="Deployed 3 full-stack projects"
+              desc="Deployed 3 full-stack web apps"
             />
             <TimelineItem
               title="Now"
-              desc="Exploring backend architecture & deployment strategies"
+              desc="Exploring Python, NumPy, Pandas, scikit-learn for ML & AI-driven features"
             />
           </div>
         </div>
 
-        <blockquote className="text-center italic dark:text-cyan-400 text-blue-600text-xl">
+        <blockquote className="text-center italic dark:text-cyan-400 text-blue-600 text-xl">
           “Still early in the journey — but building like I mean it.”
         </blockquote>
 

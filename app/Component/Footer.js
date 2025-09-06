@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { motion, useInView } from "framer-motion";
 
-// Lazy background effect
+// Lazy load the background effect to prevent SSR issues
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
@@ -29,18 +29,18 @@ export default function Footer() {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`
-    w-full px-6 py-10 text-center text-sm md:text-base
-    bg-[#f9fafb] dark:bg-[#0f172a]
-    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+        relative w-full px-6 py-10 text-center
+       bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
     text-black dark:text-white
-    backdrop-blur-[100px]
-    overflow-hidden
-  `}
-      
+        backdrop-blur-[100px]
+        overflow-hidden
+      `}
       role="contentinfo"
       aria-label="Footer"
     >
-      {/* <LazyBackgroundEffect /> */}
+      {/* Optional background effect */}
+      <LazyBackgroundEffect />
 
       <nav
         className="mb-4 flex justify-center gap-6 flex-wrap"
@@ -51,22 +51,28 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Visit my GitHub"
-          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
         >
           GitHub
         </a>
         <a
           href="#contact"
           aria-label="Go to contact section"
-          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
         >
           Contact
+        </a>
+        <a
+          href="#hero-section"
+          aria-label="Back to top"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+        >
+          Top
         </a>
       </nav>
 
       <p className="text-xs opacity-70 bg-transparent pt-4 border-t border-white/20 mt-6">
-        © {new Date().getFullYear()} Wahb. Crafted with 💻 using Next.js,
-        Tailwind, & Framer Motion.
+        © {new Date().getFullYear()} Wahb. Crafted with 💻 using Next.js, Tailwind, & Framer Motion.
       </p>
     </motion.footer>
   );
