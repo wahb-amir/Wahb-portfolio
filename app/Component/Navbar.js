@@ -32,6 +32,14 @@ const Navbar = () => {
     setMenuOpen(false);
   };
 
+  // Accessible handler for keyboard activation on the full-row button
+  const handleKeyActivate = (e, id) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleClick(id);
+    }
+  };
+
   return (
     <nav className="relative z-50">
       <div
@@ -57,7 +65,6 @@ const Navbar = () => {
                   {id.charAt(0).toUpperCase() + id.slice(1)}
                 </button>
               </li>
-
             ))}
 
             <li>
@@ -69,7 +76,6 @@ const Navbar = () => {
               >
                 <FontAwesomeIcon icon={faGithub} className="scale-150" />
               </a>
-
             </li>
 
             <li>
@@ -77,7 +83,6 @@ const Navbar = () => {
                 <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="scale-150" />
               </button>
             </li>
-
           </ul>
         )}
 
@@ -104,25 +109,45 @@ const Navbar = () => {
           ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0 overflow-hidden"}
         `}
       >
-        {["skills", "projects", "about", "contribution", "contact"].map((id) => (
-          <li
-            key={id}
-            onClick={() => handleClick(id)}
-            className="w-full mb-2 px-3 py-2 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer"
-          >
-            {id.charAt(0).toUpperCase() + id.slice(1)}
+        {["skills", "projects", "about", "contact"].map((id) => (
+          <li key={id} className="w-full mb-2">
+            {/* Big full-row button so tapping anywhere triggers the scroll */}
+            <button
+              onClick={() => handleClick(id)}
+              onKeyDown={(e) => handleKeyActivate(e, id)}
+              className="w-full text-left px-3 py-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer"
+              aria-label={`Go to ${id}`}
+            >
+              {id.charAt(0).toUpperCase() + id.slice(1)}
+            </button>
           </li>
         ))}
 
-        <li className="mt-2">
-          <a href="https://github.com/coder101-js" target="_blank" rel="noopener noreferrer">
+        <li className="mt-2 w-full">
+          {/* Make GitHub link a full-row item on mobile too */}
+          <a
+            href="https://github.com/coder101-js"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
+            aria-label="Visit my GitHub"
+          >
             <FontAwesomeIcon icon={faGithub} className="scale-150" />
+            <span>GitHub</span>
           </a>
         </li>
 
-        <li className="mt-2">
-          <button onClick={toggleTheme}>
+        <li className="mt-2 w-full">
+          <button
+            onClick={() => {
+              toggleTheme();
+              setMenuOpen(false);
+            }}
+            className="flex items-center gap-3 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
+            aria-label="Toggle theme"
+          >
             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="scale-150" />
+            <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
           </button>
         </li>
       </ul>
