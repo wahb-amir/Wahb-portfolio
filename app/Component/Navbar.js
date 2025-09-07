@@ -49,9 +49,15 @@ const Navbar = () => {
         {!smallWidth && (
           <ul className="hidden md:flex flex-row items-center">
             {["skills", "projects", "about", "contact"].map((id) => (
-              <li key={id} onClick={() => handleClick(id)}>
-                {id.charAt(0).toUpperCase() + id.slice(1)}
+              <li key={id}>
+                <button
+                  onClick={() => handleClick(id)}
+                  className="w-full mb-2 px-3 py-2 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
+                >
+                  {id.charAt(0).toUpperCase() + id.slice(1)}
+                </button>
               </li>
+
             ))}
 
             <li>
@@ -59,17 +65,19 @@ const Navbar = () => {
                 href="https://github.com/coder101-js"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-accent transition-colors"
+                aria-label="Visit my GitHub"
               >
                 <FontAwesomeIcon icon={faGithub} className="scale-150" />
               </a>
+
             </li>
 
-            <li onClick={toggleTheme}>
-              <button>
+            <li>
+              <button onClick={toggleTheme} aria-label="Toggle theme">
                 <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="scale-150" />
               </button>
             </li>
+
           </ul>
         )}
 

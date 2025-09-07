@@ -141,7 +141,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Scroll down chevron */}
-      <motion.div
+      <motion.button
         initial={{ y: 0 }}
         animate={{ y: [0, 20, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
@@ -149,11 +149,12 @@ export default function Hero() {
         onClick={handleScrollToSkills}
         aria-label="Scroll to skills section"
       >
-        <ChevronDownIcon className="w-8 h-8 text-cyan-300 animate-pulse" />
+        <ChevronDownIcon className="w-8 h-8 text-blue-700 animate-pulse" />
         <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300 drop-shadow-sm">
           Scroll to see my skills 👇
         </span>
-      </motion.div>
+      </motion.button>
+
     </main>
   );
 }
