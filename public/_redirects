@@ -1,6 +1,0 @@
-# Redirect all old subdomain traffic to new domain
-/* https://wahb.space/:splat 301!
-# Redirect www + HTTP variations to new domain
-https://www.wahb.buttnetworks.com/* https://wahb.space/:splat 301!
-http://wahb.buttnetworks.com/* https://wahb.space/:splat 301!
-http://www.wahb.buttnetworks.com/* https://wahb.space/:splat 301!
