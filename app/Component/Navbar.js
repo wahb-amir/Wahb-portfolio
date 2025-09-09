@@ -32,13 +32,15 @@ const Navbar = () => {
     setMenuOpen(false);
   };
 
-  // Accessible handler for keyboard activation on the full-row button
+  // Accessible handler for keyboard activation on the full-row item
   const handleKeyActivate = (e, id) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       handleClick(id);
     }
   };
+
+  const navIds = ["skills", "projects", "about", "contact"];
 
   return (
     <nav className="relative z-50">
@@ -56,14 +58,17 @@ const Navbar = () => {
         {/* Desktop menu */}
         {!smallWidth && (
           <ul className="hidden md:flex flex-row items-center">
-            {["skills", "projects", "about", "contact"].map((id) => (
-              <li key={id}>
-                <button
-                  onClick={() => handleClick(id)}
-                  className="w-full mb-2 px-3 py-2 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
-                >
-                  {id.charAt(0).toUpperCase() + id.slice(1)}
-                </button>
+            {navIds.map((id) => (
+              <li
+                key={id}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleClick(id)}
+                onKeyDown={(e) => handleKeyActivate(e, id)}
+                className="w-full mb-2 px-3 py-2 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer"
+                aria-label={`Go to ${id}`}
+              >
+                <span className="select-none">{id.charAt(0).toUpperCase() + id.slice(1)}</span>
               </li>
             ))}
 
@@ -109,17 +114,19 @@ const Navbar = () => {
           ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0 overflow-hidden"}
         `}
       >
-        {["skills", "projects", "about", "contact"].map((id) => (
-          <li key={id} className="w-full mb-2">
-            {/* Big full-row button so tapping anywhere triggers the scroll */}
-            <button
-              onClick={() => handleClick(id)}
-              onKeyDown={(e) => handleKeyActivate(e, id)}
-              className="w-full text-left px-3 py-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer"
-              aria-label={`Go to ${id}`}
-            >
+        {navIds.map((id) => (
+          <li
+            key={id}
+            role="button"
+            tabIndex={0}
+            onClick={() => handleClick(id)}
+            onKeyDown={(e) => handleKeyActivate(e, id)}
+            className="w-full mb-2"
+            aria-label={`Go to ${id}`}
+          >
+            <div className="w-full text-left px-3 py-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer">
               {id.charAt(0).toUpperCase() + id.slice(1)}
-            </button>
+            </div>
           </li>
         ))}
 
@@ -162,7 +169,6 @@ const Navbar = () => {
           padding: 6px;
           border: 2px solid transparent;
           transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-          cursor: pointer;
         }
         li:hover {
           background-color: rgba(0, 0, 0, 0.1);
