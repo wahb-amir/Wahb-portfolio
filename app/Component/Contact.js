@@ -24,7 +24,7 @@ export default function ContactForm() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
-  const CONTACT_EMAIL = "wahbamir2010@gamil.com";
+  const CONTACT_EMAIL = "wahbamir2010@gmail.com";
 
   useEffect(() => setHydrated(true), []);
 
