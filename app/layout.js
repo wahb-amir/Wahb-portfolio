@@ -133,7 +133,7 @@ export default function RootLayout({ children }) {
       >
 
         <div className="min-h-screen w-full bg-light-gradient dark:bg-dark-gradient bg-gray-50 dark:bg-slate-900">
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <Preloader />
             <LayoutClient>{children}</LayoutClient>
           </ThemeProvider>
