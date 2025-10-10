@@ -74,7 +74,7 @@ export default function ContactForm() {
 
       <motion.h2
         id="contact-heading"
-        className="text-3xl sm:text-4xl font-extrabold mb-2 text-center dark:text-white"
+        className="text-3xl sm:text-4xl font-extrabold mb-2 text-center dark:text-white text-gray-800"
         initial={reduceMotion ? {} : { opacity: 0, y: 18 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: "easeOut" }}

@@ -6,7 +6,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: "class", // keep it here, no need to repeat inside theme
+  darkMode: "class",
   theme: {
     extend: {
       colors: {

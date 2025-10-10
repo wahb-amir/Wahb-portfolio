@@ -65,7 +65,7 @@ export default function About() {
         transition={{ duration: 0.8 }}
         className="w-full max-w-5xl z-10 px-4 sm:px-6 md:px-8"
       >
-        <h2 id="about-heading" className="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+        <h2 id="about-heading" className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">
           👨‍💻 About Me
         </h2>
 
@@ -95,25 +95,41 @@ export default function About() {
         <div className="mb-16">
           <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">⚡ Quick Facts</h3>
           <ul className="list-disc pl-6 text-gray-700 dark:text-slate-300 space-y-2">
-            <li>Frontend: React, Next.js, Tailwind, Framer Motion</li>
+            <li>Frontend: React, Next.js, Tailwind CSS, Framer Motion</li>
             <li>Backend: Node.js, Express, MongoDB, Mongoose</li>
-            <li>Machine Learning: Python, NumPy, Pandas, scikit-learn</li>
-            <li>Deployment: Linux VPS (manual + CLI-based)</li>
-            <li>Building real-world apps — learning by shipping & experimenting</li>
+            <li>Machine Learning & AI: Python, NumPy, Pandas, scikit-learn, PyTorch (deep learning focus)</li>
+            <li>Mathematics: Linear Algebra, Calculus, Probability & Statistics — essential for ML & AI</li>
+            <li>Deployment: Linux VPS (manual + CLI-based), Docker basics for experimentation</li>
+            <li>Learning by doing: building real-world apps, experimenting with AI/ML models, shipping projects</li>
           </ul>
         </div>
 
-        {/* Learning Timeline */}
+
         <div className="mb-16">
           <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">🚀 Learning Timeline</h3>
+
           <div className="space-y-4 border-l-2 border-cyan-400 pl-4">
             <TimelineItem title="Early 2025" desc="Started with frontend foundations (HTML/CSS)" />
             <TimelineItem title="Spring 2025" desc="Built small projects with JavaScript" />
             <TimelineItem title="Mid 2025" desc="Shifted to React, Tailwind & Next.js" />
             <TimelineItem title="Summer 2025" desc="Deployed 3 full-stack web apps" />
-            <TimelineItem title="Now" desc="Exploring Python, NumPy, Pandas, scikit-learn for ML & AI-driven features" />
+
+            <TimelineItem
+              title="Now (Advanced)"
+              desc="Deep-diving into advanced math (linear algebra, probability, calculus) and PyTorch — building foundations for AI/ML model development."
+            />
+            <TimelineItem
+              title="Next"
+              desc="Apply PyTorch to small models: data pipelines, training loops, debugging, and basic model deployment experiments."
+            />
+
+            <TimelineItem
+              title="Future"
+              desc="Scale to real-world AI projects: model optimization, deployment, and contributing to open-source AI tooling."
+            />
           </div>
         </div>
+
 
         <blockquote className="text-center italic dark:text-cyan-400 text-blue-600 text-xl">
           “Still early in the journey — but building like I mean it.”

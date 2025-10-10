@@ -69,7 +69,6 @@ export default function Hero() {
         }}
       />
 
-      {/* Client-only fancy background (particles/effect) — hydrates after mount */}
       {hydrated && (
         <>
           <LazyBackgroundEffect />
@@ -92,14 +91,13 @@ export default function Hero() {
             maxWidth: "92vw",
           }}
         >
-          {/* Avatar should itself be stable (use next/image inside Avatar). If Avatar is client-only, it's ok —
-              the container reserves exact space so Avatar's later mount won't shift layout. */}
+         
           <Avatar />
         </div>
 
-        <h1 className="font-sans text-4xl xs:text-5xl sm:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white drop-shadow-lg mt-6">
+        <h1 className="font-sans text-4xl xs:text-5xl sm:text-7xl font-extrabold tracking-tight text-gray-800 dark:text-white drop-shadow-lg mt-6">
           Hey, I&apos;m{" "}
-          <span className="font-serif text-5xl xs:text-6xl sm:text-8xl text-cyan-400 font-black drop-shadow-lg">
+          <span className="font-serif text-5xl xs:text-6xl sm:text-8xl text-cyan-300 font-black drop-shadow-lg">
             Wahb
           </span>
           <br />
@@ -107,6 +105,7 @@ export default function Hero() {
             — I Build Fast & Scalable Web Apps 🚀
           </span>
         </h1>
+
 
         {/* Typewriter: show a static fallback until hydrated to avoid changing height */}
         <h2 className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md">

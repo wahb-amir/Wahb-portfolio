@@ -10,6 +10,7 @@ import About from "./Component/About";
 import ContactForm from "./Component/Contact";
 import Footer from "./Component/Footer";
 import PageTransition from "./Component/PageTransition";
+// import Contribution from "./Component/Contribution";
 
 export default function Home() {
   const path = usePathname();
@@ -25,6 +26,7 @@ export default function Home() {
           <Hero />
           <SkillsCloud />
           <Project />
+          {/* <Contribution /> */}
           <About />
           <ContactForm />
         </main>

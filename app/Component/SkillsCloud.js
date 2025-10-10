@@ -1,8 +1,9 @@
-"use client";
+'use client';
+
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
   SiHtml5,
@@ -15,12 +16,11 @@ import {
   SiExpress,
   SiMongodb,
   SiFramer,
-  SiGraphql,
-  SiTypescript,
   SiPython,
   SiPandas,
   SiNumpy,
   SiScikitlearn,
+  SiPytorch
 } from "react-icons/si";
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), { ssr: false, loading: () => null });
@@ -42,30 +42,28 @@ const coreSkills = [
 
 const learningSkills = [
   { name: "Pandas", icon: SiPandas, color: "#150458", type: "learning" },
-  { name: "NumPy", icon: SiNumpy, color: "#013243", type: "learning" },
+  { name: "NumPy", icon: SiNumpy, color: "#0b7adb", type: "learning" },
   { name: "Scikit-learn", icon: SiScikitlearn, color: "#F7931E", type: "learning" },
-  { name: "TypeScript", icon: SiTypescript, color: "#3178C6", type: "learning" },
+  { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C", type: "learning" },
 ];
 
 export default function SkillsCloud() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [view, setView] = useState("cloud"); // cloud or grid
+  const [view, setView] = useState("cloud");
   const [filter, setFilter] = useState("all");
   const containerRef = useRef(null);
-  const [containerSize, setContainerSize] = useState(420); // px
+  const [containerSize, setContainerSize] = useState(420);
   const [dotSize, setDotSize] = useState(56); // px
   const isDark = mounted && theme === "dark";
   const isInView = useInView(containerRef, { margin: "-150px", once: true });
 
-  // responsive container + dot sizing
   useEffect(() => {
     setMounted(true);
     const calc = () => {
       const w = window.innerWidth;
-      // pick container size based on viewport width
       if (w < 420) {
-        setContainerSize(Math.max(220, Math.floor(w * 0.82))); // mobile: ~82% of width
+        setContainerSize(Math.max(220, Math.floor(w * 0.82)));
         setDotSize(44);
       } else if (w < 640) {
         setContainerSize(320);
@@ -83,19 +81,53 @@ export default function SkillsCloud() {
     return () => window.removeEventListener("resize", calc);
   }, []);
 
-  // compute center offset (top/left where each dot animation starts from)
   const centerOffset = containerSize / 2 - dotSize / 2;
-  const radius = containerSize / 2.2; // a bit smaller than half to avoid clipping
+  const radius = containerSize / 2.2;
 
-  const skillsFiltered = coreSkills.filter((skill) => (filter === "all" ? true : skill.type === filter || skill.type === "backend" && filter === "backend" ? true : filter === "frontend" ? skill.type === "frontend" : false));
+  // filtering logic:
+  // - all -> show core + learning
+  // - frontend -> coreSkills with type frontend
+  // - backend -> coreSkills with type backend
+  // - learning -> show only learningSkills
+  const coreFiltered = coreSkills.filter((s) => {
+    if (filter === "all") return true;
+    if (filter === "frontend") return s.type === "frontend";
+    if (filter === "backend") return s.type === "backend";
+    return false;
+  });
 
-  // map with positions
-  const skillsWithPos = skillsFiltered.map((skill, i) => {
-    const angle = (i / skillsFiltered.length) * 2 * Math.PI;
+  // when filter === 'learning' we show only learning items
+  const showLearning = filter === "all" || filter === "learning";
+
+  // positions for core (spread in ring)
+  const coreWithPos = coreFiltered.map((skill, i) => {
+    const angle = (i / coreFiltered.length) * 2 * Math.PI;
     const x = Math.round(radius * Math.cos(angle));
     const y = Math.round(radius * Math.sin(angle));
-    return { ...skill, x, y };
+    return { ...skill, x, y, idx: i };
   });
+
+  // positions for learning (near center). Only present when showLearning === true
+  const learnWithPos = showLearning
+    ? learningSkills.map((skill, i) => {
+      const angle = (i / learningSkills.length) * 2 * Math.PI;
+      const lx = Math.round((radius * 0.45) * Math.cos(angle));
+      const ly = Math.round((radius * 0.45) * Math.sin(angle));
+      return { ...skill, x: lx, y: ly, idx: i };
+    })
+    : [];
+
+  // unified render list for cloud (core then learning). Keys are stable (skill name).
+  const cloudItems = filter === "learning" ? learnWithPos : [...coreWithPos, ...learnWithPos];
+
+  // framer motion variants for enter/exit
+  const itemVariants = {
+    initial: { opacity: 0, scale: 0.3 },
+    animate: (pos) => ({ opacity: 1, scale: 1, x: pos.x, y: pos.y }),
+    exit: { opacity: 0, scale: 0.2 }
+  };
+
+  const spring = { type: "spring", stiffness: 140, damping: 20 };
 
   return (
     <section
@@ -107,7 +139,7 @@ export default function SkillsCloud() {
     >
       {/* <LazyBackgroundEffect /> */}
 
-      <h2 className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${isDark ? "text-white" : "text-black"}`}>
+      <h2 className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${isDark ? "text-white" : "text-gray-800"}`}>
         What I Work With
       </h2>
 
@@ -149,73 +181,96 @@ export default function SkillsCloud() {
             maxHeight: "92vw",
           }}
         >
-          {skillsWithPos.map(({ name, icon: Icon, x, y, color }, i) => (
-            <motion.div
-              key={name}
-              initial={{ opacity: 0, scale: 0.3, x: 0, y: 0 }}
-              animate={isInView ? { opacity: 1, scale: 1, x, y } : { opacity: 0, scale: 0.3, x: 0, y: 0 }}
-              transition={{ delay: i * 0.08, type: "spring", stiffness: 120, damping: 18 }}
-              whileHover={{ scale: 1.18 }}
-              className="absolute flex flex-col items-center justify-center cursor-pointer rounded-full shadow-xl"
-              style={{
-                top: centerOffset,
-                left: centerOffset,
-                width: dotSize,
-                height: dotSize,
-                borderRadius: dotSize / 2,
-                backgroundColor: isDark ? "#1f2937" : "#e2e8f0",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              title={name}
-              aria-hidden={false}
-            >
-              <Icon className={dotSize < 50 ? "text-[22px]" : "text-[28px] md:text-[35px]"} style={{ color }} />
-            </motion.div>
-          ))}
-
-          {/* Learning / ML positioned closer to center */}
-          {learningSkills.map(({ name, icon: Icon, color }, i) => {
-            const angle = (i / learningSkills.length) * 2 * Math.PI;
-            const lx = Math.round((radius * 0.45) * Math.cos(angle));
-            const ly = Math.round((radius * 0.45) * Math.sin(angle));
-            return (
+          <AnimatePresence>
+            {cloudItems.map(({ name, icon: Icon, x, y, color }) => (
               <motion.div
                 key={name}
-                initial={{ opacity: 0, scale: 0.2, x: 0, y: 0 }}
-                animate={isInView ? { opacity: 1, scale: 1, x: lx, y: ly } : { opacity: 0, scale: 0.2, x: 0, y: 0 }}
-                transition={{ delay: 0.15 + i * 0.12 }}
-                className="absolute flex items-center justify-center cursor-help rounded-full"
+                custom={{ x, y }}
+                variants={itemVariants}
+                initial="initial"
+                animate={isInView ? "animate" : "initial"}
+                exit="exit"
+                transition={{ ...spring, delay: 0 }}
+                whileHover={{ scale: 1.14 }}
+                className="absolute flex flex-col items-center justify-center cursor-pointer rounded-full shadow-xl"
                 style={{
                   top: centerOffset,
                   left: centerOffset,
-                  width: Math.round(dotSize * 0.7),
-                  height: Math.round(dotSize * 0.7),
-                  backgroundColor: isDark ? "#374151" : "#cbd5e1",
+                  width: dotSize,
+                  height: dotSize,
+                  borderRadius: dotSize / 2,
+                  backgroundColor: isDark ? "#1f2937" : "#e2e8f0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-                title={`Learning: ${name}`}
+                title={name}
+                aria-hidden={false}
               >
-                <Icon className={dotSize < 50 ? "text-[16px]" : "text-[20px] md:text-[25px]"} style={{ color }} />
+                <motion.div
+                  animate={name === "React" ? { rotate: 360 } : {}}
+                  transition={name === "React" ? { repeat: Infinity, duration: 5, ease: "linear" } : {}}
+                >
+                  <Icon className={dotSize < 50 ? "text-[22px]" : "text-[28px] md:text-[35px]"} style={{ color }} />
+                </motion.div>
               </motion.div>
-            );
-          })}
+
+            ))}
+          </AnimatePresence>
         </div>
       ) : (
         // Grid View
         <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20 px-2 max-w-6xl`}>
-          {skillsFiltered.map(({ name, icon: Icon, color }) => (
-            <div key={name} className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`} title={name}>
-              <Icon className="text-3xl" style={{ color }} />
-              <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>{name}</span>
-            </div>
-          ))}
-          {learningSkills.map(({ name, icon: Icon, color }) => (
-            <div key={name} className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`} title={`Learning: ${name}`}>
-              <Icon className="text-3xl" style={{ color }} />
-              <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>Learning: {name}</span>
-            </div>
-          ))}
+          {/* grid list obeys the same filtering rules */}
+          {filter === "learning"
+            ? learningSkills.map(({ name, icon: Icon, color }) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.28 }}
+                className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`}
+                title={`Learning: ${name}`}
+              >
+                <Icon className="text-3xl" style={{ color }} />
+                <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>Learning: {name}</span>
+              </motion.div>
+            ))
+            : (
+              <>
+                {coreFiltered.map(({ name, icon: Icon, color }) => (
+                  <motion.div
+                    key={name}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.28 }}
+                    className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`}
+                    title={name}
+                  >
+                    <Icon className="text-3xl" style={{ color }} />
+                    <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>{name}</span>
+                  </motion.div>
+                ))}
+
+                {/* show learning only when filter is 'all' */}
+                {filter === "all" && learnWithPos.map(({ name, icon: Icon, color }) => (
+                  <motion.div
+                    key={name}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.28 }}
+                    className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`}
+                    title={`Learning: ${name}`}
+                  >
+                    <Icon className="text-3xl" style={{ color }} />
+                    <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>Learning: {name}</span>
+                  </motion.div>
+                ))}
+              </>
+            )}
         </div>
       )}
 

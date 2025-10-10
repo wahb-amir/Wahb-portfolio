@@ -81,7 +81,7 @@ const Project = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className={`mb-4 font-extrabold tracking-tight ${isDark ? "text-white" : "text-gray-900"
+          className={`mb-4 font-extrabold tracking-tight ${isDark ? "text-white" : "text-gray-800"
             } text-[36px] sm:text-[44px]`}
         >
           My Projects
