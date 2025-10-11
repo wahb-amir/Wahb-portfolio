@@ -41,7 +41,7 @@ const coreSkills = [
 ];
 
 const learningSkills = [
-  { name: "Pandas", icon: SiPandas, color: "#150458", type: "learning" },
+  { name: "Pandas", icon: SiPandas, color: "#136bb9ff", type: "learning" },
   { name: "NumPy", icon: SiNumpy, color: "#0b7adb", type: "learning" },
   { name: "Scikit-learn", icon: SiScikitlearn, color: "#F7931E", type: "learning" },
   { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C", type: "learning" },
