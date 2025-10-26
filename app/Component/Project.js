@@ -26,7 +26,7 @@ const projects = [
     tech: ["Next.js", "Stripe", "OAuth", "Tailwind", "MongoDB"],
     short: "A fully functional e-commerce platform with OAuth, fake Stripe checkout, and a client-safe read-only admin dashboard.",
     liveLink: "https://boltform.buttnetworks.com/",
-    githubLink: "https://github.com/coder101-js/Wahb-portfolio",
+    githubLink: "https://github.com/coder101-js/Ecommer-Store",
     problem:
       "Customers needed a lightweight store with easy checkout and an admin view that doesn't require exposing sensitive keys.",
     process: [
