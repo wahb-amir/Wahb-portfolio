@@ -1,4 +1,5 @@
-// use client
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
@@ -11,17 +12,61 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   loading: () => null,
 });
 
+// Project list — replaced ML placeholder with the new Client–Dev Collaboration Platform
 const projects = [
+  {
+    id: "client-dev-platform",
+    title: "Client–Dev Collaboration Platform",
+    role: "Full-Stack Engineer",
+    images: [
+      "/Project/Platform/Login.png",
+      "/Project/Platform/Dashboard.png",
+      "/Project/Platform/Quote.png",
+    ],
+    tech: [
+      "Next.js",
+      "React",
+      "Node.js",
+      "Tailwind",
+      // "Socket.io",
+      "MongoDB",
+      "GitHub Webhooks",
+      // "OAuth",
+    ],
+    short:
+      "A unified platform connecting clients and dev teams — request quotes, receive email alerts, view project progress & assignees, chat with developers, and automatically sync repo activity to project status.",
+    // special sentinel value telling the card this demo is private (not a public URL)
+    liveLink: "private-demo",
+    githubLink: null, // code is private — no public repo link
+    problem:
+      "Clients and development teams lacked a single workspace to request quotes, track project progress, communicate, and sync repository activity into task status.",
+    process: [
+      "Built client portal: request quotes, view project progress, see who's working on what, and chat with assigned developers",
+      "Built dev dashboard: manage tasks, update progress, assign team members, and review client requests",
+      "Implemented role-based auth (RBAC) so Clients, PMs, and Devs see appropriate views and actions",
+      "Automated user setup to create GitHub repositories for new projects and connect webhooks to auto-update progress from repo events (commits/PRs)",
+      "Added email & in-app alerts for quote responses, status changes, and mentions; real-time chat via Socket.io",
+      "Deployed with CI/CD pipelines and secure OAuth authentication for GitHub integration",
+    ],
+    outcome:
+      "Delivered a single collaboration surface that improved visibility and reduced coordination friction — clients can request quotes and track progress, and devs get an organized dashboard with automated repo syncing and status updates.",
+    stats: {
+      automation: "Auto repo creation & webhook sync for project status",
+      features:
+        "Quote requests, email alerts, real-time chat, progress timeline, role-based auth",
+    },
+    category: "Platform",
+  },
   {
     id: "ecom-1",
     title: "Modern E-Commerce Store",
     role: "Full-Stack Developer",
     images: [
-      "/Project/light-shop.png",
-      "/Project/light-men.png",
-      "/Project/light-women.png",
-      "/Project/light-product.png",
-      "/Project/stripe.png",
+      "/Project/Ecom/light-shop.png",
+      "/Project/Ecom/light-men.png",
+      "/Project/Ecom/light-women.png",
+      "/Project/Ecom/light-product.png",
+      "/Project/Ecom/stripe.png",
     ],
     tech: ["Next.js", "Stripe", "OAuth", "Tailwind", "MongoDB"],
     short: "A fully functional e-commerce platform with OAuth, fake Stripe checkout, and a client-safe read-only admin dashboard.",
@@ -39,23 +84,6 @@ const projects = [
       "Deployed MVP with a responsive store, Stripe sandbox working, and an admin dashboard. Reduced TTFB by optimizing image sizes & server-side rendering.",
     stats: { pagespeed: "Bumped 15→82" },
     category: "Web",
-  },
-
-  // ML placeholder project coming soon
-  {
-    id: "ml-coming-soon",
-    title: "ML Project Coming Soon",
-    role: "ML Engineer",
-    images: ["/project/ml/placeholder.jpg"],
-    tech: ["Python", "scikit-learn", "pandas"],
-    short: "Exciting machine learning project under development. Stay tuned!",
-    liveLink: null,
-    githubLink: null,
-    problem: "Project in progress — details will be updated soon.",
-    process: ["Data collection & preprocessing", "Model training", "Evaluation & optimization"],
-    outcome: "Results will be shared once the project is complete.",
-    stats: {},
-    category: "ML",
   },
 ];
 
@@ -90,8 +118,6 @@ const Project = () => {
         <p className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${isDark ? "text-slate-300" : "text-gray-700"}`}>
           Real apps I built & shipped — each entry includes the problem I solved, the approach I took, and the outcome. Click any card to read the case study.
         </p>
-
-
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start">
           {projects.map((p) => (

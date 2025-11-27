@@ -10,7 +10,6 @@ import About from "./Component/About";
 import ContactForm from "./Component/Contact";
 import Footer from "./Component/Footer";
 import PageTransition from "./Component/PageTransition";
-// import Contribution from "./Component/Contribution";
 
 export default function Home() {
   const path = usePathname();

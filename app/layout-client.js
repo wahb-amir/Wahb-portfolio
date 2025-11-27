@@ -1,3 +1,4 @@
+// app/layout-client.js
 "use client";
 
 import { AnimatePresence } from "framer-motion";

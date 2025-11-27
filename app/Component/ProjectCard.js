@@ -25,7 +25,7 @@ const ProjectCard = ({
   useEffect(() => setMounted(true), []);
   const isDark = mounted && theme === "dark";
 
-  const safeId = title.replace(/\s+/g, "-").toLowerCase(); 
+  const safeId = title.replace(/\s+/g, "-").toLowerCase();
 
   return (
     <motion.article
@@ -57,7 +57,7 @@ const ProjectCard = ({
 
           <div className="flex flex-col items-end gap-2">
             <div className="flex flex-wrap gap-2 justify-end">
-              {tech.slice(0, 4).map((t) => (
+              {tech.map((t) => (
                 <span
                   key={t}
                   className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200"

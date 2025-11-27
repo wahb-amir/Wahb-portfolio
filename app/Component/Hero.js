@@ -30,7 +30,7 @@ export default function Hero() {
   const handleScrollToSkills = () => {
     const skillsSection = document.getElementById("skills");
     if (skillsSection) {
-      skillsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      skillsSection.scrollIntoView({ behavior: "smooth", block: "center" });
     } else {
       console.warn("Skills section not found!");
     }
@@ -148,7 +148,7 @@ export default function Hero() {
         onClick={handleScrollToSkills}
         aria-label="Scroll to skills section"
       >
-        <ChevronDownIcon className="w-8 h-8 text-blue-700 animate-pulse" />
+        <ChevronDownIcon className="w-8 h-8 text-white animate-pulse" />
         <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300 drop-shadow-sm">
           Scroll to see my skills 👇
         </span>

@@ -63,18 +63,32 @@ export default function ContactForm() {
     }
   };
 
+  // client platform links (kept for "request quote" & portal open — login removed)
+  const CLIENT_PORTAL = "https://projects.buttnetworks.com";
+  const CLIENT_QUOTE = `${CLIENT_PORTAL}/request-quote`;
+
+  // ------- THEME / ACCENT: update these hexes to match your brand colors -------
+  const ACCENT_LIGHT = "#0ea5e9"; // change to your light-theme accent
+  const ACCENT_DARK = "#00bfff";  // change to your dark-theme accent
+  const accent = isDark ? ACCENT_DARK : ACCENT_LIGHT;
+  // ---------------------------------------------------------------------------
+
   return (
     <section
       id="contact"
       ref={ref}
-      className="relative w-full h-fit pb-12 py-16 px-6 flex flex-col items-center justify-center overflow-hidden bg-[#f9fafb] dark:bg-[#0f172a] bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] text-black"
       aria-labelledby="contact-heading"
+      // expose accent as css var for possible custom styling in nested elements
+      style={{ ['--accent']: accent }}
+      className={`relative flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden z-10  bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+    text-black dark:text-white`}
     >
       {hydrated && <LazyBackgroundEffect />}
 
       <motion.h2
         id="contact-heading"
-        className="text-3xl sm:text-4xl font-extrabold mb-2 text-center dark:text-white text-gray-800"
+        className="text-3xl sm:text-4xl font-extrabold mb-3 text-center z-10"
         initial={reduceMotion ? {} : { opacity: 0, y: 18 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -83,26 +97,85 @@ export default function ContactForm() {
       </motion.h2>
 
       <motion.p
-        className="text-center text-sm sm:text-base text-gray-700 dark:text-slate-300 max-w-2xl mb-6"
+        className="text-center text-sm sm:text-base max-w-2xl mb-6 z-10 text-gray-700 dark:text-slate-300"
         initial={reduceMotion ? {} : { opacity: 0, y: 18 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        Prefer email or quick socials? Hit up the form below or use one of the links — I usually reply within 48 hours.
+        Prefer email or quick socials? Use the form below — portal users get progress tracking and direct dev chat.
       </motion.p>
 
+      {/* CLIENT BANNER — moved under heading, cleaned up design, LOGIN REMOVED */}
+      <div className="w-full max-w-4xl mb-6 z-20 flex justify-center">
+        <div
+          className="rounded-xl p-6 flex flex-col items-center text-center gap-4
+               backdrop-blur-md bg-white/80 dark:bg-slate-900/60 border shadow-sm"
+          style={{
+            borderColor: `${isDark ? "#0b1220" : "#e6eef6"}`,
+          }}
+        >
+          <div>
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+              Client portal is live — manage projects & request quotes ✨
+            </h3>
+            <p className="text-xs text-gray-600 dark:text-slate-300 mt-2 max-w-lg mx-auto">
+              If you’re a client, you can request a quote or open the portal for tracking. This form still works for quick messages.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+            <a
+              href={CLIENT_QUOTE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 text-sm rounded-md font-medium shadow-sm"
+              aria-label="Request a quote"
+              style={{
+                backgroundColor: accent,
+                color: "#fff",
+                boxShadow: `0 6px 18px ${accent}33`,
+              }}
+            >
+              Request a quote
+            </a>
+
+            <a
+              href={CLIENT_PORTAL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 text-sm rounded-md font-medium border"
+              aria-label="Open client portal"
+              style={{
+                borderColor: isDark ? "#172031" : "#e6eef6",
+                backgroundColor: isDark ? "transparent" : "white",
+              }}
+            >
+              Open portal
+            </a>
+          </div>
+        </div>
+      </div>
+
+
       <div className="z-10 flex flex-col sm:flex-row items-center gap-4 mb-6">
-        <div className="flex items-center gap-3 bg-white/30 dark:bg-slate-900/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 dark:border-slate-700">
-          <MdEmail className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+        <div
+          className="flex items-center gap-3 px-4 py-2 rounded-full border shadow-sm"
+          style={{
+            background: isDark ? "rgba(15,23,42,0.45)" : "rgba(255,255,255,0.85)",
+            borderColor: isDark ? "#0b1220" : "#e6eef6",
+          }}
+        >
+          <MdEmail className="w-5 h-5" style={{ color: accent }} />
           <button
             onClick={copyEmail}
-            className="text-sm font-medium text-gray-800 dark:text-gray-100 hover:underline"
+            className="text-sm font-medium hover:underline"
             aria-label={`Copy email address ${CONTACT_EMAIL}`}
             title="Copy email"
+            style={{ color: isDark ? "#e6eef6" : "#0f172a" }}
           >
             {CONTACT_EMAIL}
           </button>
-          <span className="ml-2 text-xs text-gray-500 dark:text-slate-400">
+          <span className="ml-2 text-xs" style={{ color: isDark ? "#94a3b8" : "#6b7280" }}>
             {copied ? "Copied!" : "Click to copy"}
           </span>
         </div>
@@ -114,6 +187,7 @@ export default function ContactForm() {
             ariaLabel="Open GitHub"
             icon={<SiGithub className="w-5 h-5" />}
             isDark={isDark}
+            accent={accent}
           />
         </div>
       </div>
@@ -132,7 +206,7 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
+          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 focus:outline-none transition"
         />
         <input
           name="email"
@@ -141,7 +215,7 @@ export default function ContactForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
+          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 focus:outline-none transition"
         />
         <textarea
           name="message"
@@ -150,19 +224,20 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           required
-          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500 dark:placeholder-gray-400 transition"
+          className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 focus:outline-none transition"
         />
 
         <div className="relative h-14 overflow-hidden rounded-full">
           <button
             type="submit"
             disabled={status === "sending"}
-            className={`w-full h-full py-3 rounded-full font-medium tracking-wide transition
-              ${status === "sending"
-                ? "bg-gray-200 cursor-not-allowed text-gray-900 dark:text-gray-100"
-                : "bg-cyan-500 hover:bg-cyan-600 dark:bg-cyan-700 dark:hover:bg-cyan-600 text-white"
-              }
-              focus:outline-none focus:ring-2 focus:ring-cyan-500 relative`}
+            className="w-full h-full py-3 rounded-full font-medium tracking-wide transition relative"
+            style={{
+              backgroundColor: status === "sending" ? "#cbd5e1" : accent,
+              color: status === "sending" ? (isDark ? "#0b1220" : "#111827") : "#fff",
+              boxShadow: status === "sending" ? "none" : `0 8px 30px ${accent}33`,
+            }}
+            aria-live="polite"
           >
             <AnimatePresence mode="wait">
               <motion.span key={status} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -175,21 +250,21 @@ export default function ContactForm() {
 
       <div className="relative z-10 flex flex-row items-center justify-center gap-6 mt-8">
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Scroll Up" className="hover:scale-110 transition-transform">
-          <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+          <ChevronUpIcon className="w-8 h-8" style={{ color: accent }} />
         </button>
         <button
           onClick={() => document.getElementById("hero-section")?.scrollIntoView({ behavior: "smooth" })}
-          aria-label="Scroll Up"
+          aria-label="Scroll Down"
           className="animate-pulse hover:scale-110 transition-transform"
         >
-          <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+          <ChevronDownIcon className="w-8 h-8" style={{ color: accent }} />
         </button>
       </div>
     </section>
   );
 }
 
-function SocialIcon({ href, label, ariaLabel, icon, isDark }) {
+function SocialIcon({ href, label, ariaLabel, icon, isDark, accent }) {
   return (
     <a
       href={href}
@@ -197,7 +272,12 @@ function SocialIcon({ href, label, ariaLabel, icon, isDark }) {
       rel="noopener noreferrer"
       aria-label={ariaLabel}
       title={label}
-      className={`inline-flex items-center justify-center w-10 h-10 rounded-full transition shadow-sm ${isDark ? "bg-slate-800 hover:bg-slate-700" : "bg-white hover:bg-gray-100"} border border-white/10`}
+      className={`inline-flex items-center justify-center w-10 h-10 rounded-full transition shadow-sm border`}
+      style={{
+        background: isDark ? "rgba(255,255,255,0.03)" : "#fff",
+        borderColor: isDark ? "rgba(255,255,255,0.04)" : "#e6eef6",
+        color: accent,
+      }}
     >
       {icon}
     </a>

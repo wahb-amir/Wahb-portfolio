@@ -28,20 +28,15 @@ export default function About() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  // INITIALIZE synchronously (no blank string) to avoid layout shift
+  // initialize synchronously to avoid layout shift
   const [timeSinceStart, setTimeSinceStart] = useState(() => getTimeSinceStart());
-
-  // hydrated flag just for client-only visuals (background effect)
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     setHydrated(true);
 
-    // update timer every minute (keeps number accurate)
     const tick = () => setTimeSinceStart(getTimeSinceStart());
     const interval = setInterval(tick, 1000 * 60);
-
-    // also run one immediate tick to ensure freshness
     tick();
 
     return () => clearInterval(interval);
@@ -56,7 +51,6 @@ export default function About() {
        text-black dark:text-white`}
       aria-labelledby="about-heading"
     >
-      {/* Render background effect only after hydration (no DOM removal) */}
       {hydrated && <LazyBackgroundEffect />}
 
       <motion.div
@@ -70,15 +64,16 @@ export default function About() {
         </h2>
 
         <p className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed">
-          I&apos;m Wahb, a self-taught developer building high-performance web apps and exploring machine learning.
-          Currently diving deep into Python, Pandas, NumPy, and scikit-learn to integrate intelligent features into my projects.
-          My journey spans full-stack web development, deploying apps on Linux VPS, and now venturing into data-driven solutions.
+          Hey — I’m Wahb. I taught myself to code and I’m happiest when I’m building things that actually work.
+          Right now I’m deep into <strong className="underline decoration-blue-500">PyTorch</strong>, training and debugging convolutional models for computer vision — think object detection, segmentation, and all the messy training-loop stuff.
+          At the same time I’m learning <strong className="underline decoration-blue-500">C++</strong> so I can move models off the cloud and run them on robots and low-level hardware.
+          I also build and deploy full-stack apps and self-host services on Linux VPS — practical, hands-on work. 🤝
         </p>
 
-        {/* Timer — content reserved because timeSinceStart is initialized synchronously */}
+        {/* Timer */}
         <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-6 text-center mb-16 border border-white/10 dark:border-slate-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-slate-200 mb-2">⏳ Active Dev Journey</h3>
-          <p className="text-cyan-400 text-xl font-mono">{timeSinceStart}</p>
+          <p className="text-cyan-800 dark:text-cyan-400 text-xl font-mono">{timeSinceStart}</p>
         </div>
 
         {/* Stats */}
@@ -97,39 +92,38 @@ export default function About() {
           <ul className="list-disc pl-6 text-gray-700 dark:text-slate-300 space-y-2">
             <li>Frontend: React, Next.js, Tailwind CSS, Framer Motion</li>
             <li>Backend: Node.js, Express, MongoDB, Mongoose</li>
-            <li>Machine Learning & AI: Python, NumPy, Pandas, scikit-learn, PyTorch (deep learning focus)</li>
-            <li>Mathematics: Linear Algebra, Calculus, Probability & Statistics — essential for ML & AI</li>
-            <li>Deployment: Linux VPS (manual + CLI-based), Docker basics for experimentation</li>
-            <li>Learning by doing: building real-world apps, experimenting with AI/ML models, shipping projects</li>
+            <li>Machine Learning & AI: <strong>PyTorch</strong> — CNNs, detection, segmentation, training & debugging</li>
+            <li>Low-level & Robotics: learning <strong>C++</strong> for embedded/robotics and real-time systems</li>
+            <li>Mathematics: Linear Algebra, Calculus, Probability & Statistics — core for ML</li>
+            <li>Deployment: Linux VPS (manual + CLI-based), Docker for experiments</li>
+            <li>Workflow: build small experiments, iterate quickly, ship what works</li>
           </ul>
         </div>
-
 
         <div className="mb-16">
           <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">🚀 Learning Timeline</h3>
 
           <div className="space-y-4 border-l-2 border-cyan-400 pl-4">
-            <TimelineItem title="Early 2025" desc="Started with frontend foundations (HTML/CSS)" />
-            <TimelineItem title="Spring 2025" desc="Built small projects with JavaScript" />
-            <TimelineItem title="Mid 2025" desc="Shifted to React, Tailwind & Next.js" />
-            <TimelineItem title="Summer 2025" desc="Deployed 3 full-stack web apps" />
+            <TimelineItem title="Early 2025" desc="Front-end foundations: HTML & CSS" />
+            <TimelineItem title="Spring 2025" desc="Built small JS projects & sharpened JavaScript skills" />
+            <TimelineItem title="Mid 2025" desc="Moved to React, Tailwind & Next.js — shipped full-stack apps" />
+            <TimelineItem title="Summer 2025" desc="Deployed 3 full-stack web apps and self-hosted services" />
 
             <TimelineItem
               title="Now (Advanced)"
-              desc="Deep-diving into advanced math (linear algebra, probability, calculus) and PyTorch — building foundations for AI/ML model development."
+              desc="Deep-diving into PyTorch for computer vision (CNNs, detection, segmentation, training loops) while learning C++ for robotics/low-level programming."
             />
             <TimelineItem
               title="Next"
-              desc="Apply PyTorch to small models: data pipelines, training loops, debugging, and basic model deployment experiments."
+              desc="Integrate trained models into lightweight deployments — experiment with model optimization and edge/embedded inference (C++ + inference runtimes)."
             />
 
             <TimelineItem
               title="Future"
-              desc="Scale to real-world AI projects: model optimization, deployment, and contributing to open-source AI tooling."
+              desc="Scale to production-ready AI systems: optimize models for latency, contribute to ML tooling, and build robotic systems that actually move stuff."
             />
           </div>
         </div>
-
 
         <blockquote className="text-center italic dark:text-cyan-400 text-blue-600 text-xl">
           “Still early in the journey — but building like I mean it.”

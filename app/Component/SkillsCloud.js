@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
@@ -20,7 +20,9 @@ import {
   SiPandas,
   SiNumpy,
   SiScikitlearn,
-  SiPytorch
+  SiPytorch,
+  SiCplusplus,
+  SiOpencv
 } from "react-icons/si";
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), { ssr: false, loading: () => null });
@@ -38,13 +40,16 @@ const coreSkills = [
   { name: "MongoDB", icon: SiMongodb, color: "#47A248", type: "backend" },
   { name: "Framer Motion", icon: SiFramer, color: "#0055FF", type: "frontend" },
   { name: "Python", icon: SiPython, color: "#3776AB", type: "backend" },
+  { name: "Scikit-learn", icon: SiScikitlearn, color: "#F7931E", type: "backend" },
 ];
 
+// Learning skills
 const learningSkills = [
   { name: "Pandas", icon: SiPandas, color: "#136bb9ff", type: "learning" },
   { name: "NumPy", icon: SiNumpy, color: "#0b7adb", type: "learning" },
-  { name: "Scikit-learn", icon: SiScikitlearn, color: "#F7931E", type: "learning" },
+  { name: "C++", icon: SiCplusplus, color: "#00599C", type: "learning" },
   { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C", type: "learning" },
+  { name: "OpenCV", icon: SiOpencv, color: "#f27029", type: "learning" },
 ];
 
 export default function SkillsCloud() {
@@ -54,7 +59,7 @@ export default function SkillsCloud() {
   const [filter, setFilter] = useState("all");
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState(420);
-  const [dotSize, setDotSize] = useState(56); // px
+  const [dotSize, setDotSize] = useState(56);
   const isDark = mounted && theme === "dark";
   const isInView = useInView(containerRef, { margin: "-150px", once: true });
 
@@ -84,11 +89,6 @@ export default function SkillsCloud() {
   const centerOffset = containerSize / 2 - dotSize / 2;
   const radius = containerSize / 2.2;
 
-  // filtering logic:
-  // - all -> show core + learning
-  // - frontend -> coreSkills with type frontend
-  // - backend -> coreSkills with type backend
-  // - learning -> show only learningSkills
   const coreFiltered = coreSkills.filter((s) => {
     if (filter === "all") return true;
     if (filter === "frontend") return s.type === "frontend";
@@ -96,10 +96,8 @@ export default function SkillsCloud() {
     return false;
   });
 
-  // when filter === 'learning' we show only learning items
   const showLearning = filter === "all" || filter === "learning";
 
-  // positions for core (spread in ring)
   const coreWithPos = coreFiltered.map((skill, i) => {
     const angle = (i / coreFiltered.length) * 2 * Math.PI;
     const x = Math.round(radius * Math.cos(angle));
@@ -107,7 +105,6 @@ export default function SkillsCloud() {
     return { ...skill, x, y, idx: i };
   });
 
-  // positions for learning (near center). Only present when showLearning === true
   const learnWithPos = showLearning
     ? learningSkills.map((skill, i) => {
       const angle = (i / learningSkills.length) * 2 * Math.PI;
@@ -117,14 +114,12 @@ export default function SkillsCloud() {
     })
     : [];
 
-  // unified render list for cloud (core then learning). Keys are stable (skill name).
   const cloudItems = filter === "learning" ? learnWithPos : [...coreWithPos, ...learnWithPos];
 
-  // framer motion variants for enter/exit
   const itemVariants = {
     initial: { opacity: 0, scale: 0.3 },
     animate: (pos) => ({ opacity: 1, scale: 1, x: pos.x, y: pos.y }),
-    exit: { opacity: 0, scale: 0.2 }
+    exit: { opacity: 0, scale: 0.2 },
   };
 
   const spring = { type: "spring", stiffness: 140, damping: 20 };
@@ -137,13 +132,10 @@ export default function SkillsCloud() {
         bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
         text-black dark:text-white`}
     >
-      {/* <LazyBackgroundEffect /> */}
-
       <h2 className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${isDark ? "text-white" : "text-gray-800"}`}>
         What I Work With
       </h2>
 
-      {/* View & Filter Controls */}
       <div className="z-20 flex flex-wrap gap-3 mt-2 mb-6 justify-center">
         <button
           onClick={() => setView("cloud")}
@@ -169,7 +161,6 @@ export default function SkillsCloud() {
         </select>
       </div>
 
-      {/* Cloud View */}
       {view === "cloud" ? (
         <div
           ref={containerRef}
@@ -205,7 +196,6 @@ export default function SkillsCloud() {
                   justifyContent: "center",
                 }}
                 title={name}
-                aria-hidden={false}
               >
                 <motion.div
                   animate={name === "React" ? { rotate: 360 } : {}}
@@ -214,14 +204,11 @@ export default function SkillsCloud() {
                   <Icon className={dotSize < 50 ? "text-[22px]" : "text-[28px] md:text-[35px]"} style={{ color }} />
                 </motion.div>
               </motion.div>
-
             ))}
           </AnimatePresence>
         </div>
       ) : (
-        // Grid View
         <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20 px-2 max-w-6xl`}>
-          {/* grid list obeys the same filtering rules */}
           {filter === "learning"
             ? learningSkills.map(({ name, icon: Icon, color }) => (
               <motion.div
@@ -253,8 +240,6 @@ export default function SkillsCloud() {
                     <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>{name}</span>
                   </motion.div>
                 ))}
-
-                {/* show learning only when filter is 'all' */}
                 {filter === "all" && learnWithPos.map(({ name, icon: Icon, color }) => (
                   <motion.div
                     key={name}
@@ -274,7 +259,6 @@ export default function SkillsCloud() {
         </div>
       )}
 
-      {/* Navigation Arrows */}
       <div className="relative z-10 flex flex-row items-center justify-center gap-6 mt-12">
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Scroll Up" className="hover:scale-110 transition-transform">
           <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
