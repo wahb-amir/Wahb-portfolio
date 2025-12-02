@@ -12,8 +12,8 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   loading: () => null,
 });
 
-// Project list — replaced ML placeholder with the new Client–Dev Collaboration Platform
-const projects = [
+// --- your static fallback list (kept intact) ---
+const staticProjects = [
   {
     id: "client-dev-platform",
     title: "Client–Dev Collaboration Platform",
@@ -28,16 +28,16 @@ const projects = [
       "React",
       "Node.js",
       "Tailwind",
-      // "Socket.io",
       "MongoDB",
       "GitHub Webhooks",
-      // "OAuth",
     ],
     short:
       "A unified platform connecting clients and dev teams — request quotes, receive email alerts, view project progress & assignees, chat with developers, and automatically sync repo activity to project status.",
-    // special sentinel value telling the card this demo is private (not a public URL)
-    liveLink: "private-demo",
-    githubLink: null, // code is private — no public repo link
+    liveLink: "https://projects.buttnetworks.com",
+    githubLink: [
+      "https://github.com/coder101-js/dev-dashboard",
+      "https://github.com/coder101-js/dashboard",
+    ],
     problem:
       "Clients and development teams lacked a single workspace to request quotes, track project progress, communicate, and sync repository activity into task status.",
     process: [
@@ -87,11 +87,161 @@ const projects = [
   },
 ];
 
+// --- tiny IndexedDB helper (no external dep) ---
+const DB_NAME = "wahb-projects-db";
+const STORE_NAME = "projects";
+const CACHE_KEY = "project-detail";
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (typeof window === "undefined" || !("indexedDB" in window)) {
+      reject(new Error("IndexedDB not supported"));
+      return;
+    }
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = (e) => resolve(e.target.result);
+    req.onerror = (e) => reject(e.target.error);
+  });
+}
+
+async function getCached() {
+  try {
+    const db = await openDB();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const r = store.get(CACHE_KEY);
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = (e) => reject(e.target.error);
+    });
+  } catch (err) {
+    console.warn("IDB get error:", err);
+    return null;
+  }
+}
+
+async function setCached(payload) {
+  try {
+    const db = await openDB();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      const store = tx.objectStore(STORE_NAME);
+      const r = store.put(payload, CACHE_KEY);
+      r.onsuccess = () => resolve(true);
+      r.onerror = (e) => reject(e.target.error);
+    });
+  } catch (err) {
+    console.warn("IDB put error:", err);
+    return false;
+  }
+}
+
+
+async function fetchProjectDetail(version = null) {
+  try {
+    const api_path = process.env.NEXT_PUBLIC_PROJECTS_API;
+    console.log(api_path)
+    const url = new URL(api_path);
+    if (version) url.searchParams.set("version", version);
+    const resp = await fetch(url.toString(), { cache: "no-store" }); // always ask server
+    if (!resp.ok) {
+      // If 304 Not Modified semantics used server-side, handle accordingly — but fetch won't return 304 to client for CORS mostly
+      throw new Error(`Fetch failed: ${resp.status}`);
+    }
+    const json = await resp.json();
+    // Normalize payload: accept {version, projects} or {version, data}
+    const normalized = {
+      version: json.version ?? json.versionId ?? null,
+      data: json.projects ?? json.data ?? (Array.isArray(json) ? json : null),
+      raw: json,
+    };
+    return normalized;
+  } catch (err) {
+    console.warn("fetchProjectDetail error:", err);
+    return null;
+  }
+}
+
+// --- Small skeleton card for loading state ---
+const SkeletonCard = () => (
+  <article className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse">
+    <div className="w-full h-48 bg-gray-100 dark:bg-slate-800" />
+    <div className="p-4">
+      <div className="h-5 w-3/4 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
+      <div className="h-3 w-1/2 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
+      <div className="h-3 w-full rounded bg-gray-200 dark:bg-slate-800 mt-3" />
+    </div>
+  </article>
+);
+
 const Project = () => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const isDark = mounted && theme === "dark";
+
+  const [projects, setProjects] = useState([]); // actual project items
+  const [loading, setLoading] = useState(true); // initial load flag
+  const [checkingUpdate, setCheckingUpdate] = useState(false);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function init() {
+      setLoading(true);
+      try {
+        const cached = await getCached();
+        if (cached && cached.data) {
+          // show cached immediately
+          setProjects(cached.data);
+          setLoading(false); // we've got something to show
+
+          // always try to check updates in background (only once on mount)
+          setCheckingUpdate(true);
+          const remote = await fetchProjectDetail(cached.version);
+          if (!isCancelled && remote && remote.version && remote.version !== cached.version) {
+            // update cache + UI if changed
+            const payload = { version: remote.version, data: remote.data ?? remote.raw };
+            await setCached(payload);
+            setProjects(payload.data);
+          }
+          setCheckingUpdate(false);
+        } else {
+          // No cache – fetch from server
+          const remote = await fetchProjectDetail();
+          if (remote && remote.data) {
+            const payload = { version: remote.version, data: remote.data };
+            await setCached(payload);
+            if (!isCancelled) setProjects(payload.data);
+          } else {
+            // fallback to static content if server didn't return data
+            if (!isCancelled) setProjects(staticProjects);
+          }
+          if (!isCancelled) setLoading(false);
+        }
+      } catch (err) {
+        console.error("Project init error:", err);
+        if (!isCancelled) {
+          setProjects(staticProjects);
+          setLoading(false);
+        }
+      }
+    }
+
+    init();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  // Render logic: if loading & no projects yet -> show skeleton grid.
+  const showSkeleton = loading && projects.length === 0;
 
   return (
     <>
@@ -115,15 +265,27 @@ const Project = () => {
           My Projects
         </motion.h1>
 
-        <p className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${isDark ? "text-slate-300" : "text-gray-700"}`}>
-          Real apps I built & shipped — each entry includes the problem I solved, the approach I took, and the outcome. Click any card to read the case study.
+        <p
+          className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${isDark ? "text-slate-300" : "text-gray-700"
+            }`}
+        >
+          Real apps I built & shipped — each entry includes the problem I solved, the approach I
+          took, and the outcome. Click any card to read the case study.
+          {checkingUpdate && (
+            <span className="ml-2 text-xs text-gray-500 dark:text-slate-400">Checking updates…</span>
+          )}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start">
-          {projects.map((p) => (
-            // NOTE: we do NOT pass any isOpen/onToggle here — cards are independent
-            <ProjectCard key={p.id} {...p} />
-          ))}
+          {showSkeleton
+            ? // show 4 skeleton cards while initial fetch completes
+            [0, 1, 2, 3].map((i) => (
+              <div key={i}>
+                <SkeletonCard />
+              </div>
+            ))
+            : // show actual project cards (from cache, remote or static fallback)
+            projects.map((p) => <ProjectCard key={p.id ?? p.title} {...p} />)}
         </div>
 
         <div className="relative z-10 flex items-center gap-6 mt-10">

@@ -97,7 +97,7 @@ export default function Hero() {
 
         <h1 className="font-sans text-4xl xs:text-5xl sm:text-7xl font-extrabold tracking-tight text-gray-800 dark:text-white drop-shadow-lg mt-6">
           Hey, I&apos;m{" "}
-          <span className="font-serif text-5xl xs:text-6xl sm:text-8xl text-cyan-300 font-black drop-shadow-lg">
+          <span className="font-serif text-5xl xs:text-6xl sm:text-8xl text-blue-600 font-black drop-shadow-lg">
             Wahb
           </span>
           <br />
