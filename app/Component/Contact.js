@@ -65,7 +65,7 @@ export default function ContactForm() {
 
   // client platform links (kept for "request quote" & portal open — login removed)
   const CLIENT_PORTAL = "https://projects.buttnetworks.com";
-  const CLIENT_QUOTE = `${CLIENT_PORTAL}/request-quote`;
+  const CLIENT_QUOTE = `${CLIENT_PORTAL}#request-quote`;
 
   // ------- THEME / ACCENT: update these hexes to match your brand colors -------
   const ACCENT_LIGHT = "#0ea5e9"; // change to your light-theme accent

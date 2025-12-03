@@ -202,7 +202,6 @@ const Project = () => {
           setProjects(cached.data);
           setLoading(false); // we've got something to show
 
-          // always try to check updates in background (only once on mount)
           setCheckingUpdate(true);
           const remote = await fetchProjectDetail(cached.version);
           if (!isCancelled && remote && remote.version && remote.version !== cached.version) {
@@ -279,7 +278,7 @@ const Project = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start">
           {showSkeleton
             ? // show 4 skeleton cards while initial fetch completes
-            [0, 1, 2, 3].map((i) => (
+            [0,1].map((i) => (
               <div key={i}>
                 <SkeletonCard />
               </div>
