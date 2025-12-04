@@ -1,20 +1,11 @@
 import { NextResponse } from "next/server";
 import { connectToDB } from "@/lib/db";
-import AboutVersion from "@/models/AboutVersion";
-import { redis ,clearAboutCache} from "@/lib/redis"; // adjust import based on your setup
+import AboutVersion from "@/models/AboutMe";
+import { clearAboutCache } from "@/lib/redis";
 
 /**
- * Helper to clear Redis cache for About Me
+ * Internal GET: return the latest AboutVersion (protected by x-internal-secret)
  */
-async function clearAboutCache() {
-    try {
-        await redis.del("about:payload");
-    } catch (err) {
-        console.error("Warning: failed to clear About Me cache", err);
-    }
-}
-
-// ---------------- GET (latest About Me for internal use) ----------------
 export async function GET(req) {
     try {
         const secret = req.headers.get("x-internal-secret");
@@ -29,10 +20,9 @@ export async function GET(req) {
         if (!latest) {
             return NextResponse.json({ error: "No AboutVersion found" }, { status: 404 });
         }
-
         const payload = {
             version: latest.version,
-            data: latest.data,
+            data: latest.about, // about is the field in the schema
         };
 
         return NextResponse.json(payload, { status: 200 });
@@ -42,7 +32,10 @@ export async function GET(req) {
     }
 }
 
-// ---------------- PUT (create/update About Me) ----------------
+/**
+ * Internal PUT: merge provided about data into latest and create a new version.
+ * Expect body: { data: { bio: "...", timeline: [...], stats: {...}, ... } }
+ */
 export async function PUT(req) {
     try {
         const secret = req.headers.get("x-internal-secret");
@@ -51,37 +44,45 @@ export async function PUT(req) {
         }
 
         const body = await req.json();
-        if (!body || !body.data) {
+        if (!body || typeof body.data !== "object") {
             return NextResponse.json({ error: "Invalid payload — provide `data` object" }, { status: 400 });
         }
 
         await connectToDB();
 
         const latest = await AboutVersion.findOne().sort({ version: -1 });
-        const baseData = latest?.data ? { ...latest.data } : {};
 
-        // Merge incoming data — preserve fields unless overwritten
+        // baseData comes from latest.about (not latest.data)
+        const baseData = latest?.about ? { ...latest.about } : {};
+
+        // shallow merge: preserve existing fields unless overwritten
         const newData = { ...baseData, ...body.data };
+
         const newVersion = (latest?.version ?? 0) + 1;
 
         const created = await AboutVersion.create({
             version: newVersion,
-            data: newData,
+            about: newData,
         });
 
-        await clearAboutCache();
+        // clear only the about cache
+        try {
+            await clearAboutCache();
+        } catch (cacheErr) {
+            console.error("Warning: failed to clear about cache after PUT", cacheErr);
+        }
 
-        return NextResponse.json(
-            { success: true, version: created.version },
-            { status: 200 }
-        );
+        return NextResponse.json({ success: true, version: created.version }, { status: 200 });
     } catch (err) {
         console.error("PUT About API error:", err);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
 
-// ---------------- DELETE (reset About Me or remove specific keys) ----------------
+/**
+ * Internal DELETE: either remove specific keys from about object, or reset it completely.
+ * Expect body: { keys: ["timeline","bio"] }  OR empty body to reset.
+ */
 export async function DELETE(req) {
     try {
         const secret = req.headers.get("x-internal-secret");
@@ -89,10 +90,7 @@ export async function DELETE(req) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const body = await req.json();
-        if (!body) {
-            return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
-        }
+        const body = await req.json().catch(() => ({})); // tolerate empty body
 
         await connectToDB();
 
@@ -101,28 +99,33 @@ export async function DELETE(req) {
             return NextResponse.json({ error: "No AboutVersion found" }, { status: 404 });
         }
 
-        let newData = { ...latest.data };
+        // operate on latest.about
+        let newData = latest.about ? { ...latest.about } : {};
 
-        // If keys array is provided, remove only those keys
-        if (Array.isArray(body.keys)) {
-            body.keys.forEach((key) => delete newData[key]);
+        if (Array.isArray(body.keys) && body.keys.length) {
+            // remove only specified keys
+            for (const key of body.keys) {
+                delete newData[key];
+            }
         } else {
-            // Otherwise, reset everything
+            // reset everything
             newData = {};
         }
 
         const newVersion = (latest?.version ?? 0) + 1;
         const created = await AboutVersion.create({
             version: newVersion,
-            data: newData,
+            about: newData,
         });
 
-        await clearAboutCache();
+        // clear only the about cache
+        try {
+            await clearAboutCache();
+        } catch (cacheErr) {
+            console.error("Warning: failed to clear about cache after DELETE", cacheErr);
+        }
 
-        return NextResponse.json(
-            { success: true, version: created.version },
-            { status: 200 }
-        );
+        return NextResponse.json({ success: true, version: created.version }, { status: 200 });
     } catch (err) {
         console.error("DELETE About API error:", err);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

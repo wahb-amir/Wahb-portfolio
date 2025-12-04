@@ -68,7 +68,7 @@ async function setCachedAbout(payload) {
 
 async function fetchAbout(version = null) {
   try {
-    const api_path = process.env.NEXT_PUBLIC_ABOUT_API || "/api/about";
+    const api_path = process.env.NEXT_PUBLIC_ABOUT_API || "/api/updates/about";
     const url = version ? `${api_path}?version=${version}` : api_path;
     const resp = await fetch(url, { cache: "no-store" });
     if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);

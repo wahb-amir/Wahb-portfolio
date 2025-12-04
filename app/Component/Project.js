@@ -92,7 +92,6 @@ const STORE_NAME = "projects";
 const CACHE_KEY = "project-detail";
 
 const PREVIEW_COUNT = 4;
-
 function openDB() {
   return new Promise((resolve, reject) => {
     if (typeof window === "undefined" || !("indexedDB" in window)) {
