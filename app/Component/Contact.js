@@ -252,13 +252,6 @@ export default function ContactForm() {
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Scroll Up" className="hover:scale-110 transition-transform">
           <ChevronUpIcon className="w-8 h-8" style={{ color: accent }} />
         </button>
-        <button
-          onClick={() => document.getElementById("hero-section")?.scrollIntoView({ behavior: "smooth" })}
-          aria-label="Scroll Down"
-          className="animate-pulse hover:scale-110 transition-transform"
-        >
-          <ChevronDownIcon className="w-8 h-8" style={{ color: accent }} />
-        </button>
       </div>
     </section>
   );

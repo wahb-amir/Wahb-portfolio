@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import redis from "@/lib/redis"; 
+import redis from "@/lib/redis";
 
-const INTERNAL_API_URL = `${process.env.NEXT_PUBLIC_ORIGIN}/api/updates/internal/projects`;
+const INTERNAL_API_URL = `${process.env.NEXT_PUBLIC_ORIGIN}/api/updates/internal/about`;
 const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET;
 
 export async function GET(req) {
@@ -9,9 +9,8 @@ export async function GET(req) {
         const url = new URL(req.url);
         const clientVersion = Number(url.searchParams.get("version")) || 0;
 
-        // 2️⃣ Check Redis cache
-        const cached = await redis.get("projects:payload");
-
+        // 1️⃣ Check Redis cache first
+        const cached = await redis.get("about:payload");
         if (cached) {
             const payload = JSON.parse(cached);
             if (payload.version === clientVersion) {
@@ -22,7 +21,7 @@ export async function GET(req) {
             return NextResponse.json(payload);
         }
 
-        // 3️⃣ Cache miss → call internal API
+        // 2️⃣ Cache miss → call internal API
         const internalResp = await fetch(INTERNAL_API_URL, {
             headers: { "x-internal-secret": INTERNAL_API_SECRET },
         });
@@ -33,13 +32,13 @@ export async function GET(req) {
 
         const payload = await internalResp.json();
 
-        // 4️⃣ Cache in Redis (atomic payload)
-        await redis.set("projects:payload", JSON.stringify(payload));
+        // 3️⃣ Cache in Redis
+        await redis.set("about:payload", JSON.stringify(payload));
 
-        // 5️⃣ Return payload to frontend
+        // 4️⃣ Return payload
         return NextResponse.json(payload);
     } catch (err) {
-        console.error("Public API error:", err);
+        console.error("Public About API error:", err);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

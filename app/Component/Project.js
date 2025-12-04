@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import ProjectCard from "./ProjectCard";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
@@ -87,10 +87,11 @@ const staticProjects = [
   },
 ];
 
-// --- tiny IndexedDB helper (no external dep) ---
 const DB_NAME = "wahb-projects-db";
 const STORE_NAME = "projects";
 const CACHE_KEY = "project-detail";
+
+const PREVIEW_COUNT = 4;
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -142,33 +143,27 @@ async function setCached(payload) {
   }
 }
 
-
 async function fetchProjectDetail(version = null) {
   try {
     const api_path = process.env.NEXT_PUBLIC_PROJECTS_API;
-    console.log(api_path)
-    const url = new URL(api_path);
-    if (version) url.searchParams.set("version", version);
-    const resp = await fetch(url.toString(), { cache: "no-store" }); // always ask server
-    if (!resp.ok) {
-      // If 304 Not Modified semantics used server-side, handle accordingly — but fetch won't return 304 to client for CORS mostly
-      throw new Error(`Fetch failed: ${resp.status}`);
-    }
+    const url = version ? `${api_path}?version=${version}` : api_path;
+
+    const resp = await fetch(url, { cache: "no-store" });
+    if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);
+
     const json = await resp.json();
-    // Normalize payload: accept {version, projects} or {version, data}
-    const normalized = {
-      version: json.version ?? json.versionId ?? null,
-      data: json.projects ?? json.data ?? (Array.isArray(json) ? json : null),
+    return {
+      version: json.version ?? null,
+      data: json.data ?? json.projects ?? (Array.isArray(json) ? json : null),
       raw: json,
     };
-    return normalized;
   } catch (err) {
     console.warn("fetchProjectDetail error:", err);
     return null;
   }
 }
 
-// --- Small skeleton card for loading state ---
+// --- skeleton card (unchanged) ---
 const SkeletonCard = () => (
   <article className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse">
     <div className="w-full h-48 bg-gray-100 dark:bg-slate-800" />
@@ -180,15 +175,32 @@ const SkeletonCard = () => (
   </article>
 );
 
+const gridVariants = {
+  visible: {
+    transition: {
+      staggerChildren: 0.04,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 8, scale: 0.995 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35 } },
+  exit: { opacity: 0, y: 6, scale: 0.995, transition: { duration: 0.25 } },
+};
+
 const Project = () => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const isDark = mounted && theme === "dark";
 
-  const [projects, setProjects] = useState([]); // actual project items
-  const [loading, setLoading] = useState(true); // initial load flag
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [checkingUpdate, setCheckingUpdate] = useState(false);
+
+  // NEW: control whether we show all projects or only preview
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     let isCancelled = false;
@@ -198,29 +210,25 @@ const Project = () => {
       try {
         const cached = await getCached();
         if (cached && cached.data) {
-          // show cached immediately
           setProjects(cached.data);
-          setLoading(false); // we've got something to show
+          setLoading(false);
 
           setCheckingUpdate(true);
           const remote = await fetchProjectDetail(cached.version);
           if (!isCancelled && remote && remote.version && remote.version !== cached.version) {
-            // update cache + UI if changed
             const payload = { version: remote.version, data: remote.data ?? remote.raw };
             await setCached(payload);
             setProjects(payload.data);
           }
           setCheckingUpdate(false);
         } else {
-          // No cache – fetch from server
           const remote = await fetchProjectDetail();
           if (remote && remote.data) {
             const payload = { version: remote.version, data: remote.data };
             await setCached(payload);
             if (!isCancelled) setProjects(payload.data);
-          } else {
-            // fallback to static content if server didn't return data
-            if (!isCancelled) setProjects(staticProjects);
+          } else if (!isCancelled) {
+            setProjects(staticProjects);
           }
           if (!isCancelled) setLoading(false);
         }
@@ -234,13 +242,28 @@ const Project = () => {
     }
 
     init();
-    return () => {
-      isCancelled = true;
-    };
+    return () => { isCancelled = true; };
   }, []);
 
-  // Render logic: if loading & no projects yet -> show skeleton grid.
   const showSkeleton = loading && projects.length === 0;
+
+  // Determine which projects to render (preview vs all)
+  const visibleProjects = showAll ? projects : projects.slice(0, PREVIEW_COUNT);
+
+  // Smooth reveal helper: after showing all, scroll slightly so users notice new items (optional)
+  useEffect(() => {
+    if (showAll) {
+      // small delay so layout settles
+      const t = setTimeout(() => {
+        // scroll to the grid element so user sees the expansion
+        const gridEl = document.getElementById("projects-grid");
+        if (gridEl) {
+          gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 220);
+      return () => clearTimeout(t);
+    }
+  }, [showAll]);
 
   return (
     <>
@@ -275,37 +298,96 @@ const Project = () => {
           )}
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start">
+        <motion.div
+          id="projects-grid"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start"
+          variants={gridVariants}
+          initial="visible"
+          animate="visible"
+          layout
+        >
           {showSkeleton
-            ? // show 4 skeleton cards while initial fetch completes
-            [0,1].map((i) => (
+            ? // show skeletons
+            [0, 1].map((i) => (
               <div key={i}>
                 <SkeletonCard />
               </div>
             ))
-            : // show actual project cards (from cache, remote or static fallback)
-            projects.map((p) => <ProjectCard key={p.id ?? p.title} {...p} />)}
-        </div>
+            : // render project cards with animation
+            <AnimatePresence initial={false}>
+              {visibleProjects.map((p) => (
+                <motion.div
+                  key={p.id ?? p.title}
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  layout
+                >
+                  <ProjectCard {...p} />
+                </motion.div>
+              ))}
+            </AnimatePresence>}
+        </motion.div>
 
-        <div className="relative z-10 flex items-center gap-6 mt-10">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            aria-label="Scroll Up"
-            className="p-2 rounded hover:scale-105 transition"
-          >
-            <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
-          </button>
+        {/* View all / Show less controls */}
+        <div className="relative z-10 flex flex-col items-center gap-4 mt-8">
+          {/* Show the count and toggle only if we have more than preview */}
+          {projects.length > PREVIEW_COUNT && (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowAll((s) => !s)}
+                aria-expanded={showAll}
+                aria-controls="projects-grid"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border hover:scale-105 transition bg-white/80 dark:bg-[#06202b]/80 border-gray-200 dark:border-slate-700 shadow-sm"
+              >
+                {showAll ? (
+                  <>
+                    Show less
+                    <ChevronUpIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+                  </>
+                ) : (
+                  <>
+                    View all ({projects.length})
+                    <ChevronDownIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+                  </>
+                )}
+              </button>
 
-          <button
-            onClick={() => {
-              const sec = document.getElementById("about");
-              sec?.scrollIntoView({ behavior: "smooth" });
-            }}
-            aria-label="Scroll Down"
-            className="p-2 rounded animate-pulse hover:scale-105 transition"
-          >
-            <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
-          </button>
+              {/* optional: quick jump buttons */}
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                aria-label="Scroll Up"
+                className="p-2 rounded hover:scale-105 transition"
+              >
+                <ChevronUpIcon className={`w-6 h-6 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+              </button>
+            </div>
+          )}
+
+          {/* Keep your original scroll controls if there are few projects too */}
+          {projects.length <= PREVIEW_COUNT && (
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                aria-label="Scroll Up"
+                className="p-2 rounded hover:scale-105 transition"
+              >
+                <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+              </button>
+
+              <button
+                onClick={() => {
+                  const sec = document.getElementById("about");
+                  sec?.scrollIntoView({ behavior: "smooth" });
+                }}
+                aria-label="Scroll Down"
+                className="p-2 rounded animate-pulse hover:scale-105 transition"
+              >
+                <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </>
