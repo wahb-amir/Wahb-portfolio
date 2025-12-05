@@ -1,4 +1,4 @@
 module.exports = {
-  siteUrl: "https://wahb.buttnetworks.com",
+  siteUrl: "https://wahb.space",
   generateRobotsTxt: true,
 };
