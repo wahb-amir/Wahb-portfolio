@@ -5,15 +5,16 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import ProjectCard from "./ProjectCard";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
 });
 
-// Project list — replaced ML placeholder with the new Client–Dev Collaboration Platform
-const projects = [
+// --- your static fallback list (kept intact) ---
+const staticProjects = [
   {
     id: "client-dev-platform",
     title: "Client–Dev Collaboration Platform",
@@ -28,16 +29,16 @@ const projects = [
       "React",
       "Node.js",
       "Tailwind",
-      // "Socket.io",
       "MongoDB",
       "GitHub Webhooks",
-      // "OAuth",
     ],
     short:
       "A unified platform connecting clients and dev teams — request quotes, receive email alerts, view project progress & assignees, chat with developers, and automatically sync repo activity to project status.",
-    // special sentinel value telling the card this demo is private (not a public URL)
-    liveLink: "private-demo",
-    githubLink: null, // code is private — no public repo link
+    liveLink: "https://projects.buttnetworks.com",
+    githubLink: [
+      "https://github.com/coder101-js/dev-dashboard",
+      "https://github.com/coder101-js/dashboard",
+    ],
     problem:
       "Clients and development teams lacked a single workspace to request quotes, track project progress, communicate, and sync repository activity into task status.",
     process: [
@@ -87,11 +88,189 @@ const projects = [
   },
 ];
 
+const DB_NAME = "wahb-projects-db";
+const STORE_NAME = "projects";
+const CACHE_KEY = "project-detail";
+
+const PREVIEW_COUNT = 4;
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (typeof window === "undefined" || !("indexedDB" in window)) {
+      reject(new Error("IndexedDB not supported"));
+      return;
+    }
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = (e) => resolve(e.target.result);
+    req.onerror = (e) => reject(e.target.error);
+  });
+}
+
+async function getCached() {
+  try {
+    const db = await openDB();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const r = store.get(CACHE_KEY);
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = (e) => reject(e.target.error);
+    });
+  } catch (err) {
+    console.warn("IDB get error:", err);
+    return null;
+  }
+}
+
+async function setCached(payload) {
+  try {
+    const db = await openDB();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      const store = tx.objectStore(STORE_NAME);
+      const r = store.put(payload, CACHE_KEY);
+      r.onsuccess = () => resolve(true);
+      r.onerror = (e) => reject(e.target.error);
+    });
+  } catch (err) {
+    console.warn("IDB put error:", err);
+    return false;
+  }
+}
+
+async function fetchProjectDetail(version = null) {
+  try {
+    const api_path = process.env.NEXT_PUBLIC_PROJECTS_API;
+    const url = version ? `${api_path}?version=${version}` : api_path;
+
+    const resp = await fetch(url, { cache: "no-store" });
+    if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);
+
+    const json = await resp.json();
+    return {
+      version: json.version ?? null,
+      data: json.data ?? json.projects ?? (Array.isArray(json) ? json : null),
+      raw: json,
+    };
+  } catch (err) {
+    console.warn("fetchProjectDetail error:", err);
+    return null;
+  }
+}
+
+// --- skeleton card (unchanged) ---
+const SkeletonCard = () => (
+  <article className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse" aria-hidden="true">
+    <div className="w-full h-48 bg-gray-100 dark:bg-slate-800" />
+    <div className="p-4">
+      <div className="h-5 w-3/4 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
+      <div className="h-3 w-1/2 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
+      <div className="h-3 w-full rounded bg-gray-200 dark:bg-slate-800 mt-3" />
+    </div>
+  </article>
+);
+
+const gridVariants = {
+  visible: {
+    transition: {
+      staggerChildren: 0.04,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 8, scale: 0.995 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35 } },
+  exit: { opacity: 0, y: 6, scale: 0.995, transition: { duration: 0.25 } },
+};
+
+// Keywords for DOM indexing
+const KEYWORDS = {
+  projectsSection: ["projects", "portfolio", "case-studies", "projects-grid"],
+  projectCard: ["project-card", "case-study", "portfolio-item"],
+  controls: ["view-all", "toggle", "navigation"],
+};
+
 const Project = () => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const isDark = mounted && theme === "dark";
+
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [checkingUpdate, setCheckingUpdate] = useState(false);
+
+  // NEW: control whether we show all projects or only preview
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function init() {
+      setLoading(true);
+      try {
+        const cached = await getCached();
+        if (cached && cached.data) {
+          setProjects(cached.data);
+          setLoading(false);
+
+          setCheckingUpdate(true);
+          const remote = await fetchProjectDetail(cached.version);
+          if (!isCancelled && remote && remote.version && remote.version !== cached.version) {
+            const payload = { version: remote.version, data: remote.data ?? remote.raw };
+            await setCached(payload);
+            setProjects(payload.data);
+          }
+          setCheckingUpdate(false);
+        } else {
+          const remote = await fetchProjectDetail();
+          if (remote && remote.data) {
+            const payload = { version: remote.version, data: remote.data };
+            await setCached(payload);
+            if (!isCancelled) setProjects(payload.data);
+          } else if (!isCancelled) {
+            setProjects(staticProjects);
+          }
+          if (!isCancelled) setLoading(false);
+        }
+      } catch (err) {
+        console.error("Project init error:", err);
+        if (!isCancelled) {
+          setProjects(staticProjects);
+          setLoading(false);
+        }
+      }
+    }
+
+    init();
+    return () => { isCancelled = true; };
+  }, []);
+
+  const showSkeleton = loading && projects.length === 0;
+
+  // Determine which projects to render (preview vs all)
+  const visibleProjects = showAll ? projects : projects.slice(0, PREVIEW_COUNT);
+
+  // Smooth reveal helper: after showing all, scroll slightly so users notice new items (optional)
+  useEffect(() => {
+    if (showAll) {
+      // small delay so layout settles
+      const t = setTimeout(() => {
+        // scroll to the grid element so user sees the expansion
+        const gridEl = document.getElementById("projects-grid");
+        if (gridEl) {
+          gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 220);
+      return () => clearTimeout(t);
+    }
+  }, [showAll]);
 
   return (
     <>
@@ -102,10 +281,14 @@ const Project = () => {
         className={`relative flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden z-10  bg-[#f9fafb] dark:bg-[#0f172a]
     bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
     text-black dark:text-white`}
+        role="region"
+        aria-labelledby="projects-heading"
+        data-keywords={KEYWORDS.projectsSection.join(",")}
       >
-        <LazyBackgroundEffect />
+        <LazyBackgroundEffect aria-hidden="true" />
 
         <motion.h1
+          id="projects-heading"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -115,36 +298,115 @@ const Project = () => {
           My Projects
         </motion.h1>
 
-        <p className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${isDark ? "text-slate-300" : "text-gray-700"}`}>
-          Real apps I built & shipped — each entry includes the problem I solved, the approach I took, and the outcome. Click any card to read the case study.
+        <p
+          className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${isDark ? "text-slate-300" : "text-gray-700"
+            }`}
+        >
+          Real apps I built & shipped — each entry includes the problem I solved, the approach I
+          took, and the outcome. Click any card to read the case study.
+          {checkingUpdate && (
+            <span className="ml-2 text-xs text-gray-500 dark:text-slate-400" role="status" aria-live="polite">Checking updates…</span>
+          )}
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start">
-          {projects.map((p) => (
-            // NOTE: we do NOT pass any isOpen/onToggle here — cards are independent
-            <ProjectCard key={p.id} {...p} />
-          ))}
-        </div>
+        <motion.div
+          id="projects-grid"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start"
+          variants={gridVariants}
+          initial="visible"
+          animate="visible"
+          layout
+          role="list"
+          aria-label="Projects grid"
+          data-keywords="projects-grid,portfolio-grid"
+        >
+          {showSkeleton
+            ? // show skeletons
+            [0, 1].map((i) => (
+              <div key={i}>
+                <SkeletonCard />
+              </div>
+            ))
+            : // render project cards with animation
+            <AnimatePresence initial={false}>
+              {visibleProjects.map((p) => (
+                <motion.div
+                  key={p.id ?? p.title}
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  layout
+                  role="listitem"
+                  aria-label={`Project: ${p.title}`}
+                  data-keywords={[...KEYWORDS.projectCard, p.category, p.id].filter(Boolean).join(",")}
+                >
+                  <ProjectCard {...p} />
+                </motion.div>
+              ))}
+            </AnimatePresence>}
+        </motion.div>
 
-        <div className="relative z-10 flex items-center gap-6 mt-10">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            aria-label="Scroll Up"
-            className="p-2 rounded hover:scale-105 transition"
-          >
-            <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
-          </button>
+        {/* View all / Show less controls */}
+        <div className="relative z-10 flex flex-col items-center gap-4 mt-8">
+          {/* Show the count and toggle only if we have more than preview */}
+          {projects.length > PREVIEW_COUNT && (
+            <div className="flex items-center gap-3" role="region" aria-label="Project controls" data-keywords={KEYWORDS.controls.join(",")}>
+              <button
+                onClick={() => setShowAll((s) => !s)}
+                aria-expanded={showAll}
+                aria-controls="projects-grid"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border hover:scale-105 transition bg-white/80 dark:bg-[#06202b]/80 border-gray-200 dark:border-slate-700 shadow-sm"
+                aria-pressed={showAll}
+                title={showAll ? "Show fewer projects" : `View all (${projects.length}) projects`}
+              >
+                {showAll ? (
+                  <>
+                    Show less
+                    <ChevronUpIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+                  </>
+                ) : (
+                  <>
+                    View all ({projects.length})
+                    <ChevronDownIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+                  </>
+                )}
+              </button>
 
-          <button
-            onClick={() => {
-              const sec = document.getElementById("about");
-              sec?.scrollIntoView({ behavior: "smooth" });
-            }}
-            aria-label="Scroll Down"
-            className="p-2 rounded animate-pulse hover:scale-105 transition"
-          >
-            <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
-          </button>
+              {/* optional: quick jump buttons */}
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                aria-label="Scroll Up"
+                className="p-2 rounded hover:scale-105 transition"
+              >
+                <ChevronUpIcon className={`w-6 h-6 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+              </button>
+            </div>
+          )}
+
+          {/* Keep your original scroll controls if there are few projects too */}
+          {projects.length <= PREVIEW_COUNT && (
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                aria-label="Scroll Up"
+                className="p-2 rounded hover:scale-105 transition"
+              >
+                <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+              </button>
+
+              <button
+                onClick={() => {
+                  const sec = document.getElementById("about");
+                  sec?.scrollIntoView({ behavior: "smooth" });
+                }}
+                aria-label="Scroll Down"
+                className="p-2 rounded animate-pulse hover:scale-105 transition"
+              >
+                <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </>

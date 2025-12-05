@@ -2,14 +2,15 @@ import { connectToDB } from "@/lib/db";
 import Message from "@/models/Message";
 import { NextResponse } from "next/server";
 
-// ✅ Allowed origins list
 const allowedOrigins = [
   "https://shahnawaz.buttnetworks.com",
   "https://buttnetworks.com",
 ];
-
 const getCORSHeaders = (req) => {
   const origin = req.headers.get("origin");
+  if (!origin) {
+    return {};
+  }
   if (allowedOrigins.includes(origin)) {
     return {
       "Access-Control-Allow-Origin": origin,
@@ -17,6 +18,8 @@ const getCORSHeaders = (req) => {
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
   }
+
+  // 3. If Origin is present but not in the list, return empty headers.
   return {};
 };
 

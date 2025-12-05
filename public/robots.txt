@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://wahb.buttnetworks.com
+Host: https://wahb.space
 
 # Sitemaps
-Sitemap: https://wahb.buttnetworks.com/sitemap.xml
+Sitemap: https://wahb.space/sitemap.xml

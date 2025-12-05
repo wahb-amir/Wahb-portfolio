@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+#testing seed folder for DB
+seed
+#stress testing folder for portfolio
+stress
+
 # debug
 npm-debug.log*
 yarn-debug.log*
