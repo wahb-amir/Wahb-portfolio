@@ -69,7 +69,7 @@ async function setCachedAbout(payload) {
 // --- fetch helper (expects { version, data } or just data shape) ---
 async function fetchAbout(version = null) {
   try {
-    const api_path ="/api/updates/about";
+    const api_path = "/api/updates/about";
     const url = version ? `${api_path}?version=${version}` : api_path;
     const resp = await fetch(url, { cache: "no-store" });
     if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);
@@ -277,7 +277,7 @@ export default function About() {
             <p className="text-cyan-800 dark:text-cyan-400 text-xl font-mono">{timeSinceStart}</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {showSkeleton ? (
               <>
                 <SkeletonStat />
@@ -309,8 +309,9 @@ export default function About() {
               <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded animate-pulse" />
             </div>
           ) : (
-            <ul className="list-disc pl-6 text-gray-700 dark:text-slate-300 space-y-2 max-w-3xl mx-auto">
-              
+            <ul className="list-disc pl-4 md:pl-6 text-gray-700 dark:text-slate-300 space-y-2 max-w-4xl mx-auto">
+
+
               {Array.isArray(about.quickFacts) ? (
                 about.quickFacts.map((f, i) => <li key={i}>{f}</li>)
               ) : (
@@ -332,7 +333,7 @@ export default function About() {
         <div className="mb-12">
           <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">🚀 Learning Timeline</h3>
 
-          <div className="space-y-4 border-l-2 border-cyan-400 pl-4 max-w-3xl mx-auto">
+          <div className="space-y-4 border-l-2 border-cyan-400 pl-4 md:pl-6 max-w-5xl mx-auto">
             {showSkeleton ? (
               <>
                 <SkeletonTimelineItem />
