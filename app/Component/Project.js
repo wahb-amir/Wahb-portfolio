@@ -7,6 +7,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import ProjectCard from "./ProjectCard";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
@@ -164,7 +165,7 @@ async function fetchProjectDetail(version = null) {
 
 // --- skeleton card (unchanged) ---
 const SkeletonCard = () => (
-  <article className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse">
+  <article className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse" aria-hidden="true">
     <div className="w-full h-48 bg-gray-100 dark:bg-slate-800" />
     <div className="p-4">
       <div className="h-5 w-3/4 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
@@ -186,6 +187,13 @@ const cardVariants = {
   hidden: { opacity: 0, y: 8, scale: 0.995 },
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35 } },
   exit: { opacity: 0, y: 6, scale: 0.995, transition: { duration: 0.25 } },
+};
+
+// Keywords for DOM indexing
+const KEYWORDS = {
+  projectsSection: ["projects", "portfolio", "case-studies", "projects-grid"],
+  projectCard: ["project-card", "case-study", "portfolio-item"],
+  controls: ["view-all", "toggle", "navigation"],
 };
 
 const Project = () => {
@@ -273,10 +281,14 @@ const Project = () => {
         className={`relative flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden z-10  bg-[#f9fafb] dark:bg-[#0f172a]
     bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
     text-black dark:text-white`}
+        role="region"
+        aria-labelledby="projects-heading"
+        data-keywords={KEYWORDS.projectsSection.join(",")}
       >
-        <LazyBackgroundEffect />
+        <LazyBackgroundEffect aria-hidden="true" />
 
         <motion.h1
+          id="projects-heading"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -293,7 +305,7 @@ const Project = () => {
           Real apps I built & shipped — each entry includes the problem I solved, the approach I
           took, and the outcome. Click any card to read the case study.
           {checkingUpdate && (
-            <span className="ml-2 text-xs text-gray-500 dark:text-slate-400">Checking updates…</span>
+            <span className="ml-2 text-xs text-gray-500 dark:text-slate-400" role="status" aria-live="polite">Checking updates…</span>
           )}
         </p>
 
@@ -304,6 +316,9 @@ const Project = () => {
           initial="visible"
           animate="visible"
           layout
+          role="list"
+          aria-label="Projects grid"
+          data-keywords="projects-grid,portfolio-grid"
         >
           {showSkeleton
             ? // show skeletons
@@ -322,6 +337,9 @@ const Project = () => {
                   animate="visible"
                   exit="exit"
                   layout
+                  role="listitem"
+                  aria-label={`Project: ${p.title}`}
+                  data-keywords={[...KEYWORDS.projectCard, p.category, p.id].filter(Boolean).join(",")}
                 >
                   <ProjectCard {...p} />
                 </motion.div>
@@ -333,22 +351,24 @@ const Project = () => {
         <div className="relative z-10 flex flex-col items-center gap-4 mt-8">
           {/* Show the count and toggle only if we have more than preview */}
           {projects.length > PREVIEW_COUNT && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3" role="region" aria-label="Project controls" data-keywords={KEYWORDS.controls.join(",")}>
               <button
                 onClick={() => setShowAll((s) => !s)}
                 aria-expanded={showAll}
                 aria-controls="projects-grid"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md border hover:scale-105 transition bg-white/80 dark:bg-[#06202b]/80 border-gray-200 dark:border-slate-700 shadow-sm"
+                aria-pressed={showAll}
+                title={showAll ? "Show fewer projects" : `View all (${projects.length}) projects`}
               >
                 {showAll ? (
                   <>
                     Show less
-                    <ChevronUpIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+                    <ChevronUpIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
                   </>
                 ) : (
                   <>
                     View all ({projects.length})
-                    <ChevronDownIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+                    <ChevronDownIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
                   </>
                 )}
               </button>
@@ -359,7 +379,7 @@ const Project = () => {
                 aria-label="Scroll Up"
                 className="p-2 rounded hover:scale-105 transition"
               >
-                <ChevronUpIcon className={`w-6 h-6 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+                <ChevronUpIcon className={`w-6 h-6 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
               </button>
             </div>
           )}
@@ -372,7 +392,7 @@ const Project = () => {
                 aria-label="Scroll Up"
                 className="p-2 rounded hover:scale-105 transition"
               >
-                <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+                <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
               </button>
 
               <button
@@ -383,7 +403,7 @@ const Project = () => {
                 aria-label="Scroll Down"
                 className="p-2 rounded animate-pulse hover:scale-105 transition"
               >
-                <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+                <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
               </button>
             </div>
           )}

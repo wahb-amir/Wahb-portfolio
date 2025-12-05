@@ -11,226 +11,46 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   loading: () => null,
 });
 
-// --- IndexedDB tiny helper (same pattern as projects) ---
-const DB_NAME = "wahb-projects-db";
-const STORE_NAME = "projects";
-const ABOUT_CACHE_KEY = "about-detail";
+/** Start date for the "dev journey" timer */
+const START_DATE = new Date("2025-03-22T00:00:00Z");
 
-function openDB() {
-  return new Promise((resolve, reject) => {
-    if (typeof window === "undefined" || !("indexedDB" in window)) {
-      reject(new Error("IndexedDB not supported"));
-      return;
-    }
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME);
-      }
-    };
-    req.onsuccess = (e) => resolve(e.target.result);
-    req.onerror = (e) => reject(e.target.error);
-  });
-}
-
-async function getCachedAbout() {
-  try {
-    const db = await openDB();
-    return await new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, "readonly");
-      const store = tx.objectStore(STORE_NAME);
-      const r = store.get(ABOUT_CACHE_KEY);
-      r.onsuccess = () => resolve(r.result);
-      r.onerror = (e) => reject(e.target.error);
-    });
-  } catch (err) {
-    console.warn("IDB get error:", err);
-    return null;
-  }
-}
-
-async function setCachedAbout(payload) {
-  try {
-    const db = await openDB();
-    return await new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, "readwrite");
-      const store = tx.objectStore(STORE_NAME);
-      const r = store.put(payload, ABOUT_CACHE_KEY);
-      r.onsuccess = () => resolve(true);
-      r.onerror = (e) => reject(e.target.error);
-    });
-  } catch (err) {
-    console.warn("IDB put error:", err);
-    return false;
-  }
-}
-
-async function fetchAbout(version = null) {
-  try {
-    const api_path = process.env.NEXT_PUBLIC_ABOUT_API || "/api/updates/about";
-    const url = version ? `${api_path}?version=${version}` : api_path;
-    const resp = await fetch(url, { cache: "no-store" });
-    if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);
-    const json = await resp.json();
-    // Normalize
-    return {
-      version: json.version ?? null,
-      data: json.data ?? json.about ?? json,
-      raw: json,
-    };
-  } catch (err) {
-    console.warn("fetchAbout error:", err);
-    return null;
-  }
-}
-
-// --- default static content (fallback if remote unavailable) ---
-const FALLBACK = {
-  startDate: "2025-03-22T00:00:00Z",
-  bio:
-    "Hello, my name is Wahb. I learnt how to code on my own, and I'm most content when I'm creating functional things. I'm currently working on training and debugging convolutional models for computer vision using PyTorch; consider object detection, segmentation, and all the messy training-loop stuff. In order to move models off the cloud and run them on robots and low-end hardware, I am simultaneously learning C++. Additionally, I develop and implement self-host services and full-stack apps on Linux VPS—practical, hands-on work. 🤝",
-  stats: {
-    projectsDeployed: 4,
-    selfHosted: "Yes",
-  },
-  timeline: [
-    { title: "Early 2025", desc: "Front-end foundations: HTML & CSS" },
-    { title: "Spring 2025", desc: "Built small JS projects & sharpened JavaScript skills" },
-    { title: "Mid 2025", desc: "Moved to React, Tailwind & Next.js — shipped full-stack apps" },
-    { title: "Summer 2025", desc: "Deployed 3 full-stack web apps and self-hosted services" },
-    {
-      title: "Now (Advanced)",
-      desc: "Deep-diving into PyTorch for computer vision while learning C++ for robotics.",
-    },
-    { title: "Next", desc: "Integrate trained models into lightweight deployments." },
-  ],
-  goals: {
-    past: [],
-    present: [],
-    future: [],
-  },
-};
-
-// --- small skeletons for bio, stats, timeline ---
-const SkeletonBio = () => (
-  <div className="max-w-3xl mx-auto space-y-3 animate-pulse">
-    <div className="h-6 w-2/3 bg-gray-200 dark:bg-slate-800 rounded" />
-    <div className="h-4 w-full bg-gray-200 dark:bg-slate-800 rounded" />
-    <div className="h-4 w-full bg-gray-200 dark:bg-slate-800 rounded" />
-    <div className="h-4 w-5/6 bg-gray-200 dark:bg-slate-800 rounded" />
-  </div>
-);
-
-const SkeletonStat = () => (
-  <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md p-5 rounded-lg text-center border border-white/10 dark:border-slate-700 animate-pulse">
-    <div className="h-7 w-14 mx-auto bg-gray-200 dark:bg-slate-800 rounded mb-2" />
-    <div className="h-3 w-24 mx-auto bg-gray-200 dark:bg-slate-800 rounded" />
-  </div>
-);
-
-const SkeletonTimelineItem = () => (
-  <div className="space-y-2">
-    <div className="h-4 w-1/3 bg-gray-200 dark:bg-slate-800 rounded animate-pulse" />
-    <div className="h-3 w-full bg-gray-200 dark:bg-slate-800 rounded animate-pulse" />
-  </div>
-);
-
-// --- time helper like before, but accepts start date string or Date ---
-function getTimeSinceStart(start) {
-  const s = start ? new Date(start) : new Date(FALLBACK.startDate);
+/** Helper that returns "Xd Yh Zm" */
+function getTimeSinceStart(start = START_DATE) {
   const now = new Date();
-  const diff = now - s;
+  const diff = now - start;
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const minutes = Math.floor((diff / (1000 * 60)) % 60);
   return `${days}d ${hours}h ${minutes}m`;
 }
 
+/** Keyword tags for components */
+const KEYWORDS = {
+  about: ["about", "bio", "developer", "portfolio", "pytorch", "nextjs", "react", "self-host"],
+  timer: ["timer", "active-journey", "dev-journey", "uptime"],
+  stats: ["stat", "projects", "deployed", "self-host", "metrics"],
+  quickFacts: ["skills", "tech-stack", "frontend", "backend", "ml", "robotics"],
+  timeline: ["timeline", "roadmap", "milestones", "learning"],
+  navButtons: ["navigation", "scroll", "cta"],
+};
+
 export default function About() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const [about, setAbout] = useState(FALLBACK);
-  const [loading, setLoading] = useState(true);
-  const [checkingUpdate, setCheckingUpdate] = useState(false);
-  const [version, setVersion] = useState(null);
-  const [timeSinceStart, setTimeSinceStart] = useState(() => getTimeSinceStart(FALLBACK.startDate));
+  // initialize synchronously to avoid layout shift
+  const [timeSinceStart, setTimeSinceStart] = useState(() => getTimeSinceStart());
   const [hydrated, setHydrated] = useState(false);
 
-  // hydration for background effect
   useEffect(() => {
     setHydrated(true);
-  }, []);
 
-  // live timer tick (minutes)
-  useEffect(() => {
-    const tick = () => setTimeSinceStart(getTimeSinceStart(about.startDate));
-    const id = setInterval(tick, 1000 * 60);
+    const tick = () => setTimeSinceStart(getTimeSinceStart());
+    const interval = setInterval(tick, 1000 * 60);
     tick();
-    return () => clearInterval(id);
-  }, [about.startDate]);
 
-  // init: load cached -> show -> check remote
-  useEffect(() => {
-    let cancelled = false;
-
-    async function init() {
-      setLoading(true);
-      try {
-        const cached = await getCachedAbout();
-        if (cached && cached.data) {
-          // show cached immediately
-          if (!cancelled) {
-            setAbout(cached.data);
-            setVersion(cached.version ?? null);
-            setLoading(false);
-          }
-
-          // then check remote for new version
-          setCheckingUpdate(true);
-          const remote = await fetchAbout(cached.version ?? null);
-          if (!cancelled && remote && remote.version && remote.version !== cached.version) {
-            const payload = { version: remote.version, data: remote.data ?? remote.raw };
-            await setCachedAbout(payload);
-            setAbout(payload.data);
-            setVersion(payload.version);
-          }
-          setCheckingUpdate(false);
-        } else {
-          // no cache — fetch full payload
-          const remote = await fetchAbout();
-          if (remote && remote.data) {
-            const payload = { version: remote.version, data: remote.data };
-            await setCachedAbout(payload);
-            if (!cancelled) {
-              setAbout(payload.data);
-              setVersion(payload.version ?? null);
-            }
-          } else {
-            // fallback to internal static content
-            if (!cancelled) {
-              setAbout(FALLBACK);
-            }
-          }
-          if (!cancelled) setLoading(false);
-        }
-      } catch (err) {
-        console.error("About init error:", err);
-        if (!cancelled) {
-          setAbout(FALLBACK);
-          setLoading(false);
-        }
-      }
-    }
-
-    init();
-    return () => {
-      cancelled = true;
-    };
+    return () => clearInterval(interval);
   }, []);
-
-  const showSkeleton = loading;
 
   return (
     <section
@@ -240,124 +60,109 @@ export default function About() {
        bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
        text-black dark:text-white`}
       aria-labelledby="about-heading"
+      role="region"
+      data-keywords={KEYWORDS.about.join(",")}
     >
-      {hydrated && <LazyBackgroundEffect />}
+      {hydrated && <LazyBackgroundEffect aria-hidden="true" />}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="w-full max-w-5xl z-10 px-4 sm:px-6 md:px-8"
+        role="main"
+        aria-describedby="about-bio"
       >
-        <h2 id="about-heading" className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">
+        <h2
+          id="about-heading"
+          className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white"
+        >
           👨‍💻 About Me
         </h2>
 
-        {/* bio */}
-        <div className="mb-8">
-          {showSkeleton ? (
-            <SkeletonBio />
-          ) : (
-            <p className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
-              <span dangerouslySetInnerHTML={{ __html: about.bio }} />
-              {/* allow html strings from CMS; if you don't want that use plain text */}
-            </p>
-          )}
+        <p
+          id="about-bio"
+          className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed"
+          aria-label="Short biography"
+          data-keywords="bio,summary,lead"
+        >
+          Hello, my name is Wahb. I learnt how to code on my own, and I'm most content when I'm creating functional things. I'm currently working on training and debugging convolutional models for computer vision using <strong className="underline decoration-blue-500">PyTorch</strong>; consider object detection, segmentation, and all the messy training-loop stuff.In order to move models off the cloud and run them on robots and low-end hardware, I am simultaneously learning <strong className="underline decoration-blue-500">C++</strong>.  Additionally, I develop and implement self-host services and full-stack apps on Linux VPS—practical, hands-on work. 🤝
+        </p>
 
-          {checkingUpdate && (
-            <div className="text-center text-xs text-gray-500 dark:text-slate-400 mt-2">Checking updates…</div>
-          )}
+        {/* Timer */}
+        <div
+          className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-6 text-center mb-16 border border-white/10 dark:border-slate-700"
+          role="region"
+          aria-label="Active development journey timer"
+          data-keywords={KEYWORDS.timer.join(",")}
+        >
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-slate-200 mb-2">⏳ Active Dev Journey</h3>
+          <p className="text-cyan-800 dark:text-cyan-400 text-xl font-mono" role="status" aria-live="polite">
+            <time dateTime={START_DATE.toISOString()}>{timeSinceStart}</time>
+          </p>
         </div>
 
-        {/* Timer + Stats */}
-        <div className="flex flex-col md:flex-row gap-6 mb-12 items-stretch justify-center">
-          <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-6 text-center border border-white/10 dark:border-slate-700">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-slate-200 mb-2">⏳ Active Dev Journey</h3>
-            <p className="text-cyan-800 dark:text-cyan-400 text-xl font-mono">{timeSinceStart}</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-            {showSkeleton ? (
-              <>
-                <SkeletonStat />
-                <SkeletonStat />
-              </>
-            ) : (
-              <>
-                <StatCard
-                  label="Days in Dev Flow"
-                  value={`${Math.floor((new Date() - new Date(about.startDate || FALLBACK.startDate)) / (1000 * 60 * 60 * 24))}d`}
-                />
-                <StatCard
-                  label="Projects Deployed"
-                  value={about.stats?.projectsDeployed ?? FALLBACK.stats.projectsDeployed}
-                />
-              </>
-            )}
-          </div>
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-16" role="list" aria-label="Stats" data-keywords={KEYWORDS.stats.join(",")}>
+          <StatCard
+            label="Days in Dev Flow"
+            value={`${Math.floor((new Date() - START_DATE) / (1000 * 60 * 60 * 24))}d`}
+          />
+          <StatCard label="Projects Deployed" value="3" />
+          <StatCard label="Self-Hosted on VPS" value="Yes 🐧" />
         </div>
 
         {/* Quick Facts */}
-        {/* Quick Facts */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">⚡ Quick Facts</h3>
-
-          {showSkeleton ? (
-            <div className="max-w-3xl space-y-3 animate-pulse">
-              <div className="h-4 w-11/12 bg-gray-200 dark:bg-slate-800 rounded" />
-              <div className="h-4 w-10/12 bg-gray-200 dark:bg-slate-800 rounded" />
-              <div className="h-4 w-9/12 bg-gray-200 dark:bg-slate-800 rounded" />
-            </div>
-          ) : (
-            <ul className="list-disc pl-6 text-gray-700 dark:text-slate-300 space-y-2 max-w-3xl">
-              {Array.isArray(about.quickFacts) ? (
-                about.quickFacts.map((f, i) => <li key={i}>{f}</li>)
-              ) : (
-                <>
-                  <li>Frontend: React, Next.js, Tailwind CSS, Framer Motion</li>
-                  <li>Backend: Node.js, Express, MongoDB, Mongoose</li>
-                  <li>Machine Learning & AI: <strong>PyTorch</strong> — CNNs, detection, segmentation, training & debugging</li>
-                  <li>Low-level & Robotics: learning <strong>C++</strong> for embedded/robotics and real-time systems</li>
-                  <li>Mathematics: Linear Algebra, Calculus, Probability & Statistics — core for ML</li>
-                  <li>Deployment: Linux VPS (manual + CLI-based), Docker for experiments</li>
-                  <li>Workflow: build small experiments, iterate quickly, ship what works</li>
-                </>
-              )}
-            </ul>
-          )}
+        <div className="mb-16" role="region" aria-labelledby="quick-facts-heading" data-keywords={KEYWORDS.quickFacts.join(",")}>
+          <h3 id="quick-facts-heading" className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">⚡ Quick Facts</h3>
+          <ul className="list-disc pl-6 text-gray-700 dark:text-slate-300 space-y-2" role="list" aria-label="Quick facts list">
+            <li role="listitem">Frontend: React, Next.js, Tailwind CSS, Framer Motion</li>
+            <li role="listitem">Backend: Node.js, Express, MongoDB, Mongoose</li>
+            <li role="listitem">Machine Learning & AI: <strong>PyTorch</strong> — CNNs, detection, segmentation, training & debugging</li>
+            <li role="listitem">Low-level & Robotics: learning <strong>C++</strong> for embedded/robotics and real-time systems</li>
+            <li role="listitem">Mathematics: Linear Algebra, Calculus, Probability & Statistics — core for ML</li>
+            <li role="listitem">Deployment: Linux VPS (manual + CLI-based), Docker for experiments</li>
+            <li role="listitem">Workflow: build small experiments, iterate quickly, ship what works</li>
+          </ul>
         </div>
 
-        {/* Timeline */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">🚀 Learning Timeline</h3>
+        <div className="mb-16" role="region" aria-labelledby="timeline-heading" data-keywords={KEYWORDS.timeline.join(",")}>
+          <h3 id="timeline-heading" className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">🚀 Learning Timeline</h3>
 
-          <div className="space-y-4 border-l-2 border-cyan-400 pl-4 max-w-3xl">
-            {showSkeleton ? (
-              <>
-                <SkeletonTimelineItem />
-                <SkeletonTimelineItem />
-                <SkeletonTimelineItem />
-              </>
-            ) : (
-              (Array.isArray(about.timeline) ? about.timeline : FALLBACK.timeline).map((t, idx) => (
-                <TimelineItem key={idx} title={t.title} desc={t.desc} />
-              ))
-            )}
+          <div className="space-y-4 border-l-2 border-cyan-400 pl-4" role="list" aria-label="Learning timeline">
+            <TimelineItem title="Early 2025" desc="Front-end foundations: HTML & CSS" />
+            <TimelineItem title="Spring 2025" desc="Built small JS projects & sharpened JavaScript skills" />
+            <TimelineItem title="Mid 2025" desc="Moved to React, Tailwind & Next.js — shipped full-stack apps" />
+            <TimelineItem title="Summer 2025" desc="Deployed 3 full-stack web apps and self-hosted services" />
+
+            <TimelineItem
+              title="Now (Advanced)"
+              desc="Deep-diving into PyTorch for computer vision (CNNs, detection, segmentation, training loops) while learning C++ for robotics/low-level programming."
+            />
+            <TimelineItem
+              title="Next"
+              desc="Integrate trained models into lightweight deployments — experiment with model optimization and edge/embedded inference (C++ + inference runtimes)."
+            />
+
+            <TimelineItem
+              title="Future"
+              desc="Scale to production-ready AI systems: optimize models for latency, contribute to ML tooling, and build robotic systems that actually move stuff."
+            />
           </div>
         </div>
 
-
-        <blockquote className="text-center italic dark:text-cyan-400 text-blue-600 text-xl mb-8">
-          {showSkeleton ? "…" : (about.quote ?? "“Still early in the journey — but building like I mean it.”")}
+        <blockquote className="text-center italic dark:text-cyan-400 text-blue-600 text-xl" aria-label="Inspirational quote" data-keywords="quote,mission">
+          “Still early in the journey — but building like I mean it.”
         </blockquote>
 
-        <div className="relative z-10 flex justify-center items-center gap-6 mt-6">
+        <div className="relative z-10 flex justify-center items-center gap-6 mt-12" role="group" aria-label="About navigation buttons">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Scroll Up"
             className="hover:scale-110 transition-transform"
+            data-keywords={KEYWORDS.navButtons.join(",")}
           >
-            <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+            <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
           </button>
           <button
             onClick={() => {
@@ -366,8 +171,9 @@ export default function About() {
             }}
             aria-label="Scroll Down"
             className="animate-pulse hover:scale-110 transition-transform"
+            data-keywords={KEYWORDS.navButtons.join(",")}
           >
-            <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+            <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
           </button>
         </div>
       </motion.div>
@@ -375,17 +181,27 @@ export default function About() {
   );
 }
 
-// small subcomponents
-const StatCard = ({ label, value }) => (
-  <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md p-5 rounded-lg text-center border border-white/10 dark:border-slate-700">
-    <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
-    <p className="text-sm text-gray-700 dark:text-slate-300">{label}</p>
-  </div>
-);
+const StatCard = ({ label, value }) => {
+  const compact = label.toLowerCase().replace(/\s+/g, "-");
+  return (
+    <div
+      className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md p-5 rounded-lg text-center border border-white/10 dark:border-slate-700"
+      role="article"
+      aria-label={`${label} statistic`}
+      data-keywords={["stat", compact, "about"].join(",")}
+    >
+      <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+      <p className="text-sm text-gray-700 dark:text-slate-300">{label}</p>
+    </div>
+  );
+};
 
-const TimelineItem = ({ title, desc }) => (
-  <div>
-    <span className="font-semibold text-gray-900 dark:text-white">{title}:</span>{" "}
-    <span className="text-gray-700 dark:text-slate-300">{desc}</span>
-  </div>
-);
+const TimelineItem = ({ title, desc }) => {
+  const kw = ["timeline", title.toLowerCase().replace(/\s+/g, "-")].join(",");
+  return (
+    <div role="listitem" aria-label={`Timeline: ${title}`} data-keywords={kw}>
+      <span className="font-semibold text-gray-900 dark:text-white">{title}:</span>{" "}
+      <span className="text-gray-700 dark:text-slate-300">{desc}</span>
+    </div>
+  );
+};

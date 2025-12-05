@@ -22,28 +22,17 @@ export default function Hero() {
   const isDark = theme === "dark";
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
-    // mark client hydrate timing — used to enable client-only bits
-    setHydrated(true);
-  }, []);
+  useEffect(() => setHydrated(true), []);
 
   const handleScrollToSkills = () => {
     const skillsSection = document.getElementById("skills");
-    if (skillsSection) {
-      skillsSection.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else {
-      console.warn("Skills section not found!");
-    }
+    if (skillsSection) skillsSection.scrollIntoView({ behavior: "smooth", block: "center" });
+    else console.warn("Skills section not found!");
   };
 
-  // --- CONSTANTS for fallbacks so layout is consistent ---
-  const HERO_MIN_HEIGHT = "min-h-[60vh] sm:min-h-[68vh]"; // reserve vertical space
-  const AVATAR_SIZE = {
-    // explicit pixel sizes to prevent resizing flashes
-    mobile: 150, // matches w-[150px]
-    tablet: 200, // xs:w-[200px]
-    large: 300, // 3xl:w-[300px]
-  };
+  // constants for SSR-friendly layout
+  const HERO_MIN_HEIGHT = "min-h-[60vh] sm:min-h-[68vh]";
+  const AVATAR_SIZE = { mobile: 150, tablet: 200, large: 300 };
 
   return (
     <main
@@ -56,23 +45,23 @@ export default function Hero() {
         text-black dark:text-white
         overflow-hidden pt-[env(safe-area-inset-top)]
       `}
-      aria-label="Hero"
+      aria-label="Hero Section"
+      role="banner"
+      data-keywords="hero,intro,avatar,typewriter,web developer"
     >
-      {/* Background placeholder (server-rendered) — keeps same visual baseline while bg effects load */}
+      {/* SSR placeholder for smooth visual */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
-          // subtle overlay that matches final visual; this prevents jump when BackgroundEffect mounts
-          background:
-            "linear-gradient(to bottom, rgba(0,191,255,0.08), rgba(0,177,255,0.12))",
+          background: "linear-gradient(to bottom, rgba(0,191,255,0.08), rgba(0,177,255,0.12))",
         }}
       />
 
       {hydrated && (
         <>
-          <LazyBackgroundEffect />
-          <LazyParticles />
+          <LazyBackgroundEffect aria-hidden="true" />
+          <LazyParticles aria-hidden="true" />
         </>
       )}
 
@@ -81,8 +70,9 @@ export default function Hero() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.9 }}
         className="z-10 mt-8 max-w-xl mx-auto"
+        role="main"
       >
-        {/* Avatar container: explicit sizing so image space is reserved on SSR */}
+        {/* Avatar */}
         <div
           className="mx-auto p-2"
           style={{
@@ -91,10 +81,10 @@ export default function Hero() {
             maxWidth: "92vw",
           }}
         >
-         
           <Avatar />
         </div>
 
+        {/* Heading */}
         <h1 className="font-sans text-4xl xs:text-5xl sm:text-7xl font-extrabold tracking-tight text-gray-800 dark:text-white drop-shadow-lg mt-6">
           Hey, I&apos;m{" "}
           <span className="font-serif text-5xl xs:text-6xl sm:text-8xl text-blue-600 font-black drop-shadow-lg">
@@ -106,9 +96,11 @@ export default function Hero() {
           </span>
         </h1>
 
-
-        {/* Typewriter: show a static fallback until hydrated to avoid changing height */}
-        <h2 className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md">
+        {/* Typewriter */}
+        <h2
+          className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md"
+          aria-label="Developer specialties"
+        >
           {hydrated ? (
             <Typewriter
               words={[
@@ -126,11 +118,11 @@ export default function Hero() {
               delaySpeed={1500}
             />
           ) : (
-            // Fallback text has same approximate length to avoid reflow
             "Full-Stack Web Developer 💻 — Building Scalable Web Apps 🚀"
           )}
         </h2>
 
+        {/* Short description */}
         <p className="text-base mt-6 max-w-2xl mx-auto text-black dark:text-slate-400 drop-shadow-sm">
           I turn complex ideas into elegant, fast, and reliable web applications.
         </p>
@@ -139,7 +131,7 @@ export default function Hero() {
         </p>
       </motion.div>
 
-      {/* Scroll down chevron */}
+      {/* Scroll down button */}
       <motion.button
         initial={{ y: 0 }}
         animate={{ y: [0, 20, 0] }}
@@ -147,13 +139,13 @@ export default function Hero() {
         className="absolute bottom-8 flex flex-col items-center cursor-pointer z-10 hover:scale-110 transition"
         onClick={handleScrollToSkills}
         aria-label="Scroll to skills section"
+        data-keywords="scroll,chevron,cta,hero"
       >
-        <ChevronDownIcon className="w-8 h-8 text-white animate-pulse" />
+        <ChevronDownIcon className="w-8 h-8 text-white animate-pulse" aria-hidden="true" />
         <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300 drop-shadow-sm">
           Scroll to see my skills 👇
         </span>
       </motion.button>
-
     </main>
   );
 }

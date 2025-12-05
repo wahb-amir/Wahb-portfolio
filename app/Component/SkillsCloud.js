@@ -33,7 +33,7 @@ const coreSkills = [
   { name: "CSS", icon: SiCss3, color: "#1572B6", type: "frontend" },
   { name: "Tailwind", icon: SiTailwindcss, color: "#38B2AC", type: "frontend" },
   { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", type: "frontend" },
-  { name: "React", icon: SiReact, color: "#61DAFB", type: "frontend" },
+  { name: "React", icon: SiReact, color: "#38B2AC", type: "frontend" },
   { name: "Next.js", icon: SiNextdotjs, color: "#000000", type: "frontend" },
   { name: "Node.js", icon: SiNodedotjs, color: "#339933", type: "backend" },
   { name: "Express", icon: SiExpress, color: "#000000", type: "backend" },
@@ -132,6 +132,7 @@ export default function SkillsCloud() {
         bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
         text-black dark:text-white`}
     >
+      <LazyBackgroundEffect />
       <h2 className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${isDark ? "text-white" : "text-gray-800"}`}>
         What I Work With
       </h2>
