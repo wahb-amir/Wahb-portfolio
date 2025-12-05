@@ -145,7 +145,7 @@ async function setCached(payload) {
 
 async function fetchProjectDetail(version = null) {
   try {
-    const api_path = process.env.NEXT_PUBLIC_PROJECTS_API;
+    const api_path = "/api/updates/projects";
     const url = version ? `${api_path}?version=${version}` : api_path;
 
     const resp = await fetch(url, { cache: "no-store" });
