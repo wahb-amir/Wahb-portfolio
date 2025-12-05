@@ -65,7 +65,7 @@ export default function ContactForm() {
   };
 
   // client platform links (kept for "request quote" & portal open)
-  const CLIENT_PORTAL = "https://projects.buttnetworks.com";
+  const CLIENT_PORTAL = process.env.NEXT_PUBLIC_CONTACT_PLATFORM;
   const CLIENT_QUOTE = `${CLIENT_PORTAL}#request-quote`;
 
   // THEME / ACCENT

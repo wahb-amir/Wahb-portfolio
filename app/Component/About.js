@@ -362,7 +362,7 @@ export default function About() {
           </button>
           <button
             onClick={() => {
-              const nextSection = document.getElementById("contributions");
+              const nextSection = document.getElementById("contact");
               if (nextSection) nextSection.scrollIntoView({ behavior: "smooth" });
             }}
             aria-label="Scroll Down"

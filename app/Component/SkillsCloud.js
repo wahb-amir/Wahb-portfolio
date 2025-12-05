@@ -265,7 +265,7 @@ export default function SkillsCloud() {
           <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
         </button>
         <button
-          onClick={() => document.getElementById("project-section")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() => document.getElementById("project-section")?.scrollIntoView({ behavior: "smooth" ,block:"center"})}
           aria-label="Scroll Down"
           className="animate-pulse hover:scale-110 transition-transform"
         >

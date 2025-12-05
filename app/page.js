@@ -17,15 +17,10 @@ export default function Home() {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <PageTransition key={path}>
-        <header>
-          <Navbar />
-        </header>
-
         <main>
           <Hero />
           <SkillsCloud />
           <Project />
-          {/* <Contribution /> */}
           <About />
           <ContactForm />
         </main>
