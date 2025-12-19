@@ -11,7 +11,6 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   loading: () => null,
 });
 
-// --- IndexedDB tiny helper (same pattern as projects) ---
 const DB_NAME = "wahb-projects-db";
 const STORE_NAME = "projects";
 const ABOUT_CACHE_KEY = "about-detail";

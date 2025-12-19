@@ -30,7 +30,7 @@ const ImageSlider = ({ images = [] }) => {
               className="object-cover rounded-lg"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-              quality={80}
+              quality={100}
               loading="lazy"
             />
           </div>
