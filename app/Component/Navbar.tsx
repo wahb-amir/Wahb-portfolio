@@ -69,16 +69,20 @@ const Navbar = () => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
   }, [menuOpen]);
 
-  const toggleTheme = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  const toggleTheme = () =>
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   const darkMode = resolvedTheme === "dark";
 
-  const handleClick = (id) => {
+  const handleClick = (id: string) => {
     const elm = document.getElementById(id);
     if (elm) elm.scrollIntoView({ behavior: "smooth", block: "start" });
     setMenuOpen(false);
   };
 
-  const handleKeyActivate = (e, id) => {
+  const handleKeyActivate = (
+    e: React.KeyboardEvent<HTMLLIElement>,
+    id: string
+  ) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       handleClick(id);
@@ -90,12 +94,14 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-50 transform transition-transform duration-300 ${visible ? "translate-y-0" : "-translate-y-full"
-          }`}
+        className={`fixed top-0 left-0 w-full z-50 transform transition-transform duration-300 ${
+          visible ? "translate-y-0" : "-translate-y-full"
+        }`}
       >
         <div
-          className={`flex items-center justify-between rounded-xl px-4 ${compact ? "py-1" : "py-2"
-            } backdrop-blur-md bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] text-black dark:text-white transition-all duration-200`}
+          className={`flex items-center justify-between rounded-xl px-4 ${
+            compact ? "py-1" : "py-2"
+          } backdrop-blur-md bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] text-black dark:text-white transition-all duration-200`}
         >
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full overflow-hidden">
@@ -105,7 +111,7 @@ const Navbar = () => {
                 width={48}
                 height={48}
                 className="block w-full h-full rounded-full cursor-pointer"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: "cover" }}
               />
             </div>
           </div>
@@ -118,9 +124,15 @@ const Navbar = () => {
                   role="button"
                   tabIndex={0}
                   onClick={() => handleClick(id)}
-                  onKeyDown={(e) => handleKeyActivate(e, id)}
-                  className={`px-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${compact ? "py-1 text-sm" : "py-2"
-                    }`}
+                  onKeyDown={(e) =>
+                    handleKeyActivate(
+                      e as React.KeyboardEvent<HTMLLIElement>,
+                      id
+                    )
+                  }
+                  className={`px-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
+                    compact ? "py-1 text-sm" : "py-2"
+                  }`}
                   aria-label={`Go to ${id}`}
                 >
                   {id.charAt(0).toUpperCase() + id.slice(1)}
@@ -128,23 +140,48 @@ const Navbar = () => {
               ))}
 
               <li>
-                <a href="https://github.com/coder101-js" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <a
+                  href="https://github.com/coder101-js"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                {/* @ts-ignore */}
                   <FontAwesomeIcon icon={faGithub} className="scale-150" />
+                  
                 </a>
               </li>
 
               <li>
                 <button onClick={toggleTheme} aria-label="Toggle theme">
-                  <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="scale-150" />
+                  <FontAwesomeIcon
+                    icon={darkMode ? faSun : faMoon}
+                    className="scale-150"
+                  />
                 </button>
               </li>
             </ul>
           )}
 
           {smallWidth && (
-            <button className="md:hidden p-2 rounded" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
-              <svg width="28" height="28" fill="currentColor" viewBox="0 0 20 20" className={darkMode ? "text-white" : "text-black"}>
-                <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <button
+              className="md:hidden p-2 rounded"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+            >
+              <svg
+                width="28"
+                height="28"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                className={darkMode ? "text-white" : "text-black"}
+              >
+                <path
+                  d="M3 6h14M3 10h14M3 14h14"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           )}
@@ -155,8 +192,9 @@ const Navbar = () => {
 
       {/* mobile menu */}
       <ul
-        className={`fixed left-0 w-full flex flex-col items-start px-4 py-4 z-40 rounded-b-xl shadow-lg ${darkMode ? "bg-[#0f172a]/95" : "bg-white/95"
-          } backdrop-blur-md transition-all duration-300 md:hidden`}
+        className={`fixed left-0 w-full flex flex-col items-start px-4 py-4 z-40 rounded-b-xl shadow-lg ${
+          darkMode ? "bg-[#0f172a]/95" : "bg-white/95"
+        } backdrop-blur-md transition-all duration-300 md:hidden`}
         style={{
           top: NAV_HEIGHT,
           maxHeight: menuOpen ? "100vh" : 0,
@@ -186,6 +224,7 @@ const Navbar = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-3 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
           >
+            {/* @ts-ignore */}
             <FontAwesomeIcon icon={faGithub} className="scale-150" />
             GitHub
           </a>
@@ -199,13 +238,20 @@ const Navbar = () => {
             }}
             className="flex items-center gap-3 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
           >
-            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="scale-150" />
+            <FontAwesomeIcon
+              icon={darkMode ? faSun : faMoon}
+              className="scale-150"
+            />
             {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
         </li>
       </ul>
 
-      <style jsx global>{`html { scroll-padding-top: 70px; }`}</style>
+      <style jsx global>{`
+        html {
+          scroll-padding-top: 70px;
+        }
+      `}</style>
 
       <style jsx>{`
         li {

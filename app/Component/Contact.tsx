@@ -1,7 +1,12 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useInView,
+  useReducedMotion,
+} from "framer-motion";
 import { useTheme } from "next-themes";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import { SiGithub } from "react-icons/si";
@@ -19,7 +24,11 @@ export default function ContactForm() {
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   const [copied, setCopied] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
@@ -28,10 +37,11 @@ export default function ContactForm() {
 
   useEffect(() => setHydrated(true), []);
 
-  const handleChange = (e) =>
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
     try {
@@ -83,7 +93,7 @@ export default function ContactForm() {
       aria-labelledby="contact-heading"
       role="region"
       data-keywords="contact,form,email,client-portal,quote"
-      style={{ ["--accent"]: accent }}
+      style={{ ["--accent"]: String(accent) } as React.CSSProperties}
       className={`relative flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden z-10 bg-[#f9fafb] dark:bg-[#0f172a]
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] text-black dark:text-white`}
     >
@@ -106,7 +116,8 @@ export default function ContactForm() {
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        Prefer email or quick socials? Use the form below — portal users get progress tracking and direct dev chat.
+        Prefer email or quick socials? Use the form below — portal users get
+        progress tracking and direct dev chat.
       </motion.p>
 
       {/* CLIENT BANNER */}
@@ -123,7 +134,8 @@ export default function ContactForm() {
               Client portal is live — manage projects & request quotes ✨
             </h3>
             <p className="text-xs text-gray-600 dark:text-slate-300 mt-2 max-w-lg mx-auto">
-              If you’re a client, you can request a quote or open the portal for tracking. This form still works for quick messages.
+              If you’re a client, you can request a quote or open the portal for
+              tracking. This form still works for quick messages.
             </p>
           </div>
 
@@ -163,11 +175,16 @@ export default function ContactForm() {
       </div>
 
       {/* contact & social row */}
-      <div className="z-10 flex flex-col sm:flex-row items-center gap-4 mb-6" aria-hidden={false}>
+      <div
+        className="z-10 flex flex-col sm:flex-row items-center gap-4 mb-6"
+        aria-hidden={false}
+      >
         <div
           className="flex items-center gap-3 px-4 py-2 rounded-full border shadow-sm cursor-pointer select-none"
           style={{
-            background: isDark ? "rgba(15,23,42,0.45)" : "rgba(255,255,255,0.85)",
+            background: isDark
+              ? "rgba(15,23,42,0.45)"
+              : "rgba(255,255,255,0.85)",
             borderColor: isDark ? "#0b1220" : "#e6eef6",
           }}
           onClick={copyEmail}
@@ -179,8 +196,15 @@ export default function ContactForm() {
           }}
           data-keywords="email,contact,copy"
         >
-          <MdEmail className="w-5 h-5" style={{ color: accent }} aria-hidden="true" />
-          <span className="text-sm font-medium hover:underline" style={{ color: isDark ? "#e6eef6" : "#0f172a" }}>
+          <MdEmail
+            className="w-5 h-5"
+            style={{ color: accent }}
+            aria-hidden="true"
+          />
+          <span
+            className="text-sm font-medium hover:underline"
+            style={{ color: isDark ? "#e6eef6" : "#0f172a" }}
+          >
             {CONTACT_EMAIL}
           </span>
           <span
@@ -222,7 +246,9 @@ export default function ContactForm() {
         </p>
 
         {/* Visible labels for screen readers (placeholder preserved for visual users) */}
-        <label htmlFor="contact-name" className="sr-only">Full name</label>
+        <label htmlFor="contact-name" className="sr-only">
+          Full name
+        </label>
         <input
           id="contact-name"
           name="name"
@@ -234,7 +260,9 @@ export default function ContactForm() {
           className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 focus:outline-none transition"
         />
 
-        <label htmlFor="contact-email" className="sr-only">Email address</label>
+        <label htmlFor="contact-email" className="sr-only">
+          Email address
+        </label>
         <input
           id="contact-email"
           name="email"
@@ -246,7 +274,9 @@ export default function ContactForm() {
           className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 focus:outline-none transition"
         />
 
-        <label htmlFor="contact-message" className="sr-only">Message</label>
+        <label htmlFor="contact-message" className="sr-only">
+          Message
+        </label>
         <textarea
           id="contact-message"
           name="message"
@@ -258,7 +288,10 @@ export default function ContactForm() {
           className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 focus:outline-none transition"
         />
 
-        <div className="relative h-14 overflow-hidden rounded-full" aria-live="polite">
+        <div
+          className="relative h-14 overflow-hidden rounded-full"
+          aria-live="polite"
+        >
           <button
             type="submit"
             disabled={isBusy}
@@ -284,10 +317,10 @@ export default function ContactForm() {
                 {status === "sending"
                   ? "Sending..."
                   : status === "error"
-                    ? "Error sending"
-                    : status === "sent"
-                      ? "✅ Sent!"
-                      : "Send message"}
+                  ? "Error sending"
+                  : status === "sent"
+                  ? "✅ Sent!"
+                  : "Send message"}
               </motion.span>
             </AnimatePresence>
           </button>
@@ -301,14 +334,32 @@ export default function ContactForm() {
           className="hover:scale-110 transition-transform"
           data-keywords="scroll-up,nav"
         >
-          <ChevronUpIcon className="w-8 h-8" style={{ color: accent }} aria-hidden="true" />
+          <ChevronUpIcon
+            className="w-8 h-8"
+            style={{ color: accent }}
+            aria-hidden="true"
+          />
         </button>
       </div>
     </section>
   );
 }
-
-function SocialIcon({ href, label, ariaLabel, icon, isDark, accent }) {
+type SocialIconProps = {
+  href: string;
+  label: string;
+  ariaLabel: string;
+  icon: React.ReactNode;
+  isDark: boolean;
+  accent: string;
+};
+function SocialIcon({
+  href,
+  label,
+  ariaLabel,
+  icon,
+  isDark,
+  accent,
+}: SocialIconProps) {
   return (
     <a
       href={href}

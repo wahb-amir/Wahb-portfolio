@@ -2,7 +2,10 @@
 
 import { motion } from "framer-motion";
 
-export default function PageTransition({ children }) {
+type PageTransitionProps = {
+  children: React.ReactNode;
+};  
+export default function PageTransition({ children }: PageTransitionProps) {
   return (
     <motion.div
       initial={{ opacity: 0, filter: "blur(8px)" }}

@@ -4,10 +4,27 @@ import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import ImageSlider from "./ImageSlider";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowTopRightOnSquareIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowTopRightOnSquareIcon,
+  CodeBracketIcon,
+} from "@heroicons/react/24/outline";
 import RepoSelectorModal from "./RepoSelectorModal";
 
-const ProjectCard = ({
+type ProjectCardProps = {
+  title?: string;
+  role?: string;
+  images?: string[];
+  tech?: string[];
+  short?: string;
+  liveLink?: string | null;
+  githubLink?: string | string[] | null;
+  problem?: string;
+  process?: string[];
+  outcome?: string;
+  stats?: { [key: string]: string | number };
+};
+
+const ProjectCard: React.FC<ProjectCardProps> = ({
   title = "Untitled Project",
   role = "Contributor",
   images = [],
@@ -19,7 +36,7 @@ const ProjectCard = ({
   process = [],
   outcome = "",
   stats = {},
-}) => {
+}: ProjectCardProps) => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -34,22 +51,31 @@ const ProjectCard = ({
     const delay = images && images.length > 0 ? 350 : 650;
     const id = setTimeout(() => setLoading(false), delay);
     return () => clearTimeout(id);
+    // images is correct dep
   }, [images]);
 
   const isDark = mounted && theme === "dark";
 
   // fix id sanitization: allow letters, numbers and hyphens
-  const safeId = title.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9\-]/g, "").toLowerCase();
+  const safeId = title
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9\-]/g, "")
+    .toLowerCase();
 
   // handle multiple repo links (if githubLink is an array)
-  const isMultipleRepos = Array.isArray(githubLink) && githubLink.length > 1;
-  const repoLinks = Array.isArray(githubLink) ? githubLink : githubLink ? [githubLink] : [];
+  const isMultipleRepos: boolean =
+    Array.isArray(githubLink) && githubLink.length > 1;
+  const repoLinks: string[] = Array.isArray(githubLink)
+    ? githubLink
+    : githubLink
+    ? [githubLink]
+    : [];
 
-  const formatKey = (k) =>
+  const formatKey = (k: string) =>
     k
       .replace(/([A-Z])/g, " $1")
       .replace(/[_\-]/g, " ")
-      .replace(/^./, (s) => s.toUpperCase());
+      .replace(/^./, (s: string) => s.toUpperCase());
 
   return (
     <motion.article
@@ -57,7 +83,9 @@ const ProjectCard = ({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
-      className={`group relative rounded-xl overflow-hidden border transition-transform transform hover:shadow-xl focus-within:shadow-xl ${isDark ? "border-slate-700 bg-[#071020]/60" : "border-gray-100 bg-white"}`}
+      className={`group relative rounded-xl overflow-hidden border transition-transform transform hover:shadow-xl focus-within:shadow-xl ${
+        isDark ? "border-slate-700 bg-[#071020]/60" : "border-gray-100 bg-white"
+      }`}
       aria-labelledby={`project-${safeId}`}
       aria-busy={loading}
     >
@@ -67,6 +95,7 @@ const ProjectCard = ({
             <div className="w-11/12 h-40 rounded-lg bg-gray-200 dark:bg-slate-800" />
           </div>
         ) : (
+          // @ts-ignore
           <ImageSlider images={images} />
         )}
       </div>
@@ -82,10 +111,15 @@ const ProjectCard = ({
               </div>
             ) : (
               <>
-                <h3 id={`project-${safeId}`} className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900 dark:text-white truncate">
+                <h3
+                  id={`project-${safeId}`}
+                  className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900 dark:text-white truncate"
+                >
                   {title}
                 </h3>
-                <p className="text-sm text-gray-700 dark:text-slate-300 mt-1 truncate">{role}</p>
+                <p className="text-sm text-gray-700 dark:text-slate-300 mt-1 truncate">
+                  {role}
+                </p>
               </>
             )}
           </div>
@@ -98,16 +132,21 @@ const ProjectCard = ({
                   <span className="inline-block h-6 w-10 rounded-full bg-gray-200 dark:bg-slate-800 animate-pulse" />
                 </>
               ) : (
-                tech.map((t) => (
-                  <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 truncate border-2 border-cyan-500/50 dark:border-cyan-400/40 shadow-[0_0_10px_rgba(0,255,255,0.2)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] transition">
+                tech.map((t: string) => (
+                  <span
+                    key={t}
+                    className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 truncate border-2 border-cyan-500/50 dark:border-cyan-400/40 shadow-[0_0_10px_rgba(0,255,255,0.2)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] transition"
+                  >
                     {t}
                   </span>
                 ))
               )}
             </div>
 
-            {!loading && stats.usersOnLaunch && (
-              <div className="text-xs text-gray-700 dark:text-slate-400">{stats.usersOnLaunch} users</div>
+            {!loading && (stats as any).usersOnLaunch && (
+              <div className="text-xs text-gray-700 dark:text-slate-400">
+                {(stats as any).usersOnLaunch} users
+              </div>
             )}
           </div>
         </div>
@@ -120,7 +159,9 @@ const ProjectCard = ({
               <div className="h-3 w-5/6 rounded bg-gray-200 dark:bg-slate-800 animate-pulse" />
             </>
           ) : (
-            <p className="text-sm sm:text-base text-gray-800 dark:text-slate-300 min-h-[48px]">{short}</p>
+            <p className="text-sm sm:text-base text-gray-800 dark:text-slate-300 min-h-[48px]">
+              {short}
+            </p>
           )}
         </div>
 
@@ -133,21 +174,26 @@ const ProjectCard = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-cyan-700 text-white text-sm font-medium hover:bg-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
-                aria-label={`Open live demo of ${title}`}>
+                aria-label={`Open live demo of ${title}`}
+              >
                 Live Demo <ArrowTopRightOnSquareIcon className="w-4 h-4" />
               </a>
             )}
 
-            {!loading && !isMultipleRepos && githubLink && (
-              <a
-                href={githubLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
-                aria-label={`Open GitHub repo of ${title}`}>
-                Code <CodeBracketIcon className="w-4 h-4" />
-              </a>
-            )}
+            {!loading &&
+              !isMultipleRepos &&
+              githubLink &&
+              typeof githubLink === "string" && (
+                <a
+                  href={githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+                  aria-label={`Open GitHub repo of ${title}`}
+                >
+                  Code <CodeBracketIcon className="w-4 h-4" />
+                </a>
+              )}
 
             {!loading && isMultipleRepos && (
               <button
@@ -180,27 +226,42 @@ const ProjectCard = ({
               transition={{ duration: 0.35 }}
               className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700 text-left"
             >
-              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">Problem</h4>
-              <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">{problem}</p>
+              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+                Problem
+              </h4>
+              <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">
+                {problem}
+              </p>
 
-              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">Process</h4>
+              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+                Process
+              </h4>
               <ol className="list-decimal ml-5 text-sm text-gray-800 dark:text-slate-300 mb-3 space-y-1">
-                {process.length
-                  ? process.map((step, i) => (
+                {process.length ? (
+                  process.map((step, i) => (
                     <li key={i} className="leading-tight">
                       {step}
                     </li>
                   ))
-                  : <li>Documented the approach and steps here.</li>}
+                ) : (
+                  <li>Documented the approach and steps here.</li>
+                )}
               </ol>
 
-              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">Outcome / Results</h4>
-              <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">{outcome}</p>
+              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+                Outcome / Results
+              </h4>
+              <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">
+                {outcome}
+              </p>
 
               {stats && Object.keys(stats).length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {Object.entries(stats).map(([k, v]) => (
-                    <div key={k} className="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200">
+                    <div
+                      key={k}
+                      className="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200"
+                    >
                       <strong className="mr-1">{formatKey(k)}:</strong> {v}
                     </div>
                   ))}

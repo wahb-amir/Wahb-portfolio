@@ -5,13 +5,23 @@ import LayoutClient from "./layout-client";
 import { ThemeProvider } from "next-themes";
 import Preloader from "./Component/Preloader";
 import Navbar from "./Component/Navbar";
+import { Metadata } from "next";
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+});
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Wahb Amir | Full-Stack Web Developer & Next.js Expert",
-  description: "Wahb Amir is a full-stack developer building blazing-fast, modern web apps.",
+  description:
+    "Wahb Amir is a full-stack developer building blazing-fast, modern web apps.",
   authors: [{ name: "Wahb Amir", url: "https://wahb.space" }],
   creator: "Wahb Amir",
   publisher: "Wahb Amir",
@@ -21,7 +31,14 @@ export const metadata = {
     description: "Explore the portfolio of Wahb Amir, a full-stack developer.",
     url: "https://wahb.space",
     siteName: "Wahb Amir Portfolio",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Wahb Amir | Web Developer Portfolio" }],
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Wahb Amir | Web Developer Portfolio",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
@@ -31,11 +48,17 @@ export const metadata = {
     description: "Check out my projects and portfolio.",
     images: ["/og-image.png"],
   },
-  icons: { icon: "/favicon.ico", shortcut: "/favicon-96x96.png", apple: "/apple-touch-icon.png" },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-96x96.png",
+    apple: "/apple-touch-icon.png",
+  },
   manifest: "/site.webmanifest",
 };
-
-export default function RootLayout({ children }) {
+type RootLayoutProps = {
+  children: React.ReactNode;
+};
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

@@ -1,14 +1,17 @@
-// app/layout-client.js
 "use client";
 
+import { ReactNode } from "react";
+import { ThemeProvider } from "next-themes";
 import { AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import PageTransition from "./Component/PageTransition";
-import { ThemeProvider } from "next-themes";
 
-export default function LayoutClient({ children }) {
+type LayoutClientProps = {
+  children: ReactNode;
+};
+
+export default function LayoutClient({ children }: LayoutClientProps) {
   const pathname = usePathname();
-
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <AnimatePresence mode="wait" initial={false}>

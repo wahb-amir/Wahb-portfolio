@@ -5,16 +5,46 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import ProjectCard from "./ProjectCard";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
+/**
+ * Types
+ */
+export interface Project {
+  id?: string;
+  title: string;
+  role?: string;
+  images?: string[];
+  tech?: string[];
+  short?: string;
+  liveLink?: string;
+  githubLink?: string | string[];
+  problem?: string;
+  process?: string[];
+  outcome?: string;
+  stats?: Record<string, string>;
+  category?: string;
+  // allow any additional fields returned by your API
+  [k: string]: any;
+}
 
+interface CachedPayload {
+  version: string | null;
+  data: Project[] | null;
+}
+
+/**
+ * Lazy background effect (client only)
+ */
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
 });
 
-// --- your static fallback list (kept intact) ---
-const staticProjects = [
+/**
+ * Static fallback projects (kept intact)
+ */
+const staticProjects: Project[] = [
   {
     id: "client-dev-platform",
     title: "Client–Dev Collaboration Platform",
@@ -70,7 +100,8 @@ const staticProjects = [
       "/Project/Ecom/stripe.png",
     ],
     tech: ["Next.js", "Stripe", "OAuth", "Tailwind", "MongoDB"],
-    short: "A fully functional e-commerce platform with OAuth, fake Stripe checkout, and a client-safe read-only admin dashboard.",
+    short:
+      "A fully functional e-commerce platform with OAuth, fake Stripe checkout, and a client-safe read-only admin dashboard.",
     liveLink: "https://boltform.buttnetworks.com/",
     githubLink: "https://github.com/coder101-js/Ecommer-Store",
     problem:
@@ -93,41 +124,46 @@ const STORE_NAME = "projects";
 const CACHE_KEY = "project-detail";
 
 const PREVIEW_COUNT = 4;
-function openDB() {
+
+/**
+ * IndexedDB helpers (typed)
+ */
+function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     if (typeof window === "undefined" || !("indexedDB" in window)) {
       reject(new Error("IndexedDB not supported"));
       return;
     }
     const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
+    req.onupgradeneeded = (e: any) => {
+      const db = e.target.result as IDBDatabase;
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME);
       }
     };
-    req.onsuccess = (e) => resolve(e.target.result);
-    req.onerror = (e) => reject(e.target.error);
+    req.onsuccess = (e: any) => resolve(e.target.result as IDBDatabase);
+    req.onerror = (e: any) => reject(e.target.error);
   });
 }
 
-async function getCached() {
+async function getCached(): Promise<CachedPayload | null> {
   try {
     const db = await openDB();
     return await new Promise((resolve, reject) => {
       const tx = db.transaction(STORE_NAME, "readonly");
       const store = tx.objectStore(STORE_NAME);
       const r = store.get(CACHE_KEY);
-      r.onsuccess = () => resolve(r.result);
-      r.onerror = (e) => reject(e.target.error);
+      r.onsuccess = () => resolve((r.result as CachedPayload) ?? null);
+      r.onerror = (e: any) => reject(e.target.error);
     });
   } catch (err) {
+    // non-fatal: no IDB available
     console.warn("IDB get error:", err);
     return null;
   }
 }
 
-async function setCached(payload) {
+async function setCached(payload: CachedPayload): Promise<boolean> {
   try {
     const db = await openDB();
     return await new Promise((resolve, reject) => {
@@ -135,7 +171,7 @@ async function setCached(payload) {
       const store = tx.objectStore(STORE_NAME);
       const r = store.put(payload, CACHE_KEY);
       r.onsuccess = () => resolve(true);
-      r.onerror = (e) => reject(e.target.error);
+      r.onerror = (e: any) => reject(e.target.error);
     });
   } catch (err) {
     console.warn("IDB put error:", err);
@@ -143,18 +179,29 @@ async function setCached(payload) {
   }
 }
 
-async function fetchProjectDetail(version = null) {
+async function fetchProjectDetail(
+  version: string | null = null
+): Promise<{
+  version: string | null;
+  data: Project[] | null;
+  raw: any;
+} | null> {
   try {
     const api_path = "/api/updates/projects";
-    const url = version ? `${api_path}?version=${version}` : api_path;
+    const url = version
+      ? `${api_path}?version=${encodeURIComponent(version)}`
+      : api_path;
 
     const resp = await fetch(url, { cache: "no-store" });
     if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);
 
     const json = await resp.json();
     return {
-      version: json.version ?? null,
-      data: json.data ?? json.projects ?? (Array.isArray(json) ? json : null),
+      version: (json && json.version) ?? null,
+      data: (json &&
+        (json.data ?? json.projects ?? (Array.isArray(json) ? json : null))) as
+        | Project[]
+        | null,
       raw: json,
     };
   } catch (err) {
@@ -163,9 +210,14 @@ async function fetchProjectDetail(version = null) {
   }
 }
 
-// --- skeleton card (unchanged) ---
-const SkeletonCard = () => (
-  <article className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse" aria-hidden="true">
+/**
+ * Skeleton card
+ */
+const SkeletonCard: React.FC = () => (
+  <article
+    className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse"
+    aria-hidden="true"
+  >
     <div className="w-full h-48 bg-gray-100 dark:bg-slate-800" />
     <div className="p-4">
       <div className="h-5 w-3/4 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
@@ -175,7 +227,10 @@ const SkeletonCard = () => (
   </article>
 );
 
-const gridVariants = {
+/**
+ * Motion variants (typed)
+ */
+const gridVariants: Variants = {
   visible: {
     transition: {
       staggerChildren: 0.04,
@@ -183,7 +238,7 @@ const gridVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 8, scale: 0.995 },
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35 } },
   exit: { opacity: 0, y: 6, scale: 0.995, transition: { duration: 0.25 } },
@@ -196,18 +251,18 @@ const KEYWORDS = {
   controls: ["view-all", "toggle", "navigation"],
 };
 
-const Project = () => {
+const Project: React.FC = () => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const isDark = mounted && theme === "dark";
 
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [checkingUpdate, setCheckingUpdate] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [checkingUpdate, setCheckingUpdate] = useState<boolean>(false);
 
-  // NEW: control whether we show all projects or only preview
-  const [showAll, setShowAll] = useState(false);
+  // control whether we show all projects or only preview
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   useEffect(() => {
     let isCancelled = false;
@@ -221,19 +276,30 @@ const Project = () => {
           setLoading(false);
 
           setCheckingUpdate(true);
-          const remote = await fetchProjectDetail(cached.version);
-          if (!isCancelled && remote && remote.version && remote.version !== cached.version) {
-            const payload = { version: remote.version, data: remote.data ?? remote.raw };
+          const remote = await fetchProjectDetail(cached.version ?? null);
+          if (
+            !isCancelled &&
+            remote &&
+            remote.version &&
+            remote.version !== cached.version
+          ) {
+            const payload: CachedPayload = {
+              version: remote.version,
+              data: remote.data ?? (remote.raw as Project[] | null),
+            };
             await setCached(payload);
-            setProjects(payload.data);
+            setProjects(payload.data ?? []);
           }
           setCheckingUpdate(false);
         } else {
           const remote = await fetchProjectDetail();
           if (remote && remote.data) {
-            const payload = { version: remote.version, data: remote.data };
+            const payload: CachedPayload = {
+              version: remote.version,
+              data: remote.data,
+            };
             await setCached(payload);
-            if (!isCancelled) setProjects(payload.data);
+            if (!isCancelled) setProjects(payload.data ?? []);
           } else if (!isCancelled) {
             setProjects(staticProjects);
           }
@@ -249,7 +315,11 @@ const Project = () => {
     }
 
     init();
-    return () => { isCancelled = true; };
+    return () => {
+      isCancelled = true;
+    };
+    // intentionally empty deps: run once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const showSkeleton = loading && projects.length === 0;
@@ -260,9 +330,7 @@ const Project = () => {
   // Smooth reveal helper: after showing all, scroll slightly so users notice new items (optional)
   useEffect(() => {
     if (showAll) {
-      // small delay so layout settles
       const t = setTimeout(() => {
-        // scroll to the grid element so user sees the expansion
         const gridEl = document.getElementById("projects-grid");
         if (gridEl) {
           gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -270,6 +338,7 @@ const Project = () => {
       }, 220);
       return () => clearTimeout(t);
     }
+    return;
   }, [showAll]);
 
   return (
@@ -292,20 +361,29 @@ const Project = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className={`mb-4 font-extrabold tracking-tight ${isDark ? "text-white" : "text-gray-800"
-            } text-[36px] sm:text-[44px]`}
+          className={`mb-4 font-extrabold tracking-tight ${
+            isDark ? "text-white" : "text-gray-800"
+          } text-[36px] sm:text-[44px]`}
         >
           My Projects
         </motion.h1>
 
         <p
-          className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${isDark ? "text-slate-300" : "text-gray-700"
-            }`}
+          className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${
+            isDark ? "text-slate-300" : "text-gray-700"
+          }`}
         >
-          Real apps I built & shipped — each entry includes the problem I solved, the approach I
-          took, and the outcome. Click any card to read the case study.
+          Real apps I built & shipped — each entry includes the problem I
+          solved, the approach I took, and the outcome. Click any card to read
+          the case study.
           {checkingUpdate && (
-            <span className="ml-2 text-xs text-gray-500 dark:text-slate-400" role="status" aria-live="polite">Checking updates…</span>
+            <span
+              className="ml-2 text-xs text-gray-500 dark:text-slate-400"
+              role="status"
+              aria-live="polite"
+            >
+              Checking updates…
+            </span>
           )}
         </p>
 
@@ -320,14 +398,15 @@ const Project = () => {
           aria-label="Projects grid"
           data-keywords="projects-grid,portfolio-grid"
         >
-          {showSkeleton
-            ? // show skeletons
+          {showSkeleton ? (
+            // show skeletons
             [0, 1].map((i) => (
               <div key={i}>
                 <SkeletonCard />
               </div>
             ))
-            : // render project cards with animation
+          ) : (
+            // render project cards with animation
             <AnimatePresence initial={false}>
               {visibleProjects.map((p) => (
                 <motion.div
@@ -339,36 +418,60 @@ const Project = () => {
                   layout
                   role="listitem"
                   aria-label={`Project: ${p.title}`}
-                  data-keywords={[...KEYWORDS.projectCard, p.category, p.id].filter(Boolean).join(",")}
+                  data-keywords={[...KEYWORDS.projectCard, p.category, p.id]
+                    .filter(Boolean)
+                    .join(",")}
                 >
-                  <ProjectCard {...p} />
+                  {/* ProjectCard's prop type isn't known here; cast to any to avoid TS errors.
+                      Ideally, export a typed prop interface from ProjectCard and use it instead. */}
+                  <ProjectCard {...(p as any)} />
                 </motion.div>
               ))}
-            </AnimatePresence>}
+            </AnimatePresence>
+          )}
         </motion.div>
 
         {/* View all / Show less controls */}
         <div className="relative z-10 flex flex-col items-center gap-4 mt-8">
           {/* Show the count and toggle only if we have more than preview */}
           {projects.length > PREVIEW_COUNT && (
-            <div className="flex items-center gap-3" role="region" aria-label="Project controls" data-keywords={KEYWORDS.controls.join(",")}>
+            <div
+              className="flex items-center gap-3"
+              role="region"
+              aria-label="Project controls"
+              data-keywords={KEYWORDS.controls.join(",")}
+            >
               <button
                 onClick={() => setShowAll((s) => !s)}
                 aria-expanded={showAll}
                 aria-controls="projects-grid"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md border hover:scale-105 transition bg-white/80 dark:bg-[#06202b]/80 border-gray-200 dark:border-slate-700 shadow-sm"
                 aria-pressed={showAll}
-                title={showAll ? "Show fewer projects" : `View all (${projects.length}) projects`}
+                title={
+                  showAll
+                    ? "Show fewer projects"
+                    : `View all (${projects.length}) projects`
+                }
               >
                 {showAll ? (
                   <>
                     Show less
-                    <ChevronUpIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+                    <ChevronUpIcon
+                      className={`w-5 h-5 ${
+                        isDark ? "text-cyan-300" : "text-cyan-600"
+                      }`}
+                      aria-hidden="true"
+                    />
                   </>
                 ) : (
                   <>
                     View all ({projects.length})
-                    <ChevronDownIcon className={`w-5 h-5 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+                    <ChevronDownIcon
+                      className={`w-5 h-5 ${
+                        isDark ? "text-cyan-300" : "text-cyan-600"
+                      }`}
+                      aria-hidden="true"
+                    />
                   </>
                 )}
               </button>
@@ -379,7 +482,12 @@ const Project = () => {
                 aria-label="Scroll Up"
                 className="p-2 rounded hover:scale-105 transition"
               >
-                <ChevronUpIcon className={`w-6 h-6 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+                <ChevronUpIcon
+                  className={`w-6 h-6 ${
+                    isDark ? "text-cyan-300" : "text-cyan-600"
+                  }`}
+                  aria-hidden="true"
+                />
               </button>
             </div>
           )}
@@ -392,7 +500,12 @@ const Project = () => {
                 aria-label="Scroll Up"
                 className="p-2 rounded hover:scale-105 transition"
               >
-                <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+                <ChevronUpIcon
+                  className={`w-8 h-8 ${
+                    isDark ? "text-cyan-300" : "text-cyan-600"
+                  }`}
+                  aria-hidden="true"
+                />
               </button>
 
               <button
@@ -403,7 +516,12 @@ const Project = () => {
                 aria-label="Scroll Down"
                 className="p-2 rounded animate-pulse hover:scale-105 transition"
               >
-                <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} aria-hidden="true" />
+                <ChevronDownIcon
+                  className={`w-8 h-8 ${
+                    isDark ? "text-cyan-300" : "text-cyan-600"
+                  }`}
+                  aria-hidden="true"
+                />
               </button>
             </div>
           )}

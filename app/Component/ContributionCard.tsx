@@ -3,6 +3,17 @@ import React from "react";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
 
+type ContributionCardProps = {
+  project: string;
+  role: string;
+  stack: string;
+  description: string;
+  highlight: string;
+  links?: {
+    live?: string;
+    repo?: string;
+  };
+};
 export default function ContributionCard({
   project,
   role,
@@ -10,7 +21,7 @@ export default function ContributionCard({
   description,
   highlight,
   links,
-}) {
+}: ContributionCardProps ) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 

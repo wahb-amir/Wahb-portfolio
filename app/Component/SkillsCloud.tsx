@@ -22,17 +22,25 @@ import {
   SiScikitlearn,
   SiPytorch,
   SiCplusplus,
-  SiOpencv
+  SiOpencv,
 } from "react-icons/si";
 
-const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), { ssr: false, loading: () => null });
+const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+  ssr: false,
+  loading: () => null,
+});
 
 // Core skills
 const coreSkills = [
   { name: "HTML", icon: SiHtml5, color: "#E34F26", type: "frontend" },
   { name: "CSS", icon: SiCss3, color: "#1572B6", type: "frontend" },
   { name: "Tailwind", icon: SiTailwindcss, color: "#38B2AC", type: "frontend" },
-  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", type: "frontend" },
+  {
+    name: "JavaScript",
+    icon: SiJavascript,
+    color: "#F7DF1E",
+    type: "frontend",
+  },
   { name: "React", icon: SiReact, color: "#38B2AC", type: "frontend" },
   { name: "Next.js", icon: SiNextdotjs, color: "#000000", type: "frontend" },
   { name: "Node.js", icon: SiNodedotjs, color: "#339933", type: "backend" },
@@ -40,7 +48,12 @@ const coreSkills = [
   { name: "MongoDB", icon: SiMongodb, color: "#47A248", type: "backend" },
   { name: "Framer Motion", icon: SiFramer, color: "#0055FF", type: "frontend" },
   { name: "Python", icon: SiPython, color: "#3776AB", type: "backend" },
-  { name: "Scikit-learn", icon: SiScikitlearn, color: "#F7931E", type: "backend" },
+  {
+    name: "Scikit-learn",
+    icon: SiScikitlearn,
+    color: "#F7931E",
+    type: "backend",
+  },
 ];
 
 // Learning skills
@@ -107,18 +120,24 @@ export default function SkillsCloud() {
 
   const learnWithPos = showLearning
     ? learningSkills.map((skill, i) => {
-      const angle = (i / learningSkills.length) * 2 * Math.PI;
-      const lx = Math.round((radius * 0.45) * Math.cos(angle));
-      const ly = Math.round((radius * 0.45) * Math.sin(angle));
-      return { ...skill, x: lx, y: ly, idx: i };
-    })
+        const angle = (i / learningSkills.length) * 2 * Math.PI;
+        const lx = Math.round(radius * 0.45 * Math.cos(angle));
+        const ly = Math.round(radius * 0.45 * Math.sin(angle));
+        return { ...skill, x: lx, y: ly, idx: i };
+      })
     : [];
 
-  const cloudItems = filter === "learning" ? learnWithPos : [...coreWithPos, ...learnWithPos];
+  const cloudItems =
+    filter === "learning" ? learnWithPos : [...coreWithPos, ...learnWithPos];
 
   const itemVariants = {
     initial: { opacity: 0, scale: 0.3 },
-    animate: (pos) => ({ opacity: 1, scale: 1, x: pos.x, y: pos.y }),
+    animate: (pos: { x: number; y: number }) => ({
+      opacity: 1,
+      scale: 1,
+      x: pos.x,
+      y: pos.y,
+    }),
     exit: { opacity: 0, scale: 0.2 },
   };
 
@@ -133,27 +152,45 @@ export default function SkillsCloud() {
         text-black dark:text-white`}
     >
       <LazyBackgroundEffect />
-      <h2 className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${isDark ? "text-white" : "text-gray-800"}`}>
+      <h2
+        className={`z-20 text-3xl sm:text-4xl font-extrabold mb-4 mt-10 ${
+          isDark ? "text-white" : "text-gray-800"
+        }`}
+      >
         What I Work With
       </h2>
 
       <div className="z-20 flex flex-wrap gap-3 mt-2 mb-6 justify-center">
         <button
           onClick={() => setView("cloud")}
-          className={`px-4 py-1 rounded ${view === "cloud" ? "bg-cyan-500 text-black" : isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-black"}`}
+          className={`px-4 py-1 rounded ${
+            view === "cloud"
+              ? "bg-cyan-500 text-black"
+              : isDark
+              ? "bg-gray-700 text-white"
+              : "bg-gray-300 text-black"
+          }`}
         >
           Cloud
         </button>
         <button
           onClick={() => setView("grid")}
-          className={`px-4 py-1 rounded ${view === "grid" ? "bg-cyan-500 text-black" : isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-black"}`}
+          className={`px-4 py-1 rounded ${
+            view === "grid"
+              ? "bg-cyan-500 text-black"
+              : isDark
+              ? "bg-gray-700 text-white"
+              : "bg-gray-300 text-black"
+          }`}
         >
           Grid
         </button>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className={`rounded px-2 ${isDark ? "bg-gray-700 text-white" : "bg-gray-200 text-black"}`}
+          className={`rounded px-2 ${
+            isDark ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
+          }`}
         >
           <option value="all">All</option>
           <option value="frontend">Frontend</option>
@@ -182,7 +219,12 @@ export default function SkillsCloud() {
                 initial="initial"
                 animate={isInView ? "animate" : "initial"}
                 exit="exit"
-                transition={{ ...spring, delay: 0 }}
+                transition={{
+                  delay: 0.2,
+                  type: "spring" as const,
+                  stiffness: 300,
+                  damping: 30,
+                }}
                 whileHover={{ scale: 1.14 }}
                 className="absolute flex flex-col items-center justify-center cursor-pointer rounded-full shadow-xl"
                 style={{
@@ -200,76 +242,126 @@ export default function SkillsCloud() {
               >
                 <motion.div
                   animate={name === "React" ? { rotate: 360 } : {}}
-                  transition={name === "React" ? { repeat: Infinity, duration: 5, ease: "linear" } : {}}
+                  transition={
+                    name === "React"
+                      ? { repeat: Infinity, duration: 5, ease: "linear" }
+                      : {}
+                  }
                 >
-                  <Icon className={dotSize < 50 ? "text-[22px]" : "text-[28px] md:text-[35px]"} style={{ color }} />
+                  <Icon
+                    className={
+                      dotSize < 50
+                        ? "text-[22px]"
+                        : "text-[28px] md:text-[35px]"
+                    }
+                    style={{ color }}
+                  />
                 </motion.div>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
       ) : (
-        <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20 px-2 max-w-6xl`}>
-          {filter === "learning"
-            ? learningSkills.map(({ name, icon: Icon, color }) => (
+        <div
+          className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 z-20 px-2 max-w-6xl`}
+        >
+          {filter === "learning" ? (
+            learningSkills.map(({ name, icon: Icon, color }) => (
               <motion.div
                 key={name}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.28 }}
-                className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`}
+                className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${
+                  isDark ? "bg-gray-800" : "bg-gray-300"
+                }`}
                 title={`Learning: ${name}`}
               >
                 <Icon className="text-3xl" style={{ color }} />
-                <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>Learning: {name}</span>
+                <span
+                  className={`mt-2 text-sm ${
+                    isDark ? "text-white" : "text-black"
+                  }`}
+                >
+                  Learning: {name}
+                </span>
               </motion.div>
             ))
-            : (
-              <>
-                {coreFiltered.map(({ name, icon: Icon, color }) => (
-                  <motion.div
-                    key={name}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.28 }}
-                    className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`}
-                    title={name}
+          ) : (
+            <>
+              {coreFiltered.map(({ name, icon: Icon, color }) => (
+                <motion.div
+                  key={name}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.28 }}
+                  className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${
+                    isDark ? "bg-gray-800" : "bg-gray-300"
+                  }`}
+                  title={name}
+                >
+                  <Icon className="text-3xl" style={{ color }} />
+                  <span
+                    className={`mt-2 text-sm ${
+                      isDark ? "text-white" : "text-black"
+                    }`}
                   >
-                    <Icon className="text-3xl" style={{ color }} />
-                    <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>{name}</span>
-                  </motion.div>
-                ))}
-                {filter === "all" && learnWithPos.map(({ name, icon: Icon, color }) => (
+                    {name}
+                  </span>
+                </motion.div>
+              ))}
+              {filter === "all" &&
+                learnWithPos.map(({ name, icon: Icon, color }) => (
                   <motion.div
                     key={name}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.28 }}
-                    className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${isDark ? "bg-gray-800" : "bg-gray-300"}`}
+                    className={`flex flex-col items-center rounded-lg p-3 hover:scale-105 transition ${
+                      isDark ? "bg-gray-800" : "bg-gray-300"
+                    }`}
                     title={`Learning: ${name}`}
                   >
                     <Icon className="text-3xl" style={{ color }} />
-                    <span className={`mt-2 text-sm ${isDark ? "text-white" : "text-black"}`}>Learning: {name}</span>
+                    <span
+                      className={`mt-2 text-sm ${
+                        isDark ? "text-white" : "text-black"
+                      }`}
+                    >
+                      Learning: {name}
+                    </span>
                   </motion.div>
                 ))}
-              </>
-            )}
+            </>
+          )}
         </div>
       )}
 
       <div className="relative z-10 flex flex-row items-center justify-center gap-6 mt-12">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Scroll Up" className="hover:scale-110 transition-transform">
-          <ChevronUpIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="Scroll Up"
+          className="hover:scale-110 transition-transform"
+        >
+          <ChevronUpIcon
+            className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`}
+          />
         </button>
         <button
-          onClick={() => document.getElementById("project-section")?.scrollIntoView({ behavior: "smooth" ,block:"center"})}
+          onClick={() =>
+            document
+              .getElementById("project-section")
+              ?.scrollIntoView({ behavior: "smooth", block: "center" })
+          }
           aria-label="Scroll Down"
           className="animate-pulse hover:scale-110 transition-transform"
         >
-          <ChevronDownIcon className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`} />
+          <ChevronDownIcon
+            className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`}
+          />
         </button>
       </div>
     </section>
