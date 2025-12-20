@@ -2,16 +2,14 @@ import { connectToDB } from "@/lib/db";
 import Message from "@/models/Message";
 import { NextResponse } from "next/server";
 
-const allowedOrigins = [
+const allowedOrigins: string[] = [
   "https://shahnawaz.buttnetworks.com",
   "https://buttnetworks.com",
 ];
-const getCORSHeaders = (req) => {
+const getCORSHeaders = (req: Request): Record<string, string> => {
   const origin = req.headers.get("origin");
-  if (!origin) {
-    return {};
-  }
-  if (allowedOrigins.includes(origin)) {
+
+  if (origin && allowedOrigins.includes(origin)) {
     return {
       "Access-Control-Allow-Origin": origin,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -19,22 +17,27 @@ const getCORSHeaders = (req) => {
     };
   }
 
-  // 3. If Origin is present but not in the list, return empty headers.
+  // Always return a valid Record<string, string>, even if empty
   return {};
 };
 
+
 // --- OPTIONS handler for CORS preflight ---
-export async function OPTIONS(req) {
-  const headers = getCORSHeaders(req);
+export async function OPTIONS(req: Request) {
+  const headers: HeadersInit = getCORSHeaders(req);
   return NextResponse.json(null, { status: 204, headers });
 }
 
 // --- POST handler ---
-export async function POST(req) {
-  const corsHeaders = getCORSHeaders(req);
-
+export async function POST(req: Request) {
+  const corsHeaders: HeadersInit = getCORSHeaders(req);
+interface ContactRequestBody {
+  name: string;
+  email: string;
+  message: string;
+}
   try {
-    const { name, email, message } = await req.json();
+    const { name, email, message }: ContactRequestBody = await req.json();
 
     if (!name || !email || !message) {
       return NextResponse.json(
@@ -46,7 +49,10 @@ export async function POST(req) {
     await connectToDB();
     await Message.create({ name, email, message });
 
-    return NextResponse.json({ ok: true }, { status: 200, headers: corsHeaders });
+    return NextResponse.json(
+      { ok: true },
+      { status: 200, headers: corsHeaders }
+    );
   } catch (err) {
     console.error("❌ Internal error:", err);
     return NextResponse.json(

@@ -1,21 +1,45 @@
 import redis from "./redis";
 
-const memoryStore = new Map();
-
-function cleanTimestamps(timestamps, windowMs) {
-  const now = Date.now();
-  return timestamps.filter(ts => ts > now - windowMs);
+// In-memory store for fallback
+interface MemoryEntry {
+  timestamps: number[];
 }
 
-export function createRateLimiter({ points = 10, window = 60 * 1000 } = {}) {
+const memoryStore = new Map<string, MemoryEntry>();
+
+function cleanTimestamps(timestamps: number[], windowMs: number): number[] {
+  const now = Date.now();
+  return timestamps.filter((ts) => ts > now - windowMs);
+}
+
+// Rate limiter options
+interface RateLimiterOptions {
+  points?: number; // max requests
+  window?: number; // time window in ms
+}
+
+// Result returned from rate limiter
+interface RateLimiterResult {
+  success: boolean;
+  remaining: number;
+  reset: number;
+  limit: number;
+  fallback?: boolean;
+}
+
+export function createRateLimiter({
+  points = 10,
+  window = 60 * 1000,
+}: RateLimiterOptions = {}) {
   return {
-    async limit(key) {
+    async limit(key: string): Promise<RateLimiterResult> {
       const windowMs = window;
       const now = Date.now();
 
       // Try Redis first
       try {
-        if (!redis || !redis.status || redis.status !== "ready") throw new Error("Redis not ready");
+        if (!redis || redis.status !== "ready")
+          throw new Error("Redis not ready");
 
         const redisKey = `rl:${key}`;
         const member = `${now}:${Math.random().toString(36).slice(2, 9)}`;
@@ -26,8 +50,7 @@ export function createRateLimiter({ points = 10, window = 60 * 1000 } = {}) {
         pipeline.zcard(redisKey);
         pipeline.expire(redisKey, Math.ceil(windowMs / 1000));
         const results = await pipeline.exec();
-
-        const count = results?.[2]?.[1] || 0;
+        const count = Number(results?.[2]?.[1] ?? 0);
         const success = count <= points;
         const remaining = Math.max(0, points - count);
 
@@ -43,11 +66,8 @@ export function createRateLimiter({ points = 10, window = 60 * 1000 } = {}) {
 
         // Fallback in-memory
         let entry = memoryStore.get(key);
-        if (!entry) {
-          entry = { timestamps: [] };
-        }
+        if (!entry) entry = { timestamps: [] };
 
-        // clean old timestamps
         entry.timestamps = cleanTimestamps(entry.timestamps, windowMs);
         entry.timestamps.push(now);
 
@@ -64,5 +84,5 @@ export function createRateLimiter({ points = 10, window = 60 * 1000 } = {}) {
   };
 }
 
-// default instance: 10 req / 1 min
+// default instance: 10 requests per 1 minute
 export const ratelimit = createRateLimiter({ points: 10, window: 60 * 1000 });
