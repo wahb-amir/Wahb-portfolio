@@ -23,6 +23,7 @@ import {
   SiPytorch,
   SiCplusplus,
   SiOpencv,
+  SiTypescript,
 } from "react-icons/si";
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
@@ -40,6 +41,12 @@ const coreSkills = [
     icon: SiJavascript,
     color: "#F7DF1E",
     type: "frontend",
+  },
+  {
+    name: "TypeScript",
+    icon: SiTypescript,
+    color: "#007ACC",
+    type: ["frontend", "backend"],
   },
   { name: "React", icon: SiReact, color: "#38B2AC", type: "frontend" },
   { name: "Next.js", icon: SiNextdotjs, color: "#000000", type: "frontend" },
@@ -104,8 +111,8 @@ export default function SkillsCloud() {
 
   const coreFiltered = coreSkills.filter((s) => {
     if (filter === "all") return true;
-    if (filter === "frontend") return s.type === "frontend";
-    if (filter === "backend") return s.type === "backend";
+    if (filter === "frontend") return s.type.includes("frontend");
+    if (filter === "backend") return s.type.includes("backend");
     return false;
   });
 
