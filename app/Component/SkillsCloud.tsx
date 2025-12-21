@@ -24,8 +24,6 @@ import {
   SiCplusplus,
   SiOpencv,
   SiTypescript,
-  SiMysql,
-  // SiSql add to learning
 } from "react-icons/si";
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
