@@ -142,106 +142,134 @@ export default function Hero() {
       <main
         id="hero-section"
         className={`
-          relative flex flex-col justify-start items-center
-          ${HERO_MIN_HEIGHT} px-4 xs:px-6 text-center pb-[6.25rem]
-          bg-[#f9fafb] dark:bg-[#0f172a]
-          bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
-          text-black dark:text-white
-          overflow-hidden pt-[env(safe-area-inset-top)]
-        `}
+    relative flex flex-col justify-start items-center
+    ${HERO_MIN_HEIGHT} px-4 xs:px-6 text-center pb-[6.25rem]
+    bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+    text-black dark:text-white
+    overflow-hidden pt-[env(safe-area-inset-top)]
+  `}
         aria-label="Hero Section"
         role="banner"
       >
-        {/* SSR placeholder for smooth visual (decorative) */}
+        {/* decorative background (SSR-friendly) */}
         <div
           aria-hidden="true"
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(0,191,255,0.08), rgba(0,177,255,0.12))",
+              "linear-gradient(to bottom, rgba(0,191,255,0.06), rgba(0,177,255,0.10))",
           }}
         />
 
-        {/* lazy decorative complex visuals */}
         {hydrated && <LazyBackgroundEffect aria-hidden="true" />}
         {hydrated && <LazyParticles aria-hidden="true" />}
 
-        {/* Main content (CSS-driven animation; no heavy libs) */}
+        {/* Main content (balanced hierarchy + color priority) */}
         <div
-          className="z-10 mt-8 max-w-xl mx-auto"
+          className="z-10 mt-8 max-w-xl mx-auto px-4"
           role="main"
           id="main-content"
           aria-labelledby="hero-heading"
         >
-          {/* Avatar wrapper - ensure this container has fixed dimensions to avoid CLS */}
+          {/* Avatar */}
           <div
-            className="mx-auto p-2"
+            className="
+    mx-auto
+    p-2
+    rounded-full
+    bg-white/70 dark:bg-slate-800/60
+    shadow-[0_8px_30px_rgba(0,0,0,0.06)]
+    ring-1 ring-black/5 dark:ring-white/10
+  "
             style={{
               width: AVATAR_SIZE.mobile,
               height: AVATAR_SIZE.mobile,
               maxWidth: "92vw",
             }}
-            aria-hidden={false}
             role="img"
             aria-label="Portrait of Wahb"
           >
-            {/* Keep your Avatar component (assumed optimized). If it's an <img>, ensure it has width/height attributes and loading="eager" to help LCP. */}
             <Avatar />
           </div>
 
-          {/* Heading */}
+          <div className="h-4" aria-hidden="true" />
+
+          {/* H1: PRIMARY — Name (largest, blue = top priority) */}
           <h1
             id="hero-heading"
-            className="font-sans text-4xl xs:text-5xl sm:text-7xl font-extrabold tracking-tight text-gray-800 dark:text-white drop-shadow-lg mt-6"
+            className="mt-6 flex items-baseline justify-center gap-4 text-center"
           >
-            Hey, I&apos;m{" "}
-            <span className="font-serif text-5xl xs:text-6xl sm:text-8xl text-blue-600 font-black drop-shadow-lg">
-              Wahb
+            <span
+              className="
+    text-3xl xs:text-4xl sm:text-5xl
+    font-semibold
+    text-gray-700 dark:text-slate-300
+  "
+            >
+              Hey, I&apos;m
             </span>
-            <br />
-            <span className="mt-4 block text-lg xs:text-xl sm:text-2xl font-medium text-gray-700 dark:text-slate-300 drop-shadow-sm">
-              — I Build Fast & Scalable Web Apps 🚀
+
+            <span
+              className="
+    font-serif
+    text-5xl xs:text-6xl sm:text-8xl
+    text-blue-600
+    font-black
+    leading-none
+  "
+            >
+              Wahb
             </span>
           </h1>
 
-          {/* Typewriter (lightweight) */}
-          <p
-            className="text-base xs:text-lg sm:text-2xl mt-6 font-medium max-w-screen-3xl mx-auto text-gray-800 dark:text-slate-300 drop-shadow-md"
-            aria-label="Developer specialties"
-            role="text"
+          {/* H2: SECONDARY — Value proposition (prominent, darker/indigo color) */}
+          <h2 className="mt-4 text-lg xs:text-xl sm:text-2xl font-semibold text-slate-800 dark:text-slate-100 max-w-2xl mx-auto">
+            I build fast, reliable web apps that scale with your product.
+          </h2>
+
+          {/* H3: TERTIARY — Typewriter as supporting proof (accent color + subtle left border) */}
+          <div
+            className="mt-4 max-w-md mx-auto flex items-center gap-3 px-3 py-2 rounded-lg
+                 border-l-4 border-blue-100 dark:border-blue-900 bg-white/60 dark:bg-slate-800/40"
+            aria-hidden={false}
           >
-            {hydrated ? (
-              <TinyTypewriter
-                words={[
-                  "Full-Stack Web Developer 💻",
-                  "Building Scalable Web Apps 🚀",
-                  "Optimizing Performance & UX ⚡",
-                  "Deploying Apps on Linux VPS 🐧",
-                ]}
-                typeSpeed={50}
-                deleteSpeed={30}
-                delaySpeed={1300}
-                reduceMotion={reduceMotion}
-              />
-            ) : (
-              // server-rendered fallback to avoid layout shift & be readable to bots
-              "Full-Stack Web Developer 💻 — Building Scalable Web Apps 🚀"
-            )}
+            {/* subtle icon-like dot to help visual parsing (accessible hidden) */}
+            <span
+              className="w-2 h-2 rounded-full bg-blue-400 dark:bg-cyan-400 inline-block"
+              aria-hidden="true"
+            />
+            <p
+              className="m-0 text-sm xs:text-base sm:text-base font-medium text-indigo-600 dark:text-cyan-300"
+              aria-label="Developer specialties"
+              role="text"
+            >
+              {hydrated ? (
+                <TinyTypewriter
+                  words={[
+                    "Next.js & React — performance first",
+                    "Scalable full-stack systems for real users",
+                    "UX-focused frontend with robust backend",
+                    "Production deployments on Linux & cloud",
+                  ]}
+                  typeSpeed={45}
+                  deleteSpeed={25}
+                  delaySpeed={1400}
+                  reduceMotion={reduceMotion}
+                />
+              ) : (
+                "Full-stack developer building scalable web applications"
+              )}
+            </p>
+          </div>
+
+          {/* Subheading: QUATERNARY — audience/context (cyan to indicate supportive priority) */}
+          <p className="mt-3 text-sm sm:text-base max-w-xl mx-auto text-cyan-600 dark:text-cyan-300 font-medium">
+            For startups & product teams focused on performance and reliability.
           </p>
 
-          {/* Short description (keeps visual hierarchy) */}
-          <p className="text-base mt-6 max-w-2xl mx-auto text-black dark:text-slate-400 drop-shadow-sm">
-            I turn complex ideas into elegant, fast, and reliable web
-            applications.
-          </p>
-          <p className="text-blue-700 dark:text-cyan-300 mt-2 text-sm sm:text-base drop-shadow-sm">
-            Turning ideas into full-stack apps — from my terminal to the cloud
-            ☁️💻
-          </p>
-
-          {/* Primary + Secondary CTA */}
-          <div className="mt-6 flex items-center gap-4 justify-center">
-            {/* See my work */}
+          {/* CTAs — single strong button + subtle text link */}
+          <div className="mt-8 flex items-center gap-4 justify-center">
             <a
               href="/#projects"
               onClick={(e) => {
@@ -250,13 +278,12 @@ export default function Hero() {
                 if (el)
                   el.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
-              className="inline-flex items-center px-5 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-md transition-all duration-300 hover:bg-blue-500 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
-              aria-label="See my projects"
+              className="inline-flex items-center px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-md transition-all duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
+              aria-label="See my work"
             >
               See my work
             </a>
 
-            {/* Contact Me */}
             <a
               href="/#contact"
               onClick={(e) => {
@@ -266,35 +293,40 @@ export default function Hero() {
                   el.scrollIntoView({ behavior: "smooth", block: "center" });
               }}
               className="
-    inline-flex items-center px-5 py-2 rounded-xl border border-blue-600 
-    text-blue-600 font-semibold shadow-md transition-all duration-300 
-    hover:bg-blue-600 hover:text-white hover:shadow-xl hover:scale-105 
-    focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 
-    focus-visible:ring-opacity-75
-    dark:hover:bg-blue-500 dark:hover:text-white
-    dark:text-cyan-400
-    text-lg
-    drop-shadow-sm
+    inline-flex items-center justify-center
+    px-5 py-2.5
+    rounded-xl
+    border border-blue-600/60
+    text-blue-600
+    font-semibold
+    shadow-sm
+    transition-all duration-200
+    hover:bg-blue-600 hover:text-white
+    hover:shadow-md
+    focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300
+    dark:border-cyan-400/60
+    dark:text-cyan-300
+    dark:hover:bg-cyan-400 dark:hover:text-slate-700
   "
-              aria-label="Contact me"
+              aria-label="Contact Wahb"
             >
-              Contact Me
+              Contact
             </a>
           </div>
         </div>
 
-        {/* Scroll hint - CSS animation only, respects reduced-motion via Tailwind's 'motion-reduce' utility */}
+        {/* Scroll hint (small, unobtrusive) */}
         <button
           onClick={handleScrollToSkills}
-          className="absolute bottom-8 flex flex-col items-center cursor-pointer z-10 hover:scale-105 transition-transform motion-reduce:animate-none"
+          className="absolute bottom-8 flex flex-col items-center cursor-pointer z-10 transition-transform motion-reduce:animate-none"
           aria-label="Scroll to skills section"
         >
           <ChevronDownIcon
             className="w-8 h-8 text-white animate-bounce motion-reduce:animate-none"
             aria-hidden="true"
           />
-          <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300 drop-shadow-sm">
-            Scroll to see my skills 👇
+          <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300">
+            Scroll to see my skills
           </span>
         </button>
       </main>
