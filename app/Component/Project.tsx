@@ -66,10 +66,9 @@ const staticProjects: Project[] = [
       "A single workspace where clients can request project quotes, track progress, message developers, and see real-time updates — without chasing emails or spreadsheets.",
     liveLink: "https://projects.buttnetworks.com",
     githubLink: [
-      "https://github.com/coder101-js/dev-dashboard",
-      "https://github.com/coder101-js/dashboard",
+      "https://github.com/wahb-amir/dev-dashboard",
+      "https://github.com/wahb-amir/dashboard",
     ],
-
 
     problem:
       "Clients and developers were using emails, chats, and separate tools to manage projects, making communication confusing and progress hard to track.",
@@ -154,7 +153,7 @@ const staticProjects: Project[] = [
     short:
       "A clean, fast online store where users can browse products, add items to a cart, and check out — with a simple admin view for managing products safely.",
     liveLink: "https://boltform.buttnetworks.com/",
-    githubLink: "https://github.com/coder101-js/Ecommer-Store",
+    githubLink: "https://github.com/wahb-amir/Ecommer-Store",
     problem:
       "Small businesses need an easy-to-use online store with secure checkout and basic admin visibility, without exposing sensitive system access.",
     process: [

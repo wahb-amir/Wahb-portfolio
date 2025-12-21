@@ -2,7 +2,6 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import Navbar from "./Component/Navbar";
 import Hero from "./Component/Hero";
 import SkillsCloud from "./Component/SkillsCloud";
 import Project from "./Component/Project";
@@ -15,19 +14,21 @@ export default function Home() {
   const path = usePathname();
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <PageTransition key={path}>
-        <main>
-          <Hero />
-          <SkillsCloud />
-          <Project />
-          <About />
-          <ContactForm />
-        </main>
-        <footer className="h-fit overflow-hidden">
-          <Footer />
-        </footer>
-      </PageTransition>
-    </AnimatePresence>
+    <>
+      <AnimatePresence mode="wait" initial={false}>
+        <PageTransition key={path}>
+          <main>
+            <Hero />
+            <SkillsCloud />
+            <Project />
+            <About />
+            <ContactForm />
+          </main>
+          <footer className="h-fit overflow-hidden">
+            <Footer />
+          </footer>
+        </PageTransition>
+      </AnimatePresence>
+    </>
   );
 }

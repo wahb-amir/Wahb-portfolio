@@ -489,6 +489,56 @@ export default function About() {
           </button>
         </div>
       </motion.div>
+      {hydrated && !showSkeleton && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Wahb",
+              description: about.bio,
+              jobTitle: "Full-Stack Developer / AI Enthusiast",
+              url: "https://wahb.space",
+              sameAs: [
+                "https://github.com/coder101-js",
+                "https://www.linkedin.com/in/wahb-amir/",
+                "https://twitter.com/wahb_amir",
+              ],
+              worksFor: {
+                "@type": "Organization",
+                name: "Butt Networks",
+              },
+              alumniOf: [],
+              birthDate: "2010-01-01", // optional if public
+              award: [],
+              knowsAbout: about.quickFacts ?? [
+                "Frontend: React, Next.js, Tailwind CSS, Framer Motion",
+                "Backend: Node.js, Express, MongoDB, Mongoose",
+                "Machine Learning & AI: PyTorch — CNNs, detection, segmentation",
+                "Low-level & Robotics: learning C++ for embedded/robotics",
+                "Mathematics: Linear Algebra, Calculus, Probability & Statistics",
+                "Deployment: Linux VPS, Docker",
+                "Workflow: build small experiments, iterate quickly, ship what works",
+              ],
+              hasOccupation: {
+                "@type": "Occupation",
+                name: "Software Engineer / AI Developer",
+                startDate: about.startDate,
+                estimatedSalary: {
+                  "@type": "MonetaryAmount",
+                  currency: "USD",
+                  value: {
+                    "@type": "QuantitativeValue",
+                    value: 0,
+                    unitText: "YEAR",
+                  },
+                },
+              },
+            }),
+          }}
+        />
+      )}
     </section>
   );
 }

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import redis from "@/lib/redis";
 import { Project } from "../../../Component/Project";
-import { clearProjectCache } from "@/lib/redis";
 const INTERNAL_API_URL = `${process.env.NEXT_PUBLIC_ORIGIN}/api/updates/internal/projects`;
 const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET;
 
@@ -12,10 +11,6 @@ export async function GET(req: Request) {
 
     // Check Redis cache
     const cached = await redis.get("projects:payload");
-
-    if (cached) {
-      await clearProjectCache(redis);
-    }
 
     if (cached) {
       const payload: Project = JSON.parse(cached);
