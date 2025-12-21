@@ -11,7 +11,6 @@ export async function GET(req: Request) {
 
     // Check Redis cache
     const cached = await redis.get("projects:payload");
-
     if (cached) {
       const payload: Project = JSON.parse(cached);
       if (payload.version === clientVersion) {

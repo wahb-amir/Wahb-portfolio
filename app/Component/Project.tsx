@@ -64,7 +64,7 @@ const staticProjects: Project[] = [
     ],
     short:
       "A single workspace where clients can request project quotes, track progress, message developers, and see real-time updates — without chasing emails or spreadsheets.",
-    liveLink: "https://projects.buttnetworks.com",
+    liveLink: "https://dashboard.wahb.space",
     githubLink: [
       "https://github.com/wahb-amir/dev-dashboard",
       "https://github.com/wahb-amir/dashboard",
