@@ -35,17 +35,31 @@ export async function clearProjectCache(redisClient = redisInstance) {
 }
 
 export async function clearAboutCache(redisClient = redisInstance) {
+  if (!redisClient) {
+    console.warn(
+      "clearAboutCache: Redis client not available — skipping cache clear."
+    );
+    return {
+      success: false,
+      message: "Redis client not available.",
+    };
+  }
+
   try {
     const deleted = await redisClient.del("about:payload");
+
     return {
       success: true,
       message: deleted
         ? "About Me cache cleared successfully."
-        : "About Me cache key did not exist.",
+        : "About Me cache was already empty.",
     };
   } catch (err) {
     console.error("Error clearing About Me cache:", err);
-    return { success: false, message: "Internal server error" };
+    return {
+      success: false,
+      message: "Failed to clear About Me cache.",
+    };
   }
 }
 

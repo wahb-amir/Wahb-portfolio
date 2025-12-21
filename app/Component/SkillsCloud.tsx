@@ -61,11 +61,12 @@ const coreSkills = [
     color: "#F7931E",
     type: "backend",
   },
+  { name: "Pandas", icon: SiPandas, color: "#136bb9ff", type: "backend" },
 ];
 
 // Learning skills
 const learningSkills = [
-  { name: "Pandas", icon: SiPandas, color: "#136bb9ff", type: "learning" },
+  { name: "My Sql", icon: SiMysql, color: "#F29111", type: "learning" },
   { name: "NumPy", icon: SiNumpy, color: "#0b7adb", type: "learning" },
   { name: "C++", icon: SiCplusplus, color: "#00599C", type: "learning" },
   { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C", type: "learning" },

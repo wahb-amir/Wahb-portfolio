@@ -180,22 +180,20 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               </a>
             )}
 
-            {!loading &&
-              !isMultipleRepos &&
-              githubLink &&
-              typeof githubLink === "string" && (
-                <a
-                  href={githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
-                  aria-label={`Open GitHub repo of ${title}`}
-                >
-                  Code <CodeBracketIcon className="w-4 h-4" />
-                </a>
-              )}
+            {!loading && repoLinks.length === 1 && (
+              <a
+                href={repoLinks[0]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+                aria-label={`Open GitHub repo of ${title}`}
+              >
+                Code <CodeBracketIcon className="w-4 h-4" />
+              </a>
+            )}
 
-            {!loading && isMultipleRepos && (
+           
+            {!loading && repoLinks.length > 1 && (
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
@@ -219,55 +217,67 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Case Study */}
         <AnimatePresence initial={false}>
           {open && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.35 }}
-              className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700 text-left"
+            <motion.section
+              key="case-study"
+              layout="position"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 text-left"
             >
-              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+              {/* Problem */}
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                 Problem
               </h4>
-              <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">
+              <p className="text-sm text-gray-800 dark:text-slate-300 mb-4 leading-relaxed">
                 {problem}
               </p>
 
-              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+              {/* Process */}
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                 Process
               </h4>
-              <ol className="list-decimal ml-5 text-sm text-gray-800 dark:text-slate-300 mb-3 space-y-1">
+              <ul className="space-y-2 text-sm text-gray-800 dark:text-slate-300 mb-4">
                 {process.length ? (
                   process.map((step, i) => (
-                    <li key={i} className="leading-tight">
-                      {step}
+                    <li key={i} className="flex gap-2">
+                      <span className="font-semibold text-cyan-600 dark:text-cyan-400">
+                        {i + 1}.
+                      </span>
+                      <span className="leading-snug">{step}</span>
                     </li>
                   ))
                 ) : (
-                  <li>Documented the approach and steps here.</li>
+                  <li className="italic text-gray-500 dark:text-slate-400">
+                    Documented the approach and steps here.
+                  </li>
                 )}
-              </ol>
+              </ul>
 
-              <h4 className="text-sm font-semibold mb-2 text-gray-900 dark:text-white">
+              {/* Outcome */}
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                 Outcome / Results
               </h4>
-              <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">
+              <p className="text-sm text-gray-800 dark:text-slate-300 leading-relaxed">
                 {outcome}
               </p>
 
+              {/* Stats */}
               {stats && Object.keys(stats).length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div className="mt-4 flex flex-wrap gap-2">
                   {Object.entries(stats).map(([k, v]) => (
-                    <div
+                    <span
                       key={k}
                       className="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200"
                     >
-                      <strong className="mr-1">{formatKey(k)}:</strong> {v}
-                    </div>
+                      <strong className="mr-1">{formatKey(k)}:</strong>
+                      {v}
+                    </span>
                   ))}
                 </div>
               )}
-            </motion.div>
+            </motion.section>
           )}
         </AnimatePresence>
       </div>

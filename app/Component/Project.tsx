@@ -47,7 +47,7 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
 const staticProjects: Project[] = [
   {
     id: "client-dev-platform",
-    title: "Client–Dev Collaboration Platform",
+    title: "Client & Developer Collaboration Platform",
     role: "Full-Stack Engineer",
     images: [
       "/Project/Platform/Login.png",
@@ -60,37 +60,38 @@ const staticProjects: Project[] = [
       "Node.js",
       "Tailwind",
       "MongoDB",
-      "GitHub Webhooks",
+      "GitHub Automation",
     ],
     short:
-      "A unified platform connecting clients and dev teams — request quotes, receive email alerts, view project progress & assignees, chat with developers, and automatically sync repo activity to project status.",
+      "A single workspace where clients can request project quotes, track progress, message developers, and see real-time updates — without chasing emails or spreadsheets.",
     liveLink: "https://projects.buttnetworks.com",
     githubLink: [
       "https://github.com/coder101-js/dev-dashboard",
       "https://github.com/coder101-js/dashboard",
     ],
     problem:
-      "Clients and development teams lacked a single workspace to request quotes, track project progress, communicate, and sync repository activity into task status.",
+      "Clients and developers were using emails, chats, and separate tools to manage projects, making communication confusing and progress hard to track.",
     process: [
-      "Built client portal: request quotes, view project progress, see who's working on what, and chat with assigned developers",
-      "Built dev dashboard: manage tasks, update progress, assign team members, and review client requests",
-      "Implemented role-based auth (RBAC) so Clients, PMs, and Devs see appropriate views and actions",
-      "Automated user setup to create GitHub repositories for new projects and connect webhooks to auto-update progress from repo events (commits/PRs)",
-      "Added email & in-app alerts for quote responses, status changes, and mentions; real-time chat via Socket.io",
-      "Deployed with CI/CD pipelines and secure OAuth authentication for GitHub integration",
+      "Created a client dashboard where users can request quotes, view project timelines, and message their assigned developers",
+      "Built a developer workspace to manage tasks, update progress, and respond to client requests",
+      "Ensured each user sees only what’s relevant to them (clients, managers, developers)",
+      "Automatically linked projects with GitHub so development activity updates project progress without manual reporting",
+      "Added email and in-app notifications so everyone stays informed of changes and messages",
+      "Launched the platform with secure login and automated deployment",
     ],
     outcome:
-      "Delivered a single collaboration surface that improved visibility and reduced coordination friction — clients can request quotes and track progress, and devs get an organized dashboard with automated repo syncing and status updates.",
+      "Clients gained transparency and confidence, while developers reduced manual updates. Communication improved, project visibility increased, and overall coordination became faster and clearer.",
     stats: {
-      automation: "Auto repo creation & webhook sync for project status",
+      automation:
+        "Project progress updates automatically from development activity",
       features:
-        "Quote requests, email alerts, real-time chat, progress timeline, role-based auth",
+        "Quote requests, live messaging, progress tracking, notifications, role-based access",
     },
     category: "Platform",
   },
   {
     id: "ecom-1",
-    title: "Modern E-Commerce Store",
+    title: "Modern Online Store",
     role: "Full-Stack Developer",
     images: [
       "/Project/Ecom/light-shop.png",
@@ -99,22 +100,23 @@ const staticProjects: Project[] = [
       "/Project/Ecom/light-product.png",
       "/Project/Ecom/stripe.png",
     ],
-    tech: ["Next.js", "Stripe", "OAuth", "Tailwind", "MongoDB"],
+    tech: ["Next.js", "Stripe", "Secure Login", "Tailwind", "MongoDB"],
     short:
-      "A fully functional e-commerce platform with OAuth, fake Stripe checkout, and a client-safe read-only admin dashboard.",
+      "A clean, fast online store where users can browse products, add items to a cart, and check out — with a simple admin view for managing products safely.",
     liveLink: "https://boltform.buttnetworks.com/",
     githubLink: "https://github.com/coder101-js/Ecommer-Store",
     problem:
-      "Customers needed a lightweight store with easy checkout and an admin view that doesn't require exposing sensitive keys.",
+      "Small businesses need an easy-to-use online store with secure checkout and basic admin visibility, without exposing sensitive system access.",
     process: [
-      "Designed product pages and cart UX with Tailwind and responsive-first approach",
-      "Implemented OAuth-based auth and session handling",
-      "Connected Stripe sandbox for payments and built a read-only admin dashboard",
-      "Deployed on a Linux VPS with PM2 + Nginx reverse proxy",
+      "Designed a modern, mobile-friendly shopping experience",
+      "Built secure login so users can sign in safely",
+      "Integrated a test payment system to simulate real checkout flows",
+      "Created a read-only admin dashboard so owners can view data without security risks",
+      "Optimized performance so pages load fast on all devices",
     ],
     outcome:
-      "Deployed MVP with a responsive store, Stripe sandbox working, and an admin dashboard. Reduced TTFB by optimizing image sizes & server-side rendering.",
-    stats: { pagespeed: "Bumped 15→82" },
+      "Delivered a fast, responsive online store that demonstrates real-world e-commerce flows, secure payments, and admin visibility — suitable for small businesses or MVP launches.",
+    stats: { pagespeed: "Improved site performance from slow to fast loading" },
     category: "Web",
   },
 ];
@@ -179,9 +181,7 @@ async function setCached(payload: CachedPayload): Promise<boolean> {
   }
 }
 
-async function fetchProjectDetail(
-  version: string | null = null
-): Promise<{
+async function fetchProjectDetail(version: string | null = null): Promise<{
   version: string | null;
   data: Project[] | null;
   raw: any;

@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import redis from "@/lib/redis";
-import type Redis from "ioredis";
-
 const INTERNAL_API_URL = `${process.env.NEXT_PUBLIC_ORIGIN}/api/updates/about/internal/about`;
 const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET;
 
@@ -57,7 +55,6 @@ export async function GET(req: Request) {
       return NextResponse.json(payload);
     }
 
-    // 2️⃣ Cache miss → call internal API
     const internalResp = await fetch(INTERNAL_API_URL, {
       headers: { "x-internal-secret": INTERNAL_API_SECRET },
     });

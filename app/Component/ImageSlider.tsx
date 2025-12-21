@@ -1,8 +1,6 @@
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import Image from "next/image";
-import React from "react";
-
 const ImageSlider = ({ images = [] }) => {
   const [sliderRef, slider] = useKeenSlider({
     loop: true,
@@ -30,7 +28,7 @@ const ImageSlider = ({ images = [] }) => {
               className="object-cover rounded-lg"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-              quality={100}
+              quality={80}
               loading="lazy"
             />
           </div>

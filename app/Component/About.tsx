@@ -115,47 +115,55 @@ async function fetchAbout(
 // --- fallback ---
 const FALLBACK: AboutContent = {
   startDate: "2025-03-22T00:00:00Z",
-  bio: "Hello, my name is Wahb. I learnt how to code on my own...",
+
+  bio: "Hello, my name is Wahb. Because I genuinely enjoy creating functional things and resolving issues along the way, I taught myself how to code. Whether it's a web application, a server-based service, or experimenting with computer vision models, I'm most content when I'm developing useful tools.I'm currently working on teaching computers to comprehend images, such as identifying objects or separating them from the background, and figuring out how to make those systems function well on common hardware rather than just powerful cloud machines. In addition, I manage my own servers and create full-stack web applications, which keeps my work rooted in practical applications.",
+
   stats: { projectsDeployed: 3, selfHosted: "Yes" },
+
   timeline: [
-    { title: "Early 2025", desc: "Front-end foundations: HTML & CSS" },
+    {
+      title: "Early 2025",
+      desc: "Learned the basics of how websites are built and styled.",
+    },
     {
       title: "Spring 2025",
-      desc: "Built small JS projects & sharpened JavaScript skills",
+      desc: "Started building small interactive projects and learning how logic and code work together.",
     },
     {
       title: "Mid 2025",
-      desc: "Moved to React, Tailwind & Next.js — shipped full-stack apps",
+      desc: "Built complete web applications with modern tools and real features like dashboards and authentication.",
     },
     {
       title: "Summer 2025",
-      desc: "Deployed 3 full-stack web apps and self-hosted services",
+      desc: "Launched multiple real projects and ran them on my own servers.",
     },
     {
-      title: "Now (Advanced)",
-      desc: "Focusing on TypeScript, SQL, and relational database design.",
+      title: "Now",
+      desc: "Improving code quality, working with structured databases, and building more reliable systems.",
     },
     {
       title: "Next",
-      desc: "Integrate trained models into lightweight deployments.",
+      desc: "Strengthening problem-solving skills through data structures & algorithms, and deploying lightweight AI models into real products.",
     },
   ],
+
   quickFacts: [
-    "Frontend: React, Next.js, Tailwind CSS, Framer Motion",
-    "Backend: Node.js, Express, MongoDB, Mongoose",
-    "Machine Learning & AI: PyTorch — CNNs, detection, segmentation, training & debugging",
-    "Low-level & Robotics: learning C++ for embedded/robotics and real-time systems",
-    "Mathematics: Linear Algebra, Calculus, Probability & Statistics — core for ML",
-    "Deployment: Linux VPS (manual + CLI-based), Docker for experiments",
-    "Workflow: build small experiments, iterate quickly, ship what works",
+    "Builds clean, user-friendly web applications",
+    "Creates and manages full projects from idea to deployment",
+    "Works with image-based AI systems and experiments with practical machine learning",
+    "Comfortable running and maintaining apps on Linux servers",
+    "Enjoys breaking down complex problems into simple, working solutions",
+    "Focused on long-term growth, fundamentals, and real-world impact",
   ],
-  quote: "Still early in the journey — but building like I mean it.",
+
+  quote:
+    "Still early in the journey — focused on learning deeply and building things that matter.",
 };
 
 // --- timer ---
 function getTimeSinceStart(start: string | Date) {
   const s = new Date(start || FALLBACK.startDate);
-  if (isNaN(s.getTime())) return "0d 0h 0m"; 
+  if (isNaN(s.getTime())) return "0d 0h 0m";
   const now = new Date();
   const diff = now.getTime() - s.getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
