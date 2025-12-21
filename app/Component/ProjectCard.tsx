@@ -37,7 +37,7 @@ type CaseStudy = {
   callToAction?: string;
 };
 
-type ProjectCardProps = {
+export type ProjectCardProps = {
   title?: string;
   role?: string;
   images?: string[];
@@ -171,7 +171,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
         className={`project-card group relative rounded-xl overflow-hidden border transition-transform transform hover:shadow-xl focus-within:shadow-xl ${
-          isDark ? "border-slate-700 bg-[#071020]/60" : "border-gray-100 bg-white"
+          isDark
+            ? "border-slate-700 bg-[#071020]/60"
+            : "border-gray-100 bg-white"
         }`}
         aria-labelledby={`project-${safeId}`}
         aria-busy={loading}
@@ -233,18 +235,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
 
           {/* Short description */}
-          <div className="mt-3">
-            {loading ? (
-              <>
-                <div className="h-3 w-full rounded bg-gray-200 dark:bg-slate-800 animate-pulse mb-2" />
-                <div className="h-3 w-5/6 rounded bg-gray-200 dark:bg-slate-800 animate-pulse" />
-              </>
-            ) : (
-              <p className="text-sm sm:text-base text-gray-800 dark:text-slate-300 min-h-[48px]">
-                {short}
-              </p>
-            )}
-          </div>
+          {normalizedCS.tlDr && (
+            <div className="mb-4 mt-4">
+              <div className="inline-flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-900">
+                <span
+                  className="w-2 h-2 rounded-full bg-blue-500 dark:bg-cyan-300 inline-block"
+                  aria-hidden="true"
+                />
+                <p className="m-0 text-sm font-medium text-blue-700 dark:text-cyan-200 max-w-prose">
+                  {normalizedCS.tlDr}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
@@ -306,21 +309,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 transition={{ duration: 0.28, ease: "easeOut" }}
                 className="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 text-left"
               >
-                {/* tl;dr */}
-                {normalizedCS.tlDr && (
-                  <div className="mb-4">
-                    <div className="inline-flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-900">
-                      <span
-                        className="w-2 h-2 rounded-full bg-blue-500 dark:bg-cyan-300 inline-block"
-                        aria-hidden="true"
-                      />
-                      <p className="m-0 text-sm font-medium text-blue-700 dark:text-cyan-200 max-w-prose">
-                        {normalizedCS.tlDr}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
                 {/* Role / Constraints / Launch row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div className="p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
@@ -371,7 +359,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                       Approach
                     </h4>
-                    <div className="mb-3">{renderList(normalizedCS.approach)}</div>
+                    <div className="mb-3">
+                      {renderList(normalizedCS.approach)}
+                    </div>
                   </>
                 )}
 
@@ -381,7 +371,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                       My responsibilities
                     </h4>
-                    <div className="mb-3">{renderList(normalizedCS.responsibilities)}</div>
+                    <div className="mb-3">
+                      {renderList(normalizedCS.responsibilities)}
+                    </div>
                   </>
                 )}
 
@@ -391,7 +383,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                       Technical solution
                     </h4>
-                    <div className="mb-3">{renderList(normalizedCS.technicalSolution)}</div>
+                    <div className="mb-3">
+                      {renderList(normalizedCS.technicalSolution)}
+                    </div>
                   </>
                 )}
 
@@ -456,7 +450,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-cyan-700 text-white text-sm font-medium hover:bg-cyan-800 transition"
                         >
-                          View demo <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                          View demo{" "}
+                          <ArrowTopRightOnSquareIcon className="w-4 h-4" />
                         </a>
                       )}
                       <button
