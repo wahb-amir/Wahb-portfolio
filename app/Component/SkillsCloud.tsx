@@ -23,6 +23,9 @@ import {
   SiPytorch,
   SiCplusplus,
   SiOpencv,
+  SiTypescript,
+  SiMysql,
+  // SiSql add to learning
 } from "react-icons/si";
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
@@ -41,6 +44,12 @@ const coreSkills = [
     color: "#F7DF1E",
     type: "frontend",
   },
+  {
+    name: "TypeScript",
+    icon: SiTypescript,
+    color: "#007ACC",
+    type: ["frontend", "backend"],
+  },
   { name: "React", icon: SiReact, color: "#38B2AC", type: "frontend" },
   { name: "Next.js", icon: SiNextdotjs, color: "#000000", type: "frontend" },
   { name: "Node.js", icon: SiNodedotjs, color: "#339933", type: "backend" },
@@ -54,11 +63,12 @@ const coreSkills = [
     color: "#F7931E",
     type: "backend",
   },
+  { name: "Pandas", icon: SiPandas, color: "#136bb9ff", type: "backend" },
 ];
 
 // Learning skills
 const learningSkills = [
-  { name: "Pandas", icon: SiPandas, color: "#136bb9ff", type: "learning" },
+  { name: "My Sql", icon: SiMysql, color: "#F29111", type: "learning" },
   { name: "NumPy", icon: SiNumpy, color: "#0b7adb", type: "learning" },
   { name: "C++", icon: SiCplusplus, color: "#00599C", type: "learning" },
   { name: "PyTorch", icon: SiPytorch, color: "#EE4C2C", type: "learning" },
@@ -104,8 +114,8 @@ export default function SkillsCloud() {
 
   const coreFiltered = coreSkills.filter((s) => {
     if (filter === "all") return true;
-    if (filter === "frontend") return s.type === "frontend";
-    if (filter === "backend") return s.type === "backend";
+    if (filter === "frontend") return s.type.includes("frontend");
+    if (filter === "backend") return s.type.includes("backend");
     return false;
   });
 

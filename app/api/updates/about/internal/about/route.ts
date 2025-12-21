@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDB } from "@/lib/db";
 import AboutVersion from "@/models/AboutMe";
 import { clearAboutCache } from "@/lib/redis";
+import redis from "@/lib/redis";
 
 const ALLOWED_ORIGIN = process.env.META_PLATFORM_ORIGIN; // e.g. "https://platform.example.com"
 interface About {
@@ -10,6 +11,7 @@ interface About {
   timeline?: { title: string; desc: string }[];
   [key: string]: any; // fallback for dynamic keys
 }
+
 /** Helper: return CORS headers for a given origin (only if it matches allowed origin) */
 function corsHeaders(
   origin: string | null | undefined
@@ -114,8 +116,15 @@ export async function PUT(req: Request) {
       about: newData,
     });
 
+    // Clear cache using the Redis instance
     try {
-      await clearAboutCache();
+      if (!redis) {
+        console.warn(
+          "Warning: Redis client is not available. Skipping cache clear for about:payload."
+        );
+      } else {
+        await clearAboutCache(redis);
+      }
     } catch (cacheErr) {
       console.error("Warning: failed to clear about cache after PUT", cacheErr);
     }
@@ -179,8 +188,15 @@ export async function DELETE(req: Request) {
       about: newData,
     });
 
+    // Clear cache using the Redis instance
     try {
-      await clearAboutCache();
+      if (!redis) {
+        console.warn(
+          "Warning: Redis client is not available. Skipping cache clear for about:payload."
+        );
+      } else {
+        await clearAboutCache(redis);
+      }
     } catch (cacheErr) {
       console.error(
         "Warning: failed to clear about cache after DELETE",
