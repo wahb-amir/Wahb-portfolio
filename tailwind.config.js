@@ -21,6 +21,7 @@ module.exports = {
         "3xl": "1920px",
         "max-xs": { max: "480px" },
         "max-md": { max: "680px" },
+        'md850': '850px',
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
@@ -35,7 +36,6 @@ module.exports = {
         float: "float 6s ease-in-out infinite",
       },
 
-      // ✅ Gradient backgrounds (now you can use bg-light-gradient / bg-dark-gradient)
       backgroundImage: {
         "light-gradient":
           "radial-gradient(circle at top left, #7f5af022, transparent 70%), radial-gradient(circle at bottom right, #00dfd822, transparent 70%)",

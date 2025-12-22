@@ -7,9 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowTopRightOnSquareIcon,
   CodeBracketIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/24/outline";
 import RepoSelectorModal from "./RepoSelectorModal";
-
 type Metric = {
   metric?: string;
   value?: string;
@@ -50,6 +50,9 @@ export type ProjectCardProps = {
   outcome?: string;
   stats?: { [key: string]: string | number };
   caseStudy?: CaseStudy;
+  launch?: {
+    date: string;
+  };
 };
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -64,6 +67,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   process = [],
   outcome = "",
   stats = {},
+  launch = { date: "" },
   caseStudy,
 }: ProjectCardProps) => {
   const { theme } = useTheme();
@@ -134,10 +138,30 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     </div>
   );
 
-  // normalized case study (fall back to legacy fields)
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr; // fallback to original string if invalid
+    return d.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // --- replace the normalizedCS block with this ---
   const normalizedCS: CaseStudy =
     caseStudy && Object.keys(caseStudy).length > 0
-      ? caseStudy
+      ? {
+          // keep everything from caseStudy, but ensure launch falls back to top-level launch prop
+          ...caseStudy,
+          launch:
+            caseStudy.launch && caseStudy.launch.date
+              ? caseStudy.launch
+              : launch && launch.date
+              ? { date: launch.date }
+              : caseStudy.launch,
+        }
       : {
           tlDr: short || undefined,
           problem,
@@ -157,12 +181,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   }))
                 : undefined,
           },
-          launch: undefined,
           proofPoints: undefined,
           lessons: undefined,
           callToAction: undefined,
+          launch: launch && launch.date ? { date: launch.date } : undefined,
         };
-  console.log(normalizedCS);
   return (
     <>
       <motion.article
@@ -310,8 +333,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 className="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 text-left"
               >
                 {/* Role / Constraints / Launch row */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
+                  {/* Role block */}
+                  <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
                     <div className="text-xs text-gray-500 dark:text-slate-400">
                       Role
                     </div>
@@ -320,8 +344,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     </div>
                   </div>
 
+                  {/* Constraints / Timeline block */}
                   {normalizedCS.constraints ? (
-                    <div className="p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+                    <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
                       <div className="text-xs text-gray-500 dark:text-slate-400">
                         Constraints
                       </div>
@@ -330,7 +355,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       </div>
                     </div>
                   ) : (
-                    <div className="p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+                    <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
                       <div className="text-xs text-gray-500 dark:text-slate-400">
                         Timeline
                       </div>
@@ -339,6 +364,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       </div>
                     </div>
                   )}
+
+                  {/* Last Published block */}
+                  <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+                    <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-slate-400">
+                      <InformationCircleIcon className="w-4 h-4" />
+                      <span>
+                        Last Published<b>(Git-hub update)</b>
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-800 dark:text-slate-300">
+                      {normalizedCS.launch?.date ?? "Not published yet"}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Problem */}
@@ -485,27 +523,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           />
         )}
       </motion.article>
-
-      {/* small local styles to make the card "break" (take full row) at <= 850px */}
-      <style jsx>{`
-        .project-card {
-          /* preserve usual behavior by default */
-        }
-
-        /* WHEN viewport is 850px or smaller, make the card occupy the full row.
-           This helps cards placed in a grid/flex to wrap below 850px. */
-        @media (max-width: 850px) {
-          .project-card {
-            width: 100% !important;
-            max-width: 100% !important;
-            flex-basis: 100% !important;
-            /* if you're using CSS columns, avoid breaking inside */
-            break-inside: avoid;
-            -webkit-column-break-inside: avoid;
-            page-break-inside: avoid;
-          }
-        }
-      `}</style>
     </>
   );
 };

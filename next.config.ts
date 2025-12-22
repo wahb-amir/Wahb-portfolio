@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    qualities: [75, 80], 
+    qualities: [75, 80],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

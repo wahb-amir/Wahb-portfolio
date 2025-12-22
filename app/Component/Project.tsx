@@ -24,11 +24,13 @@ export interface Project {
   outcome?: string;
   stats?: Record<string, string>;
   category?: string;
-  // allow any additional fields returned by your API
+  launch?: {
+    date?: string;
+  };
   [k: string]: any;
 }
 
-interface CachedPayload {
+export interface CachedPayload {
   version: string | null;
   data: Project[] | null;
 }
@@ -485,7 +487,7 @@ const Project: React.FC = () => {
 
         <motion.div
           id="projects-grid"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start"
+          className="grid grid-cols-1 md850:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start"
           variants={gridVariants}
           initial="visible"
           animate="visible"
@@ -518,8 +520,7 @@ const Project: React.FC = () => {
                     .filter(Boolean)
                     .join(",")}
                 >
-                  {/* ProjectCard's prop type isn't known here; cast to any to avoid TS errors.
-                      Ideally, export a typed prop interface from ProjectCard and use it instead. */}
+                
                   <ProjectCard {...(p as any)} />
                 </motion.div>
               ))}
