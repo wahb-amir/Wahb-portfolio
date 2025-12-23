@@ -263,7 +263,6 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* Subheading: QUATERNARY — audience/context (cyan to indicate supportive priority) */}
           <p className="mt-3 text-sm sm:text-base max-w-xl mx-auto text-cyan-600 dark:text-cyan-300 font-medium">
             For startups & product teams focused on performance and reliability.
           </p>
@@ -271,12 +270,12 @@ export default function Hero() {
           {/* CTAs — single strong button + subtle text link */}
           <div className="mt-8 flex items-center gap-4 justify-center">
             <a
-              href="/#projects"
+              href="/#project-section"
               onClick={(e) => {
                 e.preventDefault();
-                const el = document.getElementById("projects");
+                const el = document.getElementById("project-section");
                 if (el)
-                  el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  el.scrollIntoView({ behavior: "smooth", block: "center" });
               }}
               className="inline-flex items-center px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-md transition-all duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
               aria-label="See my work"

@@ -42,7 +42,7 @@ export default function Footer() {
         aria-label="Footer links"
       >
         <a
-          href="https://github.com/coder101-js"
+          href="https://github.com/wahb-amir"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Visit my GitHub"

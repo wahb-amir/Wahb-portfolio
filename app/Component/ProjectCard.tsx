@@ -1,508 +1,113 @@
-// components/ProjectCard.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
-import ImageSlider from "./ImageSlider";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowTopRightOnSquareIcon,
-  CodeBracketIcon,
-  InformationCircleIcon,
-} from "@heroicons/react/24/outline";
-import RepoSelectorModal from "./RepoSelectorModal";
+import React, { useEffect, useState } from "react";
+import { ArrowTopRightOnSquareIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
+import RepoSelectorModal from "./RepoSelectorModal"; 
 
-type Metric = { metric?: string; value?: string; note?: string };
-
-type CaseStudy = {
-  tlDr?: string;
-  problem?: string;
-  constraints?: string;
-  myRole?: string;
-  responsibilities?: string[];
-  approach?: string[];
-  technicalSolution?: string[];
-  architectureNotes?: string;
-  outcomes?: { qualitative?: string; quantitative?: Metric[] };
-  launch?: { date?: string };
-  proofPoints?: string[];
-  lessons?: string[];
-  callToAction?: string;
-};
-
-export type ProjectCardProps = {
+type Props = {
   title?: string;
-  role?: string;
-  images?: string[];
-  tech?: string[];
-  short?: string;
   liveLink?: string | null;
-  githubLink?: string | string[] | null;
-  problem?: string;
-  process?: string[];
-  outcome?: string;
-  stats?: { [key: string]: string | number };
-  caseStudy?: CaseStudy;
-  launch?: { date: string };
+  repoLinks?: string[];
 };
 
-const ProjectCard: React.FC<ProjectCardProps> = ({
-  title = "Untitled Project",
-  role = "Contributor",
-  images = [],
-  tech = [],
-  short = "",
-  liveLink = null,
-  githubLink = null,
-  problem = "",
-  process = [],
-  outcome = "",
-  stats = {},
-  launch = { date: "" },
-  caseStudy,
-}: ProjectCardProps) => {
-  const { theme } = useTheme();
+export default function ActionsHydrate({ title, liveLink, repoLinks = [] }: Props) {
   const [mounted, setMounted] = useState(false);
-  const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => setMounted(true), []);
-  useEffect(() => {
-    const delay = images && images.length > 0 ? 350 : 650;
-    const id = setTimeout(() => setLoading(false), delay);
-    return () => clearTimeout(id);
-  }, [images]);
 
-  const isDark = mounted && theme === "dark";
+  // Render identical static markup as server while not mounted
+  if (!mounted) {
+    return (
+      <>
+        <div className="flex gap-3">
+          {liveLink && (
+            <a
+              href={liveLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-cyan-700 text-white text-sm font-medium hover:bg-cyan-800"
+            >
+              Live Demo <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+            </a>
+          )}
 
-  const safeId = title
-    .replace(/\s+/g, "-")
-    .replace(/[^a-zA-Z0-9\-]/g, "")
-    .toLowerCase();
+          {repoLinks.length === 1 && (
+            <a
+              href={repoLinks[0]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium"
+            >
+              Code <CodeBracketIcon className="w-4 h-4" />
+            </a>
+          )}
 
-  const isMultipleRepos: boolean =
-    Array.isArray(githubLink) && githubLink.length > 1;
-  const repoLinks: string[] = Array.isArray(githubLink)
-    ? githubLink
-    : githubLink
-    ? [githubLink]
-    : [];
-
-  const formatKey = (k: string) =>
-    k
-      .replace(/([A-Z])/g, " $1")
-      .replace(/[_\-]/g, " ")
-      .replace(/^./, (s: string) => s.toUpperCase());
-
-  const renderList = (arr?: string[]) =>
-    arr && arr.length ? (
-      <ul className="list-inside list-disc space-y-2 ml-4">
-        {arr.map((s, i) => (
-          <li
-            key={i}
-            className="text-sm text-gray-800 dark:text-slate-300 leading-relaxed"
-          >
-            {s}
-          </li>
-        ))}
-      </ul>
-    ) : null;
-
-  const renderMetric = (m: Metric, idx: number) => (
-    <div
-      key={idx}
-      className="flex flex-col items-start gap-1 p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 min-w-[140px]"
-    >
-      <div className="text-sm font-semibold text-gray-900 dark:text-white">
-        {m.value ?? "—"}
-      </div>
-      <div className="text-xs text-gray-600 dark:text-slate-400">
-        {m.metric ?? "Metric"}
-      </div>
-      {m.note && (
-        <div className="text-2xs text-gray-500 dark:text-slate-500 mt-1">
-          {m.note}
+          {repoLinks.length > 1 && (
+            <div className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium">
+              <span>Code:</span>
+              <ul className="ml-2 list-inside list-disc">
+                {repoLinks.map((r, i) => (
+                  <li key={i}>
+                    <a href={r} target="_blank" rel="noopener noreferrer" className="text-sm">
+                      {r}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  );
-
-  const formatDate = (dateStr?: string) => {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const normalizedCS: CaseStudy =
-    caseStudy && Object.keys(caseStudy).length > 0
-      ? {
-          ...caseStudy,
-          launch:
-            caseStudy.launch && caseStudy.launch.date
-              ? caseStudy.launch
-              : launch && launch.date
-              ? { date: launch.date }
-              : caseStudy.launch,
-        }
-      : {
-          tlDr: short || undefined,
-          problem,
-          constraints: undefined,
-          myRole: role,
-          responsibilities: undefined,
-          approach: process?.length ? process : undefined,
-          technicalSolution: undefined,
-          architectureNotes: undefined,
-          outcomes: {
-            qualitative: outcome || undefined,
-            quantitative:
-              stats && Object.keys(stats).length
-                ? Object.entries(stats).map(([k, v]) => ({
-                    metric: formatKey(k),
-                    value: String(v),
-                  }))
-                : undefined,
-          },
-          proofPoints: undefined,
-          lessons: undefined,
-          callToAction: undefined,
-          launch: launch && launch.date ? { date: launch.date } : undefined,
-        };
+      </>
+    );
+  }
 
   return (
     <>
-      <motion.article
-        layout
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-        /* fill the grid cell, become a column flex container so children can stretch */
-        className={`project-card group relative rounded-xl overflow-hidden border transition-transform transform hover:shadow-xl focus-within:shadow-xl w-full h-full flex flex-col ${
-          isDark
-            ? "border-slate-700 bg-[#071020]/60"
-            : "border-gray-100 bg-white"
-        }`}
-        aria-labelledby={`project-${safeId}`}
-        aria-busy={loading}
-      >
-        {/* IMAGE */}
-        <div className="w-full h-48 md:h-56 bg-gray-50 dark:bg-slate-900">
-          {loading ? (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-white/60 to-gray-100/40 dark:from-slate-800/60 dark:to-slate-700/40 animate-pulse">
-              <div className="w-11/12 h-40 rounded-lg bg-gray-200 dark:bg-slate-800" />
-            </div>
-          ) : (
-            // @ts-ignore - ImageSlider accepts images: string[]
-            <ImageSlider images={images} />
-          )}
-        </div>
-
-        {/* CONTENT */}
-        <div className="p-4 sm:p-6 flex flex-col flex-1 min-w-0">
-          {/* Title + Role + Tech */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="text-left flex-1 min-w-0">
-              {loading ? (
-                <div className="space-y-2">
-                  <div className="h-5 w-3/4 rounded bg-gray-200 dark:bg-slate-800 animate-pulse" />
-                  <div className="h-3 w-1/3 rounded bg-gray-200 dark:bg-slate-800 animate-pulse" />
-                </div>
-              ) : (
-                <>
-                  <h3
-                    id={`project-${safeId}`}
-                    className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900 dark:text-white truncate"
-                  >
-                    {title}
-                  </h3>
-                  <p className="text-sm text-gray-700 dark:text-slate-300 mt-1 truncate">
-                    {role}
-                  </p>
-                </>
-              )}
-            </div>
-
-            <div className="flex flex-col items-end gap-2">
-              <div className="flex flex-wrap gap-2 justify-end max-w-[220px]">
-                {loading ? (
-                  <>
-                    <span className="inline-block h-6 w-14 rounded-full bg-gray-200 dark:bg-slate-800 animate-pulse" />
-                    <span className="inline-block h-6 w-10 rounded-full bg-gray-200 dark:bg-slate-800 animate-pulse" />
-                  </>
-                ) : (
-                  tech.map((t: string) => (
-                    <span
-                      key={t}
-                      className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 truncate border-2 border-cyan-500/50 dark:border-cyan-400/40 shadow-[0_0_10px_rgba(0,255,255,0.2)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] transition"
-                    >
-                      {t}
-                    </span>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Short description */}
-          {normalizedCS.tlDr && (
-            <div className="mb-4 mt-4">
-              <div className="inline-flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-900">
-                <span
-                  className="w-2 h-2 rounded-full bg-blue-500 dark:bg-cyan-300 inline-block"
-                  aria-hidden="true"
-                />
-                <p className="m-0 text-sm font-medium text-blue-700 dark:text-cyan-200 max-w-prose">
-                  {normalizedCS.tlDr}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Actions - stick to bottom */}
-          <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mt-auto">
-            <div className="flex gap-3">
-              {!loading && liveLink && (
-                <a
-                  href={liveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-cyan-700 text-white text-sm font-medium hover:bg-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
-                  aria-label={`Open live demo of ${title}`}
-                >
-                  Live Demo <ArrowTopRightOnSquareIcon className="w-4 h-4" />
-                </a>
-              )}
-
-              {!loading && repoLinks.length === 1 && (
-                <a
-                  href={repoLinks[0]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
-                  aria-label={`Open GitHub repo of ${title}`}
-                >
-                  Code <CodeBracketIcon className="w-4 h-4" />
-                </a>
-              )}
-
-              {!loading && repoLinks.length > 1 && (
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
-                >
-                  Select repo <CodeBracketIcon className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-
-            <div className="ml-auto flex items-center gap-3">
-              <button
-                onClick={() => setOpen((s) => !s)}
-                aria-expanded={open}
-                className="text-sm font-semibold text-cyan-700 dark:text-cyan-400 hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded"
-              >
-                {open ? "Hide case study" : "View case study"}
-              </button>
-            </div>
-          </div>
-
-          {/* Case Study */}
-          <AnimatePresence initial={false}>
-            {open && (
-              <motion.section
-                key="case-study"
-                layout="position"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.28, ease: "easeOut" }}
-                className="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 text-left"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
-                  <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
-                    <div className="text-xs text-gray-500 dark:text-slate-400">
-                      Role
-                    </div>
-                    <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {normalizedCS.myRole ?? role}
-                    </div>
-                  </div>
-
-                  {normalizedCS.constraints ? (
-                    <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
-                      <div className="text-xs text-gray-500 dark:text-slate-400">
-                        Constraints
-                      </div>
-                      <div className="text-sm text-gray-800 dark:text-slate-300 leading-snug">
-                        {normalizedCS.constraints}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
-                      <div className="text-xs text-gray-500 dark:text-slate-400">
-                        Timeline
-                      </div>
-                      <div className="text-sm text-gray-800 dark:text-slate-300">
-                        MVP-focused delivery
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
-                    <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-slate-400">
-                      <InformationCircleIcon className="w-4 h-4" />
-                      <span>
-                        Last Published<b>(Git-hub update)</b>
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-800 dark:text-slate-300">
-                      {normalizedCS.launch?.date ?? "Not published yet"}
-                    </div>
-                  </div>
-                </div>
-
-                {normalizedCS.problem && (
-                  <>
-                    <h4 className="mt-5 text-sm font-semibold text-gray-900 dark:text-white">
-                      Problem
-                    </h4>
-                    <p className="text-sm text-gray-800 dark:text-slate-300 mb-3 leading-relaxed">
-                      {normalizedCS.problem}
-                    </p>
-                  </>
-                )}
-
-                {normalizedCS.approach && (
-                  <>
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                      Approach
-                    </h4>
-                    <div className="mb-3">
-                      {renderList(normalizedCS.approach)}
-                    </div>
-                  </>
-                )}
-
-                {normalizedCS.responsibilities && (
-                  <>
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                      My responsibilities
-                    </h4>
-                    <div className="mb-3">
-                      {renderList(normalizedCS.responsibilities)}
-                    </div>
-                  </>
-                )}
-
-                {normalizedCS.technicalSolution && (
-                  <>
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                      Technical solution
-                    </h4>
-                    <div className="mb-3">
-                      {renderList(normalizedCS.technicalSolution)}
-                    </div>
-                  </>
-                )}
-
-                {normalizedCS.architectureNotes && (
-                  <>
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                      Architecture notes
-                    </h4>
-                    <p className="text-sm text-gray-800 dark:text-slate-300 mb-3 leading-relaxed whitespace-pre-line">
-                      {normalizedCS.architectureNotes}
-                    </p>
-                  </>
-                )}
-
-                {(normalizedCS.outcomes || normalizedCS.problem) && (
-                  <>
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                      Outcome / Results
-                    </h4>
-
-                    {normalizedCS.outcomes?.qualitative ? (
-                      <p className="text-sm text-gray-800 dark:text-slate-300 leading-relaxed mb-3">
-                        {normalizedCS.outcomes?.qualitative}
-                      </p>
-                    ) : outcome ? (
-                      <p className="text-sm text-gray-800 dark:text-slate-300 leading-relaxed mb-3">
-                        {outcome}
-                      </p>
-                    ) : null}
-                  </>
-                )}
-
-                {stats && Object.keys(stats).length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {Object.entries(stats).map(([k, v]) => (
-                      <span
-                        key={k}
-                        className="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200"
-                      >
-                        <strong className="mr-1">{formatKey(k)}:</strong>
-                        {v}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {normalizedCS.callToAction && (
-                  <div className="mt-4">
-                    <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">
-                      {normalizedCS.callToAction}
-                    </p>
-                    <div className="flex gap-3">
-                      {liveLink && (
-                        <a
-                          href={liveLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-cyan-700 text-white text-sm font-medium hover:bg-cyan-800 transition"
-                        >
-                          View demo{" "}
-                          <ArrowTopRightOnSquareIcon className="w-4 h-4" />
-                        </a>
-                      )}
-                      <button
-                        onClick={() => {
-                          const el = document.getElementById("contact");
-                          if (el)
-                            el.scrollIntoView({
-                              behavior: "smooth",
-                              block: "center",
-                            });
-                        }}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-slate-700 text-sm font-medium text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
-                      >
-                        Contact about this
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </motion.section>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {isMultipleRepos && (
-          <RepoSelectorModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            repoLinks={repoLinks}
-            projectTitle={title}
-          />
+      <div className="flex gap-3">
+        {liveLink && (
+          <a
+            href={liveLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-cyan-700 text-white text-sm font-medium hover:bg-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+            aria-label={`Open live demo of ${title}`}
+          >
+            Live Demo <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+          </a>
         )}
-      </motion.article>
+
+        {repoLinks.length === 1 && (
+          <a
+            href={repoLinks[0]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium"
+            aria-label={`Open GitHub repo of ${title}`}
+          >
+            Code <CodeBracketIcon className="w-4 h-4" />
+          </a>
+        )}
+
+        {repoLinks.length > 1 && (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium"
+          >
+            Select repo <CodeBracketIcon className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
+      {repoLinks.length > 1 && (
+        <RepoSelectorModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          repoLinks={repoLinks}
+        //   @ts-ignore
+          projectTitle={title}
+        />
+      )}
     </>
   );
-};
-
-export default ProjectCard;
+}

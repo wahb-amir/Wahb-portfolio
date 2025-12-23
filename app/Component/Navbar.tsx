@@ -89,7 +89,12 @@ const Navbar = () => {
     }
   };
 
-  const navIds = ["skills", "projects", "about", "contact"];
+  const navIds = {
+    skills: "skills",
+    project: "project-section",
+    about: "about",
+    contact: "contact",
+  };
 
   return (
     <>
@@ -118,7 +123,7 @@ const Navbar = () => {
 
           {!smallWidth && (
             <ul className="hidden md:flex items-center gap-3">
-              {navIds.map((id) => (
+              {Object.entries(navIds).map(([name, id]) => (
                 <li
                   key={id}
                   role="button"
@@ -133,9 +138,9 @@ const Navbar = () => {
                   className={`px-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
                     compact ? "py-1 text-sm" : "py-2"
                   }`}
-                  aria-label={`Go to ${id}`}
+                  aria-label={`Go to ${name}`}
                 >
-                  {id.charAt(0).toUpperCase() + id.slice(1)}
+                  {name.charAt(0).toUpperCase() + name.slice(1)}
                 </li>
               ))}
 
@@ -146,9 +151,8 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   aria-label="GitHub"
                 >
-                {/* @ts-ignore */}
+                  {/* @ts-ignore */}
                   <FontAwesomeIcon icon={faGithub} className="scale-150" />
-                  
                 </a>
               </li>
 
@@ -202,18 +206,21 @@ const Navbar = () => {
           overflow: "hidden",
         }}
       >
-        {navIds.map((id) => (
+        {Object.entries(navIds).map(([name, id]) => (
           <li
             key={id}
             role="button"
             tabIndex={0}
             onClick={() => handleClick(id)}
-            onKeyDown={(e) => handleKeyActivate(e, id)}
-            className="w-full mb-2"
+            onKeyDown={(e) =>
+              handleKeyActivate(e as React.KeyboardEvent<HTMLLIElement>, id)
+            }
+            className={`px-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
+              compact ? "py-1 text-sm" : "py-2"
+            }`}
+            aria-label={`Go to ${name}`}
           >
-            <div className="w-full text-left px-3 py-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer">
-              {id.charAt(0).toUpperCase() + id.slice(1)}
-            </div>
+            {name.charAt(0).toUpperCase() + name.slice(1)}
           </li>
         ))}
 
