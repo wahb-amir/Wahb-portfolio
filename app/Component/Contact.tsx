@@ -219,7 +219,7 @@ export default function ContactForm() {
 
         <div className="flex items-center gap-3" data-keywords="socials,github">
           <SocialIcon
-            href="https://github.com/coder101-js"
+            href="https://github.com/wahb-amir"
             label="GitHub"
             ariaLabel="Open GitHub"
             icon={<SiGithub className="w-5 h-5" aria-hidden="true" />}
