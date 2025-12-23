@@ -1,59 +1,17 @@
-// components/Project.tsx
+// app/components/Project.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { createRoot, Root } from "react-dom/client";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-import ProjectCard from "./ProjectCard";
-import { motion, AnimatePresence, Variants } from "framer-motion";
 
-/**
- * Types
- */
-export interface Project {
-  id?: string;
-  title: string;
-  role?: string;
-  images?: string[];
-  tech?: string[];
-  short?: string;
-  liveLink?: string;
-  githubLink?: string | string[];
-  problem?: string;
-  process?: string[];
-  outcome?: string;
-  stats?: Record<string, string>;
-  category?: string;
-  launch?: {
-    date?: string;
-  };
-  [k: string]: any;
-}
-
-export interface CachedPayload {
-  version: string | null;
-  data: Project[] | null;
-}
-
-/**
- * Lazy background effect (client only)
- */
-const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+const ImageSlider = dynamic(() => import("./ImageSlider"), {
   ssr: false,
   loading: () => null,
 });
 
-/**
- * (Keep your staticProjects as-is — unchanged)
- */
-const staticProjects: Project[] = [
-  /* ... your static projects here (same as before) ... */
-];
-
-/**
- * IndexedDB setup (unchanged)
- */
+// IDB constants (same as your original)
 const DB_NAME = "wahb-projects-db";
 const STORE_NAME = "projects";
 const CACHE_KEY = "project-detail";
@@ -77,14 +35,17 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
-async function getCached(): Promise<CachedPayload | null> {
+async function getCached(): Promise<{
+  version: string | null;
+  data: any[] | null;
+} | null> {
   try {
     const db = await openDB();
     return await new Promise((resolve, reject) => {
       const tx = db.transaction(STORE_NAME, "readonly");
       const store = tx.objectStore(STORE_NAME);
       const r = store.get(CACHE_KEY);
-      r.onsuccess = () => resolve((r.result as CachedPayload) ?? null);
+      r.onsuccess = () => resolve((r.result as any) ?? null);
       r.onerror = (e: any) => reject(e.target.error);
     });
   } catch (err) {
@@ -93,7 +54,10 @@ async function getCached(): Promise<CachedPayload | null> {
   }
 }
 
-async function setCached(payload: CachedPayload): Promise<boolean> {
+async function setCached(payload: {
+  version: string | null;
+  data: any[] | null;
+}) {
   try {
     const db = await openDB();
     return await new Promise((resolve, reject) => {
@@ -109,312 +73,321 @@ async function setCached(payload: CachedPayload): Promise<boolean> {
   }
 }
 
+type CachedPayload = { version: string | null; data: any[] | null };
+
 /**
- * Motion variants
+ * Client-side lightweight card component used when we render the whole grid on client
+ * It matches SSR markup & tailwind classes so styling remains identical.
+ * Uses ImageSlider (client-only) for images.
  */
-const gridVariants: Variants = {
-  visible: {
-    transition: {
-      staggerChildren: 0.04,
-    },
-  },
-};
+function ClientCard({ p }: { p: any }) {
+  const title = p.title ?? p.name ?? "Untitled Project";
+  const role = p.role ?? "Contributor";
+  const images = Array.isArray(p.images) ? p.images : [];
+  const tech = Array.isArray(p.tech) ? p.tech : [];
+  const short = p.short ?? p.description ?? "";
+  const liveLink = p.liveLink ?? p.url ?? null;
+  const githubLink = p.githubLink ?? null;
+  const stats = p.stats ?? {};
+  const safeId = (title || "untitled")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9\-]/g, "")
+    .toLowerCase();
 
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 8, scale: 0.995 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35 } },
-  exit: { opacity: 0, y: 6, scale: 0.995, transition: { duration: 0.25 } },
-};
-
-const KEYWORDS = {
-  projectsSection: ["projects", "portfolio", "case-studies", "projects-grid"],
-  projectCard: ["project-card", "case-study", "portfolio-item"],
-  controls: ["view-all", "toggle", "navigation"],
-};
-
-type ProjectProps = {
-  serverPayload?: CachedPayload | null;
-};
-
-const Project: React.FC<ProjectProps> = ({ serverPayload = null }) => {
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const isDark = mounted && theme === "dark";
-
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [checkingUpdate, setCheckingUpdate] = useState<boolean>(false);
-
-  // control whether we show all projects or only preview
-  const [showAll, setShowAll] = useState<boolean>(false);
-
-  useEffect(() => {
-    let isCancelled = false;
-
-    async function init() {
-      setLoading(true);
-
-      try {
-        // 1) Use server payload if available (SSR passed this in)
-        const serverData = serverPayload?.data ?? null;
-        const serverVersion = serverPayload?.version ?? null;
-
-        if (serverData && Array.isArray(serverData) && serverData.length > 0) {
-          if (!isCancelled) setProjects(serverData);
-        } else {
-          // fallback to static projects if server didn't give data
-          if (!isCancelled) setProjects(staticProjects);
-        }
-        if (!isCancelled) setLoading(false);
-
-        // 2) Check client IDB cache — if client has a different/newer version, use it
-        setCheckingUpdate(true);
-        const cached = await getCached();
-        if (!isCancelled && cached && cached.data) {
-          // if client cache version differs from server version, prefer client cache (instant)
-          if (cached.version && cached.version !== serverVersion) {
-            setProjects(cached.data);
-          }
-          // if there was no cached version but serverPayload exists, persist it to IDB
-        } else {
-          if (serverPayload && serverPayload.data) {
-            await setCached({
-              version: serverPayload.version ?? null,
-              data: serverPayload.data,
-            });
-          }
-        }
-        setCheckingUpdate(false);
-      } catch (err) {
-        console.error("Project init error (client):", err);
-        if (!isCancelled) {
-          setProjects(staticProjects);
-          setLoading(false);
-          setCheckingUpdate(false);
-        }
-      }
-    }
-
-    init();
-
-    return () => {
-      isCancelled = true;
-    };
-    // serverPayload intentionally omitted from deps? we include it so client updates when serverPayload changes
-  }, [serverPayload]);
-
-  const showSkeleton = loading && projects.length === 0;
-
-  // Determine which projects to render (preview vs all)
-  const visibleProjects = showAll ? projects : projects.slice(0, PREVIEW_COUNT);
-
-  // Smooth reveal helper
-  useEffect(() => {
-    if (showAll) {
-      const t = setTimeout(() => {
-        const gridEl = document.getElementById("projects-grid");
-        if (gridEl) {
-          gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 220);
-      return () => clearTimeout(t);
-    }
-    return;
-  }, [showAll]);
+  const repoLinks: string[] = Array.isArray(githubLink)
+    ? githubLink
+    : githubLink
+    ? [githubLink]
+    : [];
 
   return (
-    <>
-      <div id="projects" />
+    <article
+      className="project-card group relative rounded-xl overflow-hidden border transition-transform transform hover:shadow-xl focus-within:shadow-xl w-full h-full flex flex-col border-gray-100 bg-white dark:border-slate-700 dark:bg-[#071020]/60"
+      aria-labelledby={`project-${safeId}`}
+      data-project-id={p.id ?? safeId}
+    >
+      <div className="w-full h-48 md:h-56 bg-gray-50 dark:bg-slate-900">
+        {images && images.length > 0 ? (
+          // @ts-ignore - ImageSlider accepts images: string[]
+          <ImageSlider images={images} />
+        ) : (
+          <div className="w-full h-full bg-gray-100 dark:bg-slate-800" />
+        )}
+      </div>
 
-      <section
-        id="project-section"
-        className={`relative flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden z-10  bg-[#f9fafb] dark:bg-[#0f172a]
-    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
-    text-black dark:text-white`}
-        role="region"
-        aria-labelledby="projects-heading"
-        data-keywords={KEYWORDS.projectsSection.join(",")}
-      >
-        <LazyBackgroundEffect aria-hidden="true" />
-
-        <motion.h1
-          id="projects-heading"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className={`mb-4 font-extrabold tracking-tight ${
-            isDark ? "text-white" : "text-gray-800"
-          } text-[36px] sm:text-[44px]`}
-        >
-          My Projects
-        </motion.h1>
-
-        <p
-          className={`max-w-2xl mx-auto mb-8 text-sm sm:text-base ${
-            isDark ? "text-slate-300" : "text-gray-700"
-          }`}
-        >
-          Real apps I built & shipped — each entry includes the problem I
-          solved, the approach I took, and the outcome. Click any card to read
-          the case study.
-          {checkingUpdate && (
-            <span
-              className="ml-2 text-xs text-gray-500 dark:text-slate-400"
-              role="status"
-              aria-live="polite"
+      <div className="p-4 sm:p-6 flex flex-col flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-4">
+          <div className="text-left flex-1 min-w-0">
+            <h3
+              id={`project-${safeId}`}
+              className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900 dark:text-white truncate"
             >
-              Checking updates…
-            </span>
-          )}
-        </p>
+              {title}
+            </h3>
+            <p className="text-sm text-gray-700 dark:text-slate-300 mt-1 truncate">
+              {role}
+            </p>
+          </div>
 
-        <motion.div
-          id="projects-grid"
-          role="list"
-          aria-label="Projects grid"
-          data-keywords="projects-grid,portfolio-grid"
-          variants={gridVariants}
-          initial="visible"
-          animate="visible"
-        //  screen-850:grid-cols-2
-          className="grid screen-min-850:grid-cols-2 screen-max-850:grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start"
-        >
-          {showSkeleton ? (
-            [0, 1].map((i) => (
-              <div key={i} className="w-full">
-                <article
-                  className="rounded-xl overflow-hidden border border-gray-100 bg-white dark:bg-[#071020]/50 dark:border-slate-700 shadow-sm animate-pulse"
-                  aria-hidden="true"
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-wrap gap-2 justify-end max-w-[220px]">
+              {tech.slice(0, 6).map((t: string) => (
+                <span
+                  key={t}
+                  className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 truncate border-2 border-cyan-500/50 dark:border-cyan-400/40 shadow-[0_0_10px_rgba(0,255,255,0.2)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] transition"
                 >
-                  <div className="w-full h-48 bg-gray-100 dark:bg-slate-800" />
-                  <div className="p-4">
-                    <div className="h-5 w-3/4 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
-                    <div className="h-3 w-1/2 rounded bg-gray-200 dark:bg-slate-800 mb-3" />
-                    <div className="h-3 w-full rounded bg-gray-200 dark:bg-slate-800 mt-3" />
-                  </div>
-                </article>
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {short && (
+          <div className="mb-4 mt-4">
+            <div className="inline-flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-900">
+              <p className="m-0 text-sm font-medium text-blue-700 dark:text-cyan-200 max-w-prose">
+                {short}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mt-auto">
+          <div className="flex gap-3">
+            {liveLink && (
+              <a
+                href={liveLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-cyan-700 text-white text-sm font-medium hover:bg-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+                aria-label={`Open live demo of ${title}`}
+              >
+                Live Demo
+              </a>
+            )}
+
+            {repoLinks.length === 1 && (
+              <a
+                href={repoLinks[0]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium"
+                aria-label={`Open GitHub repo of ${title}`}
+              >
+                Code
+              </a>
+            )}
+
+            {repoLinks.length > 1 && (
+              <div className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium">
+                <span>Code:</span>
+                <ul className="ml-2 list-inside list-disc">
+                  {repoLinks.map((r, i) => (
+                    <li key={i}>
+                      <a
+                        href={r}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm"
+                      >
+                        {r}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))
-          ) : (
-            <AnimatePresence initial={false}>
-              {visibleProjects.map((p) => (
-                <motion.div
+            )}
+          </div>
+
+          <div className="ml-auto flex items-center gap-3">
+            <button className="text-sm font-semibold text-cyan-700 dark:text-cyan-400 hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded">
+              View case study
+            </button>
+          </div>
+        </div>
+
+        {stats && Object.keys(stats).length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {Object.entries(stats).map(([k, v]) => (
+              <span
+                key={k}
+                className="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200"
+              >
+                <strong className="mr-1">{k}:</strong>
+                {String(v)}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+export default function Project({
+  serverPayload,
+}: {
+  serverPayload?: CachedPayload | null;
+}) {
+  const [mounted, setMounted] = useState(false);
+  const rootsRef = useRef<Map<string, Root>>(new Map());
+  const clientRootRef = useRef<Root | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Enhancement + caching logic
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const serverVersion = serverPayload?.version ?? null;
+      const serverData = serverPayload?.data ?? null;
+
+      // 1) Check IDB cache
+      const cached = await getCached();
+
+      // If client has a newer/different version, prefer cached and client-render entire grid
+      if (
+        cached &&
+        cached.data &&
+        cached.version &&
+        cached.version !== serverVersion
+      ) {
+        // Replace server-rendered grid with client-rendered grid using React (instant)
+        const container = document.getElementById("projects-grid");
+        if (container && !cancelled) {
+          // unmount any previous client root
+          try {
+            if (clientRootRef.current) {
+              clientRootRef.current.unmount();
+              clientRootRef.current = null;
+            }
+          } catch (e) {}
+
+          const root = createRoot(container);
+          clientRootRef.current = root;
+
+          root.render(
+            <div
+              id="projects-grid-client"
+              className="grid screen-min-850:grid-cols-2 screen-max-850:grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start"
+            >
+              {cached.data.map((p: any) => (
+                <div
                   key={p.id ?? p.title}
-                  className="w-full h-full"
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
                   role="listitem"
                   aria-label={`Project: ${p.title}`}
-                  data-keywords={[...KEYWORDS.projectCard, p.category, p.id]
-                    .filter(Boolean)
-                    .join(",")}
                 >
-                  <ProjectCard {...(p as any)} />
-                </motion.div>
+                  <ClientCard p={p} />
+                </div>
               ))}
-            </AnimatePresence>
-          )}
-        </motion.div>
-
-        {/* View all / Show less controls */}
-        <div className="relative z-10 flex flex-col items-center gap-4 mt-8">
-          {projects.length > PREVIEW_COUNT && (
-            <div
-              className="flex items-center gap-3"
-              role="region"
-              aria-label="Project controls"
-              data-keywords={KEYWORDS.controls.join(",")}
-            >
-              <button
-                onClick={() => setShowAll((s) => !s)}
-                aria-expanded={showAll}
-                aria-controls="projects-grid"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border hover:scale-105 transition bg-white/80 dark:bg-[#06202b]/80 border-gray-200 dark:border-slate-700 shadow-sm"
-                aria-pressed={showAll}
-                title={
-                  showAll
-                    ? "Show fewer projects"
-                    : `View all (${projects.length}) projects`
-                }
-              >
-                {showAll ? (
-                  <>
-                    Show less
-                    <ChevronUpIcon
-                      className={`w-5 h-5 ${
-                        isDark ? "text-cyan-300" : "text-cyan-600"
-                      }`}
-                      aria-hidden="true"
-                    />
-                  </>
-                ) : (
-                  <>
-                    View all ({projects.length})
-                    <ChevronDownIcon
-                      className={`w-5 h-5 ${
-                        isDark ? "text-cyan-300" : "text-cyan-600"
-                      }`}
-                      aria-hidden="true"
-                    />
-                  </>
-                )}
-              </button>
-
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                aria-label="Scroll Up"
-                className="p-2 rounded hover:scale-105 transition"
-              >
-                <ChevronUpIcon
-                  className={`w-6 h-6 ${
-                    isDark ? "text-cyan-300" : "text-cyan-600"
-                  }`}
-                  aria-hidden="true"
-                />
-              </button>
             </div>
-          )}
+          );
 
-          {projects.length <= PREVIEW_COUNT && (
-            <div className="flex items-center gap-6">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                aria-label="Scroll Up"
-                className="p-2 rounded hover:scale-105 transition"
-              >
-                <ChevronUpIcon
-                  className={`w-8 h-8 ${
-                    isDark ? "text-cyan-300" : "text-cyan-600"
-                  }`}
-                  aria-hidden="true"
-                />
-              </button>
+          // we're done — do not continue to SSR DOM enhancement
+          return;
+        }
+      }
 
-              <button
-                onClick={() => {
-                  const sec = document.getElementById("about");
-                  sec?.scrollIntoView({ behavior: "smooth" });
-                }}
-                aria-label="Scroll Down"
-                className="p-2 rounded animate-pulse hover:scale-105 transition"
-              >
-                <ChevronDownIcon
-                  className={`w-8 h-8 ${
-                    isDark ? "text-cyan-300" : "text-cyan-600"
-                  }`}
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
-    </>
-  );
-};
+      // 2) If no client replacement, enhance SSR DOM: mount sliders and apply theme class
+      if (serverData && Array.isArray(serverData) && serverData.length > 0) {
+        // persist server payload to IDB if client doesn't have it
+        if (!cached || !cached.data) {
+          await setCached({ version: serverVersion ?? null, data: serverData });
+        }
 
-export default Project;
+        // Enhance each server-rendered card
+        const isDark =
+          typeof document !== "undefined" &&
+          document.documentElement.classList.contains("dark");
+
+        serverData.forEach((p: any) => {
+          const id =
+            p.id ??
+            (p.title || p.name || "")
+              .replace(/\s+/g, "-")
+              .replace(/[^a-zA-Z0-9\-]/g, "")
+              .toLowerCase();
+          const article = document.querySelector<HTMLElement>(
+            `[data-project-id="${id}"]`
+          );
+          if (!article) return;
+
+          // apply theme helper class to match client's theme (prevents flash)
+          if (isDark) article.classList.add("project-theme-dark");
+          else article.classList.remove("project-theme-dark");
+
+          // mount ImageSlider into the .project-image-slot if images exist
+          if (Array.isArray(p.images) && p.images.length > 0) {
+            const slot = article.querySelector<HTMLElement>(
+              ".project-image-slot"
+            );
+            if (slot && !rootsRef.current.has(id)) {
+              const root = createRoot(slot);
+              // @ts-ignore - dynamic component is fine to render
+              root.render(<ImageSlider images={p.images} />);
+              rootsRef.current.set(id, root);
+            }
+          }
+        });
+      } else {
+        // No server data — fallback: fetch client-side (keeps your UX)
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_ORIGIN}/api/projects`
+          );
+          const data = await res.json();
+          if (!cancelled) {
+            // replace grid with client rendering
+            const container = document.getElementById("projects-grid");
+            if (container) {
+              if (clientRootRef.current) {
+                clientRootRef.current.unmount();
+                clientRootRef.current = null;
+              }
+              const root = createRoot(container);
+              clientRootRef.current = root;
+
+              root.render(
+                <div
+                  id="projects-grid-client"
+                  className="grid screen-min-850:grid-cols-2 screen-max-850:grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl px-2 items-start"
+                >
+                  {data.map((p: any) => (
+                    <div
+                      key={p.id ?? p.title}
+                      role="listitem"
+                      aria-label={`Project: ${p.title}`}
+                    >
+                      <ClientCard p={p} />
+                    </div>
+                  ))}
+                </div>
+              );
+            }
+          }
+        } catch (err) {
+          console.warn("ProjectClient fetch failed:", err);
+        }
+      }
+    })();
+
+    return () => {
+      // cleanup mounted ImageSlider roots
+      try {
+        rootsRef.current.forEach((r) => {
+          try {
+            r.unmount();
+          } catch {}
+        });
+        rootsRef.current.clear();
+      } catch {}
+    };
+  }, [serverPayload]);
+
+  // The client enhancer doesn't render the grid itself when server has rendered it.
+  // We return a small invisible anchor so this component exists in the tree (and to keep accessibility of aria-hidden)
+  return <div aria-hidden={!mounted} />;
+}
