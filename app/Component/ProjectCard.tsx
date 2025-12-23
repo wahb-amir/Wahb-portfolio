@@ -1,3 +1,4 @@
+// components/ProjectCard.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -10,11 +11,8 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/outline";
 import RepoSelectorModal from "./RepoSelectorModal";
-type Metric = {
-  metric?: string;
-  value?: string;
-  note?: string;
-};
+
+type Metric = { metric?: string; value?: string; note?: string };
 
 type CaseStudy = {
   tlDr?: string;
@@ -25,13 +23,8 @@ type CaseStudy = {
   approach?: string[];
   technicalSolution?: string[];
   architectureNotes?: string;
-  outcomes?: {
-    qualitative?: string;
-    quantitative?: Metric[];
-  };
-  launch?: {
-    date?: string;
-  };
+  outcomes?: { qualitative?: string; quantitative?: Metric[] };
+  launch?: { date?: string };
   proofPoints?: string[];
   lessons?: string[];
   callToAction?: string;
@@ -50,9 +43,7 @@ export type ProjectCardProps = {
   outcome?: string;
   stats?: { [key: string]: string | number };
   caseStudy?: CaseStudy;
-  launch?: {
-    date: string;
-  };
+  launch?: { date: string };
 };
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -77,7 +68,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => setMounted(true), []);
-
   useEffect(() => {
     const delay = images && images.length > 0 ? 350 : 650;
     const id = setTimeout(() => setLoading(false), delay);
@@ -141,7 +131,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr; // fallback to original string if invalid
+    if (isNaN(d.getTime())) return dateStr;
     return d.toLocaleDateString(undefined, {
       year: "numeric",
       month: "short",
@@ -149,11 +139,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     });
   };
 
-  // --- replace the normalizedCS block with this ---
   const normalizedCS: CaseStudy =
     caseStudy && Object.keys(caseStudy).length > 0
       ? {
-          // keep everything from caseStudy, but ensure launch falls back to top-level launch prop
           ...caseStudy,
           launch:
             caseStudy.launch && caseStudy.launch.date
@@ -186,6 +174,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           callToAction: undefined,
           launch: launch && launch.date ? { date: launch.date } : undefined,
         };
+
   return (
     <>
       <motion.article
@@ -193,7 +182,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
-        className={`project-card group relative rounded-xl overflow-hidden border transition-transform transform hover:shadow-xl focus-within:shadow-xl ${
+        /* fill the grid cell, become a column flex container so children can stretch */
+        className={`project-card group relative rounded-xl overflow-hidden border transition-transform transform hover:shadow-xl focus-within:shadow-xl w-full h-full flex flex-col ${
           isDark
             ? "border-slate-700 bg-[#071020]/60"
             : "border-gray-100 bg-white"
@@ -201,6 +191,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         aria-labelledby={`project-${safeId}`}
         aria-busy={loading}
       >
+        {/* IMAGE */}
         <div className="w-full h-48 md:h-56 bg-gray-50 dark:bg-slate-900">
           {loading ? (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-white/60 to-gray-100/40 dark:from-slate-800/60 dark:to-slate-700/40 animate-pulse">
@@ -212,7 +203,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           )}
         </div>
 
-        <div className="p-4 sm:p-6">
+        {/* CONTENT */}
+        <div className="p-4 sm:p-6 flex flex-col flex-1 min-w-0">
           {/* Title + Role + Tech */}
           <div className="flex items-start justify-between gap-4">
             <div className="text-left flex-1 min-w-0">
@@ -272,8 +264,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
           )}
 
-          {/* Actions */}
-          <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+          {/* Actions - stick to bottom */}
+          <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mt-auto">
             <div className="flex gap-3">
               {!loading && liveLink && (
                 <a
@@ -332,9 +324,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 transition={{ duration: 0.28, ease: "easeOut" }}
                 className="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 text-left"
               >
-                {/* Role / Constraints / Launch row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
-                  {/* Role block */}
                   <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
                     <div className="text-xs text-gray-500 dark:text-slate-400">
                       Role
@@ -344,7 +334,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     </div>
                   </div>
 
-                  {/* Constraints / Timeline block */}
                   {normalizedCS.constraints ? (
                     <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
                       <div className="text-xs text-gray-500 dark:text-slate-400">
@@ -365,7 +354,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     </div>
                   )}
 
-                  {/* Last Published block */}
                   <div className="w-full p-3 rounded-md bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
                     <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-slate-400">
                       <InformationCircleIcon className="w-4 h-4" />
@@ -379,7 +367,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </div>
                 </div>
 
-                {/* Problem */}
                 {normalizedCS.problem && (
                   <>
                     <h4 className="mt-5 text-sm font-semibold text-gray-900 dark:text-white">
@@ -391,7 +378,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </>
                 )}
 
-                {/* Approach / Process */}
                 {normalizedCS.approach && (
                   <>
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
@@ -403,7 +389,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </>
                 )}
 
-                {/* Responsibilities */}
                 {normalizedCS.responsibilities && (
                   <>
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
@@ -415,7 +400,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </>
                 )}
 
-                {/* Technical Solution */}
                 {normalizedCS.technicalSolution && (
                   <>
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
@@ -427,7 +411,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </>
                 )}
 
-                {/* Architecture notes */}
                 {normalizedCS.architectureNotes && (
                   <>
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
@@ -439,14 +422,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </>
                 )}
 
-                {/* Outcomes */}
                 {(normalizedCS.outcomes || normalizedCS.problem) && (
                   <>
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
                       Outcome / Results
                     </h4>
 
-                    {/* qualitative */}
                     {normalizedCS.outcomes?.qualitative ? (
                       <p className="text-sm text-gray-800 dark:text-slate-300 leading-relaxed mb-3">
                         {normalizedCS.outcomes?.qualitative}
@@ -459,7 +440,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </>
                 )}
 
-                {/* Lessons */}
                 {stats && Object.keys(stats).length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {Object.entries(stats).map(([k, v]) => (
@@ -474,7 +454,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   </div>
                 )}
 
-                {/* Call to action */}
                 {normalizedCS.callToAction && (
                   <div className="mt-4">
                     <p className="text-sm text-gray-800 dark:text-slate-300 mb-3">
@@ -513,7 +492,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </AnimatePresence>
         </div>
 
-        {/* Repo selector modal if multiple repos */}
         {isMultipleRepos && (
           <RepoSelectorModal
             isOpen={isModalOpen}

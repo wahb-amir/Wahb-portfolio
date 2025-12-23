@@ -1,32 +1,29 @@
-"use client";
 import React from "react";
-import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import Hero from "./Component/Hero";
 import SkillsCloud from "./Component/SkillsCloud";
-import Project from "./Component/Project";
-import About from "./Component/About";
+import ProjectServer from "./Component/ProjectServer";
+import AboutServer from "./Component/AboutServer";
 import ContactForm from "./Component/Contact";
 import Footer from "./Component/Footer";
 import PageTransition from "./Component/PageTransition";
 
 export default function Home() {
-  const path = usePathname();
-
   return (
     <>
       <AnimatePresence mode="wait" initial={false}>
-        <PageTransition key={path}>
-          <main>
-            <Hero />
-            <SkillsCloud />
-            <Project />
-            <About />
-            <ContactForm />
-          </main>
-          <footer className="h-fit overflow-hidden">
-            <Footer />
-          </footer>
+        <PageTransition>
+
+        <main>
+          <Hero />
+          <SkillsCloud />
+          <ProjectServer />
+          <AboutServer />
+          <ContactForm />
+        </main>
+        <footer className="h-fit overflow-hidden">
+          <Footer />
+        </footer>
         </PageTransition>
       </AnimatePresence>
     </>

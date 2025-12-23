@@ -21,7 +21,8 @@ module.exports = {
         "3xl": "1920px",
         "max-xs": { max: "480px" },
         "max-md": { max: "680px" },
-        'md850': '850px',
+        "screen-max-850": { max: "850px" },
+        "screen-min-850": { min: "850px" },
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

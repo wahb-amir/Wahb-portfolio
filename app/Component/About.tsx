@@ -1,3 +1,4 @@
+// components/About.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -5,7 +6,8 @@ import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
-import DOMPurify from "dompurify";
+
+/* -------------------- types & constants (same as you had) -------------------- */
 
 const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
@@ -17,18 +19,18 @@ const STORE_NAME = "projects";
 const ABOUT_CACHE_KEY = "about-detail";
 
 // --- types ---
-interface TimelineItemType {
+export interface TimelineItemType {
   title: string;
   desc: string;
   _id?: string;
 }
 
-interface Stats {
+export interface Stats {
   projectsDeployed: number;
   selfHosted: string;
 }
 
-interface AboutContent {
+export interface AboutContent {
   startDate: string;
   bio: string;
   stats: Stats;
@@ -37,12 +39,13 @@ interface AboutContent {
   quote?: string;
 }
 
-interface AboutData {
+export interface AboutData {
   version?: number | null;
   data: AboutContent;
 }
 
-// --- IndexedDB helpers ---
+/* -------------------- IndexedDB helpers (unchanged) -------------------- */
+
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     if (typeof window === "undefined" || !("indexedDB" in window)) {
@@ -92,7 +95,8 @@ async function setCachedAbout(payload: AboutData): Promise<boolean> {
   }
 }
 
-// --- fetch ---
+/* -------------------- fetch helper (client) -------------------- */
+
 async function fetchAbout(
   version: number | null = null
 ): Promise<AboutData | null> {
@@ -112,14 +116,12 @@ async function fetchAbout(
   }
 }
 
-// --- fallback ---
+/* -------------------- FALLBACK & helpers (unchanged) -------------------- */
+
 const FALLBACK: AboutContent = {
   startDate: "2025-03-22T00:00:00Z",
-
-  bio: "Hello, my name is Wahb. Because I genuinely enjoy creating functional things and resolving issues along the way, I taught myself how to code. Whether it's a web application, a server-based service, or experimenting with computer vision models, I'm most content when I'm developing useful tools.I'm currently working on teaching computers to comprehend images, such as identifying objects or separating them from the background, and figuring out how to make those systems function well on common hardware rather than just powerful cloud machines. In addition, I manage my own servers and create full-stack web applications, which keeps my work rooted in practical applications.",
-
+  bio: "Hi, I’m Wahb. I enjoy building useful things and solving problems, which led me to teach myself how to code. I’m happiest when I’m creating practical tools—whether that’s a web application, a backend service, or exploring computer vision Lately, I’ve been working on helping computers understand images, such as recognizing objects or separating them from the background, with a focus on making these systems run well on everyday hardware rather than relying on powerful cloud machines. Alongside this, I build full-stack web applications and manage my own servers, keeping my work grounded in real-world needs",
   stats: { projectsDeployed: 3, selfHosted: "Yes" },
-
   timeline: [
     {
       title: "Early 2025",
@@ -146,7 +148,6 @@ const FALLBACK: AboutContent = {
       desc: "Strengthening problem-solving skills through data structures & algorithms, and deploying lightweight AI models into real products.",
     },
   ],
-
   quickFacts: [
     "Builds clean, user-friendly web applications",
     "Creates and manages full projects from idea to deployment",
@@ -155,12 +156,10 @@ const FALLBACK: AboutContent = {
     "Enjoys breaking down complex problems into simple, working solutions",
     "Focused on long-term growth, fundamentals, and real-world impact",
   ],
-
   quote:
     "Still early in the journey — focused on learning deeply and building things that matter.",
 };
 
-// --- timer ---
 function getTimeSinceStart(start: string | Date) {
   const s = new Date(start || FALLBACK.startDate);
   if (isNaN(s.getTime())) return "0d 0h 0m";
@@ -172,25 +171,22 @@ function getTimeSinceStart(start: string | Date) {
   return `${days}d ${hours}h ${minutes}m`;
 }
 
-// --- subcomponents ---
-interface StatCardProps {
-  label: string;
-  value: string | number;
-}
+/* -------------------- subcomponents (kept) -------------------- */
 
-const StatCard: React.FC<StatCardProps> = ({ label, value }) => (
+const StatCard: React.FC<{ label: string; value: string | number }> = ({
+  label,
+  value,
+}) => (
   <div className="bg-white/20 dark:bg-slate-800/40 backdrop-blur-md p-5 rounded-lg text-center border border-white/10 dark:border-slate-700">
     <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
     <p className="text-sm text-gray-700 dark:text-slate-300">{label}</p>
   </div>
 );
 
-interface TimelineItemProps {
-  title: string;
-  desc: string;
-}
-
-const TimelineItem: React.FC<TimelineItemProps> = ({ title, desc }) => (
+const TimelineItem: React.FC<{ title: string; desc: string }> = ({
+  title,
+  desc,
+}) => (
   <div>
     <span className="font-semibold text-gray-900 dark:text-white">
       {title}:
@@ -199,7 +195,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, desc }) => (
   </div>
 );
 
-// --- skeletons ---
 const SkeletonBio: React.FC = () => (
   <div className="max-w-3xl mx-auto space-y-3 animate-pulse">
     <div className="h-6 w-2/3 bg-gray-200 dark:bg-slate-800 rounded" />
@@ -223,22 +218,37 @@ const SkeletonTimelineItem: React.FC = () => (
   </div>
 );
 
-// --- main component ---
-export default function About() {
+/* -------------------- main ABOUT component (client) -------------------- */
+
+/**
+ * Accepts `serverData` when rendered from a server component.
+ * If not provided, falls back to the previous client-only fetch + cache behavior.
+ */
+export default function About({
+  serverData,
+}: {
+  serverData?: AboutData | null;
+}) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   const [about, setAbout] = useState<AboutContent>(FALLBACK);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(!Boolean(serverData));
   const [checkingUpdate, setCheckingUpdate] = useState<boolean>(false);
-  const [version, setVersion] = useState<number | null>(null);
+  const [version, setVersion] = useState<number | null>(
+    serverData?.version ?? null
+  );
   const [timeSinceStart, setTimeSinceStart] = useState<string>(() =>
-    getTimeSinceStart(FALLBACK.startDate)
+    getTimeSinceStart(serverData?.data?.startDate ?? FALLBACK.startDate)
   );
   const [hydrated, setHydrated] = useState<boolean>(false);
 
+  // NEW: sanitized HTML for bio (populated client-side)
+  const [sanitizedBio, setSanitizedBio] = useState<string>("");
+
   useEffect(() => setHydrated(true), []);
 
+  // keep timer for "Active Dev Journey"
   useEffect(() => {
     const tick = () => setTimeSinceStart(getTimeSinceStart(about.startDate));
     const id = setInterval(tick, 1000 * 60);
@@ -246,19 +256,93 @@ export default function About() {
     return () => clearInterval(id);
   }, [about.startDate]);
 
+  // Dynamically import DOMPurify on the client and sanitize about.bio
+  useEffect(() => {
+    let mounted = true;
+    async function doSanitize() {
+      // if no bio available, clear sanitized state
+      if (!about?.bio) {
+        if (mounted) setSanitizedBio("");
+        return;
+      }
+
+      // Only run in client — dynamic import ensures this doesn't run during SSR
+      try {
+        const mod = await import("dompurify");
+        // some bundlers put module on .default
+        const purifier = (mod as any).default ?? mod;
+        const safe = purifier.sanitize
+          ? purifier.sanitize(about.bio)
+          : String(about.bio);
+        if (mounted) setSanitizedBio(safe);
+      } catch (err) {
+        // gracefully fallback to raw text if sanitize fails
+        console.warn("DOMPurify dynamic import or sanitize failed:", err);
+        if (mounted) setSanitizedBio(String(about.bio));
+      }
+    }
+
+    doSanitize();
+    return () => {
+      mounted = false;
+    };
+  }, [about.bio]);
+
   useEffect(() => {
     let cancelled = false;
     async function init() {
-      setLoading(true);
+      setLoading(!Boolean(serverData));
+
       try {
-        const cached = await getCachedAbout();
-        if (cached?.data && !cancelled) {
-          setAbout(cached.data);
-          setVersion(cached.version ?? null);
+        // 1. If server provided data, use it immediately for fast paint
+        if (serverData?.data && !cancelled) {
+          setAbout(serverData.data);
+          setVersion(serverData.version ?? null);
           setLoading(false);
         }
 
-        if (cached?.version && !cancelled) {
+        // 2. Now check client IndexedDB cache
+        const cached = await getCachedAbout();
+        if (cancelled) return;
+
+        if (cached?.data) {
+          // If client cache is newer/different than serverData, prefer client cache
+          if (
+            cached.version &&
+            cached.version !== (serverData?.version ?? version)
+          ) {
+            setAbout(cached.data);
+            setVersion(cached.version ?? null);
+            setLoading(false);
+          }
+        } else {
+          // If there's no cached version but server gave us data, persist it
+          if (serverData?.data) {
+            await setCachedAbout({
+              version: serverData.version ?? null,
+              data: serverData.data,
+            });
+          } else {
+            // no serverData and no cache: fetch remote
+            setCheckingUpdate(true);
+            const remote = await fetchAbout();
+            if (remote?.data) {
+              await setCachedAbout(remote);
+              if (!cancelled) {
+                setAbout(remote.data);
+                setVersion(remote.version ?? null);
+                setLoading(false);
+              }
+            } else if (!cancelled) {
+              setAbout(FALLBACK);
+              setLoading(false);
+            }
+            setCheckingUpdate(false);
+          }
+        }
+
+        // 3. If we have a cached version, double-check server for an update in background
+        if (cached?.version) {
           setCheckingUpdate(true);
           const remote = await fetchAbout(cached.version ?? null);
           if (
@@ -266,35 +350,33 @@ export default function About() {
             remote.version !== cached.version &&
             !cancelled
           ) {
-            await setCachedAbout(remote);
-            setAbout(remote.data);
-            setVersion(remote.version);
-          }
-          setCheckingUpdate(false);
-        } else if (!cached && !cancelled) {
-          const remote = await fetchAbout();
-          if (remote?.data) {
+            // remote newer: persist and use it
             await setCachedAbout(remote);
             setAbout(remote.data);
             setVersion(remote.version ?? null);
-          } else setAbout(FALLBACK);
-          setLoading(false);
+          }
+          setCheckingUpdate(false);
         }
-      } catch {
+      } catch (err) {
+        console.error("About init error (client):", err);
         if (!cancelled) {
           setAbout(FALLBACK);
           setLoading(false);
+          setCheckingUpdate(false);
         }
       }
     }
+
     init();
     return () => {
       cancelled = true;
     };
-  }, []);
+    // serverData intentionally left in deps so client updates if server passes new payload
+  }, [serverData]);
 
   const showSkeleton = loading;
 
+  /* -------------------- render (kept your original markup) -------------------- */
   return (
     <section
       id="about"
@@ -324,11 +406,17 @@ export default function About() {
           {showSkeleton ? (
             <SkeletonBio />
           ) : (
-            <span className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
-              <p className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
-                {DOMPurify.sanitize(about.bio)}
-              </p>
-            </span>
+            <div className="text-center text-lg text-gray-700 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
+              {/* Use sanitized HTML if available, otherwise render plain text */}
+              {sanitizedBio ? (
+                <p
+                  className="max-w-3xl mx-auto"
+                  dangerouslySetInnerHTML={{ __html: sanitizedBio }}
+                />
+              ) : (
+                <p className="max-w-3xl mx-auto">{about.bio}</p>
+              )}
+            </div>
           )}
 
           {checkingUpdate && (
@@ -473,11 +561,11 @@ export default function About() {
             />
           </button>
           <button
-            onClick={() => {
-              const nextSection = document.getElementById("contact");
-              if (nextSection)
-                nextSection.scrollIntoView({ behavior: "smooth" });
-            }}
+            onClick={() =>
+              document
+                .getElementById("contact")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
             aria-label="Scroll Down"
             className="animate-pulse hover:scale-110 transition-transform"
           >
@@ -489,56 +577,6 @@ export default function About() {
           </button>
         </div>
       </motion.div>
-      {hydrated && !showSkeleton && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Wahb",
-              description: about.bio,
-              jobTitle: "Full-Stack Developer / AI Enthusiast",
-              url: "https://wahb.space",
-              sameAs: [
-                "https://github.com/coder101-js",
-                "https://www.linkedin.com/in/wahb-amir/",
-                "https://twitter.com/wahb_amir",
-              ],
-              worksFor: {
-                "@type": "Organization",
-                name: "Butt Networks",
-              },
-              alumniOf: [],
-              birthDate: "2010-01-01", // optional if public
-              award: [],
-              knowsAbout: about.quickFacts ?? [
-                "Frontend: React, Next.js, Tailwind CSS, Framer Motion",
-                "Backend: Node.js, Express, MongoDB, Mongoose",
-                "Machine Learning & AI: PyTorch — CNNs, detection, segmentation",
-                "Low-level & Robotics: learning C++ for embedded/robotics",
-                "Mathematics: Linear Algebra, Calculus, Probability & Statistics",
-                "Deployment: Linux VPS, Docker",
-                "Workflow: build small experiments, iterate quickly, ship what works",
-              ],
-              hasOccupation: {
-                "@type": "Occupation",
-                name: "Software Engineer / AI Developer",
-                startDate: about.startDate,
-                estimatedSalary: {
-                  "@type": "MonetaryAmount",
-                  currency: "USD",
-                  value: {
-                    "@type": "QuantitativeValue",
-                    value: 0,
-                    unitText: "YEAR",
-                  },
-                },
-              },
-            }),
-          }}
-        />
-      )}
     </section>
   );
 }

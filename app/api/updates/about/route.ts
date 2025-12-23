@@ -1,74 +1,37 @@
+// app/api/updates/about/route.ts  (or wherever your public route lives)
 import { NextResponse } from "next/server";
 import redis from "@/lib/redis";
-const INTERNAL_API_URL = `${process.env.NEXT_PUBLIC_ORIGIN}/api/updates/about/internal/about`;
-const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET;
+import getAboutPayload from "@/lib/aboutService";
 
-// Type for your About payload
-interface TimelineItemType {
-  title: string;
-  desc: string;
-  _id?: string;
-}
-
-interface Stats {
-  projectsDeployed: number;
-  selfHosted: string;
-}
-
-interface AboutContent {
-  startDate: string;
-  bio: string;
-  stats: Stats;
-  timeline: TimelineItemType[];
-  quickFacts?: string[];
-  quote?: string;
-}
-
-interface AboutPayload {
-  version?: number | null;
-  data: AboutContent;
-}
+const REDIS_KEY = "about:payload";
 
 export async function GET(req: Request) {
   try {
-    // 0️⃣ Ensure secret exists
-    if (!INTERNAL_API_SECRET) {
-      console.error("Internal API secret is missing!");
-      return NextResponse.json(
-        { error: "Internal server error" },
-        { status: 500 }
-      );
-    }
-
-    const url = new URL(req.url);
-    const clientVersion = Number(url.searchParams.get("version")) || 0;
-
-    // 1️⃣ Check Redis cache
-    const cached = await redis.get("about:payload");
+    // try cached payload in redis
+    const cached = await redis.get(REDIS_KEY);
     if (cached) {
-      const payload: AboutPayload = JSON.parse(cached);
+      const payload = JSON.parse(cached);
+      // If client requested a version, return {version, data: null} when up-to-date
+      const url = new URL(req.url);
+      const clientVersion = Number(url.searchParams.get("version")) || 0;
       if (payload.version === clientVersion) {
-        // Client already has latest version
         return NextResponse.json({ version: payload.version, data: null });
       }
-      // Return cached payload
       return NextResponse.json(payload);
     }
 
-    const internalResp = await fetch(INTERNAL_API_URL, {
-      headers: { "x-internal-secret": INTERNAL_API_SECRET },
-    });
-
-    if (!internalResp.ok) {
-      throw new Error(`Internal API error: ${internalResp.status}`);
+    // cache miss -> read from DB directly (no fetch loop)
+    const payload = await getAboutPayload();
+    if (!payload) {
+      return NextResponse.json(
+        { error: "No About payload found" },
+        { status: 404 }
+      );
     }
 
-    const payload: AboutPayload = await internalResp.json();
+    // persist to redis (TTL 1h)
+    await redis.set(REDIS_KEY, JSON.stringify(payload), "EX", 60 * 60);
 
-    // 3️⃣ Cache in Redis with TTL (1 hour)
-    await redis.set("about:payload", JSON.stringify(payload), "EX", 60 * 60);
-
-    // 4️⃣ Return payload
     return NextResponse.json(payload);
   } catch (err) {
     console.error("Public About API error:", err);
