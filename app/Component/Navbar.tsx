@@ -146,7 +146,7 @@ const Navbar = () => {
 
               <li>
                 <a
-                  href="https://github.com/coder101-js"
+                  href="https://github.com/wahb-amir"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub"
@@ -226,7 +226,7 @@ const Navbar = () => {
 
         <li className="mt-2 w-full">
           <a
-            href="https://github.com/coder101-js"
+            href="https://github.com/wahb-amir"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
