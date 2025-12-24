@@ -3,7 +3,6 @@ import React from "react";
 import ImageSlotHydrate from "./ImageSlider";
 import ActionsHydrate from "./ProjectCard";
 import CaseStudyHydrate from "./CaseStudy";
-
 export type Project = {
   id?: string;
   title?: string;

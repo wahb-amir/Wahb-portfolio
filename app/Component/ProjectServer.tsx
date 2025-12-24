@@ -1,9 +1,9 @@
 // app/components/ProjectServer.tsx
 import React from "react";
-import Project from "./Project"; // client enhancer
+// import Project from "./Project"; // client enhancer
 import ProjectCardSSR from "./ProjectCardSSR";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
-
+import Arrow from "./Arrow";
 type ProjectsPayload<T = unknown> = {
   version: string | number | null;
   data: T | null;
@@ -94,6 +94,7 @@ export default async function ProjectServer() {
               </div>
             ))}
       </div>
+      <Arrow topId="skills" bottomId="about" topBlock="start" bottomBlock="start" />
       {projects.length > 0 && (
         <script
           type="application/ld+json"
@@ -110,9 +111,6 @@ export default async function ProjectServer() {
           }}
         />
       )}
-
-      {/* @ts-ignore - Project is a client component */}
-      <Project serverPayload={payload} />
     </section>
   );
 }

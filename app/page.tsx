@@ -1,7 +1,7 @@
 import React from "react";
 import { AnimatePresence } from "framer-motion";
 import Hero from "./Component/Hero";
-import SkillsCloud from "./Component/SkillsCloud";
+import SkillsServer from "./Component/SkillServer";
 import ProjectServer from "./Component/ProjectServer";
 import AboutServer from "./Component/AboutServer";
 import ContactForm from "./Component/Contact";
@@ -13,17 +13,16 @@ export default function Home() {
     <>
       <AnimatePresence mode="wait" initial={false}>
         <PageTransition>
-
-        <main>
-          <Hero />
-          <SkillsCloud />
-          <ProjectServer />
-          <AboutServer />
-          <ContactForm />
-        </main>
-        <footer className="h-fit overflow-hidden">
-          <Footer />
-        </footer>
+          <main>
+            <Hero />
+            <SkillsServer />
+            <ProjectServer />
+            <AboutServer />
+            <ContactForm />
+          </main>
+          <footer className="h-fit overflow-hidden">
+            <Footer />
+          </footer>
         </PageTransition>
       </AnimatePresence>
     </>
