@@ -1,6 +1,6 @@
 # wahb.space — PortFolio
 
-> **A personal portfolio website** built with **Next.js (App Router)** and a small serverless backend. Maintained by Wahb Amir — a 15-year-old full‑stack developer (coding for 285+ days, 105+ commits).
+> **A personal portfolio website** built with **Next.js (App Router)** and a small serverless backend. Maintained by Wahb Amir — a 15-year-old full‑stack developer 
 
 ---
 
