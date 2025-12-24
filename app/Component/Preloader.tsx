@@ -33,8 +33,8 @@ export default function Preloader() {
   useEffect(() => {
     // Shortened sequence timings for a snappy loader
     const drawDuration = 520; // ms - SVG stroke draw (shorter)
-    const fillDelay = 80; // ms - after draw complete before fill
-    const showHold = 120; // ms - short hold before exit
+    const fillDelay = 90; // ms - after draw complete before fill
+    const showHold = 200; // ms - short hold before exit
     const tileDuration = 820; // slower, more premium
     const maxExtra = 260; // allows outer tiles to finish cleanly
 

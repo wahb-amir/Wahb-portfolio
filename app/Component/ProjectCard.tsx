@@ -1,16 +1,23 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ArrowTopRightOnSquareIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
-import RepoSelectorModal from "./RepoSelectorModal"; 
-
+import {
+  ArrowTopRightOnSquareIcon,
+  CodeBracketIcon,
+} from "@heroicons/react/24/outline";
+import RepoSelectorModal from "./RepoSelectorModal";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 type Props = {
   title?: string;
   liveLink?: string | null;
   repoLinks?: string[];
 };
 
-export default function ActionsHydrate({ title, liveLink, repoLinks = [] }: Props) {
+export default function ActionsHydrate({
+  title,
+  liveLink,
+  repoLinks = [],
+}: Props) {
   const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -49,7 +56,12 @@ export default function ActionsHydrate({ title, liveLink, repoLinks = [] }: Prop
               <ul className="ml-2 list-inside list-disc">
                 {repoLinks.map((r, i) => (
                   <li key={i}>
-                    <a href={r} target="_blank" rel="noopener noreferrer" className="text-sm">
+                    <a
+                      href={r}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm"
+                    >
                       {r}
                     </a>
                   </li>
@@ -57,6 +69,30 @@ export default function ActionsHydrate({ title, liveLink, repoLinks = [] }: Prop
               </ul>
             </div>
           )}
+        </div>
+        <div className="relative z-10 flex justify-center items-center gap-6 mt-6">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Scroll Up"
+            className="hover:scale-110 transition-transform"
+          >
+            <ChevronUpIcon
+              className={`w-8 h-8 dark:text-cyan-300 text-cyan-600`}
+            />
+          </button>
+          <button
+            onClick={() =>
+              document
+                .getElementById("project-section")
+                ?.scrollIntoView({ behavior: "smooth", block: "center" })
+            }
+            aria-label="Scroll Down"
+            className="animate-pulse hover:scale-110 transition-transform"
+          >
+            <ChevronDownIcon
+              className={`w-8 h-8 dark:text-cyan-300 text-cyan-600`}
+            />
+          </button>
         </div>
       </>
     );
@@ -104,7 +140,7 @@ export default function ActionsHydrate({ title, liveLink, repoLinks = [] }: Prop
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           repoLinks={repoLinks}
-        //   @ts-ignore
+          //   @ts-ignore
           projectTitle={title}
         />
       )}

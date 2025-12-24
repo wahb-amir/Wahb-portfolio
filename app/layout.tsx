@@ -1,4 +1,3 @@
-// app/layout.tsx (server component)
 import "./globals.css";
 import "./tailwind-out.css";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -24,7 +23,74 @@ export const metadata: Metadata = {
   description:
     "Wahb Amir is a full-stack engineer and AI developer building high-performance web applications, practical AI tools, and scalable systems — from idea to production.",
   metadataBase: new URL("https://wahb.space"),
-  // ...other metadata you already have
+  keywords: [
+    "Wahb Amir",
+    "full-stack engineer",
+    "AI developer",
+    "Next.js",
+    "React",
+    "Node.js",
+    "Tailwind CSS",
+    "web performance",
+    "machine learning",
+    "portfolio",
+  ],
+  authors: [{ name: "Wahb Amir", url: "https://wahb.space" }],
+  creator: "Wahb Amir",
+  applicationName: "Wahb Amir Portfolio",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#071126" },
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://wahb.space/",
+    languages: {
+      "en-US": "https://wahb.space/",
+      en: "https://wahb.space/",
+    },
+  },
+  openGraph: {
+    title: "Wahb Amir | Full-Stack Engineer & AI Developer",
+    description:
+      "Portfolio of Wahb Amir — building high-performance web applications, practical AI tools, and scalable systems from idea to production.",
+    url: "https://wahb.space",
+    siteName: "Wahb Amir Portfolio",
+    images: [
+      {
+        url: "https://wahb.space/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Wahb Amir — Full-Stack Engineer & AI Developer",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wahb Amir | Full-Stack Engineer & AI Developer",
+    description:
+      "Portfolio of Wahb Amir — building high-performance web apps and practical AI tools.",
+    images: ["https://wahb.space/og-image.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
 };
 
 type RootLayoutProps = {
@@ -39,6 +105,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         "@type": "Person",
         "@id": "https://wahb.space/#person",
         name: "Wahb Amir",
+        alternateName: "Wahb",
         url: "https://wahb.space",
         image: "https://wahb.space/og-image.png",
         email: "mailto:wahbamir2010@gmail.com",
@@ -46,30 +113,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         description:
           "Full-stack engineer building high-performance web applications, applied AI tools and production-ready systems from idea to deployment.",
         sameAs: ["https://github.com/wahb-amir"],
-        skills: [
-          "HTML",
-          "CSS",
-          "Tailwind CSS",
-          "JavaScript",
-          "TypeScript",
-          "React",
-          "Next.js",
-          "Node.js",
-          "Express",
-          "MongoDB",
-          "Framer Motion",
-          "Python",
-          "Pandas",
-          "NumPy",
-          "Scikit-learn",
-          "PyTorch",
-          "OpenCV",
-          "C++",
-          "MySQL",
-        ],
         worksFor: {
           "@type": "Organization",
-          "@id": "https://buttnetworks.com/#org",
+          "@id": "https://buttnetworks.com/",
         },
       },
 
@@ -78,7 +124,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         "@id": "https://buttnetworks.com/#org",
         name: "Butt Networks",
         url: "https://buttnetworks.com",
-        sameAs: ["https://github.com/buttnetworks"],
       },
 
       {
@@ -187,7 +232,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         ],
       },
 
-      // Optional: link out to code repos as SoftwareSourceCode entries
       {
         "@type": "SoftwareSourceCode",
         "@id": "https://wahb.space/#code",
@@ -206,10 +250,57 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* JSON-LD structured data (keeps your existing graph) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+
+        {/* Extra manual tags to complement next's Metadata output */}
+        {metadata.keywords && (
+          <meta
+            name="keywords"
+            content={
+              Array.isArray(metadata.keywords)
+                ? metadata.keywords.join(", ")
+                : metadata.keywords
+            }
+          />
+        )}
+        {metadata.alternates?.canonical && (
+          <link
+            rel="canonical"
+            href={
+              typeof metadata.alternates.canonical === "string"
+                ? metadata.alternates.canonical
+                : metadata.alternates.canonical instanceof URL
+                ? metadata.alternates.canonical.toString()
+                : undefined
+            }
+          />
+        )}
+        <meta
+          name="theme-color"
+          content="#071126"
+          media="(prefers-color-scheme: dark)"
+        />
+        <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+
+        {/* Prefer preconnect for external services used often (CDNs, analytics etc.) */}
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+        {/* Small favicons / manifest (Next will also use the metadata.icons field) */}
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ...`}>
         <div className="min-h-screen ...">
