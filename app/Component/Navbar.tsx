@@ -2,7 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSun,
+  faMoon,
+  faUser,
+  faCode,
+  faBriefcase,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import Image from "next/image";
 import { useTheme } from "next-themes";
@@ -16,6 +23,14 @@ const Navbar = () => {
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
   const NAV_HEIGHT = 64;
+
+  // Configuration for Navigation Items including Icons
+  const navItems = [
+    { name: "Skills", id: "skills", icon: faCode },
+    { name: "Projects", id: "project-section", icon: faBriefcase },
+    { name: "About", id: "about", icon: faUser },
+    { name: "Contact", id: "contact", icon: faEnvelope },
+  ];
 
   useEffect(() => {
     const handleResize = () => setSmallWidth(window.innerWidth < 768);
@@ -89,13 +104,6 @@ const Navbar = () => {
     }
   };
 
-  const navIds = {
-    skills: "skills",
-    project: "project-section",
-    about: "about",
-    contact: "contact",
-  };
-
   return (
     <>
       <nav
@@ -123,24 +131,25 @@ const Navbar = () => {
 
           {!smallWidth && (
             <ul className="hidden md:flex items-center gap-3">
-              {Object.entries(navIds).map(([name, id]) => (
+              {/* DESKTOP NAV: Text Only (No Icons) */}
+              {navItems.map((item) => (
                 <li
-                  key={id}
+                  key={item.id}
                   role="button"
                   tabIndex={0}
-                  onClick={() => handleClick(id)}
+                  onClick={() => handleClick(item.id)}
                   onKeyDown={(e) =>
                     handleKeyActivate(
                       e as React.KeyboardEvent<HTMLLIElement>,
-                      id
+                      item.id
                     )
                   }
                   className={`px-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
                     compact ? "py-1 text-sm" : "py-2"
                   }`}
-                  aria-label={`Go to ${name}`}
+                  aria-label={`Go to ${item.name}`}
                 >
-                  {name.charAt(0).toUpperCase() + name.slice(1)}
+                  {item.name}
                 </li>
               ))}
 
@@ -151,7 +160,6 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   aria-label="GitHub"
                 >
-                  {/* @ts-ignore */}
                   <FontAwesomeIcon icon={faGithub} className="scale-150" />
                 </a>
               </li>
@@ -194,7 +202,7 @@ const Navbar = () => {
 
       <div style={{ height: NAV_HEIGHT }} aria-hidden="true" />
 
-      {/* mobile menu */}
+      {/* MOBILE MENU */}
       <ul
         className={`fixed left-0 w-full flex flex-col items-start px-4 py-4 z-40 rounded-b-xl shadow-lg ${
           darkMode ? "bg-[#0f172a]/95" : "bg-white/95"
@@ -206,21 +214,28 @@ const Navbar = () => {
           overflow: "hidden",
         }}
       >
-        {Object.entries(navIds).map(([name, id]) => (
+        {/* MOBILE LOOP: Includes Icons */}
+        {navItems.map((item) => (
           <li
-            key={id}
+            key={item.id}
             role="button"
             tabIndex={0}
-            onClick={() => handleClick(id)}
+            onClick={() => handleClick(item.id)}
             onKeyDown={(e) =>
-              handleKeyActivate(e as React.KeyboardEvent<HTMLLIElement>, id)
+              handleKeyActivate(
+                e as React.KeyboardEvent<HTMLLIElement>,
+                item.id
+              )
             }
-            className={`px-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
-              compact ? "py-1 text-sm" : "py-2"
+            className={`flex items-center gap-4 px-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
+              compact ? "py-2 text-sm" : "py-3"
             }`}
-            aria-label={`Go to ${name}`}
+            aria-label={`Go to ${item.name}`}
           >
-            {name.charAt(0).toUpperCase() + name.slice(1)}
+            <div className="w-6 flex justify-center">
+              <FontAwesomeIcon icon={item.icon} className="scale-125" />
+            </div>
+            <span className="font-medium">{item.name}</span>
           </li>
         ))}
 
@@ -229,11 +244,13 @@ const Navbar = () => {
             href="https://github.com/wahb-amir"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
+            className="flex items-center gap-4 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
           >
-            {/* @ts-ignore */}
-            <FontAwesomeIcon icon={faGithub} className="scale-150" />
-            GitHub
+            <div className="w-1 flex justify-center">
+              {/* @ts-ignore */}
+              <FontAwesomeIcon icon={faGithub} className="scale-150" />
+            </div>
+            <span className="font-medium">GitHub</span>
           </a>
         </li>
 
@@ -243,13 +260,17 @@ const Navbar = () => {
               toggleTheme();
               setMenuOpen(false);
             }}
-            className="flex items-center gap-3 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
+            className="flex items-center gap-4 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
           >
-            <FontAwesomeIcon
-              icon={darkMode ? faSun : faMoon}
-              className="scale-150"
-            />
-            {darkMode ? "Light Mode" : "Dark Mode"}
+            <div className="w-1 flex justify-center">
+              <FontAwesomeIcon
+                icon={darkMode ? faSun : faMoon}
+                className="scale-150"
+              />
+            </div>
+            <span className="font-medium">
+              {darkMode ? "Light Mode" : "Dark Mode"}
+            </span>
           </button>
         </li>
       </ul>
@@ -275,7 +296,7 @@ const Navbar = () => {
         }
         @media (max-width: 768px) {
           li {
-            margin: 8px 0;
+            margin: 4px 0;
             width: 100%;
           }
         }

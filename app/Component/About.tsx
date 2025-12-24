@@ -552,7 +552,7 @@ export default function About({
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Scroll Up"
-            className="hover:scale-110 transition-transform"
+            className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
           >
             <ChevronUpIcon
               className={`w-8 h-8 ${
@@ -567,7 +567,7 @@ export default function About({
                 ?.scrollIntoView({ behavior: "smooth" })
             }
             aria-label="Scroll Down"
-            className="animate-pulse hover:scale-110 transition-transform"
+            className="animate-bounce hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
           >
             <ChevronDownIcon
               className={`w-8 h-8 ${

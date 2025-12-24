@@ -17,7 +17,7 @@ const Arrow = ({ topId, bottomId, topBlock, bottomBlock }: ArrowProps) => {
               ?.scrollIntoView({ behavior: "smooth", block: topBlock })
           }
           aria-label="Scroll Up"
-          className="hover:scale-110 transition-transform"
+          className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
         >
           <ChevronUpIcon
             className={`w-8 h-8 dark:text-cyan-300 text-cyan-600`}
@@ -30,7 +30,7 @@ const Arrow = ({ topId, bottomId, topBlock, bottomBlock }: ArrowProps) => {
               ?.scrollIntoView({ behavior: "smooth", block: bottomBlock })
           }
           aria-label="Scroll Down"
-          className="animate-pulse hover:scale-110 transition-transform"
+          className="animate-bounce hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
         >
           <ChevronDownIcon
             className={`w-8 h-8 dark:text-cyan-300 text-cyan-600`}

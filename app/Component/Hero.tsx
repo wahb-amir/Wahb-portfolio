@@ -321,7 +321,7 @@ export default function Hero() {
           aria-label="Scroll to skills section"
         >
           <ChevronDownIcon
-            className="w-8 h-8 text-white animate-bounce motion-reduce:animate-none"
+            className="w-8 h-8 text-white animate-bounce motion-reduce:animate-none "
             aria-hidden="true"
           />
           <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300">

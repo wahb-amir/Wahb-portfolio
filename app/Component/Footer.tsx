@@ -51,23 +51,32 @@ export default function Footer() {
           GitHub
         </a>
         <a
-          href="#contact"
+          onClick={() =>
+            document
+              .getElementById("contact")
+              ?.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
           aria-label="Go to contact section"
-          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+          className="hover:underline focus:outline-none focus:ring-2 cursor-pointer focus:ring-cyan-400 transition"
         >
           Contact
         </a>
         <a
-          href="#hero-section"
+          onClick={() =>
+            document
+              .getElementById("hero-section")
+              ?.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
           aria-label="Back to top"
-          className="hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+          className="hover:underline focus:outline-none  cursor-pointer focus:ring-2 focus:ring-cyan-400 transition"
         >
           Top
         </a>
       </nav>
 
       <p className="text-xs opacity-70 bg-transparent pt-4 border-t border-white/20 mt-6">
-        © {new Date().getFullYear()} Wahb. Crafted with 💻 using Next.js, Tailwind, & Framer Motion.
+        © {new Date().getFullYear()} Wahb. Crafted with 💻 using Next.js,
+        Tailwind, & Framer Motion.
       </p>
     </motion.footer>
   );

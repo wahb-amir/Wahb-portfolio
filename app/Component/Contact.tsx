@@ -329,10 +329,13 @@ export default function ContactForm() {
 
       <div className="relative z-10 flex flex-row items-center justify-center gap-6 mt-8">
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() =>
+            document
+              .getElementById("hero-section")
+              ?.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
           aria-label="Scroll Up"
-          className="hover:scale-110 transition-transform"
-          data-keywords="scroll-up,nav"
+          className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
         >
           <ChevronUpIcon
             className="w-8 h-8"
