@@ -91,7 +91,7 @@ Notes:
 ```bash
 curl "ORIGIN/api/updates/projects?version=1"
 # -> 204 No Content (if up to date) or
-# -> 200 { "version": "2025-12-20T09:00:00Z", "data": [ ...projects... ] }
+# -> 200 { "version": "1", "data": [ ...projects... ] }
 ```
 
 #### `GET /api/updates/about?version=xyz`
