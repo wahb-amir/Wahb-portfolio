@@ -89,12 +89,12 @@ Notes:
 **Example (client asks for updates)**
 
 ```bash
-curl "ORIGIN/api/updates/projects?version=2025-12-01T12:00:00Z"
+curl "ORIGIN/api/updates/projects?version=1"
 # -> 204 No Content (if up to date) or
 # -> 200 { "version": "2025-12-20T09:00:00Z", "data": [ ...projects... ] }
 ```
 
-#### `GET /api/updates/about[?version=xyz]`
+#### `GET /api/updates/about?version=xyz`
 
 * Same behavior as `/projects` but returns the "about" content.
 
@@ -205,7 +205,7 @@ NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_PROJECTS_API=localhost:3000/api/updates/projects
 NEXT_PUBLIC_ORIGIN=http://localhost:3000
 NEXT_PUBLIC_ABOUT_API=localhost:3000/api/updates/about
-NEXT_PUBLIC_PRODUCTION=0 for dev 1 for prod
+NEXT_PUBLIC_PRODUCTION=0 for dev,1 for prod
 NEXT_PUBLIC_CONTACT_PLATFORM=Client-dev platform link
 WEBHOOK_SECRET=
 ```
