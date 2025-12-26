@@ -1,4 +1,3 @@
-// app/components/ProjectCardSSR.tsx
 import React from "react";
 import ImageSlotHydrate from "./ImageSlider";
 import ActionsHydrate from "./ProjectCard";
@@ -46,7 +45,7 @@ function renderList(arr?: string[] | undefined) {
     <ul className="list-inside list-disc space-y-2 ml-4">
       {arr.map((s, i) => (
         <li
-          key={i}
+          key={`li-${i}-${String(s).slice(0, 20)}`}
           className="text-sm text-gray-800 dark:text-slate-300 leading-relaxed"
         >
           {s}
@@ -104,15 +103,19 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
           launch: launchDate ? { date: launchDate } : undefined,
         };
 
-  const safeId = (title || "untitled")
+  // safeId now prefers explicit project.id if present and falls back to title + a short hash
+  const baseId = (project.id && String(project.id)) || title;
+  const safeId = baseId
+    .toString()
     .replace(/\s+/g, "-")
     .replace(/[^a-zA-Z0-9\-]/g, "")
-    .toLowerCase();
+    .toLowerCase()
+    .slice(0, 60); // keep id reasonably short to avoid insane DOM ids
 
   const repoLinks: string[] = Array.isArray(githubLink)
-    ? githubLink
+    ? githubLink.filter(Boolean).map(String)
     : githubLink
-    ? [githubLink]
+    ? [String(githubLink)]
     : [];
 
   return (
@@ -151,9 +154,10 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
 
           <div className="flex flex-col items-end gap-2">
             <div className="flex flex-wrap gap-2 justify-end max-w-[220px]">
-              {tech.slice(0, 6).map((t) => (
+              {tech.slice(0, 6).map((t, i) => (
                 <span
-                  key={t}
+                  key={`${String(t).slice(0, 20)}-${i}`}
+                  title={String(t)}
                   className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 truncate"
                 >
                   {t}
