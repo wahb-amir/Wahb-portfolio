@@ -15,7 +15,8 @@
 # next.js
 /.next/
 /out/
-
+./lib/a.js
+./lib/a.ts
 # production
 /build
 

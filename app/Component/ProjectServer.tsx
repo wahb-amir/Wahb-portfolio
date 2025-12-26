@@ -70,7 +70,7 @@ export default async function ProjectServer() {
 
   const rawProjects = (payload.data ?? []) as Project[];
   
-  // Deduplicate projects based on ID or fallback to Title to prevent double injection
+
   const uniqueProjectsMap = new Map<string, Project>();
   rawProjects.forEach((p) => {
     const key = p.id || p.title || p.name;

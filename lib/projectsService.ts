@@ -16,7 +16,6 @@ export async function getLatestProjectsPayload(options?: {
 }): Promise<{ payload: ProjectsPayload; fromCache: boolean }> {
   const { clientVersion = null, redisKey = "projects:payload" } = options ?? {};
 
-  // Try Redis first
   try {
     const raw = await redis.get(redisKey);
     if (raw) {
@@ -40,7 +39,6 @@ export async function getLatestProjectsPayload(options?: {
       (err as any)?.message ?? err
     );
   }
-
 
   try {
     await connectToDB();
