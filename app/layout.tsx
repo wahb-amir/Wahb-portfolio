@@ -113,10 +113,20 @@ export default function RootLayout({ children }: RootLayoutProps) {
         description:
           "Full-stack engineer building high-performance web applications, applied AI tools and production-ready systems from idea to deployment.",
         sameAs: ["https://github.com/wahb-amir"],
-        worksFor: {
-          "@type": "Organization",
-          "@id": "https://buttnetworks.com/",
-        },
+        worksFor: { "@id": "https://buttnetworks.com/#org" },
+        knowsAbout: [
+          "Full-stack web development",
+          "React.js",
+          "Next.js",
+          "Node.js",
+          "MongoDB",
+          "API development",
+          "AI integration",
+          "Machine learning",
+          "Performance optimization",
+          "DevOps basics",
+          "SEO",
+        ],
       },
 
       {
@@ -193,43 +203,56 @@ export default function RootLayout({ children }: RootLayoutProps) {
           {
             "@type": "ListItem",
             position: 1,
-            item: {
-              "@type": "CreativeWork",
-              name: "Client & Developer Collaboration Platform",
-              url: "https://projects.buttnetworks.com",
-              description:
-                "A single workspace where clients request quotes, track progress, message developers and see real-time updates; includes GitHub integration and automated notifications.",
-              author: { "@id": "https://wahb.space/#person" },
-              keywords: [
-                "Next.js",
-                "React",
-                "Node.js",
-                "MongoDB",
-                "Tailwind",
-                "GitHub Automation",
-              ],
-              sameAs: [
-                "https://github.com/wahb-amir/dev-dashboard",
-                "https://github.com/wahb-amir/dashboard",
-              ],
-            },
+            item: { "@id": "https://wahb.space/#project-dev-dashboard" },
           },
           {
             "@type": "ListItem",
             position: 2,
-            item: {
-              "@type": "CreativeWork",
-              name: "Modern Online Store",
-              url: "https://boltform.buttnetworks.com/",
-              description:
-                "A demo e-commerce store with secure checkout, admin view and performance optimizations — demonstrates full checkout funnel and Stripe integration.",
-              author: { "@id": "https://wahb.space/#person" },
-              keywords: ["Next.js", "Stripe", "Tailwind", "MongoDB"],
-              sameAs: ["https://github.com/wahb-amir/Ecommer-Store"],
-              datePublished: "2025-12-10",
-            },
+            item: { "@id": "https://wahb.space/#project-ecom" },
           },
         ],
+      },
+
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://wahb.space/#project-dev-dashboard",
+        name: "Client & Developer Collaboration Platform",
+        url: "https://projects.buttnetworks.com",
+        description:
+          "A unified workspace where clients request quotes, track progress, message developers, and see real-time updates with GitHub automation.",
+        applicationCategory: "WebApplication",
+        operatingSystem: "Web",
+        programmingLanguage: ["JavaScript", "TypeScript", "Node.js"],
+        softwareRequirements: [
+          "Next.js",
+          "React",
+          "Node.js",
+          "MongoDB",
+          "Tailwind CSS",
+          "GitHub API",
+        ],
+        author: { "@id": "https://wahb.space/#person" },
+        sameAs: [
+          "https://github.com/wahb-amir/dev-dashboard",
+          "https://github.com/wahb-amir/dashboard",
+        ],
+        datePublished: "2025-10-01",
+      },
+
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://wahb.space/#project-ecom",
+        name: "Modern Online Store",
+        url: "https://boltform.buttnetworks.com/",
+        description:
+          "Demo e-commerce store with secure checkout, admin view and performance optimizations — demonstrates full checkout funnel and Stripe integration.",
+        applicationCategory: "ECommercePlatform",
+        operatingSystem: "Web",
+        programmingLanguage: ["JavaScript", "Node.js"],
+        softwareRequirements: ["Next.js", "Stripe", "Tailwind CSS", "MongoDB"],
+        author: { "@id": "https://wahb.space/#person" },
+        sameAs: ["https://github.com/wahb-amir/Ecommer-Store"],
+        datePublished: "2025-12-10",
       },
 
       {
@@ -243,6 +266,126 @@ export default function RootLayout({ children }: RootLayoutProps) {
           "https://github.com/wahb-amir/Wahb-portfolio",
         ],
         creator: { "@id": "https://wahb.space/#person" },
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-fullstack",
+        name: "Full Stack Web Development",
+        serviceType: "Full Stack Development",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "Building fast, secure, and scalable web applications using modern technologies (React, Next.js, Node.js, MongoDB).",
+        keywords: ["React", "Next.js", "Node.js", "MongoDB", "Tailwind"],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-frontend",
+        name: "Frontend Development & UI/UX",
+        serviceType: "Frontend Development",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "Pixel-perfect responsive frontends, component-driven UI, animations and accessibility with React, Next.js and Tailwind CSS.",
+        keywords: [
+          "React",
+          "Next.js",
+          "Tailwind",
+          "Framer Motion",
+          "Accessibility",
+        ],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-backend",
+        name: "Backend & API Development",
+        serviceType: "Backend Development",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "Designing and implementing scalable REST/GraphQL APIs, authentication, database schema and business logic using Node.js and MongoDB.",
+        keywords: ["Node.js", "Express", "MongoDB", "REST", "GraphQL"],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-api",
+        name: "API Design & Integrations",
+        serviceType: "API Development",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "API design, third-party integrations (Stripe, GitHub, OAuth), webhooks and realtime features using WebSockets or serverless functions.",
+        keywords: ["Stripe", "GitHub API", "OAuth", "WebSocket"],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-seo",
+        name: "Technical SEO & Performance",
+        serviceType: "SEO",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "Technical SEO, structured data (JSON-LD), site performance optimization, CLS/LCP improvements and search engine indexability auditing.",
+        keywords: [
+          "SEO",
+          "structured data",
+          "performance",
+          "Lighthouse",
+          "indexability",
+        ],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-ecom",
+        name: "E-commerce Development",
+        serviceType: "E-commerce Development",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "E-commerce storefronts, secure checkout, payments (Stripe), admin dashboards and order management systems.",
+        keywords: ["Stripe", "Checkout", "E-commerce", "Admin Dashboard"],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-devops",
+        name: "DevOps & Deployment",
+        serviceType: "DevOps",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "VPS + NGINX deployments, CI/CD pipelines, container basics, PM2 process management and SSL automation (Let's Encrypt).",
+        keywords: ["NGINX", "PM2", "CI/CD", "Let's Encrypt", "VPS"],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-mobile",
+        name: "Mobile & Progressive Web Apps",
+        serviceType: "PWA / Mobile",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "Progressive Web Apps and responsive mobile experiences with offline support, installability and performance-first design.",
+        keywords: ["PWA", "Responsive", "Offline", "Mobile Performance"],
+      },
+
+      {
+        "@type": "Service",
+        "@id": "https://wahb.space/#service-ai",
+        name: "AI Integration for Web Applications",
+        serviceType: "AI Integration",
+        provider: { "@id": "https://wahb.space/#person" },
+        areaServed: "Worldwide",
+        description:
+          "Integrating applied AI tools and models into production web systems for enhanced user experience and automation.",
+        keywords: ["AI", "Machine Learning", "Embedding", "NLP"],
       },
     ],
   };
