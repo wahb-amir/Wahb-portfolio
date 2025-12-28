@@ -331,7 +331,7 @@ export default function ContactForm() {
         <button
           onClick={() =>
             document
-              .getElementById("hero-section")
+              .getElementById("about-section")
               ?.scrollIntoView({ behavior: "smooth", block: "start" })
           }
           aria-label="Scroll Up"
@@ -341,6 +341,19 @@ export default function ContactForm() {
             className="w-8 h-8"
             style={{ color: accent }}
             aria-hidden="true"
+          />
+        </button>
+        <button
+          onClick={() =>
+            document
+              .getElementById("faq")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          aria-label="Scroll Down"
+          className="animate-bounce hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
+        >
+          <ChevronDownIcon
+            className={`w-8 h-8 ${isDark ? "text-cyan-300" : "text-cyan-600"}`}
           />
         </button>
       </div>

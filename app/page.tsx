@@ -5,6 +5,7 @@ import SkillsServer from "./Component/SkillServer";
 import ProjectServer from "./Component/ProjectServer";
 import AboutServer from "./Component/AboutServer";
 import ContactForm from "./Component/Contact";
+import FAQ from "./Component/FAQ";
 import Footer from "./Component/Footer";
 import PageTransition from "./Component/PageTransition";
 
@@ -19,6 +20,7 @@ export default function Home() {
             <ProjectServer />
             <AboutServer />
             <ContactForm />
+            <FAQ />
           </main>
           <footer className="h-fit overflow-hidden">
             <Footer />
