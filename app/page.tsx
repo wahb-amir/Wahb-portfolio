@@ -19,8 +19,8 @@ export default function Home() {
             <SkillsServer />
             <ProjectServer />
             <AboutServer />
-            <FAQ />
             <ContactForm />
+            <FAQ />
           </main>
           <footer className="h-fit overflow-hidden">
             <Footer />
