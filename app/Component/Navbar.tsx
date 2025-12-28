@@ -9,6 +9,7 @@ import {
   faCode,
   faBriefcase,
   faEnvelope,
+  faQuestion
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import Image from "next/image";
@@ -30,6 +31,7 @@ const Navbar = () => {
     { name: "Projects", id: "project-section", icon: faBriefcase },
     { name: "About", id: "about", icon: faUser },
     { name: "Contact", id: "contact", icon: faEnvelope },
+    { name: "FAQ", id: "faq", icon: faQuestion },
   ];
 
   useEffect(() => {
