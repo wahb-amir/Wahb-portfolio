@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wahb Amir | Full-Stack Engineer & AI Developer",
+ title: "Wahb Amir | Full-Stack Engineer & AI Developer",
   description:
     "Wahb Amir is a full-stack engineer and AI developer building high-performance web applications, practical AI tools, and scalable systems — from idea to production.",
   metadataBase: new URL("https://wahb.space"),
