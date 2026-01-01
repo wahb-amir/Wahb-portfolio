@@ -33,8 +33,9 @@ const faqList = [
   },
   {
     q: "Can you join an existing team?",
-    a: "Absolutely. I am comfortable working within existing codebases, using Git/GitHub for version control, and collaborating via tools like Slack, Jira, or Linear.",
+    a: "Absolutely. I am comfortable working within existing codebases, using Git/GitHub for version control",
   },
+  // , and collaborating via tools like Slack, Jira, or Linear. add later
   {
     q: "What is your primary tech stack?",
     a: "I specialize in the T3/Modern stack: Next.js, React, Tailwind CSS, and Node.js. For AI integration, I use Python (Pandas/PyTorch) to build intelligent data features.",
