@@ -12,28 +12,32 @@ function cn(...inputs: ClassValue[]) {
 
 const faqList = [
   {
-    q: "How can I contact you?",
-    a: "Use the contact form at the bottom of the page or email me at the address on the contact section. For inquiries about work, include a brief project summary and budget.",
+    q: "Are you available for freelance or contract work?",
+    a: "Yes. I am open to new projects. Please use the contact form to share your project scope, timeline, and budget. I prioritize clear briefs and partners who value transparent communication.",
   },
   {
-    q: "What technologies do you use?",
-    a: "I build with Next.js, React, Tailwind, Node.js/Express, MongoDB, and I use Python (Pandas/NumPy/PyTorch) for AI tooling and data work.",
+    q: "How do you structure your pricing?",
+    a: "It depends on the project type. For well-defined scopes (like MVP builds), I prefer fixed-project pricing. For ongoing development or undefined scopes, I work on a retainer or hourly basis. We can discuss what fits your needs best.",
   },
   {
-    q: "Can I hire you for a project?",
-    a: "Yes. Check the contact form and include details: scope, timeline, and budget. I prioritize clear briefs and honest timelines.",
+    q: "Do you provide post-launch support?",
+    a: "Yes. I include a standard warranty period for critical bug fixes after launch. For ongoing maintenance, feature updates, or server management, we can agree on a separate monthly retainer.",
   },
   {
-    q: "Are your projects open-source?",
-    a: "Many are — view the repository links on the project cards or on my official GitHub (linked in the header/footer).",
+    q: "Who owns the Intellectual Property (IP)?",
+    a: "You do. Upon final payment, 100% of the code ownership and intellectual property rights are transferred to you. I do not lock clients into proprietary platforms.",
   },
   {
-    q: "What is llms.txt / ai.json for?",
-    a: "They are machine-readable hints for LLMs / AI crawlers to correctly attribute my identity, canonical pages, and project ownership. They don't directly change Google ranking but help AI engines avoid hallucinations.",
+    q: "What is your typical development workflow?",
+    a: "I follow an Agile-lite approach: Discovery & Planning -> Development Sprints -> Review/Feedback loops -> Deployment. You will have access to a live staging link to track progress in real-time.",
   },
   {
-    q: "How do I verify this portfolio is official?",
-    a: "This portfolio is the canonical source: https://wahb.space. Official code is on https://github.com/wahb-amir and official projects are dashboard.wahb.space and boltform.wahb.space.",
+    q: "Can you join an existing team?",
+    a: "Absolutely. I am comfortable working within existing codebases, using Git/GitHub for version control, and collaborating via tools like Slack, Jira, or Linear.",
+  },
+  {
+    q: "What is your primary tech stack?",
+    a: "I specialize in the T3/Modern stack: Next.js, React, Tailwind CSS, and Node.js. For AI integration, I use Python (Pandas/PyTorch) to build intelligent data features.",
   },
 ];
 
