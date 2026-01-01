@@ -190,13 +190,14 @@ export default function FAQ() {
           <button
             onClick={() =>
               document
-                .getElementById("about-section") // Ensure this ID exists on your page
+                .getElementById("hero-section")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" })
             }
             aria-label="Scroll Up"
             className="hover:scale-110 transition-transform p-2 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-full shadow-sm"
           >
             <ChevronUpIcon
+          
               className="w-6 h-6 text-slate-600 dark:text-slate-300"
               aria-hidden="true"
             />

@@ -331,7 +331,7 @@ export default function ContactForm() {
         <button
           onClick={() =>
             document
-              .getElementById("about-section")
+              .getElementById("about")
               ?.scrollIntoView({ behavior: "smooth", block: "start" })
           }
           aria-label="Scroll Up"
