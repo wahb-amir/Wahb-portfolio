@@ -550,7 +550,11 @@ export default function About({
 
         <div className="relative z-10 flex justify-center items-center gap-6 mt-6">
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() =>
+              document
+                .getElementById("project-section")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
             aria-label="Scroll Up"
             className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
           >
