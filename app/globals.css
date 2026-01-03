@@ -5,7 +5,16 @@
 body {
   @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;700&display=swap");
 }
-
+.custom-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 10px;
+}
 .neon-glow {
   text-shadow: 0 0 8px #00ffff, 0 0 16px #00bfff, 0 0 24px #00aaff;
 }
