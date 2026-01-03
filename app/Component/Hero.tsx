@@ -6,6 +6,7 @@ import Avatar from "./Avatar"; // Your existing Avatar component
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FaReact, FaNodeJs } from "react-icons/fa";
+import GitHubActivity from "./GitHubActivity";
 import {
   SiNextdotjs,
   SiTypescript,
@@ -393,6 +394,17 @@ export default function Hero() {
           </div>
         </div>
       </div>
+      <section id="github-activity" className="max-w-5xl mx-auto px-6 py-16">
+        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-slate-900 dark:text-white">
+          GitHub Activity
+        </h2>
+
+        <p className="text-slate-500 dark:text-slate-400 mb-6">
+          Real, consistent contributions across projects.
+        </p>
+
+        <GitHubActivity />
+      </section>
 
       {/* Scroll Hint */}
       <button
