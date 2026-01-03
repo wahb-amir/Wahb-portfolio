@@ -56,9 +56,7 @@ export default function GitHubActivity() {
     <div className="w-full rounded-2xl bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-700 p-6">
       <div className="flex flex-col gap-1">
         <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
-          {isMobile
-            ? "Recent Activity (Last 3 Months)"
-            : "GitHub Contributions"}
+          {isMobile ? "Recent Activity" : "GitHub Contributions"}
         </h3>
 
         <div className="flex justify-center items-center overflow-hidden">
@@ -69,14 +67,15 @@ export default function GitHubActivity() {
               data={processedData}
               theme={calendarTheme}
               maxLevel={4}
-              // We make blocks slightly larger on mobile for touch/visibility
               blockSize={isMobile ? 14 : 12}
               blockMargin={4}
               fontSize={12}
               showWeekdayLabels={false}
-              // Hide labels on mobile to save horizontal space
+              // FIX: Provide all 12 slots to prevent "undefined" lookup errors
               labels={{
-                months: isMobile ? ["", "", "", ""] : undefined,
+                months: isMobile
+                  ? ["", "", "", "", "", "", "", "", "", "", "", ""]
+                  : undefined,
               }}
             />
           ) : (
@@ -85,11 +84,7 @@ export default function GitHubActivity() {
         </div>
 
         <div className="mt-4 flex items-center justify-between text-[10px] text-slate-500">
-          <span>
-            {isMobile
-              ? "View full profile on GitHub"
-              : "Activity since May 2025"}
-          </span>
+          <span>{isMobile ? "View on GitHub" : "Activity since May 2025"}</span>
           <div className="flex items-center gap-1">
             <span>Less</span>
             {calendarTheme.dark.map((color) => (
