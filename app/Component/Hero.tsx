@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import Avatar from "./Avatar";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-
+import GitHubActivity from "./GitHubActivity";
 // keep decorative / heavy visuals client-only and lazy
 const LazyParticles = dynamic(() => import("./CustomParticles"), {
   ssr: false,
@@ -314,6 +314,7 @@ export default function Hero() {
           </div>
         </div>
 
+        <GitHubActivity />
         {/* Scroll hint (small, unobtrusive) */}
         <button
           onClick={handleScrollToSkills}
