@@ -37,12 +37,18 @@ export default function GitHubActivity() {
     fetchData();
   }, []);
 
-  // 3) processedData: full year (desktop) or last ~90 days (mobile)
+  // 3) processedData: full year (desktop) or last ~4-5 months (mobile)
   const processedData = useMemo(() => {
     if (!isMobile) return data;
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-    return data.filter((d) => new Date(d.date) >= threeMonthsAgo);
+
+    // show about 4.5 months on mobile (≈4–5 months)
+    // using average month length in days to avoid month-boundary edge cases
+    const monthsToShow = 4.5;
+    const daysToShow = Math.round(monthsToShow * 30.4375); // average days/month
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - daysToShow);
+
+    return data.filter((d) => new Date(d.date) >= cutoff);
   }, [data, isMobile]);
 
   // palette
@@ -75,8 +81,6 @@ export default function GitHubActivity() {
     // fill grid by computing week index and weekday for each day
     sorted.forEach((d) => {
       const dt = new Date(d.date);
-      // weekIndex relative to firstDate:
-      // daysSinceStart = difference in days between dt and firstDate
       const daysSinceStart = Math.floor(
         (dt.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)
       );
@@ -116,7 +120,7 @@ export default function GitHubActivity() {
     <div className="w-full rounded-2xl bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-700 p-6">
       <div className="flex flex-col gap-1">
         <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
-          {isMobile ? "Recent activity" : "GitHub Contributions"}
+          {isMobile ? "Recent activity (≈4–5 months)" : "GitHub Contributions"}
         </h3>
 
         <div className="flex justify-center items-center">
@@ -197,7 +201,9 @@ export default function GitHubActivity() {
         </div>
 
         <div className="mt-4 flex items-center justify-between text-[10px] text-slate-500">
-          <span>{isMobile ? "View on GitHub" : "Activity since May 2025"}</span>
+          <span>
+            {isMobile ? "Activity (≈4–5 months)" : "Activity since May 2025"}
+          </span>
           <div className="flex items-center gap-1">
             <span className="text-xs">Less</span>
             <div className="flex gap-1 items-center">
