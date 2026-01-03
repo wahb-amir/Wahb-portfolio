@@ -1,7 +1,7 @@
 import React from "react";
 import ProjectCardSSR from "./ProjectCardSSR";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
-
+import Arrow from "./Arrow";
 type ProjectsPayload<T = unknown> = {
   version: string | number | null;
   data: T | null;
@@ -269,6 +269,12 @@ export default async function ProjectServer() {
               </div>
             ))}
       </div>
+      <Arrow
+        topId="skills"
+        bottomId="about"
+        topBlock="start"
+        bottomBlock="start"
+      />
 
       {/* Output JSON-LD only when we have graph data */}
       {graph && graph.length > 0 && jsonLdGraph && (
