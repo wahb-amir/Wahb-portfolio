@@ -2,11 +2,20 @@
 
 import { useEffect, useState, useRef } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import Avatar from "./Avatar";
+import Avatar from "./Avatar"; // Your existing Avatar component
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
+import { FaReact, FaNodeJs } from "react-icons/fa";
+import {
+  SiNextdotjs,
+  SiTypescript,
+  SiExpress,
+  SiGithub,
+  SiLinkedin,
+  SiGmail,
+} from "react-icons/si";
 
-// keep decorative / heavy visuals client-only and lazy
+// --- Lazy Load Decorative Elements ---
 const LazyParticles = dynamic(() => import("./CustomParticles"), {
   ssr: false,
   loading: () => null,
@@ -16,11 +25,52 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   loading: () => null,
 });
 
-/**
- * Tiny Typewriter (no external lib)
- * - very small, minimal DOM updates to reduce main-thread work
- * - respects prefers-reduced-motion (shows static text)
- */
+// --- Icon map using react-icons (clean, consistent) ---
+const ICON_MAP: Record<string, any> = {
+  react: FaReact,
+  next: SiNextdotjs,
+  ts: SiTypescript,
+  node: FaNodeJs,
+  express: SiExpress,
+  github: SiGithub,
+  linkedin: SiLinkedin,
+  gmail: SiGmail,
+};
+const ICON_COLOR_MAP: Record<string, string> = {
+  react: "text-cyan-500",
+  next: "text-black dark:text-white",
+  ts: "text-blue-600",
+  node: "text-green-600",
+  express: "text-gray-700 dark:text-gray-300",
+  github: "text-black dark:text-white",
+  linkedin: "text-blue-600",
+  gmail: "text-red-500",
+};
+// --- Inline Tech (icon + name) used inside sentences ---
+const InlineTech = ({ name, label }: { name: string; label: string }) => {
+  const Icon = ICON_MAP[name] ?? FaReact;
+  const colorClass = ICON_COLOR_MAP[name] ?? "text-slate-800";
+
+  return (
+    <span className="inline-flex items-center gap-2 mr-3 text-sm font-semibold text-slate-800 dark:text-slate-200">
+      <Icon className={`w-5 h-5 shrink-0 ${colorClass}`} aria-hidden />
+      <span>{label}</span>
+    </span>
+  );
+};
+
+// --- Tech Badge Component (small pill) ---
+const TechBadge = ({ name, label }: { name: string; label: string }) => {
+  const Icon = ICON_MAP[name] ?? FaReact;
+  return (
+    <span className="inline-flex items-center gap-2 px-2 py-1 mx-1 rounded-full bg-white/60 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-200">
+      <Icon className="w-4 h-4 shrink-0" aria-hidden />
+      <span>{label}</span>
+    </span>
+  );
+};
+
+// --- Typewriter Component (unchanged) ---
 interface TinyTypewriterProps {
   words: string[];
   loop?: boolean;
@@ -48,15 +98,12 @@ function TinyTypewriter({
       setDisplay(words[0] || "");
       return;
     }
-
     function tick() {
       const word = words[idxRef.current % words.length];
       if (!deletingRef.current) {
-        // type
         charRef.current += 1;
         setDisplay(word.slice(0, charRef.current));
         if (charRef.current >= word.length) {
-          // pause then delete
           timeoutRef.current = setTimeout(() => {
             deletingRef.current = true;
             tick();
@@ -65,36 +112,30 @@ function TinyTypewriter({
         }
         timeoutRef.current = setTimeout(tick, typeSpeed);
       } else {
-        // delete
         charRef.current -= 1;
         setDisplay(word.slice(0, charRef.current));
         if (charRef.current <= 0) {
           deletingRef.current = false;
           idxRef.current += 1;
-          // small pause before next word
           timeoutRef.current = setTimeout(tick, 200);
           return;
         }
         timeoutRef.current = setTimeout(tick, deleteSpeed);
       }
     }
-
-    // start typing
     timeoutRef.current = setTimeout(tick, 250);
-
     return () => {
       if (timeoutRef.current !== null) {
         clearTimeout(timeoutRef.current);
-        timeoutRef.current = null; // reset ref
+        timeoutRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words, typeSpeed, deleteSpeed, delaySpeed, reduceMotion]);
 
   return (
     <span aria-live="polite" aria-atomic="true">
       {display}
-      <span aria-hidden="true" className="ml-1 inline-block">
+      <span aria-hidden="true" className="ml-1 inline-block animate-pulse">
         _
       </span>
     </span>
@@ -103,7 +144,6 @@ function TinyTypewriter({
 
 export default function Hero() {
   const { theme } = useTheme();
-  const isDark = theme === "dark";
   const [hydrated, setHydrated] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -122,213 +162,248 @@ export default function Hero() {
     const skillsSection = document.getElementById("skills");
     if (skillsSection)
       skillsSection.scrollIntoView({ behavior: "smooth", block: "center" });
-    else console.warn("Skills section not found!");
   };
 
-  // constants for SSR-friendly layout (unchanged)
-  const HERO_MIN_HEIGHT = "min-h-[60vh] sm:min-h-[68vh]";
-  const AVATAR_SIZE = { mobile: 150 };
-
   return (
-    <>
-      {/* SKIP LINK (keyboard users) */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white dark:bg-slate-800 p-2 rounded"
-      >
-        Skip to content
-      </a>
-
-      <main
-        id="hero-section"
-        className={`
+    <main
+      id="hero-section"
+      className={`
     relative flex flex-col justify-start items-center
-    ${HERO_MIN_HEIGHT} px-4 xs:px-6 text-center pb-[6.25rem]
+   px-4 xs:px-6 text-center pb-[6.25rem]
     bg-[#f9fafb] dark:bg-[#0f172a]
     bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
     text-black dark:text-white
     overflow-hidden pt-[env(safe-area-inset-top)]
   `}
-        aria-label="Hero Section"
-        role="banner"
+    >
+      {/* Background Effects */}
+      {hydrated && <LazyBackgroundEffect aria-hidden="true" />}
+      {hydrated && <LazyParticles aria-hidden="true" />}
+
+      {/* --- Profile Card Container --- */}
+      <div
+        className="
+          relative z-10 w-full max-w-3xl 
+          backdrop-blur-xl
+          rounded-2xl shadow-2xl 
+          border border-white/40 dark:border-slate-700/50
+
+          mt-6
+          bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+    text-black dark:text-white
+    overflow-hidden pt-[env(safe-area-inset-top)]
+        "
       >
-        {/* decorative background (SSR-friendly) */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(0,191,255,0.06), rgba(0,177,255,0.10))",
-          }}
-        />
-
-        {hydrated && <LazyBackgroundEffect aria-hidden="true" />}
-        {hydrated && <LazyParticles aria-hidden="true" />}
-
-        {/* Main content (balanced hierarchy + color priority) */}
-        <div
-          className="z-10 mt-8 max-w-xl mx-auto px-4"
-          role="main"
-          id="main-content"
-          aria-labelledby="hero-heading"
-        >
-          {/* Avatar */}
-          <div
-            className="
-    mx-auto
-    p-2
-    rounded-full
-    bg-white/70 dark:bg-slate-800/60
-    shadow-[0_8px_30px_rgba(0,0,0,0.06)]
-    ring-1 ring-black/5 dark:ring-white/10
-  "
-            style={{
-              width: AVATAR_SIZE.mobile,
-              height: AVATAR_SIZE.mobile,
-              maxWidth: "92vw",
-            }}
-            role="img"
-            aria-label="Portrait of Wahb"
+        {/* 1. Banner & Quote (improved depth + shapes) */}
+        <div className="relative h-44 sm:h-56 bg-gradient-to-r from-indigo-600 via-sky-500 to-cyan-500 overflow-hidden">
+          {/* soft animated blob */}
+          <svg
+            className="absolute -top-10 -left-16 w-72 h-72 opacity-30 transform rotate-12 mix-blend-screen"
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
           >
-            <Avatar />
-          </div>
-
-          <div className="h-4" aria-hidden="true" />
-
-          {/* H1: PRIMARY — Name (largest, blue = top priority) */}
-          <h1
-            id="hero-heading"
-            className="mt-6 flex items-baseline justify-center gap-4 text-center"
-          >
-            <span
-              className="
-    text-3xl xs:text-4xl sm:text-5xl
-    font-semibold
-    text-gray-700 dark:text-slate-300
-  "
-            >
-              Hey, I&apos;m
-            </span>
-
-            <span
-              className="
-    font-serif
-    text-5xl xs:text-6xl sm:text-8xl
-    text-blue-600
-    font-black
-    leading-none
-  "
-            >
-              Wahb
-            </span>
-          </h1>
-
-          {/* H2: SECONDARY — Value proposition (prominent, darker/indigo color) */}
-          <h2 className="mt-4 text-lg xs:text-xl sm:text-2xl font-semibold text-slate-800 dark:text-slate-100 max-w-2xl mx-auto">
-            I build fast, reliable web apps that scale with your product.
-          </h2>
-
-          {/* H3: TERTIARY — Typewriter as supporting proof (accent color + subtle left border) */}
-          <div
-            className="mt-4 max-w-md mx-auto flex items-center gap-3 px-3 py-2 rounded-lg
-                 border-l-4 border-blue-100 dark:border-blue-900 bg-white/60 dark:bg-slate-800/40"
-            aria-hidden={false}
-          >
-            {/* subtle icon-like dot to help visual parsing (accessible hidden) */}
-            <span
-              className="w-2 h-2 rounded-full bg-blue-400 dark:bg-cyan-400 inline-block"
-              aria-hidden="true"
+            <path
+              fill="white"
+              d="M43.6,-66.7C57.2,-58.1,69.6,-50.3,77.9,-38.8C86.2,-27.4,90.3,-12.3,90.6,3.2C90.9,18.7,87.5,34.7,77.8,47.6C68.1,60.5,52.1,70.3,36.1,72.9C20.1,75.5,10.1,70,0.9,68.5C-8.3,66.9,-16.6,69.4,-30.2,70.6C-43.8,71.7,-62.8,71.5,-69.4,61.4C-76.1,51.3,-70.5,31.3,-68.5,13C-66.5,-5.3,-68.9,-22.6,-63.1,-35.3C-57.3,-48,-43.2,-56.2,-28.7,-64.2C-14.2,-72.2,1.7,-80.1,17.5,-78.9C33.3,-77.6,49.9,-67.5,43.6,-66.7Z"
+              transform="translate(100 100)"
             />
-            <p
-              className="m-0 text-sm xs:text-base sm:text-base font-medium text-indigo-600 dark:text-cyan-300"
-              aria-label="Developer specialties"
-              role="text"
-            >
-              {hydrated ? (
-                <TinyTypewriter
-                  words={[
-                    "Next.js & React — performance first",
-                    "Scalable full-stack systems for real users",
-                    "UX-focused frontend with robust backend",
-                    "Production deployments on Linux & cloud",
-                  ]}
-                  typeSpeed={45}
-                  deleteSpeed={25}
-                  delaySpeed={1400}
-                  reduceMotion={reduceMotion}
-                />
-              ) : (
-                "Full-stack developer building scalable web applications"
-              )}
+          </svg>
+
+          {/* subtle diagonal stripe texture */}
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage:
+                "linear-gradient(135deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.02) 75%, transparent 75%, transparent)",
+              backgroundSize: "28px 28px",
+            }}
+          />
+
+          <div className="relative z-10 flex items-center justify-center h-full px-8 text-center">
+            <p className="text-white/95 font-semibold text-lg sm:text-2xl tracking-tight drop-shadow-lg">
+              “I design, build, and ship products that scale.”
             </p>
-          </div>
-
-          <p className="mt-3 text-sm sm:text-base max-w-xl mx-auto text-cyan-600 dark:text-cyan-300 font-medium">
-            For startups & product teams focused on performance and reliability.
-          </p>
-
-          {/* CTAs — single strong button + subtle text link */}
-          <div className="mt-8 flex items-center gap-4 justify-center">
-            <a
-              href="/#project-section"
-              onClick={(e) => {
-                e.preventDefault();
-                const el = document.getElementById("project-section");
-                if (el)
-                  el.scrollIntoView({ behavior: "smooth", block: "center" });
-              }}
-              className="inline-flex items-center px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-md transition-all duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
-              aria-label="See my work"
-            >
-              See my work
-            </a>
-
-            <a
-              href="/#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                const el = document.getElementById("contact");
-                if (el)
-                  el.scrollIntoView({ behavior: "smooth", block: "center" });
-              }}
-              className="
-    inline-flex items-center justify-center
-    px-5 py-2.5
-    rounded-xl
-    border border-blue-600/60
-    text-blue-600
-    font-semibold
-    shadow-sm
-    transition-all duration-200
-    hover:bg-blue-600 hover:text-white
-    hover:shadow-md
-    focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300
-    dark:border-cyan-400/60
-    dark:text-cyan-300
-    dark:hover:bg-cyan-400 dark:hover:text-slate-700
-  "
-              aria-label="Contact Wahb"
-            >
-              Contact
-            </a>
           </div>
         </div>
 
-        {/* Scroll hint (small, unobtrusive) */}
-        <button
-          onClick={handleScrollToSkills}
-          className="absolute bottom-8 flex flex-col items-center cursor-pointer z-10 transition-transform motion-reduce:animate-none"
-          aria-label="Scroll to skills section"
-        >
-          <ChevronDownIcon
-            className="w-8 h-8 text-white animate-bounce motion-reduce:animate-none "
-            aria-hidden="true"
-          />
-          <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300">
-            Scroll to see my skills
-          </span>
-        </button>
-      </main>
-    </>
+        {/* 2. Content Wrapper */}
+        <div className="px-6 sm:px-10 pb-10">
+          {/* Avatar Row (left aligned, overlapping banner) */}
+          <div className="relative -mt-20 mb-5 flex justify-between items-start">
+            <div className="relative">
+              <div className="relative w-40 h-52 sm:w-44 sm:h-56 rounded-2xl overflow-hidden">
+                <Avatar />
+              </div>
+
+              {/* Green Online Status Icon (keeps subtle border so it reads on any background) */}
+              {/* <div
+                className="
+    absolute bottom-1 right-1
+    translate-x-1/2 translate-y-1/2
+    w-6 h-6 sm:w-7 sm:h-7
+    bg-emerald-500
+    border-4 border-white dark:border-slate-900
+    rounded-full
+    z-30
+  "
+                title="Online"
+              >
+                <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-60 animate-ping" />
+              </div> */}
+            </div>
+
+            {/* Right side spacer to keep layout balanced on wide screens */}
+            <div className="flex-1" />
+          </div>
+
+          {/* 3. Name & Username */}
+          <div className="mb-6 text-left">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-1">
+              Wahb
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
+              @wahb-amir
+            </p>
+          </div>
+
+          {/* 4. Improved Description & Tech Stack (inline icons) */}
+          <div className="text-base sm:text-lg leading-relaxed text-slate-700 dark:text-slate-300 mb-8 max-w-2xl">
+            <p className="mb-3 text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">
+              Hi — I’m Wahb, a Full Stack Web Developer.
+            </p>
+
+            <p className="mb-4">
+              I build high-performance, user-first web applications using{" "}
+              <InlineTech name="react" label="React" />
+              <InlineTech name="next" label="Next.js" />
+              <InlineTech name="ts" label="TypeScript" />
+              <InlineTech name="node" label="Node.js" />
+              <InlineTech name="express" label="Express.js" />— blending
+              polished UI design with scalable backend engineering.
+            </p>
+
+            {/* Subheading (Typewriter) */}
+            <div className="mt-4 p-3 bg-blue-50/60 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded-r-md">
+              <span className="font-semibold text-blue-700 dark:text-blue-300">
+                {hydrated ? (
+                  <TinyTypewriter
+                    words={[
+                      "Turning ideas into scalable solutions.",
+                      "Focused on performance & user experience.",
+                      "Open source enthusiast.",
+                    ]}
+                    typeSpeed={40}
+                    delaySpeed={2000}
+                    reduceMotion={reduceMotion}
+                  />
+                ) : (
+                  "Turning ideas into scalable solutions."
+                )}
+              </span>
+            </div>
+          </div>
+
+          {/* 5. Buttons Row */}
+          <div className="flex flex-wrap gap-4 mb-8">
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm sm:text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                />
+              </svg>
+              Get in Touch
+            </a>
+
+            {/* <a
+              href="/resume.pdf"
+              target="_blank"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 font-semibold text-sm sm:text-base hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Resume / CV
+            </a> */}
+          </div>
+
+          {/* 6. Social Links (Footer) */}
+          <div className="pt-6 border-t border-slate-200 dark:border-slate-700/60">
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-3">
+              Find me on:
+            </p>
+            <div className="flex gap-5 items-center">
+              <a
+                href="https://github.com/wahb-amir"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-slate-600 hover:text-black dark:text-slate-400 dark:hover:text-white transition-colors"
+              >
+                <SiGithub className="w-5 h-5" aria-hidden />
+                <span className="text-sm font-semibold">GitHub</span>
+              </a>
+
+              {/* <a
+                href="https://linkedin.com/in/wahb-amir"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-slate-600 hover:text-blue-700 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
+              >
+                <SiLinkedin className="w-5 h-5" aria-hidden />
+                <span className="text-sm font-semibold">LinkedIn</span>
+              </a> */}
+
+              <a
+                href="mailto:wahbamir2010@gmail.com"
+                className="flex items-center gap-2 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors"
+              >
+                <SiGmail className="w-5 h-5" aria-hidden />
+                <span className="text-sm font-semibold">Email</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll Hint */}
+      <button
+        onClick={() =>
+          document
+            .getElementById("skills")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
+        className="mt-6 animate-bounce hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
+      >
+        <ChevronDownIcon className="w-6 h-6 text-cyan-700 dark:text-cyan-300" />
+      </button>
+    </main>
   );
 }
