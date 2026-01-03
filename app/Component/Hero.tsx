@@ -383,6 +383,7 @@ export default function Hero() {
 
               <a
                 href="mailto:wahbamir2010@gmail.com"
+                target="_blank"
                 className="flex items-center gap-2 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors"
               >
                 <SiGmail className="w-5 h-5" aria-hidden />
