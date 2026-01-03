@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  cloneElement,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ActivityCalendar } from "react-activity-calendar";
 import { useTheme } from "next-themes";
 
@@ -29,17 +35,6 @@ export default function GitHubActivity() {
   }, []);
 
   useEffect(() => {
-    const onDocClick = (ev: MouseEvent) => {
-      if (!containerRef.current) return;
-      if (!containerRef.current.contains(ev.target as Node)) {
-        setTooltip((t) => ({ ...t, visible: false, pinned: false }));
-      }
-    };
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, []);
-
-  useEffect(() => {
     async function fetchData() {
       try {
         const res = await fetch("/api/github-activity");
@@ -53,6 +48,17 @@ export default function GitHubActivity() {
       }
     }
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const onDocClick = (ev: MouseEvent) => {
+      if (!containerRef.current) return;
+      if (!containerRef.current.contains(ev.target as Node)) {
+        setTooltip((t) => ({ ...t, visible: false, pinned: false }));
+      }
+    };
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
   }, []);
 
   const processedData = useMemo(() => {
@@ -126,14 +132,13 @@ export default function GitHubActivity() {
     // assume horizontal padding from card (p-6 => 48px each side total 48)
     const horizontalPadding = 48;
     const safeViewport = Math.max(220, window.innerWidth - horizontalPadding);
-    // try to allocate blocks and gaps across columns
-    // base gap guess (we'll adjust it proportionally later)
     const baseGap = 4;
     const candidate = Math.floor((safeViewport - (cols - 1) * baseGap) / cols);
     const maxBlock = window.innerWidth < 450 ? 10 : MOBILE_MAX_BLOCK_DEFAULT;
     return Math.max(MOBILE_MIN_BLOCK, Math.min(maxBlock, candidate));
   };
 
+  // tooltip helpers
   const showTooltipAt = (e: React.MouseEvent, text: string, pinned = false) => {
     if (!containerRef.current) {
       setTooltip({
@@ -175,13 +180,14 @@ export default function GitHubActivity() {
     showTooltipAt(e, text, !tooltip.pinned);
   };
 
-  // --- Render ---
+  // build tooltip text helper
+  const formatTitle = (date: string, count: number) =>
+    `${date} — ${count} contribution${count === 1 ? "" : "s"}`;
+
   return (
     <div
-      // outer card: we'll set an inline maxWidth computed from inner grid below
       ref={containerRef}
       className="mx-auto rounded-2xl bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-700 p-6 relative mt-10 mb-6"
-      // style will be appended when mobile grid is available (see below)
     >
       <div className="flex flex-col gap-1">
         <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
@@ -201,6 +207,36 @@ export default function GitHubActivity() {
                 blockMargin={4}
                 fontSize={12}
                 showWeekdayLabels={false}
+                // <-- this renderBlock clones each SVG rect and attaches handlers
+                renderBlock={(block, activity) =>
+                  cloneElement(block, {
+                    onMouseEnter: (e: React.MouseEvent) =>
+                      showTooltipAt(
+                        e,
+                        formatTitle(activity.date, activity.count),
+                        false
+                      ),
+                    onMouseMove: (e: React.MouseEvent) => {
+                      if (tooltip.visible && !tooltip.pinned) {
+                        showTooltipAt(
+                          e,
+                          formatTitle(activity.date, activity.count),
+                          false
+                        );
+                      }
+                    },
+                    onMouseLeave: () => {
+                      if (!tooltip.pinned) hideTooltip();
+                    },
+                    onClick: (e: React.MouseEvent) =>
+                      togglePinTooltip(
+                        e,
+                        formatTitle(activity.date, activity.count),
+                        true
+                      ),
+                    style: { cursor: "pointer", ...(block.props?.style || {}) },
+                  })
+                }
               />
             ) : (
               <p className="text-sm text-slate-500">No activity found.</p>
@@ -208,19 +244,12 @@ export default function GitHubActivity() {
           ) : mobileGrid && mobileGrid.grid.length > 0 ? (
             (() => {
               const { grid, cols } = mobileGrid;
-              // calculate block size
               const block = pickMobileBlock(cols);
-
               const gapRatio = 0.1;
               const margin = Math.max(2, Math.round(block * gapRatio));
-
-              // compute the total inner grid width (only cells + gaps)
               const gridInnerWidth =
                 cols * block + Math.max(0, cols - 1) * margin;
-
-              // include horizontal padding from the card (p-6 => 48px)
               const horizontalPadding = 48;
-              // clamp the card width so it never exceeds viewport minus small margin
               const safeViewport =
                 typeof window !== "undefined"
                   ? Math.max(260, window.innerWidth)
@@ -230,25 +259,12 @@ export default function GitHubActivity() {
                 safeViewport - 16,
                 desiredCardWidth
               );
-
-              // inline styles for the inner wrapper
               const innerWrapperStyle: React.CSSProperties = {
                 width: `${gridInnerWidth}px`,
                 display: "flex",
                 gap: `${margin}px`,
               };
 
-              // set style for the outer card so it visually shrinks to the grid size (centered)
-              const outerCardStyle: React.CSSProperties = {
-                maxWidth: "100%",
-                width: `${cardMaxWidth}px`,
-                marginLeft: "auto",
-                marginRight: "auto",
-              };
-
-              // apply outerCardStyle to the actual outer div (containerRef.current may be needed),
-              // but because we cannot directly mutate the parent div style from here, we'll render an inner wrapper
-              // with a centered layout and the computed max width. The parent card already has mx-auto to center it.
               return (
                 <div
                   style={{
@@ -258,11 +274,10 @@ export default function GitHubActivity() {
                   }}
                 >
                   <div
-                    // this inner card-box will shrink to fit the grid and keep padding visually
                     style={{
                       boxSizing: "border-box",
                       width: `${Math.min(cardMaxWidth, safeViewport)}px`,
-                      padding: "0px", // we keep the outer card's padding to avoid double padding
+                      padding: "0px",
                       display: "flex",
                       justifyContent: "center",
                     }}
@@ -275,7 +290,6 @@ export default function GitHubActivity() {
                         overflowX: "hidden",
                       }}
                     >
-                      {/* render columns */}
                       {grid.map((col, ci) => (
                         <div
                           key={ci}
@@ -287,9 +301,7 @@ export default function GitHubActivity() {
                         >
                           {col.map((cell, ri) => {
                             const title = cell
-                              ? `${cell.date} — ${cell.count} contribution${
-                                  cell.count === 1 ? "" : "s"
-                                }`
+                              ? formatTitle(cell.date, cell.count)
                               : "No contributions";
                             const bg = cell
                               ? levelColor(cell.level)
