@@ -129,7 +129,7 @@ export default function GitHubActivity() {
     if (typeof window === "undefined") return MOBILE_MIN_BLOCK;
     if (!cols) return MOBILE_MIN_BLOCK;
 
-    // assume horizontal padding from card (p-6 => 48px each side total 48)
+    // assume horizontal padding from card (p-6 => 48px both sides total 48)
     const horizontalPadding = 48;
     const safeViewport = Math.max(220, window.innerWidth - horizontalPadding);
     const baseGap = 4;
@@ -151,6 +151,7 @@ export default function GitHubActivity() {
       return;
     }
     const rect = containerRef.current.getBoundingClientRect();
+    // compute within container so tooltip won't overflow page
     const left = Math.min(
       rect.width - 8,
       Math.max(8, e.clientX - rect.left - 10)
@@ -184,10 +185,59 @@ export default function GitHubActivity() {
   const formatTitle = (date: string, count: number) =>
     `${date} — ${count} contribution${count === 1 ? "" : "s"}`;
 
+  // Legend renderer (desktop + mobile). Mobile legend is horizontally scrollable.
+  const Legend = () => {
+    if (!isMobile) return null; // 👈 mobile only
+
+    const pal = theme === "dark" ? calendarTheme.dark : calendarTheme.light;
+
+    return (
+      <div
+        className="mt-4"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          overflowX: "auto",
+          paddingBottom: 6,
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        <div className="text-xs text-slate-500 dark:text-slate-400 mr-2">
+          Less
+        </div>
+
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          {pal.map((c, i) => (
+            <div
+              key={i}
+              style={{
+                width: 14,
+                height: 14,
+                background: c,
+                borderRadius: 3,
+                border: "1px solid rgba(0,0,0,0.06)",
+                boxSizing: "border-box",
+              }}
+              aria-hidden
+            />
+          ))}
+        </div>
+
+        <div className="text-xs text-slate-500 dark:text-slate-400 ml-2">
+          More
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div
       ref={containerRef}
-      className="mx-auto rounded-2xl bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-700 p-6 relative mt-10 mb-6"
+      className="mx-auto rounded-2xl bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-700 p-6 relative mt-10 mb-6 max-w-full"
+      style={{
+        boxSizing: "border-box",
+      }}
     >
       <div className="flex flex-col gap-1">
         <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
@@ -199,45 +249,61 @@ export default function GitHubActivity() {
             <div className="h-[120px] w-full animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800" />
           ) : !isMobile ? (
             data && data.length > 0 ? (
-              <ActivityCalendar
-                data={processedData}
-                theme={calendarTheme}
-                maxLevel={4}
-                blockSize={12}
-                blockMargin={4}
-                fontSize={12}
-                showWeekdayLabels={false}
-                // <-- this renderBlock clones each SVG rect and attaches handlers
-                renderBlock={(block, activity) =>
-                  cloneElement(block, {
-                    onMouseEnter: (e: React.MouseEvent) =>
-                      showTooltipAt(
-                        e,
-                        formatTitle(activity.date, activity.count),
-                        false
-                      ),
-                    onMouseMove: (e: React.MouseEvent) => {
-                      if (tooltip.visible && !tooltip.pinned) {
-                        showTooltipAt(
-                          e,
-                          formatTitle(activity.date, activity.count),
-                          false
-                        );
-                      }
-                    },
-                    onMouseLeave: () => {
-                      if (!tooltip.pinned) hideTooltip();
-                    },
-                    onClick: (e: React.MouseEvent) =>
-                      togglePinTooltip(
-                        e,
-                        formatTitle(activity.date, activity.count),
-                        true
-                      ),
-                    style: { cursor: "pointer", ...(block.props?.style || {}) },
-                  })
-                }
-              />
+              // Wrap desktop calendar in a scrollable container so large SVGs don't cause page overflow
+              <div
+                style={{
+                  width: "100%",
+                  overflowX: "auto",
+                  WebkitOverflowScrolling: "touch",
+                }}
+              >
+                {/* inner wrapper keeps SVG's natural width and allows horizontal scrolling when needed */}
+                <div
+                  style={{ display: "inline-block", minWidth: "max-content" }}
+                >
+                  <ActivityCalendar
+                    data={processedData}
+                    theme={calendarTheme}
+                    maxLevel={4}
+                    blockSize={12}
+                    blockMargin={4}
+                    fontSize={12}
+                    showWeekdayLabels={false}
+                    renderBlock={(block, activity) =>
+                      cloneElement(block, {
+                        onMouseEnter: (e: React.MouseEvent) =>
+                          showTooltipAt(
+                            e,
+                            formatTitle(activity.date, activity.count),
+                            false
+                          ),
+                        onMouseMove: (e: React.MouseEvent) => {
+                          if (tooltip.visible && !tooltip.pinned) {
+                            showTooltipAt(
+                              e,
+                              formatTitle(activity.date, activity.count),
+                              false
+                            );
+                          }
+                        },
+                        onMouseLeave: () => {
+                          if (!tooltip.pinned) hideTooltip();
+                        },
+                        onClick: (e: React.MouseEvent) =>
+                          togglePinTooltip(
+                            e,
+                            formatTitle(activity.date, activity.count),
+                            true
+                          ),
+                        style: {
+                          cursor: "pointer",
+                          ...(block.props?.style || {}),
+                        },
+                      })
+                    }
+                  />
+                </div>
+              </div>
             ) : (
               <p className="text-sm text-slate-500">No activity found.</p>
             )
@@ -259,12 +325,14 @@ export default function GitHubActivity() {
                 safeViewport - 16,
                 desiredCardWidth
               );
+
               const innerWrapperStyle: React.CSSProperties = {
                 width: `${gridInnerWidth}px`,
                 display: "flex",
                 gap: `${margin}px`,
               };
 
+              // Outer container is horizontally scrollable so mobile shows more detail and doesn't clip
               return (
                 <div
                   style={{
@@ -280,14 +348,16 @@ export default function GitHubActivity() {
                       padding: "0px",
                       display: "flex",
                       justifyContent: "center",
+                      overflowX: "auto", // <-- allow scroll on mobile
+                      WebkitOverflowScrolling: "touch",
                     }}
                   >
                     <div
                       className="inline-block"
                       style={{
                         ...innerWrapperStyle,
-                        maxWidth: "100%",
-                        overflowX: "hidden",
+                        maxWidth: "none", // allow it to be wider than container
+                        overflowX: "visible",
                       }}
                     >
                       {grid.map((col, ci) => (
@@ -378,6 +448,9 @@ export default function GitHubActivity() {
             <p className="text-sm text-slate-500">No recent activity.</p>
           )}
         </div>
+
+        {/* Legend always visible (desktop + mobile). On small screens it's horizontally scrollable. */}
+        <Legend />
       </div>
 
       {tooltip.visible && (
