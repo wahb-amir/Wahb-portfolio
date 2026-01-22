@@ -277,13 +277,13 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <style jsx global>{`
+      <style>{`
         html {
           scroll-padding-top: 70px;
         }
       `}</style>
 
-      <style jsx>{`
+      <style>{`
         li {
           margin: 0 15px;
           border-radius: 5px;
