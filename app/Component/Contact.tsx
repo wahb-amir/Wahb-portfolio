@@ -238,7 +238,7 @@ const Contact: React.FC = () => {
                     name="interest"
                     value={formData.interest}
                     onChange={handleChange}
-                    className="mx-2 bg-white dark:bg-transparent border-b-2 border-gray-300 dark:border-gray-600 focus:border-blue-400 outline-none text-gray-800 dark:text-white font-medium cursor-pointer transition-colors appearance-none"
+                   className="mx-2 bg-transparent border-b-2 border-gray-600 focus:border-gray-300 dark:border-gray-400 outline-none text-gray-800 dark:text-white font-medium cursor-pointer transition-colors appearance-none"
                   >
                     <option value="Full-Stack Web Application">
                       Full-Stack Web Application
