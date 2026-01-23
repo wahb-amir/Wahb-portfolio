@@ -4,7 +4,7 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 export interface MessageDoc extends Document {
   name: string;
   email: string;
-  message: string;
+  interest: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,7 +14,7 @@ const MessageSchema: Schema<MessageDoc> = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
-    message: { type: String, required: true },
+    interest: { type: String, required: true },
   },
   { timestamps: true }
 );

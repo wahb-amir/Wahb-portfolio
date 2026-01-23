@@ -34,12 +34,12 @@ export async function POST(req: Request) {
 interface ContactRequestBody {
   name: string;
   email: string;
-  message: string;
+  interest: string;
 }
   try {
-    const { name, email, message }: ContactRequestBody = await req.json();
+    const { name, email, interest }: ContactRequestBody = await req.json();
 
-    if (!name || !email || !message) {
+    if (!name || !email || !interest) {
       return NextResponse.json(
         { error: "Missing fields" },
         { status: 400, headers: corsHeaders }
@@ -47,7 +47,7 @@ interface ContactRequestBody {
     }
 
     await connectToDB();
-    await Message.create({ name, email, message });
+    await Message.create({ name, email, interest });
 
     return NextResponse.json(
       { ok: true },
