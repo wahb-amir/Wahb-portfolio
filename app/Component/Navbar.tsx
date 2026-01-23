@@ -9,7 +9,7 @@ import {
   faCode,
   faBriefcase,
   faEnvelope,
-  faQuestion
+  faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import Image from "next/image";
@@ -25,7 +25,6 @@ const Navbar = () => {
   const ticking = useRef(false);
   const NAV_HEIGHT = 64;
 
-  // Configuration for Navigation Items including Icons
   const navItems = [
     { name: "Skills", id: "skills", icon: faCode },
     { name: "Projects", id: "project-section", icon: faBriefcase },
@@ -114,26 +113,29 @@ const Navbar = () => {
         }`}
       >
         <div
-          className={`flex items-center justify-between rounded-xl px-4 ${
+          className={`flex items-center rounded-xl px-4 ${
             compact ? "py-1" : "py-2"
           } backdrop-blur-md bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] text-black dark:text-white transition-all duration-200`}
+          style={{ height: NAV_HEIGHT }}
         >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full overflow-hidden">
+          {/* LEFT: logo */}
+          <div className="flex items-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-full overflow-hidden">
               <Image
                 src="/logo.png"
                 alt="wahb logo"
-                width={48}
-                height={48}
+                width={40}
+                height={40}
                 className="block w-full h-full rounded-full cursor-pointer"
                 style={{ objectFit: "cover" }}
               />
             </div>
           </div>
 
-          {!smallWidth && (
-            <ul className="hidden md:flex items-center gap-3">
-              {/* DESKTOP NAV: Text Only (No Icons) */}
+          {/* CENTER: nav items (centered) */}
+          <div className="flex-1 flex justify-center">
+            {/* hidden on small screens */}
+            <ul className="hidden md:flex items-center gap-6">
               {navItems.map((item) => (
                 <li
                   key={item.id}
@@ -141,67 +143,75 @@ const Navbar = () => {
                   tabIndex={0}
                   onClick={() => handleClick(item.id)}
                   onKeyDown={(e) =>
-                    handleKeyActivate(
-                      e as React.KeyboardEvent<HTMLLIElement>,
-                      item.id
-                    )
+                    handleKeyActivate(e as React.KeyboardEvent<HTMLLIElement>, item.id)
                   }
-                  className={`px-3 rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
-                    compact ? "py-1 text-sm" : "py-2"
+                  className={`px-3 py-2 rounded-md hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
+                    compact ? "text-sm" : "text-base"
                   }`}
                   aria-label={`Go to ${item.name}`}
                 >
                   {item.name}
                 </li>
               ))}
+            </ul>
+          </div>
 
-              <li>
+          {/* RIGHT: actions (github, theme, mobile toggle) */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            {/* desktop actions */}
+            {!smallWidth && (
+              <>
                 <a
                   href="https://github.com/wahb-amir"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub"
+                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                 >
-                  <FontAwesomeIcon icon={faGithub} className="scale-150" />
+                  <FontAwesomeIcon icon={faGithub} className="text-xl" />
                 </a>
-              </li>
 
-              <li>
-                <button onClick={toggleTheme} aria-label="Toggle theme">
+                <button
+                  onClick={toggleTheme}
+                  aria-label="Toggle theme"
+                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                >
                   <FontAwesomeIcon
                     icon={darkMode ? faSun : faMoon}
-                    className="scale-150"
+                    className="text-xl"
                   />
                 </button>
-              </li>
-            </ul>
-          )}
+              </>
+            )}
 
-          {smallWidth && (
-            <button
-              className="md:hidden p-2 rounded"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
-            >
-              <svg
-                width="28"
-                height="28"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                className={darkMode ? "text-white" : "text-black"}
+            {/* mobile menu toggle */}
+            {smallWidth && (
+              <button
+                className="md:hidden p-2 rounded-md"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Toggle menu"
               >
-                <path
-                  d="M3 6h14M3 10h14M3 14h14"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          )}
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  className={darkMode ? "text-white" : "text-black"}
+                >
+                  <path
+                    d="M3 7h18M3 12h18M3 17h18"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 
+      {/* spacer to avoid content behind fixed nav */}
       <div style={{ height: NAV_HEIGHT }} aria-hidden="true" />
 
       {/* MOBILE MENU */}
@@ -216,7 +226,6 @@ const Navbar = () => {
           overflow: "hidden",
         }}
       >
-        {/* MOBILE LOOP: Includes Icons */}
         {navItems.map((item) => (
           <li
             key={item.id}
@@ -224,10 +233,7 @@ const Navbar = () => {
             tabIndex={0}
             onClick={() => handleClick(item.id)}
             onKeyDown={(e) =>
-              handleKeyActivate(
-                e as React.KeyboardEvent<HTMLLIElement>,
-                item.id
-              )
+              handleKeyActivate(e as React.KeyboardEvent<HTMLLIElement>, item.id)
             }
             className={`flex items-center gap-4 px-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
               compact ? "py-2 text-sm" : "py-3"
@@ -248,9 +254,8 @@ const Navbar = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-4 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
           >
-            <div className="w-1 flex justify-center">
-              {/* @ts-ignore */}
-              <FontAwesomeIcon icon={faGithub} className="scale-150" />
+            <div className="w-6 flex justify-center">
+              <FontAwesomeIcon icon={faGithub} className="text-lg" />
             </div>
             <span className="font-medium">GitHub</span>
           </a>
@@ -264,11 +269,8 @@ const Navbar = () => {
             }}
             className="flex items-center gap-4 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
           >
-            <div className="w-1 flex justify-center">
-              <FontAwesomeIcon
-                icon={darkMode ? faSun : faMoon}
-                className="scale-150"
-              />
+            <div className="w-6 flex justify-center">
+              <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="text-lg" />
             </div>
             <span className="font-medium">
               {darkMode ? "Light Mode" : "Dark Mode"}
@@ -277,32 +279,7 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <style>{`
-        html {
-          scroll-padding-top: 70px;
-        }
-      `}</style>
-
-      <style>{`
-        li {
-          margin: 0 15px;
-          border-radius: 5px;
-          padding: 6px;
-          border: 2px solid transparent;
-          transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-        }
-        li:hover {
-          background-color: rgba(0, 0, 0, 0.1);
-          color: ${darkMode ? "#00dfd8" : "#000"};
-          border-color: ${darkMode ? "#00dfd8" : "#000"};
-        }
-        @media (max-width: 768px) {
-          li {
-            margin: 4px 0;
-            width: 100%;
-          }
-        }
-      `}</style>
+      <style>{`html { scroll-padding-top: ${NAV_HEIGHT}px; }`}</style>
     </>
   );
 };
