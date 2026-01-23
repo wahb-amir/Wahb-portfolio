@@ -5,6 +5,7 @@ import { SiGithub } from "react-icons/si";
 import { MdEmail } from "react-icons/md";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
+import { ChevronDownIcon,ChevronUpIcon } from "lucide-react";
 
 // Font configurations
 const playfair = Playfair_Display({
@@ -329,6 +330,38 @@ const Contact: React.FC = () => {
             )}
           </div>
         </div>
+        <div className="relative z-10 flex justify-center items-center gap-6 mt-6">
+                  <button
+                    onClick={() =>
+                      document
+                        .getElementById("about")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    aria-label="Scroll Up"
+                    className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
+                  >
+                    <ChevronUpIcon
+                      className={`w-8 h-8 ${
+                        isDark ? "text-cyan-300" : "text-cyan-600"
+                      }`}
+                    />
+                  </button>
+                  <button
+                    onClick={() =>
+                      document
+                        .getElementById("faq")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    aria-label="Scroll Down"
+                    className="animate-bounce hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
+                  >
+                    <ChevronDownIcon
+                      className={`w-8 h-8 ${
+                        isDark ? "text-cyan-300" : "text-cyan-600"
+                      }`}
+                    />
+                  </button>
+                </div>
       </div>
     </section>
   );
