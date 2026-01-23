@@ -114,7 +114,7 @@ const Contact: React.FC = () => {
 
   return (
     <section
-      className={`${inter.className} min-h-screen flex flex-col items-center justify-center overflow-hidden relative bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]`}
+      className={`${inter.className} min-h-screen flex flex-col items-center justify-center overflow-hidden relative bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]`} id="contact"
     >
       {/* Background Ambient Glows (blue theme) */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/12 rounded-full blur-[120px] pointer-events-none" />
