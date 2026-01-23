@@ -14,6 +14,7 @@ type DayItem = { date: string; count: number; level: number };
 
 export default function GitHubActivity() {
   const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [data, setData] = useState<DayItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -61,6 +62,7 @@ export default function GitHubActivity() {
     return () => document.removeEventListener("click", onDocClick);
   }, []);
 
+  // For mobile we show a recent slice; desktop shows full (or what the API returned)
   const processedData = useMemo(() => {
     if (!isMobile) return data;
     const monthsToShow = 4.5;
@@ -70,6 +72,7 @@ export default function GitHubActivity() {
     return data.filter((d) => new Date(d.date) >= cutoff);
   }, [data, isMobile]);
 
+  // softer palettes already used by calendar; keep them but adjust container/text colors
   const calendarTheme = {
     light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
     dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
@@ -83,12 +86,22 @@ export default function GitHubActivity() {
     return { start: min, end: max, days: processedData.length };
   }, [processedData]);
 
+  // total contributions from the processed dataset (desktop: full set; mobile: truncated one)
+  const totalContributions = useMemo(
+    () =>
+      processedData && processedData.length > 0
+        ? processedData.reduce((s, d) => s + (d.count || 0), 0)
+        : 0,
+    [processedData]
+  );
+
   function levelColor(level: number) {
-    const pal = theme === "dark" ? calendarTheme.dark : calendarTheme.light;
+    const pal = isDark ? calendarTheme.dark : calendarTheme.light;
     const idx = Math.max(0, Math.min(pal.length - 1, level));
     return pal[idx];
   }
 
+  // Build grid for mobile
   const mobileGrid = useMemo(() => {
     if (!processedData || processedData.length === 0) return null;
 
@@ -121,7 +134,7 @@ export default function GitHubActivity() {
     return { grid, cols, firstDate };
   }, [processedData]);
 
-  // ------- sizing constants (min/max block)
+  // sizing constants (min/max block)
   const MOBILE_MIN_BLOCK = 4;
   const MOBILE_MAX_BLOCK_DEFAULT = 14;
 
@@ -129,8 +142,8 @@ export default function GitHubActivity() {
     if (typeof window === "undefined") return MOBILE_MIN_BLOCK;
     if (!cols) return MOBILE_MIN_BLOCK;
 
-    // assume horizontal padding from card (p-6 => 48px both sides total 48)
-    const horizontalPadding = 48;
+    // horizontal padding for a card-like container
+    const horizontalPadding = 32;
     const safeViewport = Math.max(220, window.innerWidth - horizontalPadding);
     const baseGap = 4;
     const candidate = Math.floor((safeViewport - (cols - 1) * baseGap) / cols);
@@ -151,10 +164,9 @@ export default function GitHubActivity() {
       return;
     }
     const rect = containerRef.current.getBoundingClientRect();
-    // compute within container so tooltip won't overflow page
     const left = Math.min(
-      rect.width - 8,
-      Math.max(8, e.clientX - rect.left - 10)
+      Math.max(8, e.clientX - rect.left - 10),
+      rect.width - 8
     );
     const top = Math.max(6, e.clientY - rect.top - 40);
     setTooltip({ visible: true, text, left, top, pinned });
@@ -181,15 +193,13 @@ export default function GitHubActivity() {
     showTooltipAt(e, text, !tooltip.pinned);
   };
 
-  // build tooltip text helper
+  // tooltip text helper
   const formatTitle = (date: string, count: number) =>
     `${date} — ${count} contribution${count === 1 ? "" : "s"}`;
 
-  // Legend renderer (desktop + mobile). Mobile legend is horizontally scrollable.
+  // Legend (mobile uses horizontal scrolling)
   const Legend = () => {
-    if (!isMobile) return null; // 👈 mobile only
-
-    const pal = theme === "dark" ? calendarTheme.dark : calendarTheme.light;
+    const pal = isDark ? calendarTheme.dark : calendarTheme.light;
 
     return (
       <div
@@ -203,7 +213,7 @@ export default function GitHubActivity() {
           WebkitOverflowScrolling: "touch",
         }}
       >
-        <div className="text-xs text-slate-500 dark:text-slate-400 mr-2">
+        <div className="text-xs" style={{ color: isDark ? "#94a3b8" : "#6b7280" }}>
           Less
         </div>
 
@@ -216,7 +226,7 @@ export default function GitHubActivity() {
                 height: 14,
                 background: c,
                 borderRadius: 3,
-                border: "1px solid rgba(0,0,0,0.06)",
+                border: isDark ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(2,6,23,0.04)",
                 boxSizing: "border-box",
               }}
               aria-hidden
@@ -224,32 +234,62 @@ export default function GitHubActivity() {
           ))}
         </div>
 
-        <div className="text-xs text-slate-500 dark:text-slate-400 ml-2">
+        <div className="text-xs" style={{ color: isDark ? "#94a3b8" : "#6b7280" }}>
           More
         </div>
       </div>
     );
   };
 
+  // softer container colors (less harsh than pure white/black)
+  const containerBg = isDark ? "rgba(15,23,42,0.62)" : "rgba(249,250,251,0.88)"; // slate-900-ish / slate-50-ish
+  const containerBorder = isDark ? "rgba(71,85,105,0.15)" : "rgba(2,6,23,0.06)";
+  const headingColor = isDark ? "#e6eef6" : "#0f172a"; // not pure black
+
   return (
     <div
       ref={containerRef}
-      className="mx-auto rounded-2xl bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-700 p-6 relative mt-10 mb-6 max-w-full"
+      className="mx-auto rounded-2xl backdrop-blur-xl p-5 relative mt-8 mb-6 max-w-full"
       style={{
         boxSizing: "border-box",
+        background: containerBg,
+        border: `1px solid ${containerBorder}`,
       }}
     >
-      <div className="flex flex-col gap-1">
-        <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-4">
-          {isMobile ? "Recent activity (≈4–5 months)" : "GitHub Contributions"}
-        </h3>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-4">
+          <h3
+            className="text-sm font-medium mb-0"
+            style={{ color: headingColor }}
+          >
+            {isMobile
+              ? `Recent activity (≈4–5 months)`
+              : `GitHub Contributions`}
+          </h3>
+
+          {/* Total contributions badge (always visible; more prominent on mobile) */}
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
+            style={{
+              background: isDark ? "rgba(255,255,255,0.04)" : "rgba(2,6,23,0.04)",
+              color: isDark ? "#e6eef6" : "#0f172a",
+            }}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {totalContributions.toLocaleString()} contribution
+            {totalContributions === 1 ? "" : "s"}
+            {dateRange ? ` • ${dateRange.days} days` : ""}
+          </div>
+        </div>
 
         <div className="flex justify-center items-center">
           {loading ? (
-            <div className="h-[120px] w-full animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800" />
+            <div className="h-[120px] w-full animate-pulse rounded-lg" style={{
+              background: isDark ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.03)"
+            }}/>
           ) : !isMobile ? (
             data && data.length > 0 ? (
-              // Wrap desktop calendar in a scrollable container so large SVGs don't cause page overflow
               <div
                 style={{
                   width: "100%",
@@ -257,10 +297,7 @@ export default function GitHubActivity() {
                   WebkitOverflowScrolling: "touch",
                 }}
               >
-                {/* inner wrapper keeps SVG's natural width and allows horizontal scrolling when needed */}
-                <div
-                  style={{ display: "inline-block", minWidth: "max-content" }}
-                >
+                <div style={{ display: "inline-block", minWidth: "max-content" }}>
                   <ActivityCalendar
                     data={processedData}
                     theme={calendarTheme}
@@ -305,26 +342,21 @@ export default function GitHubActivity() {
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-slate-500">No activity found.</p>
+              <p className="text-sm" style={{ color: isDark ? "#94a3b8" : "#6b7280" }}>
+                No activity found.
+              </p>
             )
           ) : mobileGrid && mobileGrid.grid.length > 0 ? (
             (() => {
               const { grid, cols } = mobileGrid;
               const block = pickMobileBlock(cols);
-              const gapRatio = 0.1;
+              const gapRatio = 0.12;
               const margin = Math.max(2, Math.round(block * gapRatio));
-              const gridInnerWidth =
-                cols * block + Math.max(0, cols - 1) * margin;
-              const horizontalPadding = 48;
-              const safeViewport =
-                typeof window !== "undefined"
-                  ? Math.max(260, window.innerWidth)
-                  : 1024;
+              const gridInnerWidth = cols * block + Math.max(0, cols - 1) * margin;
+              const horizontalPadding = 32;
+              const safeViewport = typeof window !== "undefined" ? Math.max(260, window.innerWidth) : 1024;
               const desiredCardWidth = gridInnerWidth + horizontalPadding;
-              const cardMaxWidth = Math.min(
-                safeViewport - 16,
-                desiredCardWidth
-              );
+              const cardMaxWidth = Math.min(safeViewport - 16, desiredCardWidth);
 
               const innerWrapperStyle: React.CSSProperties = {
                 width: `${gridInnerWidth}px`,
@@ -332,15 +364,8 @@ export default function GitHubActivity() {
                 gap: `${margin}px`,
               };
 
-              // Outer container is horizontally scrollable so mobile shows more detail and doesn't clip
               return (
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
+                <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
                   <div
                     style={{
                       boxSizing: "border-box",
@@ -348,36 +373,16 @@ export default function GitHubActivity() {
                       padding: "0px",
                       display: "flex",
                       justifyContent: "center",
-                      overflowX: "auto", // <-- allow scroll on mobile
+                      overflowX: "auto",
                       WebkitOverflowScrolling: "touch",
                     }}
                   >
-                    <div
-                      className="inline-block"
-                      style={{
-                        ...innerWrapperStyle,
-                        maxWidth: "none", // allow it to be wider than container
-                        overflowX: "visible",
-                      }}
-                    >
+                    <div className="inline-block" style={{ ...innerWrapperStyle, maxWidth: "none", overflowX: "visible" }}>
                       {grid.map((col, ci) => (
-                        <div
-                          key={ci}
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: `${margin}px`,
-                          }}
-                        >
+                        <div key={ci} style={{ display: "flex", flexDirection: "column", gap: `${margin}px` }}>
                           {col.map((cell, ri) => {
-                            const title = cell
-                              ? formatTitle(cell.date, cell.count)
-                              : "No contributions";
-                            const bg = cell
-                              ? levelColor(cell.level)
-                              : theme === "dark"
-                              ? "#0b1220"
-                              : "#f3f4f6";
+                            const title = cell ? formatTitle(cell.date, cell.count) : "No contributions";
+                            const bg = cell ? levelColor(cell.level) : (isDark ? "#0b1220" : "#f3f4f6");
 
                             return (
                               <div
@@ -386,12 +391,10 @@ export default function GitHubActivity() {
                                 aria-label={title}
                                 tabIndex={cell ? 0 : -1}
                                 onMouseEnter={(e) => {
-                                  if (cell)
-                                    showTooltipAt(e as any, title, false);
+                                  if (cell) showTooltipAt(e as any, title, false);
                                 }}
                                 onMouseMove={(e) => {
-                                  if (tooltip.visible && !tooltip.pinned)
-                                    showTooltipAt(e as any, title, false);
+                                  if (tooltip.visible && !tooltip.pinned) showTooltipAt(e as any, title, false);
                                 }}
                                 onMouseLeave={() => {
                                   if (!tooltip.pinned) hideTooltip();
@@ -400,20 +403,10 @@ export default function GitHubActivity() {
                                   togglePinTooltip(e, title, !!cell);
                                 }}
                                 onKeyDown={(e) => {
-                                  if (
-                                    (e as React.KeyboardEvent).key ===
-                                      "Enter" &&
-                                    cell
-                                  ) {
+                                  if ((e as React.KeyboardEvent).key === "Enter" && cell) {
                                     const fakeEvent = {
-                                      clientX:
-                                        (e.nativeEvent as any).clientX ||
-                                        (containerRef.current?.getBoundingClientRect()
-                                          .left || 0) + 8,
-                                      clientY:
-                                        (e.nativeEvent as any).clientY ||
-                                        (containerRef.current?.getBoundingClientRect()
-                                          .top || 0) + 8,
+                                      clientX: (e.nativeEvent as any).clientX || ((containerRef.current?.getBoundingClientRect().left || 0) + 8),
+                                      clientY: (e.nativeEvent as any).clientY || ((containerRef.current?.getBoundingClientRect().top || 0) + 8),
                                     } as unknown as React.MouseEvent;
                                     togglePinTooltip(fakeEvent, title, !!cell);
                                   }
@@ -425,14 +418,8 @@ export default function GitHubActivity() {
                                   background: bg,
                                   borderRadius: 3,
                                   cursor: cell ? "pointer" : "default",
-                                  boxShadow:
-                                    tooltip.visible && tooltip.text === title
-                                      ? "0 3px 10px rgba(0,0,0,0.12)"
-                                      : undefined,
-                                  border:
-                                    tooltip.visible && tooltip.text === title
-                                      ? "1px solid rgba(0,0,0,0.08)"
-                                      : undefined,
+                                  boxShadow: tooltip.visible && tooltip.text === title ? "0 3px 10px rgba(0,0,0,0.08)" : undefined,
+                                  border: tooltip.visible && tooltip.text === title ? "1px solid rgba(0,0,0,0.06)" : undefined,
                                 }}
                               />
                             );
@@ -445,11 +432,13 @@ export default function GitHubActivity() {
               );
             })()
           ) : (
-            <p className="text-sm text-slate-500">No recent activity.</p>
+            <p className="text-sm" style={{ color: isDark ? "#94a3b8" : "#6b7280" }}>
+              No recent activity.
+            </p>
           )}
         </div>
 
-        {/* Legend always visible (desktop + mobile). On small screens it's horizontally scrollable. */}
+        {/* Legend */}
         <Legend />
       </div>
 
@@ -462,16 +451,16 @@ export default function GitHubActivity() {
             left: tooltip.left,
             top: tooltip.top,
             transform: "translate(-50%, 0)",
-            background: theme === "dark" ? "#0b1220" : "#ffffff",
-            color: theme === "dark" ? "#fff" : "#111827",
+            background: isDark ? "#0b1220" : "#f8fafc",
+            color: isDark ? "#e6eef6" : "#0f172a",
             padding: "6px 8px",
-            borderRadius: 6,
-            boxShadow: "0 6px 20px rgba(2,6,23,0.25)",
+            borderRadius: 8,
+            boxShadow: "0 6px 20px rgba(2,6,23,0.12)",
             fontSize: 12,
             zIndex: 60,
             whiteSpace: "nowrap",
             pointerEvents: "auto",
-            border: "1px solid rgba(0,0,0,0.06)",
+            border: isDark ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(2,6,23,0.06)",
           }}
         >
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
