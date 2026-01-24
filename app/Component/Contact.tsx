@@ -5,7 +5,7 @@ import { SiGithub } from "react-icons/si";
 import { MdEmail } from "react-icons/md";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { ChevronDownIcon,ChevronUpIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 // Font configurations
 const playfair = Playfair_Display({
@@ -48,7 +48,7 @@ const Contact: React.FC = () => {
   const reduceMotion = useReducedMotion();
 
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
+    "idle",
   );
   const [copied, setCopied] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -68,7 +68,7 @@ const Contact: React.FC = () => {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,13 +114,13 @@ const Contact: React.FC = () => {
 
   return (
     <section
-      className={`${inter.className} min-h-screen flex flex-col items-center justify-center overflow-hidden relative bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]`} id="contact"
+      className={`${inter.className} min-h-screen flex flex-col items-center justify-center overflow-hidden relative bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]`}
+      id="contact"
     >
       {/* Background Ambient Glows (blue theme) */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/12 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Mobile Title */}
       <div
         aria-hidden="true"
         className={`text-center w-full mt-5 mb-5 text-6xl sm:text-6xl font-bold z-30 ${playfair.className} pointer-events-none select-none text-black dark:text-white`}
@@ -144,14 +144,20 @@ const Contact: React.FC = () => {
               }}
               className="inline-flex items-center gap-3 px-4 py-2 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1"
               style={{
-                background: isDark ? "rgba(15,23,42,0.45)" : "rgba(255,255,255,0.9)",
+                background: isDark
+                  ? "rgba(15,23,42,0.45)"
+                  : "rgba(255,255,255,0.9)",
                 borderColor: isDark ? "#0b1220" : "#e6eef6",
                 color: isDark ? "#e6eef6" : "#0f172a",
               }}
               aria-label={`Copy email address ${CONTACT_EMAIL}`}
               type="button"
             >
-              <MdEmail className="w-5 h-5" style={{ color: accent }} aria-hidden />
+              <MdEmail
+                className="w-5 h-5"
+                style={{ color: accent }}
+                aria-hidden
+              />
               <span className="text-sm font-medium">{CONTACT_EMAIL}</span>
               <span className="ml-2 text-xs" role="status" aria-live="polite">
                 {copied ? "Copied!" : "Copy"}
@@ -176,7 +182,6 @@ const Contact: React.FC = () => {
               Request a quote
             </a>
 
-        
             <SocialIcon
               href="https://github.com/wahb-amir"
               ariaLabel="Open GitHub"
@@ -205,7 +210,9 @@ const Contact: React.FC = () => {
                 </div>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-white/80 text-sm">I am Wahb</p>
+                <p className="text-gray-500 dark:text-white/80 text-sm">
+                  I am Wahb
+                </p>
                 <p className="text-black dark:text-white font-medium">
                   Ready to turn your idea into a real product?
                 </p>
@@ -239,18 +246,32 @@ const Contact: React.FC = () => {
                     name="interest"
                     value={formData.interest}
                     onChange={handleChange}
-                   className="mx-2 bg-transparent border-b-2 border-gray-600 focus:border-gray-300 dark:border-gray-400 outline-none text-gray-800 dark:text-white font-medium cursor-pointer transition-colors appearance-none"
+                    className="mx-2 bg-transparent border-b-2 border-gray-600 focus:border-gray-300 dark:border-gray-400 outline-none text-gray-800 dark:text-white font-medium cursor-pointer transition-colors appearance-none"
                   >
-                    <option value="Full-Stack Web Application">
+                    <option
+                      value="Full-Stack Web Application"
+                      className="text-black bg-white"
+                    >
                       Full-Stack Web Application
                     </option>
-                    <option value="Backend Development">
+                    <option
+                      value="Backend Development"
+                      className="text-black bg-white"
+                    >
                       Backend Development & APIs
                     </option>
-                    <option value="SEO Optimization">
+                    <option
+                      value="SEO Optimization"
+                      className="text-black bg-white"
+                    >
                       SEO & Performance Optimization
                     </option>
-                    <option value="Custom Web Solution">Custom Web Solution</option>
+                    <option
+                      value="Custom Web Solution"
+                      className="text-black bg-white"
+                    >
+                      Custom Web Solution
+                    </option>
                   </select>
                   .
                 </p>
@@ -331,37 +352,37 @@ const Contact: React.FC = () => {
           </div>
         </div>
         <div className="relative z-10 flex justify-center items-center gap-6 mt-6">
-                  <button
-                    onClick={() =>
-                      document
-                        .getElementById("about")
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    aria-label="Scroll Up"
-                    className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
-                  >
-                    <ChevronUpIcon
-                      className={`w-8 h-8 ${
-                        isDark ? "text-cyan-300" : "text-cyan-600"
-                      }`}
-                    />
-                  </button>
-                  <button
-                    onClick={() =>
-                      document
-                        .getElementById("faq")
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    aria-label="Scroll Down"
-                    className="animate-bounce hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
-                  >
-                    <ChevronDownIcon
-                      className={`w-8 h-8 ${
-                        isDark ? "text-cyan-300" : "text-cyan-600"
-                      }`}
-                    />
-                  </button>
-                </div>
+          <button
+            onClick={() =>
+              document
+                .getElementById("about")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            aria-label="Scroll Up"
+            className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
+          >
+            <ChevronUpIcon
+              className={`w-8 h-8 ${
+                isDark ? "text-cyan-300" : "text-cyan-600"
+              }`}
+            />
+          </button>
+          <button
+            onClick={() =>
+              document
+                .getElementById("faq")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            aria-label="Scroll Down"
+            className="animate-bounce hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
+          >
+            <ChevronDownIcon
+              className={`w-8 h-8 ${
+                isDark ? "text-cyan-300" : "text-cyan-600"
+              }`}
+            />
+          </button>
+        </div>
       </div>
     </section>
   );
