@@ -15,12 +15,6 @@ const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
   ssr: false,
   loading: () => null,
 });
-
-/**
- * Tiny Typewriter (no external lib)
- * - very small, minimal DOM updates to reduce main-thread work
- * - respects prefers-reduced-motion (shows static text)
- */
 interface TinyTypewriterProps {
   words: string[];
   loop?: boolean;
@@ -263,7 +257,7 @@ export default function Hero() {
             </p>
           </div>
 
-          <p className="mt-3 text-sm sm:text-base max-w-xl mx-auto text-cyan-600 dark:text-cyan-300 font-medium">
+          <p className="mt-3 text-sm sm:text-base max-w-xl mx-auto text-blue-600 dark:text-cyan-300 font-medium">
             For startups & product teams focused on performance and reliability.
           </p>
 
