@@ -13,7 +13,7 @@ type LayoutClientProps = {
 export default function LayoutClient({ children }: LayoutClientProps) {
   const pathname = usePathname();
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <AnimatePresence mode="wait" initial={false}>
         <PageTransition key={pathname}>{children}</PageTransition>
       </AnimatePresence>
