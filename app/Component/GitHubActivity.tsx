@@ -72,10 +72,9 @@ export default function GitHubActivity() {
     return data.filter((d) => new Date(d.date) >= cutoff);
   }, [data, isMobile]);
 
-  // softer palettes already used by calendar; keep them but adjust container/text colors
   const calendarTheme = {
-    light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
-    dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+    light: ["#161b22", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+    dark: [`${isDark?"#161b22":"#b3b2b2"}`, "#0e4429", "#006d32", "#26a641", "#39d353"],
   };
 
   const dateRange = useMemo(() => {
@@ -197,7 +196,6 @@ export default function GitHubActivity() {
   const formatTitle = (date: string, count: number) =>
     `${date} — ${count} contribution${count === 1 ? "" : "s"}`;
 
-  // Legend (mobile uses horizontal scrolling)
   const Legend = () => {
     const pal = isDark ? calendarTheme.dark : calendarTheme.light;
 
@@ -241,10 +239,9 @@ export default function GitHubActivity() {
     );
   };
 
-  // softer container colors (less harsh than pure white/black)
-  const containerBg = isDark ? "rgba(15,23,42,0.62)" : "rgba(249,250,251,0.88)"; // slate-900-ish / slate-50-ish
+  const containerBg = isDark ? "rgba(15,23,42,0.62)" : "rgba(249,250,251,0.88)"; 
   const containerBorder = isDark ? "rgba(71,85,105,0.15)" : "rgba(2,6,23,0.06)";
-  const headingColor = isDark ? "#e6eef6" : "#0f172a"; // not pure black
+  const headingColor = isDark ? "#e6eef6" : "#0f172a"; 
 
   return (
     <div
@@ -267,20 +264,22 @@ export default function GitHubActivity() {
               : `GitHub Contributions`}
           </h3>
 
-          {/* Total contributions badge (always visible; more prominent on mobile) */}
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
-            style={{
-              background: isDark ? "rgba(255,255,255,0.04)" : "rgba(2,6,23,0.04)",
-              color: isDark ? "#e6eef6" : "#0f172a",
-            }}
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {totalContributions.toLocaleString()} contribution
-            {totalContributions === 1 ? "" : "s"}
-            {dateRange ? ` • ${dateRange.days} days` : ""}
-          </div>
+          {/* UPDATED: Total contributions badge is now hidden on desktop */}
+          {isMobile && (
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
+              style={{
+                background: isDark ? "rgba(255,255,255,0.04)" : "rgba(2,6,23,0.04)",
+                color: isDark ? "#e6eef6" : "#0f172a",
+              }}
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {totalContributions.toLocaleString()} contribution
+              {totalContributions === 1 ? "" : "s"}
+              {dateRange ? ` • ${dateRange.days} days` : ""}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-center items-center">
@@ -438,8 +437,8 @@ export default function GitHubActivity() {
           )}
         </div>
 
-        {/* Legend */}
-        <Legend />
+        {/* UPDATED: Legend is now hidden on desktop */}
+        {isMobile && <Legend />}
       </div>
 
       {tooltip.visible && (
