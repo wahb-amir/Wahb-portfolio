@@ -128,7 +128,6 @@ const Contact: React.FC = () => {
         Let's Talk
       </div>
 
-      {/* --- TOOLBAR: email chip + CTAs + socials (responsive & aligned) --- */}
       <div className="w-full max-w-4xl px-4 mb-6 z-10">
         <div
           className="flex flex-col sm:flex-row items-center sm:justify-between gap-3"
@@ -192,19 +191,15 @@ const Contact: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* --- end toolbar --- */}
-
-      {/* Main Container */}
+   
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between relative z-10 w-full max-w-7xl">
-        {/* Center Form Card */}
         <div className="w-full md:w-2/3 max-w-xl mx-4 relative">
           <div className="relative overflow-hidden group rounded-3xl p-8 md:p-12 border transition-all duration-500 shadow-2xl bg-white/80 dark:bg-white/5 border-gray-200 dark:border-white/10 hover:shadow-sky-900/20">
-            {/* Subtle Gradient Overlay on Card (blue) */}
-            <div className="absolute inset-0 bg-gradient-to-br from-sky-100/40 to-blue-100/30 pointer-events-none" />
+           {isDark? <div className="absolute inset-0 bg-gradient-to-br from-sky-300/40 to-blue-400/30 pointer-events-none" />:<div className="absolute inset-0 bg-gradient-to-br from-sky-50/40 to-blue-50/30 pointer-events-none" />}
 
-            {/* Header */}
+            
             <div className="relative flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-sky-400 p-[2px]">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-400 to-sky-400 p-[2px] border">
                 <div className="w-full h-full rounded-full bg-white dark:bg-black flex items-center justify-center text-xs font-bold text-black dark:text-white">
                   W.A
                 </div>
