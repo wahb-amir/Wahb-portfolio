@@ -12,33 +12,32 @@ function cn(...inputs: ClassValue[]) {
 
 const faqList = [
   {
-    q: "Are you available for freelance or contract work?",
-    a: "Yes. I am open to new projects. Please use the contact form to share your project scope, timeline, and budget. I prioritize clear briefs and partners who value transparent communication.",
+    q: "How do I track the progress of my project in real-time?",
+    a: "Every client gets access to my custom-built Client Portal (dashboard.wahb.space). You can track development sprints, view task status, sync GitHub progress, and provide feedback directly in one centralized place.",
   },
   {
-    q: "How do you structure your pricing?",
-    a: "It depends on the project type. For well-defined scopes (like MVP builds), I prefer fixed-project pricing. For ongoing development or undefined scopes, I work on a retainer or hourly basis. We can discuss what fits your needs best.",
+    q: "Can you integrate AI or Computer Vision into my existing web app?",
+    a: "Absolutely. I specialize in merging modern web frontends (Next.js/React) with AI capabilities, specifically lightweight computer vision models for object recognition or image processing that run efficiently on standard hardware.",
   },
   {
-    q: "Do you provide post-launch support?",
-    a: "Yes. I include a standard warranty period for critical bug fixes after launch. For ongoing maintenance, feature updates, or server management, we can agree on a separate monthly retainer.",
+    q: "Do you handle hosting and server management for me?",
+    a: "Yes. I provide a 'hands-off' experience for my clients. Whether it's managing Linux servers via Nginx and Docker or deploying to serverless platforms like Vercel/AWS, I handle the DevOps so you can focus on your business.",
   },
   {
-    q: "Who owns the Intellectual Property (IP)?",
-    a: "You do. Upon final payment, 100% of the code ownership and intellectual property rights are transferred to you. I do not lock clients into proprietary platforms.",
+    q: "What is the typical timeline for an MVP (Minimum Viable Product)?",
+    a: "While timelines vary by complexity, I typically aim to deliver a fully functional MVP within 8 to 12 weeks. This includes core features, a secure database, and a polished user interface ready for launch.",
   },
   {
-    q: "What is your typical development workflow?",
-    a: "I follow an Agile-lite approach: Discovery & Planning -> Development Sprints -> Review/Feedback loops -> Deployment. You will have access to a live staging link to track progress in real-time.",
+    q: "How do you ensure the security of e-commerce and payment systems?",
+    a: "Security is non-negotiable. I use industry-standard protocols like Stripe for PCI-compliant payments and JWT (JSON Web Tokens) for secure authentication, ensuring that sensitive user data never touches your server directly.",
   },
   {
-    q: "Can you join an existing team?",
-    a: "Absolutely. I am comfortable working within existing codebases, using Git/GitHub for version control",
+    q: "Will I be able to update my own website content without coding?",
+    a: "Yes. Depending on your preference, I can build a custom Admin Dashboard tailored to your workflow or integrate a Headless CMS (like Sanity or Strapi). You'll have total control over your blogs, products, and media.",
   },
-  // , and collaborating via tools like Slack, Jira, or Linear. add later
   {
-    q: "What is your primary tech stack?",
-    a: "I specialize in the T3/Modern stack: Next.js, React, Tailwind CSS, and Node.js. For AI integration, I use Python (Pandas/PyTorch) to build intelligent data features.",
+    q: "What happens if something breaks after the project is finished?",
+    a: "I provide a standard 30-day bug-fix guarantee to ensure everything runs smoothly post-launch. For peace of mind, I also offer monthly maintenance retainers to keep your server secure and your dependencies updated.",
   },
 ];
 
