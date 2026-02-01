@@ -34,7 +34,7 @@ export default function NotFound() {
           <h2 className="text-2xl md:text-3xl font-medium text-slate-200">
             I think you&apos;ve lost your way.
           </h2>
-          <p className="mt-4 text-slate-400 max-w-md mx-auto leading-relaxed">
+          <p className="mt-4 dark:text-slate-400 text-white max-w-md mx-auto leading-relaxed">
             The page you are looking for has either been moved to another dimension 
             or simply doesn&apos;t exist in this universe.
           </p>
