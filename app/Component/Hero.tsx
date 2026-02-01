@@ -125,7 +125,6 @@ export default function Hero() {
 
   return (
     <>
-      {/* SKIP LINK (keyboard users) */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white dark:bg-slate-800 p-2 rounded"
