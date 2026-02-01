@@ -31,7 +31,7 @@ export default function NotFound() {
           transition={{ delay: 0.2 }}
           className="mt-4"
         >
-          <h2 className="text-2xl md:text-3xl font-medium text-slate-200">
+          <h2 className="text-2xl md:text-3xl font-medium dark:text-slate-200 text-slate-500">
             I think you&apos;ve lost your way.
           </h2>
           <p className="mt-4 dark:text-slate-400 text-white max-w-md mx-auto leading-relaxed">
