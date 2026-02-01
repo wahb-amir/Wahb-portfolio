@@ -77,13 +77,18 @@ export default function GitHubActivity() {
     dark: [`${isDark?"#161b22":"#b3b2b2"}`, "#0e4429", "#006d32", "#26a641", "#39d353"],
   };
 
-  const dateRange = useMemo(() => {
-    if (!processedData || processedData.length === 0) return null;
-    const dates = processedData.map((d) => new Date(d.date));
-    const min = new Date(Math.min(...dates.map((d) => d.getTime())));
-    const max = new Date(Math.max(...dates.map((d) => d.getTime())));
-    return { start: min, end: max, days: processedData.length };
-  }, [processedData]);
+const dateRange = useMemo(() => {
+  // Check if it exists AND if it is an actual Array
+  if (!processedData || !Array.isArray(processedData) || processedData.length === 0) {
+    return null;
+  }
+
+  const dates = processedData.map((d) => new Date(d.date));
+  const min = new Date(Math.min(...dates.map((d) => d.getTime())));
+  const max = new Date(Math.max(...dates.map((d) => d.getTime())));
+  
+  return { start: min, end: max, days: processedData.length };
+}, [processedData]);
 
   // total contributions from the processed dataset (desktop: full set; mobile: truncated one)
   const totalContributions = useMemo(
