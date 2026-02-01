@@ -109,7 +109,7 @@ curl "ORIGIN/api/updates/projects?version=1"
 ```bash
 curl -X POST "ORIGIN/api/contact" \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Wahb","email":"wahb@example.com","message":"Hi!"}'
+  -d '{"name":"Wahb","email":"wahb@example.com","interest":"backend"}'
 ```
 
 ### Internal / Protected routes
