@@ -19,7 +19,7 @@ export default function NotFound() {
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-[12rem] md:text-[15rem] font-bold leading-none tracking-tighter dark:text-transparent text-gray-200/40 bg-clip-text bg-gradient-to-b from-white to-white/10 select-none"
+          className="text-[12rem] md:text-[15rem] font-bold leading-none tracking-tighter dark:text-transparent text-gray-300/40 bg-clip-text bg-gradient-to-b from-white to-white/10 select-none"
         >
           404
         </motion.h1>
