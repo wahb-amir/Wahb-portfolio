@@ -55,7 +55,7 @@ export default function NotFound() {
           
           <Link
             href="/projects"
-            className="px-8 py-3 rounded-full border border-slate-700 text-slate-300 font-medium hover:bg-slate-800/50 transition-all"
+            className="px-8 py-3 rounded-full border border-slate-700 dark:text-slate-300 font-medium hover:bg-slate-800/50 transition-all text-white"
           >
             View Projects
           </Link>
