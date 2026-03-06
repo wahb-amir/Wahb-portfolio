@@ -2,16 +2,16 @@
 
 import { useEffect, useState, useRef } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import Avatar from "../Component/avatar/Avatar";
+import Avatar from "../avatar/Avatar";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import GitHubActivity from "./github/GitHubActivity";
+import GitHubActivity from "../github/GitHubActivity";
 // keep decorative / heavy visuals client-only and lazy
-const LazyParticles = dynamic(() => import("./effects/CustomParticles"), {
+const LazyParticles = dynamic(() => import("../effects/CustomParticles"), {
   ssr: false,
   loading: () => null,
 });
-const LazyBackgroundEffect = dynamic(() => import("./effects/BackgroundEffect"), {
+const LazyBackgroundEffect = dynamic(() => import("../effects/BackgroundEffect"), {
   ssr: false,
   loading: () => null,
 });

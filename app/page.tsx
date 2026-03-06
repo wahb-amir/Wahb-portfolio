@@ -1,9 +1,8 @@
 import React, { Suspense } from "react";
 import dynamic from "next/dynamic";
-import Hero from "./Component/Hero";
+import Hero from "./Component/hero/Hero";
 
 // ─── Skeleton fallbacks ────────────────────────────────────────────────────────
-// Sized to match each section so there's zero layout shift (CLS ≈ 0)
 function SectionSkeleton({ height = 400 }: { height?: number }) {
   return (
     <div
@@ -13,35 +12,53 @@ function SectionSkeleton({ height = 400 }: { height?: number }) {
   );
 }
 
+const PageTransition = dynamic(
+  () => import("./Component/effects/PageTransition"),
+  { loading: () => null }
+);
 
-const PageTransition = dynamic(() => import("./Component/PageTransition"), {
-  loading: () => null
-});
+const SkillsServer = dynamic(
+  () => import("./Component/skills/SkillServer"),
+  {
+    loading: () => <SectionSkeleton height={320} />,
+  }
+);
 
-const SkillsServer = dynamic(() => import("./Component/SkillServer"), {
-  loading: () => <SectionSkeleton height={320} />,
-});
+const ProjectServer = dynamic(
+  () => import("./Component/projects/ProjectServer"),
+  {
+    loading: () => <SectionSkeleton height={600} />,
+  }
+);
 
-const ProjectServer = dynamic(() => import("./Component/ProjectServer"), {
-  loading: () => <SectionSkeleton height={600} />,
-});
+const AboutServer = dynamic(
+  () => import("./Component/about/AboutServer"),
+  {
+    loading: () => <SectionSkeleton height={400} />,
+  }
+);
 
-const AboutServer = dynamic(() => import("./Component/AboutServer"), {
-  loading: () => <SectionSkeleton height={400} />,
-});
+const ContactForm = dynamic(
+  () => import("./Component/contact/Contact"),
+  {
+    ssr: true,
+    loading: () => <SectionSkeleton height={480} />,
+  }
+);
 
-const ContactForm = dynamic(() => import("./Component/Contact"), {
-  ssr: true,
-  loading: () => <SectionSkeleton height={480} />,
-});
+const FAQ = dynamic(
+  () => import("./Component/faq/FAQ"),
+  {
+    loading: () => <SectionSkeleton height={320} />,
+  }
+);
 
-const FAQ = dynamic(() => import("./Component/FAQ"), {
-  loading: () => <SectionSkeleton height={320} />,
-});
-
-const Footer = dynamic(() => import("./Component/Footer"), {
-  loading: () => <SectionSkeleton height={120} />,
-});
+const Footer = dynamic(
+  () => import("./Component/footer/Footer"),
+  {
+    loading: () => <SectionSkeleton height={120} />,
+  }
+);
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
@@ -49,10 +66,8 @@ export default function Home() {
     <Suspense fallback={null}>
       <PageTransition>
         <main>
-        
           <Hero />
 
-        
           <Suspense fallback={<SectionSkeleton height={320} />}>
             <SkillsServer />
           </Suspense>

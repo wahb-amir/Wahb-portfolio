@@ -1,9 +1,8 @@
 // ProjectCardSSR.tsx — redesigned for a clean, professional look
 import React from "react";
-import ImageSlotHydrate from "../Component/slider/ImageSlider";
-import ActionsHydrate from "./ProjectCard";;
-import CaseStudyHydrate from "./case-study/CaseStudy";
-
+import ImageSlotHydrate from "../slider/ImageSlider";
+import ActionsHydrate from "../projects/ProjectCard";
+import CaseStudyHydrate from "../case-study/CaseStudy";
 export type Project = {
   id?: string;
   title?: string;

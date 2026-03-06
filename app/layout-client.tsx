@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { ThemeProvider } from "next-themes";
 import { AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import PageTransition from "./Component/PageTransition";
+import PageTransition from "./Component/effects/PageTransition";
 
 type LayoutClientProps = {
   children: ReactNode;

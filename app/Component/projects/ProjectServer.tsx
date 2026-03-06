@@ -5,7 +5,7 @@
 import React, { Suspense } from "react";
 import ProjectCardSSR from "./ProjectCardSSR";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
-import Arrow from "../Component/navigation/Arrow";
+import Arrow from "../navigation/Arrow";
 
 type ProjectsPayload<T = unknown> = {
   version: string | number | null;

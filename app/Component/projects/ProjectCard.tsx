@@ -5,7 +5,7 @@ import {
   ArrowTopRightOnSquareIcon,
   CodeBracketIcon,
 } from "@heroicons/react/24/outline";
-import RepoSelectorModal from "./projects/RepoSelectorModal";
+import RepoSelectorModal from "./RepoSelectorModal";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 type Props = {
   title?: string;

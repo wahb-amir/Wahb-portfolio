@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { motion, useInView } from "framer-motion";
 
-const LazyBackgroundEffect = dynamic(() => import("./BackgroundEffect"), {
+const LazyBackgroundEffect = dynamic(() => import("../effects/BackgroundEffect"), {
   ssr: false,
   loading: () => null,
 });

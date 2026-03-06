@@ -3,8 +3,8 @@ import "./tailwind-out.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import LayoutClient from "./layout-client";
 import { ThemeProvider } from "next-themes";
-import Preloader from "./Component/Preloader";
-import Navbar from "./Component/Navbar";
+import Preloader from "./Component/ui/Preloader";
+import Navbar from "./Component/navigation/Navbar";
 import { Metadata } from "next";
 
 const geistSans = Geist({

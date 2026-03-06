@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 
 // Lazy-load for client-only effects
-const LazyParticles = dynamic(() => import("./effects/CustomParticles"), {
+const LazyParticles = dynamic(() => import("../effects/CustomParticles"), {
   ssr: false,
   loading: () => null,
 });

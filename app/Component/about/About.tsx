@@ -11,7 +11,7 @@ import { Syne, DM_Mono } from "next/font/google";
 const syne = Syne({ subsets: ["latin"], weight: ["700", "800"] });
 const mono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"] });
 
-const LazyBackgroundEffect = dynamic(() => import("./effects/BackgroundEffect"), {
+const LazyBackgroundEffect = dynamic(() => import("../effects/BackgroundEffect"), {
   ssr: false,
   loading: () => null,
 });
