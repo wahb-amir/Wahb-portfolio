@@ -10,7 +10,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 // Font configurations
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["400", "600", "700"],
 });
 const inter = Inter({ subsets: ["latin"] });
 
@@ -121,11 +121,26 @@ const Contact: React.FC = () => {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/12 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
 
+      {/* reliable, Tailwind-based gradient heading (SSR/hydration friendly) */}
       <div
         aria-hidden="true"
-        className={`text-center w-full mt-5 mb-5 text-6xl sm:text-6xl font-bold z-30 ${playfair.className} pointer-events-none select-none text-black dark:text-white`}
+        className={`${playfair.className} pointer-events-none select-none z-30 text-center mb-6`}
       >
-        Let's Talk
+        <span
+          className="inline-block relative font-[700] leading-none tracking-tight"
+          style={{ fontSize: "clamp(2.4rem,6vw,4rem)" }}
+        >
+          {/* gradient text via Tailwind utilities (works on SSR and client) */}
+          <span className="bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-400 bg-clip-text text-transparent">
+            Let's Talk
+          </span>
+
+          {/* rounded underline sized to ~50% of text width and centered */}
+          <span
+            aria-hidden="true"
+            className="absolute left-1/2 -bottom-2.5 -translate-x-1/2 h-1.5 w-1/2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-400 opacity-90"
+          />
+        </span>
       </div>
 
       {/* --- TOOLBAR: email chip + CTAs + socials (responsive & aligned) --- */}
