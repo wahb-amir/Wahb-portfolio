@@ -255,6 +255,6 @@ This project is available under the **MIT License**. See `LICENSE` for details.
 
 ## Author
 
-**Wahb Amir** — 15‑year‑old full‑stack dev. Portfolio: [https://wahb.space](https://wahb.space)
+**Wahb Amir** — 16‑year‑old full‑stack dev. Portfolio: [https://wahb.space](https://wahb.space)
 
 If you want changes to wording, add a quick API reference, or include curl/Postman collections or example seed scripts, tell me which parts to expand and I'll update the README.
