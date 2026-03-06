@@ -135,7 +135,7 @@ export default function Hero() {
       <main
         id="hero-section"
         className={`
-    relative flex flex-col justify-start items-center
+    relative flex flex-col justify-start items-center 
     ${HERO_MIN_HEIGHT} px-4 xs:px-6 text-center pb-[6.25rem]
     bg-[#f9fafb] dark:bg-[#0f172a]
     bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]

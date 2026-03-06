@@ -14,16 +14,17 @@ import {
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const { resolvedTheme, setTheme } = useTheme();
-  const [smallWidth, setSmallWidth] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [visible, setVisible] = useState(true);
   const [compact, setCompact] = useState(false);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
-  const NAV_HEIGHT = 64;
+  
+  const NAV_HEIGHT = 72; 
 
   const navItems = [
     { name: "Skills", id: "skills", icon: faCode },
@@ -34,60 +35,35 @@ const Navbar = () => {
   ];
 
   useEffect(() => {
-    const handleResize = () => setSmallWidth(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const DELTA = 8;
-    const MIN_Y_TO_HIDE = 100;
-    const MIN_TO_COMPACT = 140;
-
-    function onScroll() {
-      if (ticking.current) return;
-      ticking.current = true;
-
-      requestAnimationFrame(() => {
-        const currentY = window.scrollY;
-        const prevY = lastScrollY.current;
-
-        if (menuOpen) {
-          setVisible(true);
-          setCompact(currentY > MIN_TO_COMPACT);
+    const handleScroll = () => {
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const currentY = window.scrollY;
+          if (currentY < 10) {
+            setVisible(true);
+            setCompact(false);
+          } else {
+            // Only hide if menu is closed
+            setVisible(currentY < lastScrollY.current || menuOpen);
+            setCompact(currentY > 50);
+          }
           lastScrollY.current = currentY;
           ticking.current = false;
-          return;
-        }
+        });
+        ticking.current = true;
+      }
+    };
 
-        if (currentY <= 0) {
-          setVisible(true);
-          setCompact(false);
-        } else if (currentY - prevY > DELTA && currentY > MIN_Y_TO_HIDE) {
-          setVisible(false);
-          setCompact(false);
-        } else if (prevY - currentY > DELTA) {
-          setVisible(true);
-          setCompact(currentY > MIN_TO_COMPACT);
-        }
-
-        lastScrollY.current = currentY;
-        ticking.current = false;
-      });
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [menuOpen]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
   }, [menuOpen]);
 
-  const toggleTheme = () =>
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  const darkMode = resolvedTheme === "dark";
+  const toggleTheme = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  const isDark = resolvedTheme === "dark";
 
   const handleClick = (id: string) => {
     const elm = document.getElementById(id);
@@ -95,193 +71,139 @@ const Navbar = () => {
     setMenuOpen(false);
   };
 
-  const handleKeyActivate = (
-    e: React.KeyboardEvent<HTMLLIElement>,
-    id: string
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleClick(id);
-    }
-  };
-
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-50 transform transition-transform duration-300 ${
-          visible ? "translate-y-0" : "-translate-y-full"
+        className={`fixed left-0 w-full z-50 transition-all duration-500 ease-in-out px-4 py-4 ${
+          visible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
         <div
-          className={`flex items-center rounded-xl px-4 ${
-            compact ? "py-1" : "py-2"
-          } backdrop-blur-md bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88] text-black dark:text-white transition-all duration-200`}
-          style={{ height: NAV_HEIGHT }}
+          className={`mx-auto max-w-6xl flex items-center justify-between transition-all duration-300 rounded-2xl border backdrop-blur-xl ${
+            compact 
+            ? "py-2 px-4 shadow-lg bg-white/70 dark:bg-slate-900/80 border-slate-200/50 dark:border-white/10" 
+            : "py-3 px-6 bg-white/10 dark:bg-white/5 border-white/20 dark:border-white/10"
+          }`}
         >
-          {/* LEFT: logo */}
-          <div className="flex items-center flex-shrink-0">
-            <div className="w-10 h-10 rounded-full overflow-hidden">
+          {/* LEFT: Logo */}
+          <div className="flex-1 flex justify-start">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative w-10 h-10 cursor-pointer"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
               <Image
                 src="/logo.png"
-                alt="wahb logo"
-                width={40}
-                height={40}
-                className="block w-full h-full rounded-full cursor-pointer"
-                style={{ objectFit: "cover" }}
+                alt="Logo"
+                fill
+                className="rounded-full object-cover border-2 border-cyan-400 shadow-md"
               />
-            </div>
+            </motion.div>
           </div>
 
-          {/* CENTER: nav items (centered) */}
-          <div className="flex-1 flex justify-center">
-            {/* hidden on small screens */}
-            <ul className="hidden md:flex items-center gap-6">
+          {/* CENTER: Desktop Nav */}
+          <div className="hidden md:flex flex-[2] justify-center">
+            <ul className="flex items-center gap-2 p-1 bg-white/5 dark:bg-black/10 rounded-xl border border-white/10 backdrop-blur-md">
               {navItems.map((item) => (
-                <li
-                  key={item.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => handleClick(item.id)}
-                  onKeyDown={(e) =>
-                    handleKeyActivate(e as React.KeyboardEvent<HTMLLIElement>, item.id)
-                  }
-                  className={`px-3 py-2 rounded-md hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
-                    compact ? "text-sm" : "text-base"
-                  }`}
-                  aria-label={`Go to ${item.name}`}
-                >
-                  {item.name}
+                <li key={item.id}>
+                  <button
+                    onClick={() => handleClick(item.id)}
+                    className="relative px-4 py-2 text-sm font-bold transition-all group rounded-lg"
+                  >
+                    <span className="relative z-10 text-slate-800 dark:text-slate-100 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors">
+                      {item.name}
+                    </span>
+                    {/* Floating Hover Background */}
+                    <span className="absolute inset-0 bg-cyan-500/10 dark:bg-cyan-400/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 ease-out border border-cyan-500/20" />
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* RIGHT: actions (github, theme, mobile toggle) */}
-          <div className="flex items-center gap-4 flex-shrink-0">
-            {/* desktop actions */}
-            {!smallWidth && (
-              <>
-                <a
-                  href="https://github.com/wahb-amir"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                >
-                  <FontAwesomeIcon icon={faGithub} className="text-xl" />
-                </a>
+          {/* RIGHT: Actions */}
+          <div className="flex-1 flex justify-end items-center gap-3">
+            <div className="hidden md:flex gap-2">
+              <IconButton icon={faGithub} onClick={() => window.open("https://github.com/wahb-amir", "_blank")} />
+              <IconButton icon={isDark ? faSun : faMoon} onClick={toggleTheme} />
+            </div>
 
-                <button
-                  onClick={toggleTheme}
-                  aria-label="Toggle theme"
-                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                >
-                  <FontAwesomeIcon
-                    icon={darkMode ? faSun : faMoon}
-                    className="text-xl"
-                  />
-                </button>
-              </>
-            )}
-
-            {/* mobile menu toggle */}
-            {smallWidth && (
-              <button
-                className="md:hidden p-2 rounded-md"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle menu"
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className={darkMode ? "text-white" : "text-black"}
-                >
-                  <path
-                    d="M3 7h18M3 12h18M3 17h18"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            )}
+            {/* ANIMATED HAMBURGER */}
+            <button
+              className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 z-50 relative"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <motion.span 
+                animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                className={`w-6 h-0.5 rounded-full ${isDark || menuOpen ? 'bg-white' : 'bg-black'}`}
+              />
+              <motion.span 
+                animate={menuOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
+                className={`w-6 h-0.5 rounded-full ${isDark || menuOpen ? 'bg-white' : 'bg-black'}`}
+              />
+              <motion.span 
+                animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+                className={`w-6 h-0.5 rounded-full ${isDark || menuOpen ? 'bg-white' : 'bg-black'}`}
+              />
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* spacer to avoid content behind fixed nav */}
-      <div style={{ height: NAV_HEIGHT }} aria-hidden="true" />
-
-      {/* MOBILE MENU */}
-      <ul
-        className={`fixed left-0 w-full flex flex-col items-start px-4 py-4 z-40 rounded-b-xl shadow-lg ${
-          darkMode ? "bg-[#0f172a]/95" : "bg-white/95"
-        } backdrop-blur-md transition-all duration-300 md:hidden`}
-        style={{
-          top: NAV_HEIGHT,
-          maxHeight: menuOpen ? "100vh" : 0,
-          opacity: menuOpen ? 1 : 0,
-          overflow: "hidden",
-        }}
-      >
-        {navItems.map((item) => (
-          <li
-            key={item.id}
-            role="button"
-            tabIndex={0}
-            onClick={() => handleClick(item.id)}
-            onKeyDown={(e) =>
-              handleKeyActivate(e as React.KeyboardEvent<HTMLLIElement>, item.id)
-            }
-            className={`flex items-center gap-4 px-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors cursor-pointer ${
-              compact ? "py-2 text-sm" : "py-3"
-            }`}
-            aria-label={`Go to ${item.name}`}
+      {/* MOBILE DRAWER */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed inset-0 z-40 md:hidden bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl pt-28 pb-10 px-6"
           >
-            <div className="w-6 flex justify-center">
-              <FontAwesomeIcon icon={item.icon} className="scale-125" />
+            <div className="flex flex-col gap-3 max-w-sm mx-auto">
+              {navItems.map((item, idx) => (
+                <motion.button
+                  key={item.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  onClick={() => handleClick(item.id)}
+                  className="flex items-center gap-4 p-5 rounded-2xl bg-slate-100 dark:bg-white/5 text-lg font-bold hover:bg-cyan-500 hover:text-white transition-all shadow-sm"
+                >
+                  <FontAwesomeIcon icon={item.icon} className="w-6" />
+                  {item.name}
+                </motion.button>
+              ))}
+              <div className="grid grid-cols-2 gap-3 mt-4">
+                <button onClick={toggleTheme} className="flex items-center justify-center gap-2 p-5 rounded-2xl bg-slate-100 dark:bg-white/5 font-bold shadow-sm">
+                  <FontAwesomeIcon icon={isDark ? faSun : faMoon} />
+                  <span>Theme</span>
+                </button>
+                <a href="https://github.com/wahb-amir" className="flex items-center justify-center gap-2 p-5 rounded-2xl bg-slate-100 dark:bg-white/5 font-bold shadow-sm">
+                  <FontAwesomeIcon icon={faGithub} />
+                  <span>GitHub</span>
+                </a>
+              </div>
             </div>
-            <span className="font-medium">{item.name}</span>
-          </li>
-        ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <li className="mt-2 w-full">
-          <a
-            href="https://github.com/wahb-amir"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-4 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
-          >
-            <div className="w-6 flex justify-center">
-              <FontAwesomeIcon icon={faGithub} className="text-lg" />
-            </div>
-            <span className="font-medium">GitHub</span>
-          </a>
-        </li>
-
-        <li className="mt-2 w-full">
-          <button
-            onClick={() => {
-              toggleTheme();
-              setMenuOpen(false);
-            }}
-            className="flex items-center gap-4 px-3 py-3 w-full rounded hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors"
-          >
-            <div className="w-6 flex justify-center">
-              <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="text-lg" />
-            </div>
-            <span className="font-medium">
-              {darkMode ? "Light Mode" : "Dark Mode"}
-            </span>
-          </button>
-        </li>
-      </ul>
-
-      <style>{`html { scroll-padding-top: ${NAV_HEIGHT}px; }`}</style>
+      {/* CSS Scroll Padding Fix */}
+      <style>{`html { scroll-padding-top: ${NAV_HEIGHT + 24}px; }`}</style>
     </>
   );
 };
+
+const IconButton = ({ icon, onClick }: { icon: any; onClick: () => void }) => (
+  <motion.button
+    whileHover={{ scale: 1.1, backgroundColor: "rgba(6, 182, 212, 0.2)" }}
+    whileTap={{ scale: 0.9 }}
+    onClick={onClick}
+    className="w-10 h-10 flex items-center justify-center rounded-xl bg-black/5 dark:bg-white/5 border border-white/10 transition-colors"
+  >
+    <FontAwesomeIcon icon={icon} className="text-lg" />
+  </motion.button>
+);
 
 export default Navbar;

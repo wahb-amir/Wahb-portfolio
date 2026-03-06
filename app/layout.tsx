@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
- title: "Wahb Amir | Full-Stack Engineer & AI Developer",
+  title: "Wahb Amir | Full-Stack Engineer & AI Developer",
   description:
     "Wahb Amir is a full-stack engineer and AI developer building high-performance web applications, practical AI tools, and scalable systems — from idea to production.",
   metadataBase: new URL("https://wahb.space"),
@@ -417,8 +417,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
               typeof metadata.alternates.canonical === "string"
                 ? metadata.alternates.canonical
                 : metadata.alternates.canonical instanceof URL
-                ? metadata.alternates.canonical.toString()
-                : undefined
+                  ? metadata.alternates.canonical.toString()
+                  : undefined
             }
           />
         )}
@@ -446,11 +446,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ...`}>
-        <div className="min-h-screen ...">
+        <div className="min-h-screen bg-white dark:bg-[#0b1220] transition-colors duration-500">
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <Preloader />
             <Navbar />
-            <LayoutClient>{children}</LayoutClient>
+            <main
+              className="pt-20 md:pt-24 bg-[#f9fafb] dark:bg-[#0f172a]
+    bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44] rounded-lg  border-t-4 border-cyan-500/50
+    text-black dark:text-white
+
+    transition-colors duration-500"
+            >
+              <LayoutClient>{children}</LayoutClient>
+            </main>
           </ThemeProvider>
         </div>
       </body>
