@@ -7,7 +7,7 @@ import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Plus_Jakarta_Sans, DM_Mono } from "next/font/google";
 import {
   SiHtml5,
-  SiCss3,
+  SiCss,
   SiTailwindcss,
   SiJavascript,
   SiReact,
@@ -52,7 +52,7 @@ type GroupWithSkills = GroupDef & { skills: SkillDef[] };
 /* ─── skill definitions ─────────────────────────────────────────────── */
 const SKILLS: Record<string, SkillDef> = {
   html: { id: "html", name: "HTML", icon: SiHtml5, color: "#E34F26" },
-  css: { id: "css", name: "CSS", icon: SiCss3, color: "#1572B6" },
+  css: { id: "css", name: "CSS", icon: SiCss, color: "#1572B6" },
   tailwind: {
     id: "tailwind",
     name: "Tailwind",
