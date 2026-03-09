@@ -1,0 +1,37 @@
+{
+  "bio": "Hi, I'm Wahb. I enjoy building useful things and solving problems, which led me to teach myself how to code. I'm happiest when I'm creating practical tools—whether that's a web application, a backend service, or exploring computer vision. Lately, I've been working on helping computers understand images, such as recognizing objects or separating them from the background, with a focus on making these systems run well on everyday hardware rather than relying on powerful cloud machines. Alongside this, I build full-stack web applications and manage my own servers, keeping my work grounded in real-world needs.",
+  "quickFacts": [
+    "Builds clean, user-friendly web applications",
+    "Creates and manages full projects from idea to deployment",
+    "Works with image-based AI systems and experiments with practical machine learning",
+    "Comfortable running and maintaining apps on Linux servers",
+    "Enjoys breaking down complex problems into simple, working solutions",
+    "Focused on long-term growth, fundamentals, and real-world impact"
+  ],
+  "timeline": [
+    {
+      "title": "Early 2025",
+      "desc": "Learned the basics of how websites are built and styled."
+    },
+    {
+      "title": "Spring 2025",
+      "desc": "Started building small interactive projects and learning how logic and code work together."
+    },
+    {
+      "title": "Mid 2025",
+      "desc": "Built complete web applications with modern tools and real features like dashboards and authentication."
+    },
+    {
+      "title": "Summer 2025",
+      "desc": "Launched multiple real projects and ran them on my own servers."
+    },
+    {
+      "title": "Now",
+      "desc": "Improving code quality, working with structured databases, and building more reliable systems."
+    },
+    {
+      "title": "Next",
+      "desc": "Strengthening problem-solving skills through data structures & algorithms, and deploying lightweight AI models into real products."
+    }
+  ]
+}
