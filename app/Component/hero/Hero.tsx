@@ -1,327 +1,227 @@
-"use client";
-
-import { useEffect, useState, useRef } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import Avatar from "../avatar/Avatar";
-import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
+import Avatar from "../avatar/Avatar";
 import GitHubActivity from "../github/GitHubActivity";
-// keep decorative / heavy visuals client-only and lazy
-const LazyParticles = dynamic(() => import("../effects/CustomParticles"), {
-  ssr: false,
-  loading: () => null,
-});
+import HeroCTAs from "./HeroCTAs";
+import HeroScrollHint from "./HeroScrollHint";
+import HeroProof from "./HeroProof";
+
 const LazyBackgroundEffect = dynamic(() => import("../effects/BackgroundEffect"), {
-  ssr: false,
+  ssr: true,
   loading: () => null,
 });
-interface TinyTypewriterProps {
-  words: string[];
-  loop?: boolean;
-  typeSpeed?: number;
-  deleteSpeed?: number;
-  delaySpeed?: number;
-  reduceMotion?: boolean;
-}
-function TinyTypewriter({
-  words = [],
-  loop = true,
-  typeSpeed = 60,
-  deleteSpeed = 40,
-  delaySpeed = 1500,
-  reduceMotion = false,
-}: TinyTypewriterProps) {
-  const [display, setDisplay] = useState(words[0] || "");
-  const idxRef = useRef(0);
-  const charRef = useRef(0);
-  const deletingRef = useRef(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (reduceMotion || words.length === 0) {
-      setDisplay(words[0] || "");
-      return;
-    }
-
-    function tick() {
-      const word = words[idxRef.current % words.length];
-      if (!deletingRef.current) {
-        // type
-        charRef.current += 1;
-        setDisplay(word.slice(0, charRef.current));
-        if (charRef.current >= word.length) {
-          // pause then delete
-          timeoutRef.current = setTimeout(() => {
-            deletingRef.current = true;
-            tick();
-          }, delaySpeed);
-          return;
-        }
-        timeoutRef.current = setTimeout(tick, typeSpeed);
-      } else {
-        // delete
-        charRef.current -= 1;
-        setDisplay(word.slice(0, charRef.current));
-        if (charRef.current <= 0) {
-          deletingRef.current = false;
-          idxRef.current += 1;
-          // small pause before next word
-          timeoutRef.current = setTimeout(tick, 200);
-          return;
-        }
-        timeoutRef.current = setTimeout(tick, deleteSpeed);
-      }
-    }
-
-    // start typing
-    timeoutRef.current = setTimeout(tick, 250);
-
-    return () => {
-      if (timeoutRef.current !== null) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null; // reset ref
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [words, typeSpeed, deleteSpeed, delaySpeed, reduceMotion]);
-
-  return (
-    <span aria-live="polite" aria-atomic="true">
-      {display}
-      <span aria-hidden="true" className="ml-1 inline-block">
-        _
-      </span>
-    </span>
-  );
-}
+const STACK = [
+  "Next.js",
+  "Node.js",
+  "TypeScript",
+  "PostgreSQL",
+  "GitHub APIs",
+] as const;
 
 export default function Hero() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const [hydrated, setHydrated] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    if (mq) {
-      setReduceMotion(mq.matches);
-      const onChange = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
-      mq.addEventListener?.("change", onChange);
-      return () => mq.removeEventListener?.("change", onChange);
-    }
-  }, []);
-
-  const handleScrollToSkills = () => {
-    const skillsSection = document.getElementById("skills");
-    if (skillsSection)
-      skillsSection.scrollIntoView({ behavior: "smooth", block: "center" });
-    else console.warn("Skills section not found!");
-  };
-
-  // constants for SSR-friendly layout (unchanged)
-  const HERO_MIN_HEIGHT = "min-h-[60vh] sm:min-h-[68vh]";
-  const AVATAR_SIZE = { mobile: 150 };
-
   return (
     <>
+      {/* ── Keyframes (injected once, server-rendered) ───────────────── */}
+      <style>{`
+        @keyframes hero-fade-up {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0);    }
+        }
+        @keyframes hero-scale-in {
+          from { opacity: 0; transform: scale(0.85); }
+          to   { opacity: 1; transform: scale(1);    }
+        }
+        @keyframes hero-shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position:  200% center; }
+        }
+        @keyframes hero-pulse-ring {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.35); }
+          50%       { box-shadow: 0 0 0 10px rgba(59,130,246,0);  }
+        }
+        @keyframes hero-dot-pulse {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.4; }
+        }
+
+        .h-fade-up  { animation: hero-fade-up  0.65s cubic-bezier(0.22,1,0.36,1) both; }
+        .h-scale-in { animation: hero-scale-in 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+
+        .h-d1  { animation-delay: 0.05s; }
+        .h-d2  { animation-delay: 0.15s; }
+        .h-d3  { animation-delay: 0.28s; }
+        .h-d4  { animation-delay: 0.42s; }
+        .h-d5  { animation-delay: 0.56s; }
+        .h-d6  { animation-delay: 0.70s; }
+        .h-d7  { animation-delay: 0.84s; }
+
+        /* Name glow */
+        .name-glow {
+          text-shadow:
+            0 0 28px rgba(59,130,246,0.5),
+            0 0 72px rgba(59,130,246,0.18);
+        }
+
+        /* Avatar ring pulse */
+        .avatar-ring {
+          animation: hero-pulse-ring 2.8s ease-in-out infinite;
+        }
+
+        /* Chip hover shimmer */
+        .stack-chip {
+          position: relative;
+          overflow: hidden;
+          transition: border-color 0.2s, transform 0.2s;
+        }
+        .stack-chip::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255,255,255,0.18) 50%,
+            transparent 100%
+          );
+          background-size: 200% auto;
+          opacity: 0;
+          transition: opacity 0.2s;
+          animation: hero-shimmer 2s linear infinite;
+        }
+        .stack-chip:hover::after { opacity: 1; }
+        .stack-chip:hover { transform: translateY(-1px); }
+
+        /* Availability dot */
+        .avail-dot { animation: hero-dot-pulse 2s ease-in-out infinite; }
+      `}</style>
+
+      {/* ── Skip link ───────────────────────────────────────────────── */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white dark:bg-slate-800 p-2 rounded"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white dark:bg-slate-800 px-3 py-2 rounded text-sm font-medium"
       >
         Skip to content
       </a>
 
+      {/* ── Root section ────────────────────────────────────────────── */}
       <main
         id="hero-section"
-        className={`
-    relative flex flex-col justify-start items-center 
-    ${HERO_MIN_HEIGHT} px-4 xs:px-6 text-center pb-[6.25rem]
-    bg-[#f9fafb] dark:bg-[#0f172a]
-    bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
-    text-black dark:text-white
-    overflow-hidden pt-[env(safe-area-inset-top)]
-  `}
+        className="
+          relative flex flex-col items-center justify-start
+          min-h-[65vh] sm:min-h-[72vh]
+          px-4 xs:px-6 text-center
+          pb-28 overflow-hidden
+          pt-[env(safe-area-inset-top)]
+          bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+        "
         aria-label="Hero Section"
         role="banner"
       >
-        {/* decorative background (SSR-friendly) */}
+        {/* Ambient gradient — static, no JS */}
         <div
           aria-hidden="true"
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(0,191,255,0.06), rgba(0,177,255,0.10))",
+              "linear-gradient(160deg, rgba(0,191,255,0.07) 0%, rgba(0,112,243,0.12) 60%, transparent 100%)",
           }}
         />
 
-        {hydrated && <LazyBackgroundEffect aria-hidden="true" />}
-        {hydrated && <LazyParticles aria-hidden="true" />}
-
-        {/* Main content (balanced hierarchy + color priority) */}
+        {/* Decorative circle blur — pure CSS depth */}
         <div
-          className="z-10 mt-8 max-w-xl mx-auto px-4"
-          role="main"
+          aria-hidden="true"
+          className="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)",
+            filter: "blur(40px)",
+          }}
+        />
+
+        {/* Client-only decorative effects */}
+        <LazyBackgroundEffect aria-hidden="true" />
+
+        {/* ── Content ─────────────────────────────────────────────── */}
+        <div
+          className="relative z-10 mt-10 max-w-lg mx-auto px-4 flex flex-col items-center"
           id="main-content"
+          role="main"
           aria-labelledby="hero-heading"
         >
-          {/* Avatar */}
+          {/* ── Avatar ── */}
           <div
-            className="
-    mx-auto
-    p-2
-    rounded-full
-    bg-white/70 dark:bg-slate-800/60
-    shadow-[0_8px_30px_rgba(0,0,0,0.06)]
-    ring-1 ring-black/5 dark:ring-white/10
-  "
-            style={{
-              width: AVATAR_SIZE.mobile,
-              height: AVATAR_SIZE.mobile,
-              maxWidth: "92vw",
-            }}
+            className="h-scale-in h-d1 avatar-ring rounded-full"
+            style={{ width: 150, height: 150 }}
             role="img"
             aria-label="Portrait of Wahb"
           >
-            <Avatar />
+            {/* Gradient border ring */}
+            <div
+              className="w-full h-full rounded-full p-[2.5px]"
+              style={{
+                background:
+                  "linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #6366f1 100%)",
+              }}
+            >
+              <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-slate-900">
+                <Avatar />
+              </div>
+            </div>
           </div>
 
-          <div className="h-4" aria-hidden="true" />
+          {/* ── Availability badge (server-rendered) ── */}
+          <div className="h-fade-up h-d2 mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-300/60 dark:border-emerald-700/50 bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400">
+            <span className="avail-dot w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" aria-hidden="true" />
+            Available for new projects
+          </div>
 
-          {/* H1: PRIMARY — Name (largest, blue = top priority) */}
+          {/* ── H1: Name ── */}
           <h1
             id="hero-heading"
-            className="mt-6 flex items-baseline justify-center gap-4 text-center"
+            className="h-fade-up h-d3 mt-5 flex items-baseline justify-center gap-3"
           >
-            <span
-              className="
-    text-3xl xs:text-4xl sm:text-5xl
-    font-semibold
-    text-gray-700 dark:text-slate-300
-  "
-            >
+            <span className="text-2xl xs:text-3xl sm:text-4xl font-medium tracking-tight text-gray-500 dark:text-slate-400">
               Hey, I&apos;m
             </span>
-
             <span
-              className="
-    font-serif
-    text-5xl xs:text-6xl sm:text-8xl
-    text-blue-600
-    font-black
-    leading-none
-  "
+              className="font-serif text-5xl xs:text-6xl sm:text-7xl font-black leading-none text-blue-600 dark:text-blue-400 name-glow"
             >
               Wahb
             </span>
           </h1>
 
-          {/* H2: SECONDARY — Value proposition (prominent, darker/indigo color) */}
-          <h2 className="mt-4 text-lg xs:text-xl sm:text-2xl font-semibold text-slate-800 dark:text-slate-100 max-w-2xl mx-auto">
-            I build fast, reliable web apps that scale with your product.
+          {/* ── H2: Value prop ── */}
+          <h2 className="h-fade-up h-d4 mt-3 text-base xs:text-lg sm:text-xl font-semibold text-slate-700 dark:text-slate-200 max-w-md mx-auto leading-snug">
+            I ship production-ready SaaS &amp; developer tools.
           </h2>
 
-          {/* H3: TERTIARY — Typewriter as supporting proof (accent color + subtle left border) */}
+          {/* ── Tech stack chips ── */}
           <div
-            className="mt-4 max-w-md mx-auto flex items-center gap-3 px-3 py-2 rounded-lg
-                 border-l-4 border-blue-100 dark:border-blue-900 bg-white/60 dark:bg-slate-800/40"
-            aria-hidden={false}
+            className="h-fade-up h-d5 mt-5 flex flex-wrap justify-center gap-2"
+            aria-label="Core technologies"
           >
-            {/* subtle icon-like dot to help visual parsing (accessible hidden) */}
-            <span
-              className="w-2 h-2 rounded-full bg-blue-400 dark:bg-cyan-400 inline-block"
-              aria-hidden="true"
-            />
-            <p
-              className="m-0 text-sm xs:text-base sm:text-base font-medium text-indigo-600 dark:text-cyan-300"
-              aria-label="Developer specialties"
-              role="text"
-            >
-              {hydrated ? (
-                <TinyTypewriter
-                  words={[
-                    "Next.js & React — performance first",
-                    "Scalable full-stack systems for real users",
-                    "UX-focused frontend with robust backend",
-                    "Production deployments on Linux & cloud",
-                  ]}
-                  typeSpeed={45}
-                  deleteSpeed={25}
-                  delaySpeed={1400}
-                  reduceMotion={reduceMotion}
-                />
-              ) : (
-                "Full-stack developer building scalable web applications"
-              )}
-            </p>
+            {STACK.map((tech) => (
+              <span
+                key={tech}
+                className="stack-chip px-3 py-1 text-xs font-semibold rounded-full border border-blue-200/70 dark:border-blue-700/50 text-blue-700 dark:text-cyan-300 bg-blue-50/80 dark:bg-blue-950/40 select-none"
+              >
+                {tech}
+              </span>
+            ))}
           </div>
 
-          <p className="mt-3 text-sm sm:text-base max-w-xl mx-auto text-blue-600 dark:text-cyan-300 font-medium">
-            For startups & product teams focused on performance and reliability.
-          </p>
+          {/* ── Proof line (client — animated entrance) ── */}
+          <HeroProof />
 
-          {/* CTAs — single strong button + subtle text link */}
-          <div className="mt-8 flex items-center gap-4 justify-center">
-            <a
-              href="/#project-section"
-              onClick={(e) => {
-                e.preventDefault();
-                const el = document.getElementById("project-section");
-                if (el)
-                  el.scrollIntoView({ behavior: "smooth", block: "center" });
-              }}
-              className="inline-flex items-center px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-md transition-all duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
-              aria-label="See my work"
-            >
-              See my work
-            </a>
-
-            <a
-              href="/#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                const el = document.getElementById("contact");
-                if (el)
-                  el.scrollIntoView({ behavior: "smooth", block: "center" });
-              }}
-              className="
-    inline-flex items-center justify-center
-    px-5 py-2.5
-    rounded-xl
-    border border-blue-600/60
-    text-blue-600
-    font-semibold
-    shadow-sm
-    transition-all duration-200
-    hover:bg-blue-600 hover:text-white
-    hover:shadow-md
-    focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300
-    dark:border-cyan-400/60
-    dark:text-cyan-300
-    dark:hover:bg-cyan-400 dark:hover:text-slate-700
-  "
-              aria-label="Contact Wahb"
-            >
-              Contact
-            </a>
-          </div>
+          {/* ── CTAs (client — needs onClick scroll) ── */}
+          <HeroCTAs />
         </div>
 
+        {/* GitHub activity strip */}
         <GitHubActivity />
-        {/* Scroll hint (small, unobtrusive) */}
-        <button
-          onClick={handleScrollToSkills}
-          className="absolute bottom-8 flex flex-col items-center cursor-pointer z-10 transition-transform motion-reduce:animate-none"
-          aria-label="Scroll to skills section"
-        >
-          <ChevronDownIcon
-            className="w-8 h-8 text-white animate-bounce motion-reduce:animate-none "
-            aria-hidden="true"
-          />
-          <span className="mt-2 text-sm xs:text-base text-gray-700 dark:text-slate-300">
-            Scroll to see my skills
-          </span>
-        </button>
+
+        {/* Scroll hint (client — needs onClick) */}
+        <HeroScrollHint />
       </main>
     </>
   );
