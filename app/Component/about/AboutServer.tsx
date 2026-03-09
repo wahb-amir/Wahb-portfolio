@@ -1,12 +1,12 @@
 // components/AboutServer.tsx
-import About from "./About";
 import getLatestAboutPayload from "@/lib/aboutService";
-
+import About from "./About";
 export default async function AboutServer() {
   const { payload } = await getLatestAboutPayload({
     clientVersion: null,
   });
 
+  // You already did this part!
   const { version, data: about } = payload;
 
   const jsonLd = about
@@ -22,10 +22,10 @@ export default async function AboutServer() {
         hasOccupation: {
           "@type": "Occupation",
           name: "Software Engineer / AI Developer",
-          startDate: about.startDate,
         },
       }
     : null;
+  if (!about) return null;
 
   return (
     <>
@@ -36,7 +36,8 @@ export default async function AboutServer() {
         />
       )}
 
-      <About serverData={payload} />
+      {/* Changed payload to about */}
+      <About data={about} />
     </>
   );
 }
