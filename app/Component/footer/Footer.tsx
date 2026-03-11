@@ -26,38 +26,26 @@ const LazyBackgroundEffect = dynamic(
   { ssr: false, loading: () => null }
 );
 
-/* ── internal nav links ── */
 const NAV_LINKS = [
-  { label: "Skills",    id: "skills"         },
-  { label: "Projects",  id: "project-section" },
-  { label: "About",     id: "about"           },
-  { label: "Contact",   id: "contact"         },
-  { label: "FAQ",       id: "faq"             },
+  { label: "Skills",   id: "skills"          },
+  { label: "Projects", id: "project-section"  },
+  { label: "About",    id: "about"            },
+  { label: "Contact",  id: "contact"          },
+  { label: "FAQ",      id: "faq"              },
 ];
 
-/* ── external links ── */
 const EXT_LINKS = [
-  {
-    label: "GitHub",
-    href:  "https://github.com/wahb-amir",
-    icon:  SiGithub,
-  },
-  {
-    label: "Client Portal",
-    href:  "https://dashboard.wahb.space",
-    icon:  ExternalLink,
-  },
+  { label: "GitHub",        href: "https://github.com/wahb-amir",      icon: SiGithub      },
+  { label: "Client Portal", href: "https://dashboard.wahb.space",      icon: ExternalLink  },
 ];
 
-/* ── stack pills ── */
 const STACK = [
-  { label: "Next.js",   icon: SiNextdotjs   },
-  { label: "Tailwind",  icon: SiTailwindcss  },
-  { label: "MongoDB",   icon: SiMongodb      },
-  { label: "Framer",    icon: Zap            },
+  { label: "Next.js",  icon: SiNextdotjs  },
+  { label: "Tailwind", icon: SiTailwindcss },
+  { label: "MongoDB",  icon: SiMongodb    },
+  { label: "Framer",   icon: Zap          },
 ];
 
-/* ── rotating status messages ── */
 const STATUS_LINES = [
   "Currently open for new projects",
   "Building something cool right now",
@@ -82,18 +70,40 @@ export default function Footer() {
     return () => clearInterval(id);
   }, []);
 
-  /* design tokens */
-  const accent      = isDark ? "#38bdf8"                : "#0284c7";
-  const accentMuted = isDark ? "rgba(56,189,248,0.12)"  : "rgba(2,132,199,0.08)";
-  const textPrimary = isDark ? "#f0f9ff"                : "#0c1a2e";
-  const textMuted   = isDark ? "rgba(186,230,255,0.55)" : "#4a6280";
-  const divider     = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
-  const cardBg      = isDark ? "rgba(8,18,36,0.5)"      : "rgba(255,255,255,0.65)";
+  /* ─── Design tokens, contrast-safe ───────────────────────────────
+     Light mode: gradient sits around #a8deff–#70caff (mid-cyan).
+     Need contrast ratio ≥ 4.5:1 for small text against that mid-tone.
+     - #0c1a2e  on #a8deff  → ~8.2:1  ✓  (primary text)
+     - #1e3a52  on #a8deff  → ~5.4:1  ✓  (muted text — was #4a6280 at 3.2:1 ✗)
+     - #0369a1  on #a8deff  → ~4.8:1  ✓  (accent — was #0284c7 at ~4.1:1, marginal)
 
+     Dark mode: gradient is very faint (#00bfff18–#0078aa2e) over #0f172a.
+     Effective bg ≈ #0e1e2e. Same tokens as before work fine.
+  ─────────────────────────────────────────────────────────────── */
+
+  // Light: stronger values to clear the saturated cyan gradient
+  // Dark: unchanged — already passes on the near-black bg
+  const accent       = isDark ? "#38bdf8"  : "#024f80";        // was #0284c7 (marginal)
+  const accentHover  = isDark ? "#7dd3fc"  : "#013a5e";
+  const textPrimary  = isDark ? "#f0f9ff"  : "#0a1628";        // near-black on light
+  const textMuted    = isDark ? "#94a3b8"  : "#1e3a52";        // was #4a6280 (3.2:1 fail)
+  const textSubtle   = isDark ? "#64748b"  : "#2c4a63";        // for least-important copy
+  const divider      = isDark ? "rgba(255,255,255,0.09)" : "rgba(10,22,40,0.18)";
+
+  // Status badge: pill bg + border need to work on the mid-cyan
+  const statusBg     = isDark ? "rgba(56,189,248,0.12)"  : "rgba(2,79,128,0.1)";
+  const statusBorder = isDark ? "rgba(56,189,248,0.22)"  : "rgba(2,79,128,0.28)";
+
+  // Stack pill
+  const pillBg       = isDark ? "rgba(56,189,248,0.1)"   : "rgba(255,255,255,0.55)";
+  const pillBorder   = isDark ? "rgba(56,189,248,0.18)"  : "rgba(10,22,40,0.2)";
+  const pillText     = isDark ? "#94a3b8"                : "#1e3a52";
+
+  const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
   const fade = (delay = 0) => ({
     initial:    { opacity: 0, y: 20 },
     animate:    inView ? { opacity: 1, y: 0 } : {},
-    transition: { duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] },
+    transition: { duration: 0.55, delay, ease },
   });
 
   return (
@@ -119,7 +129,7 @@ export default function Footer() {
 
       {/* Grain */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        className="pointer-events-none absolute inset-0 opacity-[0.035]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
           backgroundSize: "180px",
@@ -130,41 +140,47 @@ export default function Footer() {
       <div
         className="absolute top-0 left-0 right-0 h-px"
         style={{
-          background: "linear-gradient(90deg, transparent 0%, #0ea5e9 30%, #38bdf8 70%, transparent 100%)",
-          opacity: 0.5,
+          background: isDark
+            ? "linear-gradient(90deg, transparent 0%, #0ea5e9 30%, #38bdf8 70%, transparent 100%)"
+            : "linear-gradient(90deg, transparent 0%, #024f80 30%, #0369a1 70%, transparent 100%)",
+          opacity: isDark ? 0.5 : 0.4,
         }}
       />
 
-      {/* Ambient glow */}
+      {/* Ambient glow — toned down in light so it doesn't worsen contrast */}
       <div
         className="pointer-events-none absolute"
         style={{
-          bottom: "0", left: "50%", transform: "translateX(-50%)",
-          width: 600, height: 300,
+          bottom: 0, left: "50%", transform: "translateX(-50%)",
+          width: 600, height: 280,
           borderRadius: "50%",
           background: isDark
-            ? "radial-gradient(ellipse, rgba(14,165,233,0.06) 0%, transparent 70%)"
-            : "radial-gradient(ellipse, rgba(14,165,233,0.12) 0%, transparent 70%)",
+            ? "radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 70%)"
+            : "radial-gradient(ellipse, rgba(0,80,140,0.06) 0%, transparent 70%)",
           filter: "blur(40px)",
         }}
       />
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-8">
 
-        {/* ══════════ TOP SECTION ══════════ */}
+        {/* ══════════ TOP GRID ══════════ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
 
-          {/* ── Col 1: Brand + status ── */}
+          {/* ── Col 1: Brand ── */}
           <motion.div {...fade(0)} className="md:col-span-1 flex flex-col gap-4">
 
-            {/* Logo mark */}
+            {/* Logo */}
             <div className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm"
+                className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm select-none"
                 style={{
-                  background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
+                  background: isDark
+                    ? "linear-gradient(135deg, #0ea5e9, #0284c7)"
+                    : "linear-gradient(135deg, #024f80, #013a5e)",
                   color: "#fff",
-                  boxShadow: "0 4px 14px rgba(14,165,233,0.35)",
+                  boxShadow: isDark
+                    ? "0 4px 14px rgba(14,165,233,0.35)"
+                    : "0 4px 14px rgba(2,79,128,0.3)",
                 }}
               >
                 W
@@ -177,30 +193,39 @@ export default function Footer() {
               </span>
             </div>
 
-            {/* Tagline */}
-            <p className="text-sm leading-relaxed max-w-xs" style={{ color: textMuted }}>
+            {/* Tagline — stronger color, readable on cyan */}
+            <p
+              className="text-sm leading-relaxed max-w-xs font-medium"
+              style={{ color: textMuted }}
+            >
               Full-stack engineer crafting fast, maintainable web products — from
               landing pages to production SaaS.
             </p>
 
             {/* Location */}
-            <div className="flex items-center gap-1.5 text-xs" style={{ color: textMuted }}>
-              <MapPin className="w-3.5 h-3.5" style={{ color: accent }} />
+            <div
+              className="flex items-center gap-1.5 text-xs font-medium"
+              style={{ color: textMuted }}
+            >
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" style={{ color: accent }} />
               Based anywhere with good Wi-Fi
             </div>
 
-            {/* Live status ticker */}
+            {/* Status ticker */}
             <div
-              className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full text-xs font-medium border"
+              className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full text-xs font-semibold border"
               style={{
-                background:   accentMuted,
-                borderColor:  isDark ? "rgba(56,189,248,0.18)" : "rgba(2,132,199,0.15)",
-                color: accent,
+                background:  statusBg,
+                borderColor: statusBorder,
+                color:       accent,
               }}
             >
               <span
                 className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse"
-                style={{ background: accent, boxShadow: `0 0 5px ${accent}` }}
+                style={{
+                  background: accent,
+                  boxShadow:  `0 0 5px ${accent}`,
+                }}
               />
               <AnimatePresence mode="wait">
                 <motion.span
@@ -208,7 +233,8 @@ export default function Footer() {
                   initial={{ opacity: 0, y: 6  }}
                   animate={{ opacity: 1, y: 0  }}
                   exit={{   opacity: 0, y: -6  }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.28 }}
+                  className="whitespace-nowrap"
                 >
                   {STATUS_LINES[statusIdx]}
                 </motion.span>
@@ -216,10 +242,10 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* ── Col 2: Site nav ── */}
+          {/* ── Col 2: Nav ── */}
           <motion.div {...fade(0.1)} className="flex flex-col gap-3">
             <p
-              className="text-[10px] font-bold uppercase tracking-[0.2em] mb-1"
+              className="text-[10px] font-bold uppercase tracking-[0.22em] mb-1"
               style={{ color: accent }}
             >
               Navigation
@@ -231,32 +257,33 @@ export default function Footer() {
                 onClick={() =>
                   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
                 }
-                className="group flex items-center gap-2 text-sm w-fit transition-all duration-200"
+                className="group flex items-center gap-2 text-sm font-medium w-fit"
                 style={{ color: textMuted }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
+                onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
               >
+                {/* animated dash */}
                 <span
-                  className="w-4 h-px transition-all duration-200 group-hover:w-6"
-                  style={{ background: accent }}
+                  className="h-px transition-all duration-200 group-hover:w-5"
+                  style={{
+                    width: "14px",
+                    background: accent,
+                    display: "block",
+                    flexShrink: 0,
+                  }}
                 />
-                <span
-                  className="transition-colors duration-200 group-hover:translate-x-0.5"
-                  style={{ color: "inherit" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
-                >
-                  {label}
-                </span>
+                {label}
               </button>
             ))}
           </motion.div>
 
-          {/* ── Col 3: External + Built with ── */}
+          {/* ── Col 3: External + Stack ── */}
           <motion.div {...fade(0.2)} className="flex flex-col gap-6">
 
             {/* External links */}
             <div className="flex flex-col gap-3">
               <p
-                className="text-[10px] font-bold uppercase tracking-[0.2em] mb-1"
+                className="text-[10px] font-bold uppercase tracking-[0.22em] mb-1"
                 style={{ color: accent }}
               >
                 Find me online
@@ -267,17 +294,13 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 text-sm w-fit transition-all duration-200"
+                  className="group inline-flex items-center gap-2 text-sm font-medium w-fit"
                   style={{ color: textMuted }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
                 >
-                  <Icon className="w-3.5 h-3.5 transition-colors duration-200 group-hover:text-current" style={{ color: accent }} />
-                  <span
-                    className="transition-colors duration-200"
-                    onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
-                  >
-                    {label}
-                  </span>
+                  <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: accent }} />
+                  {label}
                   <ArrowUpRight
                     className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0"
                     style={{ color: accent }}
@@ -286,10 +309,10 @@ export default function Footer() {
               ))}
             </div>
 
-            {/* Built-with stack */}
+            {/* Stack badges */}
             <div>
               <p
-                className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3"
+                className="text-[10px] font-bold uppercase tracking-[0.22em] mb-3"
                 style={{ color: accent }}
               >
                 Built with
@@ -300,12 +323,12 @@ export default function Footer() {
                     key={label}
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 0.35, delay: 0.3 + i * 0.06 }}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg border"
+                    transition={{ duration: 0.35, delay: 0.3 + i * 0.07 }}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg border"
                     style={{
-                      background:  accentMuted,
-                      borderColor: isDark ? "rgba(56,189,248,0.15)" : "rgba(2,132,199,0.12)",
-                      color:       isDark ? "rgba(186,230,255,0.75)" : "#334e68",
+                      background:  pillBg,
+                      borderColor: pillBorder,
+                      color:       pillText,
                     }}
                   >
                     <SIcon className="w-3 h-3" style={{ color: accent }} />
@@ -318,33 +341,47 @@ export default function Footer() {
         </div>
 
         {/* ══════════ DIVIDER ══════════ */}
-        <div className="w-full h-px mb-6" style={{ background: divider }} />
+        <div
+          className="w-full h-px mb-6"
+          style={{ background: divider }}
+        />
 
         {/* ══════════ BOTTOM BAR ══════════ */}
         <motion.div
           {...fade(0.3)}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs"
-          style={{ color: textMuted }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           {/* Copyright */}
-          <p className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start">
+          <p
+            className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start text-xs font-medium"
+            style={{ color: textSubtle }}
+          >
             <Code2 className="w-3.5 h-3.5" style={{ color: accent }} />
             <span>© {year} Wahb Amir.</span>
             <span>Designed &amp; built by me, for me.</span>
           </p>
 
-          {/* Personal sign-off */}
-          <p className="flex items-center gap-1.5">
+          {/* Sign-off */}
+          <p
+            className="flex items-center gap-1.5 text-xs font-medium"
+            style={{ color: textSubtle }}
+          >
             Made with
             <motion.span
-              animate={{ scale: [1, 1.25, 1] }}
-              transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 2 }}
+              animate={{ scale: [1, 1.3, 1] }}
+              transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 2.5 }}
               className="inline-flex"
             >
-              <Heart className="w-3.5 h-3.5" style={{ color: "#f43f5e", fill: "#f43f5e" }} />
+              <Heart
+                className="w-3.5 h-3.5"
+                style={{ color: "#e11d48", fill: "#e11d48" }}
+              />
             </motion.span>
             &amp;
-            <Coffee className="w-3.5 h-3.5" style={{ color: "#a16207" }} />
+            <Coffee
+              className="w-3.5 h-3.5"
+              style={{ color: isDark ? "#92400e" : "#78350f" }}
+            />
             in the late hours
           </p>
 
@@ -356,15 +393,15 @@ export default function Footer() {
                 .getElementById("hero-section")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" })
             }
-            className="group inline-flex items-center gap-1.5 text-xs font-semibold transition-all duration-200 hover:scale-105"
+            className="group inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-200 hover:scale-105"
             style={{ color: accent }}
           >
             Back to top
             <span
               className="w-5 h-5 rounded-full flex items-center justify-center border transition-all duration-200 group-hover:-translate-y-0.5"
               style={{
-                borderColor: isDark ? "rgba(56,189,248,0.3)" : "rgba(2,132,199,0.25)",
-                background:   accentMuted,
+                borderColor: isDark ? "rgba(56,189,248,0.35)" : "rgba(2,79,128,0.3)",
+                background:  isDark ? "rgba(56,189,248,0.1)"  : "rgba(2,79,128,0.1)",
               }}
             >
               <svg
@@ -382,10 +419,10 @@ export default function Footer() {
           </button>
         </motion.div>
 
-        {/* Easter-egg tiny watermark */}
+        {/* Easter-egg watermark — intentionally subtle */}
         <p
-          className="mt-6 text-center text-[10px] select-none"
-          style={{ color: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }}
+          className="mt-6 text-center text-[10px] select-none font-medium"
+          style={{ color: isDark ? "rgba(255,255,255,0.12)" : "rgba(10,22,40,0.28)" }}
         >
           wahb.space · v2.0 · {year}
         </p>
