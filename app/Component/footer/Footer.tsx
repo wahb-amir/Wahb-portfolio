@@ -87,7 +87,7 @@ export default function Footer() {
   const accentHover  = isDark ? "#7dd3fc"  : "#013a5e";
   const textPrimary  = isDark ? "#f0f9ff"  : "#0a1628";        // near-black on light
   const textMuted    = isDark ? "#94a3b8"  : "#1e3a52";        // was #4a6280 (3.2:1 fail)
-  const textSubtle   = isDark ? "#64748b"  : "#2c4a63";        // for least-important copy
+  const textSubtle   = isDark ? "#ffffff"  : "#2c4a63";        // for least-important copy
   const divider      = isDark ? "rgba(255,255,255,0.09)" : "rgba(10,22,40,0.18)";
 
   // Status badge: pill bg + border need to work on the mid-cyan
