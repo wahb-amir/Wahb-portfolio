@@ -360,15 +360,6 @@ export default function FAQ() {
   const toggleFAQ = (globalIdx: number) =>
     setActiveIndex(activeIndex === globalIdx ? null : globalIdx);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqList.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
 
   return (
     <section
@@ -396,11 +387,6 @@ export default function FAQ() {
         }}
       />
       <div className="absolute inset-0 -z-20 bg-slate-950 hidden dark:block" />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
 
       <div className="relative z-10 max-w-3xl w-full mx-auto">
 
