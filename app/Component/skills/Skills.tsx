@@ -1,25 +1,8 @@
 "use client";
 
-/**
- * Skills.tsx — CLIENT COMPONENT (performance-optimized)
- *
- * Perf changes vs original:
- * 1. Chips use CSS animations + transitions only — zero framer-motion per chip.
- *    (24 × spring physics was the main cause of jank.)
- * 2. backdropFilter removed from individual chips — kept only on group cards
- *    where it's visually significant. Blur compositing on 24 small elements
- *    forces a separate GPU layer per chip.
- * 3. Single useInView per GroupCard (unchanged), but isDark is passed as prop
- *    instead of calling useTheme() in every child.
- * 4. framer-motion is kept for heading section (3 elements) — where the
- *    orchestrated entrance actually matters visually.
- * 5. CSS stagger via --i custom property; no JS timers or variant cascades.
- * 6. whileHover replaced with CSS :hover — identical visual, no JS event loop.
- */
-
 import React, { useMemo, useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { useTheme } from "next-themes";
+import { useClientTheme } from "@/app/hooks/useClientTheme";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Plus_Jakarta_Sans, DM_Mono } from "next/font/google";
 import {
@@ -225,7 +208,7 @@ function GroupCard({ group, isDark }: { group: GroupWithSkills; isDark: boolean 
 
 /* ─── main ───────────────────────────────────────────────────────────── */
 export default function SkillsGrouped() {
-  const { resolvedTheme } = useTheme();
+  const { resolvedTheme } = useClientTheme();
   const isDark = resolvedTheme === "dark";
 
   const headingRef    = useRef<HTMLDivElement>(null);

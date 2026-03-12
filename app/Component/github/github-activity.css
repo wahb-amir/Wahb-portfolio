@@ -1,0 +1,165 @@
+/* github-activity.css
+   Import once in your layout.tsx or globals.css:
+   @import "./Component/github/github-activity.css";
+   ─────────────────────────────────────────────── */
+
+:root {
+  --gh-bg:          rgba(248, 250, 253, 0.92);
+  --gh-border:      rgba(0, 0, 0, 0.06);
+  --gh-heading:     #0f172a;
+  --gh-sub:         #9ca3af;
+  --gh-badge-bg:    rgba(48, 161, 78, 0.09);
+  --gh-badge-clr:   #216e39;
+  --gh-tip-bg:      #ffffff;
+  --gh-tip-clr:     #0f172a;
+  --gh-tip-shadow:  0 8px 28px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+  --gh-card-shadow: 0 2px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --gh-skel-base:   #e8edf2;
+  --gh-skel-shine:  #f4f7fa;
+  --gh-skel-dot:    #30a14e;
+  --gh-dot-idle:    #d1d8e0;
+}
+
+.dark {
+  --gh-bg:          rgba(13, 19, 33, 0.75);
+  --gh-border:      rgba(255, 255, 255, 0.07);
+  --gh-heading:     #c9d8eb;
+  --gh-sub:         #4a6380;
+  --gh-badge-bg:    rgba(38, 166, 65, 0.14);
+  --gh-badge-clr:   #39d353;
+  --gh-tip-bg:      #0b1320;
+  --gh-tip-clr:     #d4e4f5;
+  --gh-tip-shadow:  0 8px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  --gh-card-shadow: 0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  --gh-skel-base:   #0d1b2a;
+  --gh-skel-shine:  #162032;
+  --gh-skel-dot:    #26a641;
+  --gh-dot-idle:    #2a3a50;
+}
+
+@keyframes gh-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes gh-pulse-dot {
+  0%, 100% { transform: scale(0.7); opacity: 0.4; }
+  50%       { transform: scale(1.2); opacity: 1; }
+}
+@keyframes gh-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gh-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(57, 211, 83, 0); }
+  50%       { box-shadow: 0 0 14px 2px rgba(57, 211, 83, 0.18); }
+}
+
+.gh-card {
+  width: 100%;
+  max-width: 980px;
+  margin: 24px auto;
+  box-sizing: border-box;
+  background: var(--gh-bg);
+  border: 1px solid var(--gh-border);
+  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 20px 20px 16px;
+  position: relative;
+  box-shadow: var(--gh-card-shadow);
+  animation: gh-fade-up 0.5s ease both;
+}
+
+/* Reserve calendar height — prevents CLS when data arrives */
+.gh-calendar-area {
+  width: 100%;
+  min-height: 112px;
+  contain: layout;
+}
+
+.gh-skel-block {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--gh-skel-base)  25%,
+    var(--gh-skel-shine) 50%,
+    var(--gh-skel-base)  75%
+  );
+  background-size: 200% 100%;
+  animation: gh-shimmer 1.6s ease-in-out infinite;
+}
+
+.gh-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gh-dot-idle);
+  transition: background 0.4s ease;
+}
+.gh-status-dot.loaded {
+  background: #39d353;
+  animation: gh-glow 2.4s ease infinite;
+}
+
+.gh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--gh-badge-bg);
+  color: var(--gh-badge-clr);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  animation: gh-fade-up 0.4s 0.2s ease both;
+}
+
+.gh-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gh-heading);
+  letter-spacing: 0.01em;
+}
+
+.gh-sub {
+  font-size: 11px;
+  color: var(--gh-sub);
+}
+
+.gh-tooltip {
+  position: absolute;
+  transform: translate(-50%, 0);
+  background: var(--gh-tip-bg);
+  color: var(--gh-tip-clr);
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: var(--gh-tip-shadow);
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 60;
+  white-space: nowrap;
+  pointer-events: auto;
+  animation: gh-fade-up 0.15s ease both;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gh-pulse-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 32px 0;
+}
+
+.gh-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gh-skel-dot);
+  animation: gh-pulse-dot 1.2s ease-in-out infinite;
+}

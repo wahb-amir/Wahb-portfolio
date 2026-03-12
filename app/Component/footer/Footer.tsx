@@ -1,25 +1,22 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
-import dynamic from "next/dynamic";
+
+/**
+ * Footer.tsx
+ * Same CSS custom-property pattern as Contact.tsx — all design tokens
+ * live in .footer-root / .dark .footer-root, inline style values are
+ * static strings like "var(--ft-accent)" that are identical on server
+ * and client. Zero isDark branching = zero hydration mismatch.
+ */
+
+import React, { useEffect, useRef, useState } from "react";
 import { Playfair_Display, DM_Sans } from "next/font/google";
-import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { SiGithub, SiNextdotjs, SiTailwindcss, SiMongodb } from "react-icons/si";
-import {
-  ArrowUpRight,
-  ExternalLink,
-  Heart,
-  MapPin,
-  Coffee,
-  Code2,
-  Zap,
-} from "lucide-react";
+import { ArrowUpRight, ExternalLink, Heart, MapPin, Coffee, Code2, Zap } from "lucide-react";
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "700", "900"],
-});
-const dmSans = DM_Sans({ subsets: ["latin"] });
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400","700","900"] });
+const dmSans   = DM_Sans({ subsets: ["latin"] });
 
 const LazyBackgroundEffect = dynamic(
   () => import("../effects/BackgroundEffect"),
@@ -35,8 +32,8 @@ const NAV_LINKS = [
 ];
 
 const EXT_LINKS = [
-  { label: "GitHub",        href: "https://github.com/wahb-amir",      icon: SiGithub      },
-  { label: "Client Portal", href: "https://dashboard.wahb.space",      icon: ExternalLink  },
+  { label: "GitHub",        href: "https://github.com/wahb-amir",  icon: SiGithub     },
+  { label: "Client Portal", href: "https://dashboard.wahb.space",  icon: ExternalLink },
 ];
 
 const STACK = [
@@ -54,8 +51,6 @@ const STATUS_LINES = [
 ];
 
 export default function Footer() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const ref    = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -63,41 +58,9 @@ export default function Footer() {
   const [year] = useState(() => new Date().getFullYear());
 
   useEffect(() => {
-    const id = setInterval(
-      () => setStatusIdx((i) => (i + 1) % STATUS_LINES.length),
-      3500
-    );
+    const id = setInterval(() => setStatusIdx((i) => (i + 1) % STATUS_LINES.length), 3500);
     return () => clearInterval(id);
   }, []);
-
-  /* ─── Design tokens, contrast-safe ───────────────────────────────
-     Light mode: gradient sits around #a8deff–#70caff (mid-cyan).
-     Need contrast ratio ≥ 4.5:1 for small text against that mid-tone.
-     - #0c1a2e  on #a8deff  → ~8.2:1  ✓  (primary text)
-     - #1e3a52  on #a8deff  → ~5.4:1  ✓  (muted text — was #4a6280 at 3.2:1 ✗)
-     - #0369a1  on #a8deff  → ~4.8:1  ✓  (accent — was #0284c7 at ~4.1:1, marginal)
-
-     Dark mode: gradient is very faint (#00bfff18–#0078aa2e) over #0f172a.
-     Effective bg ≈ #0e1e2e. Same tokens as before work fine.
-  ─────────────────────────────────────────────────────────────── */
-
-  // Light: stronger values to clear the saturated cyan gradient
-  // Dark: unchanged — already passes on the near-black bg
-  const accent       = isDark ? "#38bdf8"  : "#024f80";        // was #0284c7 (marginal)
-  const accentHover  = isDark ? "#7dd3fc"  : "#013a5e";
-  const textPrimary  = isDark ? "#f0f9ff"  : "#0a1628";        // near-black on light
-  const textMuted    = isDark ? "#94a3b8"  : "#1e3a52";        // was #4a6280 (3.2:1 fail)
-  const textSubtle   = isDark ? "#ffffff"  : "#2c4a63";        // for least-important copy
-  const divider      = isDark ? "rgba(255,255,255,0.09)" : "rgba(10,22,40,0.18)";
-
-  // Status badge: pill bg + border need to work on the mid-cyan
-  const statusBg     = isDark ? "rgba(56,189,248,0.12)"  : "rgba(2,79,128,0.1)";
-  const statusBorder = isDark ? "rgba(56,189,248,0.22)"  : "rgba(2,79,128,0.28)";
-
-  // Stack pill
-  const pillBg       = isDark ? "rgba(56,189,248,0.1)"   : "rgba(255,255,255,0.55)";
-  const pillBorder   = isDark ? "rgba(56,189,248,0.18)"  : "rgba(10,22,40,0.2)";
-  const pillText     = isDark ? "#94a3b8"                : "#1e3a52";
 
   const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
   const fade = (delay = 0) => ({
@@ -112,16 +75,68 @@ export default function Footer() {
       initial={{ opacity: 0 }}
       animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: 0.6 }}
-      className={`
-        ${dmSans.className}
-        relative w-full overflow-hidden
+      className={`footer-root ${dmSans.className} relative w-full overflow-hidden
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
         dark:from-[#00bfff18] dark:to-[#0078aa2e]
-        text-black dark:text-white
-      `}
+        text-black dark:text-white`}
       role="contentinfo"
       aria-label="Site footer"
     >
+      <style>{`
+        /* ─── Light tokens ─────────────────────────────────────── */
+        .footer-root {
+          --ft-accent:         #024f80;
+          --ft-text-primary:   #0a1628;
+          --ft-text-muted:     #1e3a52;
+          --ft-text-subtle:    #2c4a63;
+          --ft-divider:        rgba(10,22,40,0.18);
+          --ft-status-bg:      rgba(2,79,128,0.1);
+          --ft-status-border:  rgba(2,79,128,0.28);
+          --ft-pill-bg:        rgba(255,255,255,0.55);
+          --ft-pill-border:    rgba(10,22,40,0.2);
+          --ft-pill-text:      #1e3a52;
+          --ft-logo-grad:      linear-gradient(135deg, #024f80, #013a5e);
+          --ft-logo-shadow:    rgba(2,79,128,0.3);
+          --ft-shimmer:        linear-gradient(90deg, transparent 0%, #024f80 30%, #0369a1 70%, transparent 100%);
+          --ft-shimmer-opacity: 0.4;
+          --ft-glow-bg:        radial-gradient(ellipse, rgba(0,80,140,0.06) 0%, transparent 70%);
+          --ft-watermark:      rgba(10,22,40,0.28);
+          --ft-back-top-border: rgba(2,79,128,0.3);
+          --ft-back-top-bg:    rgba(2,79,128,0.1);
+          --ft-coffee:         #78350f;
+        }
+
+        /* ─── Dark tokens ──────────────────────────────────────── */
+        .dark .footer-root,
+        :is(.dark) .footer-root {
+          --ft-accent:         #38bdf8;
+          --ft-text-primary:   #f0f9ff;
+          --ft-text-muted:     #94a3b8;
+          --ft-text-subtle:    #ffffff;
+          --ft-divider:        rgba(255,255,255,0.09);
+          --ft-status-bg:      rgba(56,189,248,0.12);
+          --ft-status-border:  rgba(56,189,248,0.22);
+          --ft-pill-bg:        rgba(56,189,248,0.1);
+          --ft-pill-border:    rgba(56,189,248,0.18);
+          --ft-pill-text:      #94a3b8;
+          --ft-logo-grad:      linear-gradient(135deg, #0ea5e9, #0284c7);
+          --ft-logo-shadow:    rgba(14,165,233,0.35);
+          --ft-shimmer:        linear-gradient(90deg, transparent 0%, #0ea5e9 30%, #38bdf8 70%, transparent 100%);
+          --ft-shimmer-opacity: 0.5;
+          --ft-glow-bg:        radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 70%);
+          --ft-watermark:      rgba(255,255,255,0.12);
+          --ft-back-top-border: rgba(56,189,248,0.35);
+          --ft-back-top-bg:    rgba(56,189,248,0.1);
+          --ft-coffee:         #92400e;
+        }
+
+        /* ─── Utility classes ──────────────────────────────────── */
+        .ft-accent-text   { color: var(--ft-accent); }
+        .ft-text-primary  { color: var(--ft-text-primary); }
+        .ft-text-muted    { color: var(--ft-text-muted); }
+        .ft-text-subtle   { color: var(--ft-text-subtle); }
+      `}</style>
+
       {/* Background effect */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <LazyBackgroundEffect />
@@ -136,96 +151,65 @@ export default function Footer() {
         }}
       />
 
-      {/* Top shimmer border */}
+      {/* Top shimmer border — CSS-var driven, no JS */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{
-          background: isDark
-            ? "linear-gradient(90deg, transparent 0%, #0ea5e9 30%, #38bdf8 70%, transparent 100%)"
-            : "linear-gradient(90deg, transparent 0%, #024f80 30%, #0369a1 70%, transparent 100%)",
-          opacity: isDark ? 0.5 : 0.4,
-        }}
+        style={{ background: "var(--ft-shimmer)", opacity: "var(--ft-shimmer-opacity)" as never }}
       />
 
-      {/* Ambient glow — toned down in light so it doesn't worsen contrast */}
+      {/* Ambient glow */}
       <div
         className="pointer-events-none absolute"
         style={{
           bottom: 0, left: "50%", transform: "translateX(-50%)",
           width: 600, height: 280,
           borderRadius: "50%",
-          background: isDark
-            ? "radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 70%)"
-            : "radial-gradient(ellipse, rgba(0,80,140,0.06) 0%, transparent 70%)",
+          background: "var(--ft-glow-bg)",
           filter: "blur(40px)",
         }}
       />
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-8">
 
-        {/* ══════════ TOP GRID ══════════ */}
+        {/* ══ TOP GRID ══ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
 
-          {/* ── Col 1: Brand ── */}
+          {/* Col 1: Brand */}
           <motion.div {...fade(0)} className="md:col-span-1 flex flex-col gap-4">
-
-            {/* Logo */}
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm select-none"
                 style={{
-                  background: isDark
-                    ? "linear-gradient(135deg, #0ea5e9, #0284c7)"
-                    : "linear-gradient(135deg, #024f80, #013a5e)",
+                  background: "var(--ft-logo-grad)",
                   color: "#fff",
-                  boxShadow: isDark
-                    ? "0 4px 14px rgba(14,165,233,0.35)"
-                    : "0 4px 14px rgba(2,79,128,0.3)",
+                  boxShadow: "0 4px 14px var(--ft-logo-shadow)",
                 }}
               >
                 W
               </div>
-              <span
-                className={`${playfair.className} text-xl font-bold`}
-                style={{ color: textPrimary }}
-              >
+              <span className={`${playfair.className} text-xl font-bold ft-text-primary`}>
                 Wahb Amir
               </span>
             </div>
 
-            {/* Tagline — stronger color, readable on cyan */}
-            <p
-              className="text-sm leading-relaxed max-w-xs font-medium"
-              style={{ color: textMuted }}
-            >
+            <p className="ft-text-muted text-sm leading-relaxed max-w-xs font-medium">
               Full-stack engineer crafting fast, maintainable web products — from
               landing pages to production SaaS.
             </p>
 
-            {/* Location */}
-            <div
-              className="flex items-center gap-1.5 text-xs font-medium"
-              style={{ color: textMuted }}
-            >
-              <MapPin className="w-3.5 h-3.5 flex-shrink-0" style={{ color: accent }} />
+            <div className="ft-text-muted flex items-center gap-1.5 text-xs font-medium">
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
               Based anywhere with good Wi-Fi
             </div>
 
             {/* Status ticker */}
             <div
-              className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full text-xs font-semibold border"
-              style={{
-                background:  statusBg,
-                borderColor: statusBorder,
-                color:       accent,
-              }}
+              className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full text-xs font-semibold border ft-accent-text"
+              style={{ background: "var(--ft-status-bg)", borderColor: "var(--ft-status-border)" }}
             >
               <span
-                className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse"
-                style={{
-                  background: accent,
-                  boxShadow:  `0 0 5px ${accent}`,
-                }}
+                className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse ft-accent-text"
+                style={{ background: "var(--ft-accent)", boxShadow: "0 0 5px var(--ft-accent)" }}
               />
               <AnimatePresence mode="wait">
                 <motion.span
@@ -242,50 +226,33 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* ── Col 2: Nav ── */}
+          {/* Col 2: Nav */}
           <motion.div {...fade(0.1)} className="flex flex-col gap-3">
-            <p
-              className="text-[10px] font-bold uppercase tracking-[0.22em] mb-1"
-              style={{ color: accent }}
-            >
+            <p className="ft-accent-text text-[10px] font-bold uppercase tracking-[0.22em] mb-1">
               Navigation
             </p>
             {NAV_LINKS.map(({ label, id }) => (
               <button
                 key={id}
                 type="button"
-                onClick={() =>
-                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
-                }
-                className="group flex items-center gap-2 text-sm font-medium w-fit"
-                style={{ color: textMuted }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
+                onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                className="ft-text-muted group flex items-center gap-2 text-sm font-medium w-fit transition-colors duration-150 hover:ft-accent-text"
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ft-accent)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ft-text-muted)")}
               >
-                {/* animated dash */}
                 <span
                   className="h-px transition-all duration-200 group-hover:w-5"
-                  style={{
-                    width: "14px",
-                    background: accent,
-                    display: "block",
-                    flexShrink: 0,
-                  }}
+                  style={{ width: "14px", background: "var(--ft-accent)", display: "block", flexShrink: 0 }}
                 />
                 {label}
               </button>
             ))}
           </motion.div>
 
-          {/* ── Col 3: External + Stack ── */}
+          {/* Col 3: External + Stack */}
           <motion.div {...fade(0.2)} className="flex flex-col gap-6">
-
-            {/* External links */}
             <div className="flex flex-col gap-3">
-              <p
-                className="text-[10px] font-bold uppercase tracking-[0.22em] mb-1"
-                style={{ color: accent }}
-              >
+              <p className="ft-accent-text text-[10px] font-bold uppercase tracking-[0.22em] mb-1">
                 Find me online
               </p>
               {EXT_LINKS.map(({ label, href, icon: Icon }) => (
@@ -294,16 +261,14 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 text-sm font-medium w-fit"
-                  style={{ color: textMuted }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
+                  className="ft-text-muted group inline-flex items-center gap-2 text-sm font-medium w-fit"
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ft-accent)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ft-text-muted)")}
                 >
-                  <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: accent }} />
+                  <Icon className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
                   {label}
                   <ArrowUpRight
-                    className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0"
-                    style={{ color: accent }}
+                    className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 ft-accent-text"
                   />
                 </a>
               ))}
@@ -311,10 +276,7 @@ export default function Footer() {
 
             {/* Stack badges */}
             <div>
-              <p
-                className="text-[10px] font-bold uppercase tracking-[0.22em] mb-3"
-                style={{ color: accent }}
-              >
+              <p className="ft-accent-text text-[10px] font-bold uppercase tracking-[0.22em] mb-3">
                 Built with
               </p>
               <div className="flex flex-wrap gap-2">
@@ -326,12 +288,12 @@ export default function Footer() {
                     transition={{ duration: 0.35, delay: 0.3 + i * 0.07 }}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg border"
                     style={{
-                      background:  pillBg,
-                      borderColor: pillBorder,
-                      color:       pillText,
+                      background:  "var(--ft-pill-bg)",
+                      borderColor: "var(--ft-pill-border)",
+                      color:       "var(--ft-pill-text)",
                     }}
                   >
-                    <SIcon className="w-3 h-3" style={{ color: accent }} />
+                    <SIcon className="w-3 h-3 ft-accent-text" />
                     {label}
                   </motion.span>
                 ))}
@@ -340,89 +302,61 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        {/* ══════════ DIVIDER ══════════ */}
-        <div
-          className="w-full h-px mb-6"
-          style={{ background: divider }}
-        />
+        {/* ══ DIVIDER ══ */}
+        <div className="w-full h-px mb-6" style={{ background: "var(--ft-divider)" }} />
 
-        {/* ══════════ BOTTOM BAR ══════════ */}
+        {/* ══ BOTTOM BAR ══ */}
         <motion.div
           {...fade(0.3)}
           className="flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           {/* Copyright */}
-          <p
-            className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start text-xs font-medium"
-            style={{ color: textSubtle }}
-          >
-            <Code2 className="w-3.5 h-3.5" style={{ color: accent }} />
+          <p className="ft-text-subtle flex items-center gap-1.5 flex-wrap justify-center sm:justify-start text-xs font-medium">
+            <Code2 className="w-3.5 h-3.5 ft-accent-text" />
             <span>© {year} Wahb Amir.</span>
             <span>Designed &amp; built by me, for me.</span>
           </p>
 
           {/* Sign-off */}
-          <p
-            className="flex items-center gap-1.5 text-xs font-medium"
-            style={{ color: textSubtle }}
-          >
+          <p className="ft-text-subtle flex items-center gap-1.5 text-xs font-medium">
             Made with
             <motion.span
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 2.5 }}
               className="inline-flex"
             >
-              <Heart
-                className="w-3.5 h-3.5"
-                style={{ color: "#e11d48", fill: "#e11d48" }}
-              />
+              <Heart className="w-3.5 h-3.5" style={{ color: "#e11d48", fill: "#e11d48" }} />
             </motion.span>
             &amp;
-            <Coffee
-              className="w-3.5 h-3.5"
-              style={{ color: isDark ? "#92400e" : "#78350f" }}
-            />
+            {/* Coffee icon colour is a fixed amber — same in both themes, no branching needed */}
+            <Coffee className="w-3.5 h-3.5" style={{ color: "var(--ft-coffee)" }} />
             in the late hours
           </p>
 
           {/* Back to top */}
           <button
             type="button"
-            onClick={() =>
-              document
-                .getElementById("hero-section")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            }
-            className="group inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-200 hover:scale-105"
-            style={{ color: accent }}
+            onClick={() => document.getElementById("hero-section")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className="ft-accent-text group inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-200 hover:scale-105"
           >
             Back to top
             <span
               className="w-5 h-5 rounded-full flex items-center justify-center border transition-all duration-200 group-hover:-translate-y-0.5"
               style={{
-                borderColor: isDark ? "rgba(56,189,248,0.35)" : "rgba(2,79,128,0.3)",
-                background:  isDark ? "rgba(56,189,248,0.1)"  : "rgba(2,79,128,0.1)",
+                borderColor: "var(--ft-back-top-border)",
+                background:  "var(--ft-back-top-bg)",
               }}
             >
-              <svg
-                className="w-2.5 h-2.5"
-                viewBox="0 0 10 10"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg className="w-2.5 h-2.5" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 8V2M2 5l3-3 3 3" />
               </svg>
             </span>
           </button>
         </motion.div>
 
-        {/* Easter-egg watermark — intentionally subtle */}
         <p
           className="mt-6 text-center text-[10px] select-none font-medium"
-          style={{ color: isDark ? "rgba(255,255,255,0.12)" : "rgba(10,22,40,0.28)" }}
+          style={{ color: "var(--ft-watermark)" }}
         >
           wahb.space · v2.0 · {year}
         </p>

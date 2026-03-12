@@ -1,11 +1,10 @@
 import dynamic from "next/dynamic";
 import Avatar from "../avatar/Avatar";
-import GitHubActivity from "../github/GitHubActivity";
 import HeroCTAs from "./HeroCTAs";
 import HeroScrollHint from "./HeroScrollHint";
 import HeroProof from "./HeroProof";
 
-const LazyBackgroundEffect = dynamic(() => import("../effects/BackgroundEffect"), {
+const GitHubActivity = dynamic(() => import("../github/index"), {
   ssr: true,
   loading: () => null,
 });
@@ -139,7 +138,6 @@ export default function Hero() {
         />
 
         {/* Client-only decorative effects */}
-        <LazyBackgroundEffect aria-hidden="true" />
 
         {/* ── Content ─────────────────────────────────────────────── */}
         <div
