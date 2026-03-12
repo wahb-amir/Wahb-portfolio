@@ -64,7 +64,7 @@ const Footer = dynamic(
 export default function Home() {
   return (
     <Suspense fallback={null}>
-      <PageTransition>
+      {/* <PageTransition> */}
         <main>
           <Hero />
 
@@ -87,14 +87,15 @@ export default function Home() {
           <Suspense fallback={<SectionSkeleton height={320} />}>
             <FAQ />
           </Suspense>
-        </main>
+         
+        </main> 
 
-        <footer className="h-fit overflow-hidden">
-          <Suspense fallback={<SectionSkeleton height={120} />}>
+        {/* <footer className="h-fit overflow-hidden"> */}
+          {/* <Suspense fallback={<SectionSkeleton height={120} />}>
             <Footer />
-          </Suspense>
-        </footer>
-      </PageTransition>
+          </Suspense> */}
+        {/* </footer> */}
+      {/* </PageTransition> */}
     </Suspense>
   );
 }

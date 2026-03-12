@@ -1,10 +1,9 @@
 import "./globals.css";
 import "./tailwind-out.css";
 import { Geist, Geist_Mono } from "next/font/google";
-import LayoutClient from "./layout-client";
 import { ThemeProvider } from "next-themes";
-import Preloader from "./Component/ui/Preloader";
 import Navbar from "./Component/navigation/Navbar";
+import Preloader from "./Component/ui/Preloader";
 import { Metadata } from "next";
 
 const geistSans = Geist({
@@ -448,7 +447,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className={`${geistSans.variable} ${geistMono.variable} ...`}>
         <div className="min-h-screen bg-white dark:bg-[#0b1220] transition-colors duration-500">
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            <Preloader />
+            {/* <Preloader /> */}
             <Navbar />
             <main
               className="pt-20 md:pt-24 bg-[#f9fafb] dark:bg-[#0f172a]
@@ -457,7 +456,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
     transition-colors duration-500"
             >
-              <LayoutClient>{children}</LayoutClient>
+              {children}
             </main>
           </ThemeProvider>
         </div>
