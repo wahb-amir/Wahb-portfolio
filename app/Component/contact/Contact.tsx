@@ -1,4 +1,25 @@
 "use client";
+
+/**
+ * Contact.tsx
+ * Theme is 100% CSS custom-property driven.
+ *
+ * The core fix: instead of computing tokens in JS as
+ *   const accent = isDark ? "#38bdf8" : "#0284c7"
+ * and writing style={{ color: accent }}, we define CSS vars:
+ *   .contact-root { --ct-accent: #0284c7 }
+ *   .dark .contact-root { --ct-accent: #38bdf8 }
+ * and write style={{ color: "var(--ct-accent)" }}.
+ *
+ * The inline style VALUE is now the literal string "var(--ct-accent)"
+ * on BOTH server and client — identical, no hydration mismatch.
+ * The browser resolves the var at paint time, reading .dark from <html>.
+ *
+ * isDark is completely removed from this file.
+ * The only state that changes before/after mount is `mounted` which
+ * gates the LazyBackgroundEffect (correct) — nothing else.
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import { SiGithub } from "react-icons/si";
@@ -10,53 +31,35 @@ import {
   useReducedMotion,
   cubicBezier,
 } from "framer-motion";
-import { useTheme } from "next-themes";
 import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ArrowUpRight,
-  Sparkles,
-  Code2,
-  Globe,
-  ShoppingCart,
-  Wrench,
-  Zap,
-  Clock,
-  Layers,
-  ShieldCheck,
-  Check,
-  ChevronsUpDown,
-  DollarSign,
-  CalendarClock,
-  User,
-  AtSign,
-  MessageSquare,
+  ChevronDownIcon, ChevronUpIcon, ArrowUpRight,
+  Sparkles, Code2, Globe, ShoppingCart, Wrench,
+  Zap, Clock, Layers, ShieldCheck, Check,
+  ChevronsUpDown, DollarSign, CalendarClock,
+  User, AtSign, MessageSquare,
 } from "lucide-react";
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800", "900"],
-});
-const dmSans = DM_Sans({ subsets: ["latin"] });
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400","600","700","800","900"] });
+const dmSans   = DM_Sans({ subsets: ["latin"] });
 
 const CONTACT_EMAIL = "wahbamir2010@gmail.com";
 const CLIENT_PORTAL = "https://dashboard.wahb.space";
 const CLIENT_QUOTE  = `${CLIENT_PORTAL}#request-quote`;
 
 const SERVICES = [
-  { value: "Full-Stack Web Application", label: "Full-Stack Web App", icon: Globe       },
-  { value: "Backend Development",        label: "Backend & APIs",     icon: Code2       },
-  { value: "SEO Optimization",           label: "SEO & Performance",  icon: Sparkles    },
+  { value: "Full-Stack Web Application", label: "Full-Stack Web App", icon: Globe        },
+  { value: "Backend Development",        label: "Backend & APIs",     icon: Code2        },
+  { value: "SEO Optimization",           label: "SEO & Performance",  icon: Sparkles     },
   { value: "E-commerce Store",           label: "E-commerce Store",   icon: ShoppingCart },
-  { value: "Custom Web Solution",        label: "Custom Solution",    icon: Wrench      },
+  { value: "Custom Web Solution",        label: "Custom Solution",    icon: Wrench       },
 ];
 
 const BUDGET_OPTIONS = [
-  { value: "under-1k", label: "Under $1,000"    },
-  { value: "1k-3k",    label: "$1,000 – $3,000"  },
-  { value: "3k-8k",    label: "$3,000 – $8,000"  },
-  { value: "8k-plus",  label: "$8,000+"           },
-  { value: "not-sure", label: "Not sure yet"      },
+  { value: "under-1k", label: "Under $1,000"   },
+  { value: "1k-3k",    label: "$1,000 – $3,000" },
+  { value: "3k-8k",    label: "$3,000 – $8,000" },
+  { value: "8k-plus",  label: "$8,000+"          },
+  { value: "not-sure", label: "Not sure yet"     },
 ];
 
 const TIMELINE_OPTIONS = [
@@ -67,67 +70,49 @@ const TIMELINE_OPTIONS = [
 ];
 
 const TRUST_ITEMS = [
-  { icon: Zap,          text: "Reply within 24 hours"               },
-  { icon: Clock,        text: "MVPs shipped in weeks, not months"    },
-  { icon: Layers,       text: "Full ownership from design to deploy" },
-  { icon: ShieldCheck,  text: "Clean code, tested & maintainable"   },
+  { icon: Zap,         text: "Reply within 24 hours"               },
+  { icon: Clock,       text: "MVPs shipped in weeks, not months"    },
+  { icon: Layers,      text: "Full ownership from design to deploy" },
+  { icon: ShieldCheck, text: "Clean code, tested & maintainable"   },
 ];
 
-/* ─────────────────── Custom Select ─────────────────────────── */
+/* ─── CSS-var-aware Custom Select ─────────────────────────────── */
 interface SelectOption { value: string; label: string }
-interface CustomSelectProps {
+
+const CustomSelect: React.FC<{
   id: string;
   value: string;
   options: SelectOption[];
   onChange: (val: string) => void;
   icon: React.ReactNode;
-  isDark: boolean;
-}
-
-const CustomSelect: React.FC<CustomSelectProps> = ({
-  id, value, options, onChange, icon, isDark,
-}) => {
+}> = ({ id, value, options, onChange, icon }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
+    const h = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, []);
 
-  const selected   = options.find((o) => o.value === value);
-  const accent     = isDark ? "#38bdf8"            : "#0284c7";
-  const border     = isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)";
-  const bg         = isDark ? "rgba(15,23,42,0.85)"   : "rgba(255,255,255,0.95)";
-  const dropBg     = isDark ? "#0f172a"               : "#ffffff";
-  const textCol    = isDark ? "#f8fafc"               : "#0f172a";
-  const mutedCol   = isDark ? "#94a3b8"               : "#64748b";
-  const hoverBg    = isDark ? "rgba(56,189,248,0.15)" : "rgba(14,165,233,0.1)";
+  const selected = options.find((o) => o.value === value);
 
   return (
-    <div ref={ref} className="relative" id={id}>
+    <div ref={ref} className="ct-select-root relative" id={id}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium border transition-all duration-200"
-        style={{
-          background: bg,
-          borderColor: open ? accent : border,
-          color: textCol,
-          boxShadow: open
-            ? `0 0 0 3px ${isDark ? "rgba(56,189,248,0.25)" : "rgba(2,132,199,0.15)"}`
-            : "none",
-        }}
+        className={`ct-select-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium border transition-all duration-200 ${open ? "ct-select-btn--open" : ""}`}
       >
-        <span style={{ color: accent, flexShrink: 0 }}>{icon}</span>
-        <span className="flex-1 text-left truncate">{selected?.label ?? "Select…"}</span>
+        <span className="ct-accent-text" style={{ flexShrink: 0 }}>{icon}</span>
+        <span className="flex-1 text-left truncate ct-text-primary">{selected?.label ?? "Select…"}</span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          style={{ color: mutedCol, flexShrink: 0 }}
+          className="ct-muted-text"
+          style={{ flexShrink: 0 }}
         >
           <ChevronsUpDown className="w-3.5 h-3.5" />
         </motion.span>
@@ -140,9 +125,8 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
             animate={{ opacity: 1, y: 0,  scaleY: 1    }}
             exit={{    opacity: 0, y: -4,  scaleY: 0.96 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            style={{ transformOrigin: "top", background: dropBg, borderColor: border }}
-            className="absolute z-50 left-0 right-0 mt-1.5 rounded-xl border overflow-hidden py-1 shadow-xl"
-            
+            className="ct-dropdown absolute z-50 left-0 right-0 mt-1.5 rounded-xl border overflow-hidden py-1 shadow-xl"
+            style={{ transformOrigin: "top" }}
           >
             {options.map((opt) => {
               const isActive = opt.value === value;
@@ -151,21 +135,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                   <button
                     type="button"
                     onClick={() => { onChange(opt.value); setOpen(false); }}
-                    className="w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors duration-100"
-                    style={{
-                      background: isActive ? hoverBg : "transparent",
-                      color: isActive ? accent : textCol,
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.background = hoverBg;
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.background = isActive
-                        ? hoverBg : "transparent";
-                    }}
+                    className={`ct-dropdown-item w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors duration-100 ${isActive ? "ct-dropdown-item--active" : ""}`}
                   >
                     <span className="font-medium">{opt.label}</span>
-                    {isActive && <Check className="w-3.5 h-3.5" style={{ color: accent }} />}
+                    {isActive && <Check className="w-3.5 h-3.5 ct-accent-text" />}
                   </button>
                 </li>
               );
@@ -177,85 +150,54 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   );
 };
 
-/* ─────────────────── Icon Input ─────────────────────────────── */
-interface IconInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  icon: React.ReactNode;
-  isDark: boolean;
-}
-const IconInput: React.FC<IconInputProps> = ({ icon, isDark, ...props }) => {
+/* ─── Icon Input ──────────────────────────────────────────────── */
+const IconInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { icon: React.ReactNode }> = ({
+  icon, ...props
+}) => {
   const [focused, setFocused] = useState(false);
-  const accent = isDark ? "#38bdf8" : "#0284c7";
   return (
-    <div
-      className="flex items-center gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200"
-      style={{
-        background:   isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
-        borderColor:  focused ? accent : isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)",
-        boxShadow:    focused
-          ? `0 0 0 3px ${isDark ? "rgba(56,189,248,0.25)" : "rgba(2,132,199,0.15)"}`
-          : "none",
-      }}
-    >
-      <span style={{ color: focused ? accent : isDark ? "#94a3b8" : "#64748b", flexShrink: 0 }}>
+    <div className={`ct-field flex items-center gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}>
+      <span className={focused ? "ct-accent-text" : "ct-muted-text"} style={{ flexShrink: 0 }}>
         {icon}
       </span>
       <input
         {...props}
         onFocus={(e) => { setFocused(true);  props.onFocus?.(e); }}
         onBlur={(e)  => { setFocused(false); props.onBlur?.(e);  }}
-        className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-500 dark:placeholder:text-slate-400"
-        style={{ color: isDark ? "#f8fafc" : "#0f172a" }}
+        className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ct-text-primary"
       />
     </div>
   );
 };
 
-/* ─────────────────── Icon Textarea ──────────────────────────── */
-interface IconTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  icon: React.ReactNode;
-  isDark: boolean;
-}
-const IconTextarea: React.FC<IconTextareaProps> = ({ icon, isDark, ...props }) => {
+/* ─── Icon Textarea ───────────────────────────────────────────── */
+const IconTextarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & { icon: React.ReactNode }> = ({
+  icon, ...props
+}) => {
   const [focused, setFocused] = useState(false);
-  const accent = isDark ? "#38bdf8" : "#0284c7";
   return (
-    <div
-      className="flex gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200"
-      style={{
-        background:  isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
-        borderColor: focused ? accent : isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)",
-        boxShadow:   focused
-          ? `0 0 0 3px ${isDark ? "rgba(56,189,248,0.25)" : "rgba(2,132,199,0.15)"}`
-          : "none",
-      }}
-    >
-      <span
-        className="mt-0.5"
-        style={{ color: focused ? accent : isDark ? "#94a3b8" : "#64748b", flexShrink: 0 }}
-      >
+    <div className={`ct-field flex gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}>
+      <span className={`mt-0.5 ${focused ? "ct-accent-text" : "ct-muted-text"}`} style={{ flexShrink: 0 }}>
         {icon}
       </span>
       <textarea
         {...props}
         onFocus={(e) => { setFocused(true);  props.onFocus?.(e); }}
         onBlur={(e)  => { setFocused(false); props.onBlur?.(e);  }}
-        className="flex-1 bg-transparent text-sm outline-none resize-none placeholder:text-slate-500 dark:placeholder:text-slate-400"
-        style={{ color: isDark ? "#f8fafc" : "#0f172a" }}
+        className="flex-1 bg-transparent text-sm outline-none resize-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ct-text-primary"
       />
     </div>
   );
 };
 
-/* ─────────────────── Main Component ─────────────────────────── */
+/* ─── Main component ──────────────────────────────────────────── */
 export default function Contact() {
-  const { theme } = useTheme();
-  const isDark    = theme === "dark";
   const reduceMotion = useReducedMotion();
 
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus]               = useState<"idle"|"sending"|"sent"|"error">("idle");
+  const [copied, setCopied]               = useState(false);
   const [selectedService, setSelectedService] = useState("Full-Stack Web Application");
-  const [formData, setFormData] = useState({
+  const [formData, setFormData]           = useState({
     name: "", email: "", message: "", budget: "not-sure", timeline: "flexible",
   });
 
@@ -296,9 +238,8 @@ export default function Contact() {
     }
   };
 
-  const ease = cubicBezier(0.22, 1, 0.36, 1);
-
-  const fadeUp = (delay = 0) =>
+  const ease    = cubicBezier(0.22, 1, 0.36, 1);
+  const fadeUp  = (delay = 0) =>
     reduceMotion ? {} : {
       initial:    { opacity: 0, y: 32 },
       animate:    inView ? { opacity: 1, y: 0 } : {},
@@ -308,23 +249,232 @@ export default function Contact() {
   const isSubmitting = status === "sending";
   const isSent       = status === "sent";
 
-  /* Design tokens with improved contrast */
-  const accent      = isDark ? "#38bdf8"                 : "#0284c7";
-  const accentMuted = isDark ? "rgba(56,189,248,0.15)"   : "rgba(2,132,199,0.1)";
-  const textPrimary = isDark ? "#f8fafc"                 : "#0f172a";
-  const textMuted   = isDark ? "#cbd5e1"                 : "#475569";
-  const cardBg      = isDark ? "rgba(15,23,42,0.75)"     : "rgba(255,255,255,0.85)";
-  const cardBorder  = isDark ? "rgba(255,255,255,0.15)"  : "rgba(0,0,0,0.1)";
-
   return (
     <section
       ref={ref}
-      className={`${dmSans.className} relative min-h-screen flex flex-col items-center justify-center overflow-hidden
+      className={`contact-root ${dmSans.className} relative min-h-screen flex flex-col items-center justify-center overflow-hidden
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
         dark:from-[#00bfff18] dark:to-[#0078aa2e]
         text-black dark:text-white`}
       id="contact"
     >
+      {/* ── CSS custom properties: all theme tokens in one place ── */}
+      <style>{`
+        /* ─── Light tokens ─────────────────────────────────────── */
+        .contact-root {
+          --ct-accent:        #0284c7;
+          --ct-accent-muted:  rgba(2,132,199,0.1);
+          --ct-text-primary:  #0f172a;
+          --ct-text-muted:    #475569;
+          --ct-card-bg:       rgba(255,255,255,0.85);
+          --ct-card-border:   rgba(0,0,0,0.1);
+          --ct-field-bg:      rgba(255,255,255,0.7);
+          --ct-field-border:  rgba(0,0,0,0.15);
+          --ct-field-focus-ring: rgba(2,132,199,0.15);
+          --ct-select-bg:     rgba(255,255,255,0.95);
+          --ct-dropdown-bg:   #ffffff;
+          --ct-hover-bg:      rgba(14,165,233,0.1);
+          --ct-glow-1-opacity: 0.18;
+          --ct-glow-2-opacity: 0.14;
+          --ct-shimmer-line:  "linear-gradient(90deg, transparent 0%, #024f80 30%, #0369a1 70%, transparent 100%)";
+        }
+
+        /* ─── Dark tokens ──────────────────────────────────────── */
+        .dark .contact-root,
+        :is(.dark) .contact-root {
+          --ct-accent:        #38bdf8;
+          --ct-accent-muted:  rgba(56,189,248,0.15);
+          --ct-text-primary:  #f8fafc;
+          --ct-text-muted:    #cbd5e1;
+          --ct-card-bg:       rgba(15,23,42,0.75);
+          --ct-card-border:   rgba(255,255,255,0.15);
+          --ct-field-bg:      rgba(255,255,255,0.08);
+          --ct-field-border:  rgba(255,255,255,0.15);
+          --ct-field-focus-ring: rgba(56,189,248,0.25);
+          --ct-select-bg:     rgba(15,23,42,0.85);
+          --ct-dropdown-bg:   #0f172a;
+          --ct-hover-bg:      rgba(56,189,248,0.15);
+          --ct-glow-1-opacity: 0.06;
+          --ct-glow-2-opacity: 0.05;
+        }
+
+        /* ─── Utility classes (all var-driven) ─────────────────── */
+        .ct-accent-text   { color: var(--ct-accent); }
+        .ct-text-primary  { color: var(--ct-text-primary); }
+        .ct-muted-text    { color: var(--ct-text-muted); }
+
+        /* ─── Glow blobs ───────────────────────────────────────── */
+        .ct-glow-1 {
+          top: -5%; left: -8%;
+          width: 700px; height: 700px;
+          background: radial-gradient(circle, rgba(14,165,233,var(--ct-glow-1-opacity)) 0%, transparent 70%);
+          filter: blur(55px);
+        }
+        .ct-glow-2 {
+          bottom: -10%; right: -5%;
+          width: 600px; height: 600px;
+          background: radial-gradient(circle, rgba(14,165,233,var(--ct-glow-2-opacity)) 0%, transparent 70%);
+          filter: blur(55px);
+        }
+
+        /* ─── Card ─────────────────────────────────────────────── */
+        .ct-card {
+          background:     var(--ct-card-bg);
+          border-color:   var(--ct-card-border);
+          backdrop-filter: blur(16px);
+        }
+        .ct-form-card {
+          background:     var(--ct-card-bg);
+          border-color:   var(--ct-card-border);
+          backdrop-filter: blur(20px);
+        }
+        .dark .ct-form-card,
+        :is(.dark) .ct-form-card {
+          box-shadow: 0 24px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .ct-form-card {
+          box-shadow: 0 20px 60px rgba(14,165,233,0.12), inset 0 1px 0 rgba(255,255,255,0.95);
+        }
+
+        /* ─── Field (input/textarea wrapper) ───────────────────── */
+        .ct-field {
+          background:   var(--ct-field-bg);
+          border-color: var(--ct-field-border);
+          box-shadow:   none;
+        }
+        .ct-field--focused {
+          border-color: var(--ct-accent);
+          box-shadow:   0 0 0 3px var(--ct-field-focus-ring);
+        }
+
+        /* ─── Select ───────────────────────────────────────────── */
+        .ct-select-btn {
+          background:   var(--ct-select-bg);
+          border-color: var(--ct-field-border);
+          color:        var(--ct-text-primary);
+          box-shadow:   none;
+        }
+        .ct-select-btn--open {
+          border-color: var(--ct-accent);
+          box-shadow:   0 0 0 3px var(--ct-field-focus-ring);
+        }
+        .ct-dropdown {
+          background:   var(--ct-dropdown-bg);
+          border-color: var(--ct-field-border);
+        }
+        .ct-dropdown-item {
+          background: transparent;
+          color:      var(--ct-text-primary);
+        }
+        .ct-dropdown-item:hover,
+        .ct-dropdown-item--active {
+          background: var(--ct-hover-bg);
+          color:      var(--ct-accent);
+        }
+
+        /* ─── Service buttons ──────────────────────────────────── */
+        .ct-service-btn {
+          border-color: var(--ct-card-border);
+          background:   transparent;
+          color:        var(--ct-text-muted);
+        }
+        .ct-service-btn--active {
+          border-color: color-mix(in srgb, var(--ct-accent) 50%, transparent);
+          background:   var(--ct-accent-muted);
+          color:        var(--ct-accent);
+        }
+        .ct-service-icon {
+          background: var(--ct-card-border);
+        }
+        .ct-service-icon--active {
+          background: var(--ct-accent-muted);
+        }
+
+        /* ─── Trust strip ──────────────────────────────────────── */
+        .ct-trust-icon {
+          background:   var(--ct-accent-muted);
+          border: 1px solid color-mix(in srgb, var(--ct-accent) 20%, transparent);
+        }
+
+        /* ─── Email copy chip ──────────────────────────────────── */
+        .ct-email-chip {
+          border-color:    color-mix(in srgb, var(--ct-accent) 30%, transparent);
+          background:      color-mix(in srgb, var(--ct-accent) 10%, transparent);
+          color:           var(--ct-accent);
+          backdrop-filter: blur(8px);
+        }
+        .ct-copy-pill {
+          background: rgba(0,0,0,0.06);
+          color:      var(--ct-text-muted);
+        }
+        .dark .ct-copy-pill,
+        :is(.dark) .ct-copy-pill {
+          background: rgba(255,255,255,0.1);
+          color:      var(--ct-text-muted);
+        }
+        .ct-copy-pill--copied {
+          background: rgba(22,163,74,0.12);
+          color: #15803d;
+        }
+        .dark .ct-copy-pill--copied,
+        :is(.dark) .ct-copy-pill--copied {
+          background: rgba(34,197,94,0.2);
+          color: #86efac;
+        }
+
+        /* ─── GitHub link ──────────────────────────────────────── */
+        .ct-gh-link {
+          border-color:    var(--ct-card-border);
+          background:      rgba(0,0,0,0.05);
+          color:           var(--ct-text-muted);
+          backdrop-filter: blur(8px);
+        }
+        .dark .ct-gh-link,
+        :is(.dark) .ct-gh-link {
+          background: rgba(255,255,255,0.08);
+        }
+
+        /* ─── Scroll buttons ────────────────────────────────────  */
+        .ct-scroll-btn {
+          border-color:    var(--ct-card-border);
+          background:      rgba(0,0,0,0.05);
+          color:           var(--ct-accent);
+          backdrop-filter: blur(8px);
+        }
+        .dark .ct-scroll-btn,
+        :is(.dark) .ct-scroll-btn {
+          background: rgba(255,255,255,0.08);
+        }
+
+        /* ─── Availability badge ───────────────────────────────── */
+        .ct-avail-badge {
+          color:        var(--ct-accent);
+          border-color: var(--ct-accent-muted);
+          background:   var(--ct-accent-muted);
+        }
+        .ct-avail-dot {
+          background: var(--ct-accent);
+          box-shadow: 0 0 5px var(--ct-accent);
+        }
+
+        /* ─── Service pill (active indicator) ──────────────────── */
+        .ct-service-pill {
+          background:   var(--ct-accent-muted);
+          color:        var(--ct-accent);
+          border: 1px solid color-mix(in srgb, var(--ct-accent) 25%, transparent);
+        }
+
+        /* ─── Submit button disabled state ─────────────────────── */
+        .ct-submit-disabled {
+          background: rgba(0,0,0,0.08);
+          color:      var(--ct-text-muted);
+        }
+        .dark .ct-submit-disabled,
+        :is(.dark) .ct-submit-disabled {
+          background: rgba(255,255,255,0.1);
+        }
+      `}</style>
+
       {/* Grain */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -334,38 +484,18 @@ export default function Contact() {
         }}
       />
 
-      {/* Ambient glows */}
-      {[
-        { top: "-5%",  left: "-8%",  size: 700, opacity: isDark ? 0.06 : 0.18 },
-        { bottom: "-10%", right: "-5%", size: 600, opacity: isDark ? 0.05 : 0.14 },
-      ].map((g, i) => (
-        <div
-          key={i}
-          className="pointer-events-none absolute rounded-full"
-          style={{
-            ...g,
-            width: g.size,
-            height: g.size,
-            background: `radial-gradient(circle, rgba(14,165,233,${g.opacity}) 0%, transparent 70%)`,
-            filter: "blur(55px)",
-          }}
-        />
-      ))}
+      {/* Ambient glows — opacity from CSS vars, no isDark branching */}
+      <div className="ct-glow-1 pointer-events-none absolute rounded-full" aria-hidden />
+      <div className="ct-glow-2 pointer-events-none absolute rounded-full" aria-hidden />
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
 
-        {/* ══════════ HEADING ══════════ */}
+        {/* ══ HEADING ══ */}
         <div className="mb-14 md:mb-20">
 
           <motion.div {...fadeUp(0)}>
-            <span
-              className="mb-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] px-3.5 py-1.5 rounded-full border"
-              style={{ color: accent, borderColor: accentMuted, background: accentMuted }}
-            >
-              <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse"
-                style={{ background: accent, boxShadow: `0 0 5px ${accent}` }}
-              />
+            <span className="ct-avail-badge mb-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] px-3.5 py-1.5 rounded-full border">
+              <span className="ct-avail-dot w-1.5 h-1.5 rounded-full animate-pulse" />
               Available for new projects
             </span>
           </motion.div>
@@ -375,7 +505,7 @@ export default function Contact() {
             className={`${playfair.className} font-black leading-[0.9] tracking-tight mt-3`}
             style={{ fontSize: "clamp(2.9rem, 8.5vw, 7rem)" }}
           >
-            <span style={{ display: "block", color: textPrimary }}>Got an idea?</span>
+            <span className="ct-text-primary block">Got an idea?</span>
             <span
               style={{
                 display: "block",
@@ -386,17 +516,13 @@ export default function Contact() {
                 fontStyle: "italic",
               }}
             >
-              Let's ship it.
+              Let&apos;s ship it.
             </span>
           </motion.h2>
 
-          <motion.p
-            {...fadeUp(0.18)}
-            className="mt-5 max-w-lg text-base md:text-lg leading-relaxed"
-            style={{ color: textMuted }}
-          >
-            I'm Wahb — a full-stack developer who turns rough ideas into
-            production-ready products. Tell me what you're building.
+          <motion.p {...fadeUp(0.18)} className="ct-muted-text mt-5 max-w-lg text-base md:text-lg leading-relaxed">
+            I&apos;m Wahb — a full-stack developer who turns rough ideas into
+            production-ready products. Tell me what you&apos;re building.
           </motion.p>
 
           {/* Action row */}
@@ -407,13 +533,7 @@ export default function Contact() {
               type="button"
               onClick={copyEmail}
               aria-label={`Copy email ${CONTACT_EMAIL}`}
-              className="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 hover:scale-[1.02]"
-              style={{
-                borderColor: isDark ? "rgba(56,189,248,0.3)"  : "rgba(2,132,199,0.3)",
-                background:  isDark ? "rgba(56,189,248,0.1)" : "rgba(2,132,199,0.1)",
-                color:       isDark ? "#7dd3fc"               : "#0369a1",
-                backdropFilter: "blur(8px)",
-              }}
+              className="ct-email-chip group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 hover:scale-[1.02]"
             >
               <MdEmail className="w-4 h-4" />
               <span className="hidden sm:inline">{CONTACT_EMAIL}</span>
@@ -426,15 +546,7 @@ export default function Contact() {
                   animate={{ opacity: 1, scale: 1  }}
                   exit={{   opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.14 }}
-                  className="text-xs px-2 py-0.5 rounded-md"
-                  style={{
-                    background: copied
-                      ? isDark ? "rgba(34,197,94,0.2)"  : "rgba(22,163,74,0.12)"
-                      : isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)",
-                    color: copied
-                      ? isDark ? "#86efac" : "#15803d"
-                      : isDark ? "#cbd5e1" : "#475569",
-                  }}
+                  className={`text-xs px-2 py-0.5 rounded-md ${copied ? "ct-copy-pill--copied" : "ct-copy-pill"}`}
                   role="status"
                   aria-live="polite"
                 >
@@ -449,13 +561,7 @@ export default function Contact() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="inline-flex items-center justify-center w-10 h-10 rounded-xl border transition-all duration-200 hover:scale-105"
-              style={{
-                borderColor: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)",
-                background:  isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
-                color:       isDark ? "#cbd5e1" : "#475569",
-                backdropFilter: "blur(8px)",
-              }}
+              className="ct-gh-link inline-flex items-center justify-center w-10 h-10 rounded-xl border transition-all duration-200 hover:scale-105"
             >
               <SiGithub className="w-4 h-4" />
             </a>
@@ -478,18 +584,15 @@ export default function Contact() {
           </motion.div>
         </div>
 
-        {/* ══════════ GRID ══════════ */}
+        {/* ══ GRID ══ */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
 
           {/* ── LEFT ── */}
           <motion.div {...fadeUp(0.2)} className="lg:col-span-2 flex flex-col gap-5">
 
             {/* Service picker */}
-            <div
-              className="rounded-2xl border p-5"
-              style={{ background: cardBg, borderColor: cardBorder, backdropFilter: "blur(16px)" }}
-            >
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: textPrimary }}>
+            <div className="ct-card rounded-2xl border p-5">
+              <p className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                 What do you need?
               </p>
               <div className="flex flex-col gap-2">
@@ -504,31 +607,10 @@ export default function Contact() {
                       animate={inView ? { opacity: 1, x: 0 } : {}}
                       transition={{ duration: 0.4, delay: 0.24 + i * 0.06, ease }}
                       whileHover={{ x: 4 }}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium border transition-colors duration-150"
-                      style={{
-                        borderColor: active
-                          ? isDark ? "rgba(56,189,248,0.5)" : "rgba(2,132,199,0.4)"
-                          : isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
-                        background: active
-                          ? isDark ? "rgba(56,189,248,0.15)" : "rgba(14,165,233,0.1)"
-                          : "transparent",
-                        color: active
-                          ? isDark ? "#7dd3fc" : "#0369a1"
-                          : isDark ? "#94a3b8" : "#64748b",
-                      }}
+                      className={`ct-service-btn ${active ? "ct-service-btn--active" : ""} flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium border transition-colors duration-150`}
                     >
-                      <span
-                        className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-150"
-                        style={{
-                          background: active
-                            ? isDark ? "rgba(56,189,248,0.2)" : "rgba(14,165,233,0.15)"
-                            : isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-                        }}
-                      >
-                        <Icon
-                          className="w-3.5 h-3.5"
-                          style={{ color: active ? accent : isDark ? "#94a3b8" : "#64748b" }}
-                        />
+                      <span className={`${active ? "ct-service-icon--active" : "ct-service-icon"} w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-150`}>
+                        <Icon className={`w-3.5 h-3.5 ${active ? "ct-accent-text" : "ct-muted-text"}`} />
                       </span>
                       <span className="flex-1">{label}</span>
                       {active && (
@@ -536,7 +618,7 @@ export default function Contact() {
                           layoutId="service-tick"
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          style={{ color: accent }}
+                          className="ct-accent-text"
                         >
                           <Check className="w-3.5 h-3.5" />
                         </motion.span>
@@ -548,11 +630,8 @@ export default function Contact() {
             </div>
 
             {/* Trust strip */}
-            <div
-              className="rounded-2xl border p-5"
-              style={{ background: cardBg, borderColor: cardBorder, backdropFilter: "blur(16px)" }}
-            >
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: textPrimary }}>
+            <div className="ct-card rounded-2xl border p-5">
+              <p className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                 Working with me
               </p>
               <div className="space-y-3">
@@ -564,16 +643,10 @@ export default function Contact() {
                     transition={{ duration: 0.4, delay: 0.32 + i * 0.07, ease }}
                     className="flex items-center gap-3"
                   >
-                    <span
-                      className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{
-                        background: accentMuted,
-                        border: `1px solid ${isDark ? "rgba(56,189,248,0.2)" : "rgba(2,132,199,0.2)"}`,
-                      }}
-                    >
-                      <TIcon className="w-4 h-4" style={{ color: accent }} />
+                    <span className="ct-trust-icon w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <TIcon className="w-4 h-4 ct-accent-text" />
                     </span>
-                    <span className="text-sm font-medium" style={{ color: textMuted }}>{text}</span>
+                    <span className="ct-muted-text text-sm font-medium">{text}</span>
                   </motion.div>
                 ))}
               </div>
@@ -582,18 +655,9 @@ export default function Contact() {
 
           {/* ── RIGHT: FORM ── */}
           <motion.div {...fadeUp(0.3)} className="lg:col-span-3">
-            <div
-              className="rounded-2xl border relative overflow-hidden"
-              style={{
-                background:    cardBg,
-                borderColor:   cardBorder,
-                backdropFilter: "blur(20px)",
-                boxShadow: isDark
-                  ? "0 24px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)"
-                  : "0 20px 60px rgba(14,165,233,0.12), inset 0 1px 0 rgba(255,255,255,0.95)",
-              }}
-            >
-              {/* Top shimmer bar */}
+            <div className="ct-form-card rounded-2xl border relative overflow-hidden">
+
+              {/* Top shimmer — fixed colour, no isDark branching */}
               <div
                 className="absolute top-0 left-0 right-0 h-px"
                 style={{
@@ -614,77 +678,73 @@ export default function Contact() {
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {/* Form title */}
                     <div>
-                      <h3
-                        className={`${playfair.className} text-2xl md:text-3xl font-bold leading-snug`}
-                        style={{ color: textPrimary }}
-                      >
+                      <h3 className={`${playfair.className} ct-text-primary text-2xl md:text-3xl font-bold leading-snug`}>
                         Tell me about your project
                         <span style={{ color: "#0ea5e9" }}>.</span>
                       </h3>
-                      <p className="mt-1.5 text-sm" style={{ color: textMuted }}>
-                        All fields optional except name & email.
+                      <p className="ct-muted-text mt-1.5 text-sm">
+                        All fields optional except name &amp; email.
                       </p>
                     </div>
 
                     {/* Name */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: textPrimary }} htmlFor="name">
+                      <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="name">
                         Your name
                       </label>
                       <IconInput
                         id="name" type="text" name="name" required
                         placeholder="e.g. Alex Johnson"
                         value={formData.name} onChange={handleChange}
-                        isDark={isDark} icon={<User className="w-4 h-4" />}
+                        icon={<User className="w-4 h-4" />}
                       />
                     </div>
 
                     {/* Email */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: textPrimary }} htmlFor="email">
+                      <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="email">
                         Your email
                       </label>
                       <IconInput
                         id="email" type="email" name="email" required
                         placeholder="you@company.com"
                         value={formData.email} onChange={handleChange}
-                        isDark={isDark} icon={<AtSign className="w-4 h-4" />}
+                        icon={<AtSign className="w-4 h-4" />}
                       />
                     </div>
 
                     {/* Budget + Timeline */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: textPrimary }} htmlFor="budget">
+                        <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="budget">
                           Budget
                         </label>
                         <CustomSelect
                           id="budget" value={formData.budget}
                           options={BUDGET_OPTIONS}
                           onChange={(val) => setFormData((p) => ({ ...p, budget: val }))}
-                          isDark={isDark} icon={<DollarSign className="w-4 h-4" />}
+                          icon={<DollarSign className="w-4 h-4" />}
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: textPrimary }} htmlFor="timeline">
+                        <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="timeline">
                           Timeline
                         </label>
                         <CustomSelect
                           id="timeline" value={formData.timeline}
                           options={TIMELINE_OPTIONS}
                           onChange={(val) => setFormData((p) => ({ ...p, timeline: val }))}
-                          isDark={isDark} icon={<CalendarClock className="w-4 h-4" />}
+                          icon={<CalendarClock className="w-4 h-4" />}
                         />
                       </div>
                     </div>
 
                     {/* Message */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: textPrimary }} htmlFor="message">
+                      <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="message">
                         Project details{" "}
-                        <span style={{ textTransform: "none", letterSpacing: 0, color: textMuted }}>
+                        <span className="ct-muted-text" style={{ textTransform: "none", letterSpacing: 0 }}>
                           (optional)
                         </span>
                       </label>
@@ -692,15 +752,13 @@ export default function Contact() {
                         id="message" name="message" rows={4}
                         placeholder="What are you building? Any tech preferences? What's the main goal?"
                         value={formData.message} onChange={handleChange}
-                        isDark={isDark} icon={<MessageSquare className="w-4 h-4" />}
+                        icon={<MessageSquare className="w-4 h-4" />}
                       />
                     </div>
 
                     {/* Active service pill */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-medium" style={{ color: textMuted }}>
-                        Service:
-                      </span>
+                      <span className="ct-muted-text text-xs font-medium">Service:</span>
                       <AnimatePresence mode="wait">
                         <motion.span
                           key={selectedService}
@@ -708,12 +766,7 @@ export default function Contact() {
                           animate={{ opacity: 1, scale: 1   }}
                           exit={{   opacity: 0, scale: 0.85 }}
                           transition={{ duration: 0.2 }}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
-                          style={{
-                            background: accentMuted,
-                            color: accent,
-                            border: `1px solid ${isDark ? "rgba(56,189,248,0.25)" : "rgba(2,132,199,0.25)"}`,
-                          }}
+                          className="ct-service-pill inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
                         >
                           {React.createElement(
                             SERVICES.find((s) => s.value === selectedService)?.icon ?? Globe,
@@ -724,17 +777,15 @@ export default function Contact() {
                       </AnimatePresence>
                     </div>
 
-                    {/* Submit button */}
+                    {/* Submit */}
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="group relative w-full py-4 rounded-xl font-bold text-sm overflow-hidden transition-all duration-300 hover:scale-[1.015] active:scale-[0.99]"
-                      style={{
-                        background: isSubmitting
-                          ? isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"
-                          : "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
-                        color: isSubmitting ? textMuted : "#fff",
-                        boxShadow: isSubmitting ? "none" : "0 8px 28px rgba(14,165,233,0.38)",
+                      className={`group relative w-full py-4 rounded-xl font-bold text-sm overflow-hidden transition-all duration-300 hover:scale-[1.015] active:scale-[0.99] ${isSubmitting ? "ct-submit-disabled" : ""}`}
+                      style={isSubmitting ? {} : {
+                        background: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
+                        color: "#fff",
+                        boxShadow: "0 8px 28px rgba(14,165,233,0.38)",
                       }}
                     >
                       {!isSubmitting && (
@@ -777,7 +828,6 @@ export default function Contact() {
                     </AnimatePresence>
                   </motion.form>
                 ) : (
-                  /* ── Success ── */
                   <motion.div
                     key="success"
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -801,18 +851,17 @@ export default function Contact() {
                     </motion.div>
 
                     <div>
-                      <h3 className={`${playfair.className} text-2xl font-bold mb-2`} style={{ color: textPrimary }}>
+                      <h3 className={`${playfair.className} ct-text-primary text-2xl font-bold mb-2`}>
                         Message sent!
                       </h3>
-                      <p style={{ color: textMuted }}>
-                        Thanks{formData.name ? `, ${formData.name}` : ""}. I'll reply within 24 hours.
+                      <p className="ct-muted-text">
+                        Thanks{formData.name ? `, ${formData.name}` : ""}. I&apos;ll reply within 24 hours.
                       </p>
                     </div>
 
                     <button
                       onClick={() => setStatus("idle")}
-                      className="text-sm underline underline-offset-2 font-medium"
-                      style={{ color: accent }}
+                      className="ct-accent-text text-sm underline underline-offset-2 font-medium"
                     >
                       Send another message
                     </button>
@@ -826,20 +875,14 @@ export default function Contact() {
         {/* Scroll nav */}
         <div className="flex justify-center gap-4 mt-16">
           {[
-            { id: "about", Icon: ChevronUpIcon,   label: "Scroll Up",   extra: "" },
+            { id: "about", Icon: ChevronUpIcon,   label: "Scroll Up",   extra: ""              },
             { id: "faq",   Icon: ChevronDownIcon, label: "Scroll Down", extra: "animate-bounce" },
           ].map(({ id, Icon, label, extra }) => (
             <button
               key={id}
               onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
               aria-label={label}
-              className={`hover:scale-110 transition-transform p-2.5 rounded-full border ${extra}`}
-              style={{
-                borderColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)",
-                background:  isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
-                color: accent,
-                backdropFilter: "blur(8px)",
-              }}
+              className={`ct-scroll-btn hover:scale-110 transition-transform p-2.5 rounded-full border ${extra}`}
             >
               <Icon className="w-5 h-5" />
             </button>

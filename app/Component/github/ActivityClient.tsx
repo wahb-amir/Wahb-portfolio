@@ -1,17 +1,5 @@
 "use client";
 
-// ─── ActivityClient ───────────────────────────────────────────────────────────
-// TBT strategy:
-//  • Component is imported with ssr:false at the call-site → zero SSR cost
-//  • Hydration is gated behind IntersectionObserver → main thread stays free
-//    until the card is actually close to the viewport
-//  • react-activity-calendar loaded in a second dynamic() chunk → its ~40 kB
-//    parse is deferred further behind user-visible data arriving
-//  • Fetch runs inside requestIdleCallback → never races with hydration
-//  • startTransition on every setState from fetch → non-blocking state updates
-//  • Tooltip is its own tiny island so calendar re-renders never cascade to it
-//  • useCallback/useMemo on everything that flows to child props
-
 import {
   useCallback,
   useEffect,
@@ -301,7 +289,6 @@ export default function ActivityClient() {
           data.length > 0 ? (
             <CalendarDesktop
               data={processedData}
-              isDark={isDark}
               onMouseEnter={onEnter}
               onMouseMove={onMove}
               onMouseLeave={hide}

@@ -13,7 +13,10 @@ import { CALENDAR_THEME } from "./config";
 
 interface Props {
   data: DayItem[];
-  isDark: boolean;
+  // isDark removed — ActivityCalendar handles theme switching internally
+  // via the `theme` prop (both light/dark variants are always provided).
+  // Passing colorScheme from a JS isDark value would re-introduce a
+  // hydration mismatch on every parent re-render.
   onMouseEnter: (e: React.MouseEvent, date: string, count: number) => void;
   onMouseMove:  (e: React.MouseEvent, date: string, count: number) => void;
   onMouseLeave: () => void;
@@ -22,7 +25,6 @@ interface Props {
 
 export default function CalendarDesktop({
   data,
-  isDark,
   onMouseEnter,
   onMouseMove,
   onMouseLeave,
@@ -42,7 +44,7 @@ export default function CalendarDesktop({
           data={data}
           theme={{
             light: [...CALENDAR_THEME.light],
-            dark: [...CALENDAR_THEME.dark],
+            dark:  [...CALENDAR_THEME.dark],
           }}
           maxLevel={4}
           blockSize={12}

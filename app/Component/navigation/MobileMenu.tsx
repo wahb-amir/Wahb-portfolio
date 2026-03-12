@@ -92,8 +92,8 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
               y: 0,
               // framer-motion interpolates backgroundColor, unlike Tailwind dark: which snaps
               backgroundColor: isDark
-                ? "rgba(2, 6, 23, 0.97)"     // slate-950
-                : "rgba(255, 255, 255, 0.97)",
+                ? "rgba(2, 6, 23)"     // slate-950
+                : "rgba(255, 255, 255)",
             }}
             exit={{ opacity: 0, y: -40 }}
             transition={{

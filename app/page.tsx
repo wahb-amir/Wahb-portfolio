@@ -16,35 +16,33 @@ function SectionSkeleton({ height = 400 }: { height?: number }) {
   );
 }
 
+const SkillsServer = dynamic(() => import("./Component/skills/SkillServer"), {
+  loading: () => <SectionSkeleton height={320} />,
+});
 
+const ProjectServer = dynamic(
+  () => import("./Component/projects/ProjectServer"),
+  {
+    loading: () => <SectionSkeleton height={600} />,
+  },
+);
 
-// const SkillsServer = dynamic(() => import("./Component/skills/SkillServer"), {
-//   loading: () => <SectionSkeleton height={320} />,
-// });
+const AboutServer = dynamic(() => import("./Component/about/AboutServer"), {
+  loading: () => <SectionSkeleton height={400} />,
+});
 
-// const ProjectServer = dynamic(
-//   () => import("./Component/projects/ProjectServer"),
-//   {
-//     loading: () => <SectionSkeleton height={600} />,
-//   },
-// );
+const ContactForm = dynamic(() => import("./Component/contact/Contact"), {
+  ssr: true,
+  loading: () => <SectionSkeleton height={480} />,
+});
 
-// const AboutServer = dynamic(() => import("./Component/about/AboutServer"), {
-//   loading: () => <SectionSkeleton height={400} />,
-// });
+const FAQ = dynamic(() => import("./Component/faq/FAQ"), {
+  loading: () => <SectionSkeleton height={320} />,
+});
 
-// const ContactForm = dynamic(() => import("./Component/contact/Contact"), {
-//   ssr: true,
-//   loading: () => <SectionSkeleton height={480} />,
-// });
-
-// const FAQ = dynamic(() => import("./Component/faq/FAQ"), {
-//   loading: () => <SectionSkeleton height={320} />,
-// });
-
-// const Footer = dynamic(() => import("./Component/footer/Footer"), {
-//   loading: () => <SectionSkeleton height={120} />,
-// });
+const Footer = dynamic(() => import("./Component/footer/Footer"), {
+  loading: () => <SectionSkeleton height={120} />,
+});
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
@@ -52,7 +50,7 @@ export default function Home() {
     <Suspense fallback={null}>
       <main>
         <Hero />
-        {/* <Suspense fallback={<SectionSkeleton height={320} />}>
+        <Suspense fallback={<SectionSkeleton height={320} />}>
           <SkillsServer />
         </Suspense>
         <Suspense fallback={<SectionSkeleton height={600} />}>
@@ -70,15 +68,13 @@ export default function Home() {
         <Suspense fallback={<SectionSkeleton height={320} />}>
           <FAQ />
         </Suspense>
-        */}
-        </main>
-        
-        {/* <footer className="h-fit overflow-hidden">
-       <Suspense fallback={<SectionSkeleton height={120} />}>
-         <Footer />
-         </Suspense>
-         </footer>  */}
-        
+      </main>
+
+      <footer className="h-fit overflow-hidden">
+        <Suspense fallback={<SectionSkeleton height={120} />}>
+          <Footer />
+        </Suspense>
+      </footer>
     </Suspense>
   );
 }
