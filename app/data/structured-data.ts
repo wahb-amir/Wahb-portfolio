@@ -54,6 +54,67 @@ const faqEntries = [
   },
 ];
 
+// ─── Projects ────────────────────────────────────────────────────────────────
+// Single source of truth — referenced by ItemList and individual SoftwareApplication nodes.
+// Adding a project: add one entry here; the rest of the graph is generated automatically.
+const projects = [
+  {
+    id: "https://wahb.space/#project-ecolens",
+    name: "EcoLens — AI Waste Classifier",
+    url: "https://eco.wahb.space",
+    description:
+      "AI-powered waste classifier that identifies materials from a photo, estimates CO₂/water/energy impact, and gamifies recycling with badges and a global leaderboard. Placed 3rd at Hack for Humanity 2026 (474 participants, solo build).",
+    applicationCategory: "WebApplication",
+    programmingLanguage: ["TypeScript", "Python"],
+    softwareRequirements: [
+      "Next.js",
+      "React",
+      "MongoDB",
+      "HuggingFace",
+      "Framer Motion",
+      "Tailwind CSS",
+      "JWT",
+      "Nodemailer",
+    ],
+    sameAs: ["https://github.com/wahb-amir/ecolens"],
+    datePublished: "2026-03-01",
+  },
+  {
+    id: "https://wahb.space/#project-dev-dashboard",
+    name: "Client & Developer Collaboration Platform",
+    url: "https://dashboard.wahb.space",
+    description:
+      "A unified workspace where clients request quotes, track progress, message developers, and see real-time updates with GitHub automation.",
+    applicationCategory: "WebApplication",
+    programmingLanguage: ["JavaScript", "TypeScript", "Node.js"],
+    softwareRequirements: [
+      "Next.js",
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Tailwind CSS",
+      "GitHub API",
+    ],
+    sameAs: [
+      "https://github.com/wahb-amir/dev-dashboard",
+      "https://github.com/wahb-amir/dashboard",
+    ],
+    datePublished: "2025-10-01",
+  },
+  {
+    id: "https://wahb.space/#project-ecom",
+    name: "Modern Online Store",
+    url: "https://boltform.wahb.space",
+    description:
+      "Demo e-commerce store with secure checkout, admin view and performance optimizations — demonstrates full checkout funnel and Stripe integration.",
+    applicationCategory: "ECommercePlatform",
+    programmingLanguage: ["JavaScript", "Node.js"],
+    softwareRequirements: ["Next.js", "Stripe", "Tailwind CSS", "MongoDB"],
+    sameAs: ["https://github.com/wahb-amir/Boltform"],
+    datePublished: "2025-10-01",
+  },
+];
+
 // ─── Full @graph ─────────────────────────────────────────────────────────────
 export const structuredData = {
   "@context": "https://schema.org",
@@ -81,6 +142,7 @@ export const structuredData = {
         "API development",
         "AI integration",
         "Machine learning",
+        "Computer vision",
         "Performance optimization",
         "DevOps basics",
         "SEO",
@@ -156,8 +218,6 @@ export const structuredData = {
     },
 
     // ── FAQPage ──────────────────────────────────────────────────────────────
-    // Google surfaces up to ~10 FAQ rich results per page.
-    // Order is preserved from faqList in FAQ.tsx (keep the two in sync).
     {
       "@type": "FAQPage",
       "@id": "https://wahb.space/#faq",
@@ -173,81 +233,43 @@ export const structuredData = {
       })),
     },
 
-    // ── Projects list ────────────────────────────────────────────────────────
+    // ── Projects ItemList ─────────────────────────────────────────────────────
+    // Generated from the projects array above — single source of truth.
     {
       "@type": "ItemList",
       "@id": "https://wahb.space/#projects",
       name: "Projects — Wahb Amir",
       url: "https://wahb.space/#projects",
-      numberOfItems: 2,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          item: { "@id": "https://wahb.space/#project-dev-dashboard" },
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          item: { "@id": "https://wahb.space/#project-ecom" },
-        },
-      ],
+      numberOfItems: projects.length,
+      itemListElement: projects.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: { "@id": p.id },
+      })),
     },
 
-    // ── Project: Client & Developer Collaboration Platform ───────────────────
-    // FIX: URL corrected from projects.buttnetworks.com → dashboard.wahb.space
-    {
+    // ── SoftwareApplication nodes — one per project, no duplicates ────────────
+    ...projects.map((p) => ({
       "@type": "SoftwareApplication",
-      "@id": "https://wahb.space/#project-dev-dashboard",
-      name: "Client & Developer Collaboration Platform",
-      url: "https://dashboard.wahb.space",
-      description:
-        "A unified workspace where clients request quotes, track progress, message developers, and see real-time updates with GitHub automation.",
-      applicationCategory: "WebApplication",
+      "@id": p.id,
+      name: p.name,
+      url: p.url,
+      description: p.description,
+      applicationCategory: p.applicationCategory,
       operatingSystem: "Web",
-      programmingLanguage: ["JavaScript", "TypeScript", "Node.js"],
-      softwareRequirements: [
-        "Next.js",
-        "React",
-        "Node.js",
-        "MongoDB",
-        "Tailwind CSS",
-        "GitHub API",
-      ],
+      programmingLanguage: p.programmingLanguage,
+      softwareRequirements: p.softwareRequirements,
       author: { "@id": "https://wahb.space/#person" },
-      sameAs: [
-        "https://github.com/wahb-amir/dev-dashboard",
-        "https://github.com/wahb-amir/dashboard",
-      ],
-      datePublished: "2025-10-01",
-    },
+      sameAs: p.sameAs,
+      datePublished: p.datePublished,
+    })),
 
-    {
-      "@type": "SoftwareApplication",
-      "@id": "https://wahb.space/#project-ecom",
-      name: "Modern Online Store",
-      url: "https://boltform.wahb.space",
-      description:
-        "Demo e-commerce store with secure checkout, admin view and performance optimizations — demonstrates full checkout funnel and Stripe integration.",
-      applicationCategory: "ECommercePlatform",
-      operatingSystem: "Web",
-      programmingLanguage: ["JavaScript", "Node.js"],
-      softwareRequirements: ["Next.js", "Stripe", "Tailwind CSS", "MongoDB"],
-      author: { "@id": "https://wahb.space/#person" },
-      sameAs: ["https://github.com/wahb-amir/Boltform"],
-      datePublished: "2025-12-10",
-    },
-
-    // ── Source code ──────────────────────────────────────────────────────────
+    // ── SoftwareSourceCode ───────────────────────────────────────────────────
     {
       "@type": "SoftwareSourceCode",
       "@id": "https://wahb.space/#code",
       name: "Selected source code — Wahb Amir",
-      codeRepository: [
-        "https://github.com/wahb-amir/dashboard",
-        "https://github.com/wahb-amir/Boltform",
-        "https://github.com/wahb-amir/Wahb-portfolio",
-      ],
+      codeRepository: projects.flatMap((p) => p.sameAs),
       creator: { "@id": "https://wahb.space/#person" },
     },
 
@@ -272,13 +294,7 @@ export const structuredData = {
       areaServed: "Worldwide",
       description:
         "Pixel-perfect responsive frontends, component-driven UI, animations and accessibility with React, Next.js and Tailwind CSS.",
-      keywords: [
-        "React",
-        "Next.js",
-        "Tailwind",
-        "Framer Motion",
-        "Accessibility",
-      ],
+      keywords: ["React", "Next.js", "Tailwind", "Framer Motion", "Accessibility"],
     },
     {
       "@type": "Service",
@@ -311,13 +327,7 @@ export const structuredData = {
       areaServed: "Worldwide",
       description:
         "Technical SEO, structured data (JSON-LD), site performance optimization, CLS/LCP improvements and search engine indexability auditing.",
-      keywords: [
-        "SEO",
-        "structured data",
-        "performance",
-        "Lighthouse",
-        "indexability",
-      ],
+      keywords: ["SEO", "structured data", "performance", "Lighthouse", "indexability"],
     },
     {
       "@type": "Service",
