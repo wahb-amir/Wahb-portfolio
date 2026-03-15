@@ -9,11 +9,12 @@ declare global {
 let redisInstance: Redis;
 
 if (!global.redis) {
-  const redisUrl = "redis://default:qq7sQ2nUvADuOuC8R10hWLtjBgy4u0bn@redis-18224.c263.us-east-1-2.ec2.cloud.redislabs.com:18224";
+  const redisUrl =
+    "redis://default:qq7sQ2nUvADuOuC8R10hWLtjBgy4u0bn@redis-18224.c263.us-east-1-2.ec2.cloud.redislabs.com:18224";
   global.redis = new Redis(redisUrl);
   global.redis.on("connect", () => console.log("Redis connected"));
   global.redis.on("error", (err) =>
-    console.error(`Redis error: ${redisUrl}`, err)
+    console.error(`Redis error: ${redisUrl}`, err),
   );
 }
 
@@ -37,7 +38,7 @@ export async function clearProjectCache(redisClient = redisInstance) {
 export async function clearAboutCache(redisClient = redisInstance) {
   if (!redisClient) {
     console.warn(
-      "clearAboutCache: Redis client not available — skipping cache clear."
+      "clearAboutCache: Redis client not available — skipping cache clear.",
     );
     return {
       success: false,
@@ -62,9 +63,9 @@ export async function clearAboutCache(redisClient = redisInstance) {
     };
   }
 }
-(async()=>{
- await clearProjectCache();
- await clearAboutCache();
-  console.log("cleared")
-})()
+(async () => {
+  await clearProjectCache();
+  await clearAboutCache();
+  console.log("cleared");
+})();
 export default redisInstance;

@@ -250,7 +250,6 @@
 //   } catch (err) {
 //     console.error("projectsService: DB read failed:", err);
 
-    
 //     const fallbackPayload: ProjectsPayload = {
 //       version: null,
 //       data: staticProjects,
@@ -260,7 +259,7 @@
 //   }
 // }
 
-// removing redis db logic for now shifted back to static content 
+// removing redis db logic for now shifted back to static content
 /**
  * projectsService.ts
  *
@@ -274,7 +273,7 @@
  *      intentionally kept identical so call sites need zero changes.
  */
 
-import projects from '@/app/data/projects.json'
+import projects from "@/app/data/projects.json";
 
 export type Project = (typeof projects)[number];
 
@@ -294,7 +293,7 @@ export async function getLatestProjectsPayload(options?: {
   const { clientVersion = null } = options ?? {};
 
   const payload: ProjectsPayload = {
-    version: null,          // no versioning in static mode
+    version: null, // no versioning in static mode
     data: projects as Project[],
   };
 

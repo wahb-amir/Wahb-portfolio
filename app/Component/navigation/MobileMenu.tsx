@@ -20,24 +20,31 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import type { NavItem } from "./navConfig";
 
 const ICON_MAP: Record<string, IconDefinition> = {
-  skills:            faCode,
+  skills: faCode,
   "project-section": faBriefcase,
-  about:             faUser,
-  contact:           faEnvelope,
-  faq:               faQuestion,
+  about: faUser,
+  contact: faEnvelope,
+  faq: faQuestion,
 };
 
 interface Props {
-  navItems:  NavItem[];
+  navItems: NavItem[];
   githubUrl: string;
-  isOpen:    boolean;
-  onToggle:  () => void;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 const scrollTo = (id: string) =>
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Props) {
+export default function MobileMenu({
+  navItems,
+  githubUrl,
+  isOpen,
+  onToggle,
+}: Props) {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -49,9 +56,11 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
 
   // Per-bar animation targets
   const barAnims = [
-    isOpen ? { rotate: 45,  y: 8,  opacity: 1 } : { rotate: 0, y: 0, opacity: 1 },
-    isOpen ? { opacity: 0,  x: -10            } : { opacity: 1, x: 0            },
-    isOpen ? { rotate: -45, y: -8, opacity: 1 } : { rotate: 0, y: 0, opacity: 1 },
+    isOpen ? { rotate: 45, y: 8, opacity: 1 } : { rotate: 0, y: 0, opacity: 1 },
+    isOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 },
+    isOpen
+      ? { rotate: -45, y: -8, opacity: 1 }
+      : { rotate: 0, y: 0, opacity: 1 },
   ];
 
   return (
@@ -92,7 +101,7 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
               y: 0,
               // framer-motion interpolates backgroundColor, unlike Tailwind dark: which snaps
               backgroundColor: isDark
-                ? "rgba(2, 6, 23)"     // slate-950
+                ? "rgba(2, 6, 23)" // slate-950
                 : "rgba(255, 255, 255)",
             }}
             exit={{ opacity: 0, y: -40 }}
@@ -105,7 +114,6 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
             className="fixed inset-x-0 top-0 z-40 md:hidden backdrop-blur-2xl pt-28 pb-10 px-6 overflow-y-auto"
           >
             <div className="flex flex-col gap-3 max-w-sm mx-auto">
-
               {/* Nav items */}
               {navItems.map((item, idx) => (
                 <motion.button
@@ -113,7 +121,10 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  onClick={() => { scrollTo(item.id); onToggle(); }}
+                  onClick={() => {
+                    scrollTo(item.id);
+                    onToggle();
+                  }}
                   className="flex items-center gap-4 p-5 rounded-2xl text-lg font-bold shadow-sm
                              transition-colors duration-300
                              bg-slate-100 dark:bg-white/5
@@ -127,11 +138,12 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
 
               {/* Action row */}
               <div className="grid grid-cols-2 gap-3 mt-4">
-
                 {/* Theme toggle — icon cross-fades on switch */}
                 <button
                   onClick={toggleTheme}
-                  aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                  aria-label={
+                    isDark ? "Switch to light mode" : "Switch to dark mode"
+                  }
                   className="flex items-center justify-center gap-2 p-5 rounded-2xl font-bold shadow-sm
                              transition-colors duration-300
                              bg-slate-100 dark:bg-white/5
@@ -141,8 +153,8 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
                     <motion.span
                       key={isDark ? "sun" : "moon"}
                       initial={{ opacity: 0, rotate: -30, scale: 0.6 }}
-                      animate={{ opacity: 1, rotate: 0,   scale: 1   }}
-                      exit={{    opacity: 0, rotate:  30, scale: 0.6 }}
+                      animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                      exit={{ opacity: 0, rotate: 30, scale: 0.6 }}
                       transition={{ duration: 0.2, ease: "easeInOut" }}
                       className="inline-flex"
                     >
@@ -165,7 +177,6 @@ export default function MobileMenu({ navItems, githubUrl, isOpen, onToggle }: Pr
                   <span>GitHub</span>
                 </a>
               </div>
-
             </div>
           </motion.div>
         )}

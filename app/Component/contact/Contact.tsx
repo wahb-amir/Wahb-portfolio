@@ -32,52 +32,76 @@ import {
   cubicBezier,
 } from "framer-motion";
 import {
-  ChevronDownIcon, ChevronUpIcon, ArrowUpRight,
-  Sparkles, Code2, Globe, ShoppingCart, Wrench,
-  Zap, Clock, Layers, ShieldCheck, Check,
-  ChevronsUpDown, DollarSign, CalendarClock,
-  User, AtSign, MessageSquare,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ArrowUpRight,
+  Sparkles,
+  Code2,
+  Globe,
+  ShoppingCart,
+  Wrench,
+  Zap,
+  Clock,
+  Layers,
+  ShieldCheck,
+  Check,
+  ChevronsUpDown,
+  DollarSign,
+  CalendarClock,
+  User,
+  AtSign,
+  MessageSquare,
 } from "lucide-react";
 
-const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400","600","700","800","900"] });
-const dmSans   = DM_Sans({ subsets: ["latin"] });
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "800", "900"],
+});
+const dmSans = DM_Sans({ subsets: ["latin"] });
 
 const CONTACT_EMAIL = "wahbamir2010@gmail.com";
 const CLIENT_PORTAL = "https://dashboard.wahb.space";
-const CLIENT_QUOTE  = `${CLIENT_PORTAL}#request-quote`;
+const CLIENT_QUOTE = `${CLIENT_PORTAL}#request-quote`;
 
 const SERVICES = [
-  { value: "Full-Stack Web Application", label: "Full-Stack Web App", icon: Globe        },
-  { value: "Backend Development",        label: "Backend & APIs",     icon: Code2        },
-  { value: "SEO Optimization",           label: "SEO & Performance",  icon: Sparkles     },
-  { value: "E-commerce Store",           label: "E-commerce Store",   icon: ShoppingCart },
-  { value: "Custom Web Solution",        label: "Custom Solution",    icon: Wrench       },
+  {
+    value: "Full-Stack Web Application",
+    label: "Full-Stack Web App",
+    icon: Globe,
+  },
+  { value: "Backend Development", label: "Backend & APIs", icon: Code2 },
+  { value: "SEO Optimization", label: "SEO & Performance", icon: Sparkles },
+  { value: "E-commerce Store", label: "E-commerce Store", icon: ShoppingCart },
+  { value: "Custom Web Solution", label: "Custom Solution", icon: Wrench },
 ];
 
 const BUDGET_OPTIONS = [
-  { value: "under-1k", label: "Under $1,000"   },
-  { value: "1k-3k",    label: "$1,000 – $3,000" },
-  { value: "3k-8k",    label: "$3,000 – $8,000" },
-  { value: "8k-plus",  label: "$8,000+"          },
-  { value: "not-sure", label: "Not sure yet"     },
+  { value: "under-1k", label: "Under $1,000" },
+  { value: "1k-3k", label: "$1,000 – $3,000" },
+  { value: "3k-8k", label: "$3,000 – $8,000" },
+  { value: "8k-plus", label: "$8,000+" },
+  { value: "not-sure", label: "Not sure yet" },
 ];
 
 const TIMELINE_OPTIONS = [
-  { value: "asap",       label: "ASAP"           },
-  { value: "1-month",    label: "Within 1 month" },
-  { value: "1-3-months", label: "1–3 months"     },
-  { value: "flexible",   label: "Flexible"       },
+  { value: "asap", label: "ASAP" },
+  { value: "1-month", label: "Within 1 month" },
+  { value: "1-3-months", label: "1–3 months" },
+  { value: "flexible", label: "Flexible" },
 ];
 
 const TRUST_ITEMS = [
-  { icon: Zap,         text: "Reply within 24 hours"               },
-  { icon: Clock,       text: "MVPs shipped in weeks, not months"    },
-  { icon: Layers,      text: "Full ownership from design to deploy" },
-  { icon: ShieldCheck, text: "Clean code, tested & maintainable"   },
+  { icon: Zap, text: "Reply within 24 hours" },
+  { icon: Clock, text: "MVPs shipped in weeks, not months" },
+  { icon: Layers, text: "Full ownership from design to deploy" },
+  { icon: ShieldCheck, text: "Clean code, tested & maintainable" },
 ];
 
 /* ─── CSS-var-aware Custom Select ─────────────────────────────── */
-interface SelectOption { value: string; label: string }
+interface SelectOption {
+  value: string;
+  label: string;
+}
 
 const CustomSelect: React.FC<{
   id: string;
@@ -91,7 +115,8 @@ const CustomSelect: React.FC<{
 
   useEffect(() => {
     const h = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
@@ -106,8 +131,12 @@ const CustomSelect: React.FC<{
         onClick={() => setOpen((v) => !v)}
         className={`ct-select-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium border transition-all duration-200 ${open ? "ct-select-btn--open" : ""}`}
       >
-        <span className="ct-accent-text" style={{ flexShrink: 0 }}>{icon}</span>
-        <span className="flex-1 text-left truncate ct-text-primary">{selected?.label ?? "Select…"}</span>
+        <span className="ct-accent-text" style={{ flexShrink: 0 }}>
+          {icon}
+        </span>
+        <span className="flex-1 text-left truncate ct-text-primary">
+          {selected?.label ?? "Select…"}
+        </span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
@@ -122,8 +151,8 @@ const CustomSelect: React.FC<{
         {open && (
           <motion.ul
             initial={{ opacity: 0, y: -6, scaleY: 0.96 }}
-            animate={{ opacity: 1, y: 0,  scaleY: 1    }}
-            exit={{    opacity: 0, y: -4,  scaleY: 0.96 }}
+            animate={{ opacity: 1, y: 0, scaleY: 1 }}
+            exit={{ opacity: 0, y: -4, scaleY: 0.96 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             className="ct-dropdown absolute z-50 left-0 right-0 mt-1.5 rounded-xl border overflow-hidden py-1 shadow-xl"
             style={{ transformOrigin: "top" }}
@@ -134,11 +163,16 @@ const CustomSelect: React.FC<{
                 <li key={opt.value}>
                   <button
                     type="button"
-                    onClick={() => { onChange(opt.value); setOpen(false); }}
+                    onClick={() => {
+                      onChange(opt.value);
+                      setOpen(false);
+                    }}
                     className={`ct-dropdown-item w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors duration-100 ${isActive ? "ct-dropdown-item--active" : ""}`}
                   >
                     <span className="font-medium">{opt.label}</span>
-                    {isActive && <Check className="w-3.5 h-3.5 ct-accent-text" />}
+                    {isActive && (
+                      <Check className="w-3.5 h-3.5 ct-accent-text" />
+                    )}
                   </button>
                 </li>
               );
@@ -151,19 +185,30 @@ const CustomSelect: React.FC<{
 };
 
 /* ─── Icon Input ──────────────────────────────────────────────── */
-const IconInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { icon: React.ReactNode }> = ({
-  icon, ...props
-}) => {
+const IconInput: React.FC<
+  React.InputHTMLAttributes<HTMLInputElement> & { icon: React.ReactNode }
+> = ({ icon, ...props }) => {
   const [focused, setFocused] = useState(false);
   return (
-    <div className={`ct-field flex items-center gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}>
-      <span className={focused ? "ct-accent-text" : "ct-muted-text"} style={{ flexShrink: 0 }}>
+    <div
+      className={`ct-field flex items-center gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}
+    >
+      <span
+        className={focused ? "ct-accent-text" : "ct-muted-text"}
+        style={{ flexShrink: 0 }}
+      >
         {icon}
       </span>
       <input
         {...props}
-        onFocus={(e) => { setFocused(true);  props.onFocus?.(e); }}
-        onBlur={(e)  => { setFocused(false); props.onBlur?.(e);  }}
+        onFocus={(e) => {
+          setFocused(true);
+          props.onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          props.onBlur?.(e);
+        }}
         className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ct-text-primary"
       />
     </div>
@@ -171,19 +216,30 @@ const IconInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { icon: 
 };
 
 /* ─── Icon Textarea ───────────────────────────────────────────── */
-const IconTextarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & { icon: React.ReactNode }> = ({
-  icon, ...props
-}) => {
+const IconTextarea: React.FC<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement> & { icon: React.ReactNode }
+> = ({ icon, ...props }) => {
   const [focused, setFocused] = useState(false);
   return (
-    <div className={`ct-field flex gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}>
-      <span className={`mt-0.5 ${focused ? "ct-accent-text" : "ct-muted-text"}`} style={{ flexShrink: 0 }}>
+    <div
+      className={`ct-field flex gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}
+    >
+      <span
+        className={`mt-0.5 ${focused ? "ct-accent-text" : "ct-muted-text"}`}
+        style={{ flexShrink: 0 }}
+      >
         {icon}
       </span>
       <textarea
         {...props}
-        onFocus={(e) => { setFocused(true);  props.onFocus?.(e); }}
-        onBlur={(e)  => { setFocused(false); props.onBlur?.(e);  }}
+        onFocus={(e) => {
+          setFocused(true);
+          props.onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          props.onBlur?.(e);
+        }}
         className="flex-1 bg-transparent text-sm outline-none resize-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ct-text-primary"
       />
     </div>
@@ -194,24 +250,33 @@ const IconTextarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> &
 export default function Contact() {
   const reduceMotion = useReducedMotion();
 
-  const [status, setStatus]               = useState<"idle"|"sending"|"sent"|"error">("idle");
-  const [copied, setCopied]               = useState(false);
-  const [selectedService, setSelectedService] = useState("Full-Stack Web Application");
-  const [formData, setFormData]           = useState({
-    name: "", email: "", message: "", budget: "not-sure", timeline: "flexible",
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
+  const [copied, setCopied] = useState(false);
+  const [selectedService, setSelectedService] = useState(
+    "Full-Stack Web Application",
+  );
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+    budget: "not-sure",
+    timeline: "flexible",
   });
 
-  const ref    = useRef<HTMLDivElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
     try {
-      const res  = await fetch("/api/contact", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, interest: selectedService }),
@@ -219,7 +284,13 @@ export default function Contact() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Something went wrong");
       setStatus("sent");
-      setFormData({ name: "", email: "", message: "", budget: "not-sure", timeline: "flexible" });
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+        budget: "not-sure",
+        timeline: "flexible",
+      });
       setTimeout(() => setStatus("idle"), 5000);
     } catch (err) {
       console.error(err);
@@ -238,16 +309,18 @@ export default function Contact() {
     }
   };
 
-  const ease    = cubicBezier(0.22, 1, 0.36, 1);
-  const fadeUp  = (delay = 0) =>
-    reduceMotion ? {} : {
-      initial:    { opacity: 0, y: 32 },
-      animate:    inView ? { opacity: 1, y: 0 } : {},
-      transition: { duration: 0.65, delay, ease },
-    };
+  const ease = cubicBezier(0.22, 1, 0.36, 1);
+  const fadeUp = (delay = 0) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 32 },
+          animate: inView ? { opacity: 1, y: 0 } : {},
+          transition: { duration: 0.65, delay, ease },
+        };
 
   const isSubmitting = status === "sending";
-  const isSent       = status === "sent";
+  const isSent = status === "sent";
 
   return (
     <section
@@ -485,14 +558,18 @@ export default function Contact() {
       />
 
       {/* Ambient glows — opacity from CSS vars, no isDark branching */}
-      <div className="ct-glow-1 pointer-events-none absolute rounded-full" aria-hidden />
-      <div className="ct-glow-2 pointer-events-none absolute rounded-full" aria-hidden />
+      <div
+        className="ct-glow-1 pointer-events-none absolute rounded-full"
+        aria-hidden
+      />
+      <div
+        className="ct-glow-2 pointer-events-none absolute rounded-full"
+        aria-hidden
+      />
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-
         {/* ══ HEADING ══ */}
         <div className="mb-14 md:mb-20">
-
           <motion.div {...fadeUp(0)}>
             <span className="ct-avail-badge mb-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] px-3.5 py-1.5 rounded-full border">
               <span className="ct-avail-dot w-1.5 h-1.5 rounded-full animate-pulse" />
@@ -509,7 +586,8 @@ export default function Contact() {
             <span
               style={{
                 display: "block",
-                background: "linear-gradient(105deg, #0ea5e9 0%, #38bdf8 48%, #7dd3fc 100%)",
+                background:
+                  "linear-gradient(105deg, #0ea5e9 0%, #38bdf8 48%, #7dd3fc 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -520,14 +598,19 @@ export default function Contact() {
             </span>
           </motion.h2>
 
-          <motion.p {...fadeUp(0.18)} className="ct-muted-text mt-5 max-w-lg text-base md:text-lg leading-relaxed">
+          <motion.p
+            {...fadeUp(0.18)}
+            className="ct-muted-text mt-5 max-w-lg text-base md:text-lg leading-relaxed"
+          >
             I&apos;m Wahb — a full-stack developer who turns rough ideas into
             production-ready products. Tell me what you&apos;re building.
           </motion.p>
 
           {/* Action row */}
-          <motion.div {...fadeUp(0.26)} className="mt-8 flex items-center gap-3 flex-wrap">
-
+          <motion.div
+            {...fadeUp(0.26)}
+            className="mt-8 flex items-center gap-3 flex-wrap"
+          >
             {/* Email copy chip */}
             <button
               type="button"
@@ -543,8 +626,8 @@ export default function Contact() {
                 <motion.span
                   key={copied ? "c" : "u"}
                   initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1  }}
-                  exit={{   opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.14 }}
                   className={`text-xs px-2 py-0.5 rounded-md ${copied ? "ct-copy-pill--copied" : "ct-copy-pill"}`}
                   role="status"
@@ -586,10 +669,11 @@ export default function Contact() {
 
         {/* ══ GRID ══ */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-
           {/* ── LEFT ── */}
-          <motion.div {...fadeUp(0.2)} className="lg:col-span-2 flex flex-col gap-5">
-
+          <motion.div
+            {...fadeUp(0.2)}
+            className="lg:col-span-2 flex flex-col gap-5"
+          >
             {/* Service picker */}
             <div className="ct-card rounded-2xl border p-5">
               <p className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
@@ -605,12 +689,20 @@ export default function Contact() {
                       onClick={() => setSelectedService(value)}
                       initial={reduceMotion ? {} : { opacity: 0, x: -14 }}
                       animate={inView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.4, delay: 0.24 + i * 0.06, ease }}
+                      transition={{
+                        duration: 0.4,
+                        delay: 0.24 + i * 0.06,
+                        ease,
+                      }}
                       whileHover={{ x: 4 }}
                       className={`ct-service-btn ${active ? "ct-service-btn--active" : ""} flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium border transition-colors duration-150`}
                     >
-                      <span className={`${active ? "ct-service-icon--active" : "ct-service-icon"} w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-150`}>
-                        <Icon className={`w-3.5 h-3.5 ${active ? "ct-accent-text" : "ct-muted-text"}`} />
+                      <span
+                        className={`${active ? "ct-service-icon--active" : "ct-service-icon"} w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-150`}
+                      >
+                        <Icon
+                          className={`w-3.5 h-3.5 ${active ? "ct-accent-text" : "ct-muted-text"}`}
+                        />
                       </span>
                       <span className="flex-1">{label}</span>
                       {active && (
@@ -646,7 +738,9 @@ export default function Contact() {
                     <span className="ct-trust-icon w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
                       <TIcon className="w-4 h-4 ct-accent-text" />
                     </span>
-                    <span className="ct-muted-text text-sm font-medium">{text}</span>
+                    <span className="ct-muted-text text-sm font-medium">
+                      {text}
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -656,12 +750,12 @@ export default function Contact() {
           {/* ── RIGHT: FORM ── */}
           <motion.div {...fadeUp(0.3)} className="lg:col-span-3">
             <div className="ct-form-card rounded-2xl border relative overflow-hidden">
-
               {/* Top shimmer — fixed colour, no isDark branching */}
               <div
                 className="absolute top-0 left-0 right-0 h-px"
                 style={{
-                  background: "linear-gradient(90deg, transparent 0%, #0ea5e9 40%, #38bdf8 60%, transparent 100%)",
+                  background:
+                    "linear-gradient(90deg, transparent 0%, #0ea5e9 40%, #38bdf8 60%, transparent 100%)",
                   opacity: 0.85,
                 }}
               />
@@ -679,7 +773,9 @@ export default function Contact() {
                     transition={{ duration: 0.3 }}
                   >
                     <div>
-                      <h3 className={`${playfair.className} ct-text-primary text-2xl md:text-3xl font-bold leading-snug`}>
+                      <h3
+                        className={`${playfair.className} ct-text-primary text-2xl md:text-3xl font-bold leading-snug`}
+                      >
                         Tell me about your project
                         <span style={{ color: "#0ea5e9" }}>.</span>
                       </h3>
@@ -690,26 +786,40 @@ export default function Contact() {
 
                     {/* Name */}
                     <div className="space-y-1.5">
-                      <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="name">
+                      <label
+                        className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
+                        htmlFor="name"
+                      >
                         Your name
                       </label>
                       <IconInput
-                        id="name" type="text" name="name" required
+                        id="name"
+                        type="text"
+                        name="name"
+                        required
                         placeholder="e.g. Alex Johnson"
-                        value={formData.name} onChange={handleChange}
+                        value={formData.name}
+                        onChange={handleChange}
                         icon={<User className="w-4 h-4" />}
                       />
                     </div>
 
                     {/* Email */}
                     <div className="space-y-1.5">
-                      <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="email">
+                      <label
+                        className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
+                        htmlFor="email"
+                      >
                         Your email
                       </label>
                       <IconInput
-                        id="email" type="email" name="email" required
+                        id="email"
+                        type="email"
+                        name="email"
+                        required
                         placeholder="you@company.com"
-                        value={formData.email} onChange={handleChange}
+                        value={formData.email}
+                        onChange={handleChange}
                         icon={<AtSign className="w-4 h-4" />}
                       />
                     </div>
@@ -717,24 +827,36 @@ export default function Contact() {
                     {/* Budget + Timeline */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="budget">
+                        <label
+                          className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
+                          htmlFor="budget"
+                        >
                           Budget
                         </label>
                         <CustomSelect
-                          id="budget" value={formData.budget}
+                          id="budget"
+                          value={formData.budget}
                           options={BUDGET_OPTIONS}
-                          onChange={(val) => setFormData((p) => ({ ...p, budget: val }))}
+                          onChange={(val) =>
+                            setFormData((p) => ({ ...p, budget: val }))
+                          }
                           icon={<DollarSign className="w-4 h-4" />}
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="timeline">
+                        <label
+                          className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
+                          htmlFor="timeline"
+                        >
                           Timeline
                         </label>
                         <CustomSelect
-                          id="timeline" value={formData.timeline}
+                          id="timeline"
+                          value={formData.timeline}
                           options={TIMELINE_OPTIONS}
-                          onChange={(val) => setFormData((p) => ({ ...p, timeline: val }))}
+                          onChange={(val) =>
+                            setFormData((p) => ({ ...p, timeline: val }))
+                          }
                           icon={<CalendarClock className="w-4 h-4" />}
                         />
                       </div>
@@ -742,37 +864,50 @@ export default function Contact() {
 
                     {/* Message */}
                     <div className="space-y-1.5">
-                      <label className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]" htmlFor="message">
+                      <label
+                        className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
+                        htmlFor="message"
+                      >
                         Project details{" "}
-                        <span className="ct-muted-text" style={{ textTransform: "none", letterSpacing: 0 }}>
+                        <span
+                          className="ct-muted-text"
+                          style={{ textTransform: "none", letterSpacing: 0 }}
+                        >
                           (optional)
                         </span>
                       </label>
                       <IconTextarea
-                        id="message" name="message" rows={4}
+                        id="message"
+                        name="message"
+                        rows={4}
                         placeholder="What are you building? Any tech preferences? What's the main goal?"
-                        value={formData.message} onChange={handleChange}
+                        value={formData.message}
+                        onChange={handleChange}
                         icon={<MessageSquare className="w-4 h-4" />}
                       />
                     </div>
 
                     {/* Active service pill */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="ct-muted-text text-xs font-medium">Service:</span>
+                      <span className="ct-muted-text text-xs font-medium">
+                        Service:
+                      </span>
                       <AnimatePresence mode="wait">
                         <motion.span
                           key={selectedService}
                           initial={{ opacity: 0, scale: 0.85 }}
-                          animate={{ opacity: 1, scale: 1   }}
-                          exit={{   opacity: 0, scale: 0.85 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.85 }}
                           transition={{ duration: 0.2 }}
                           className="ct-service-pill inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
                         >
                           {React.createElement(
-                            SERVICES.find((s) => s.value === selectedService)?.icon ?? Globe,
-                            { className: "w-3 h-3" }
+                            SERVICES.find((s) => s.value === selectedService)
+                              ?.icon ?? Globe,
+                            { className: "w-3 h-3" },
                           )}
-                          {SERVICES.find((s) => s.value === selectedService)?.label ?? selectedService}
+                          {SERVICES.find((s) => s.value === selectedService)
+                            ?.label ?? selectedService}
                         </motion.span>
                       </AnimatePresence>
                     </div>
@@ -782,16 +917,24 @@ export default function Contact() {
                       type="submit"
                       disabled={isSubmitting}
                       className={`group relative w-full py-4 rounded-xl font-bold text-sm overflow-hidden transition-all duration-300 hover:scale-[1.015] active:scale-[0.99] ${isSubmitting ? "ct-submit-disabled" : ""}`}
-                      style={isSubmitting ? {} : {
-                        background: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
-                        color: "#fff",
-                        boxShadow: "0 8px 28px rgba(14,165,233,0.38)",
-                      }}
+                      style={
+                        isSubmitting
+                          ? {}
+                          : {
+                              background:
+                                "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
+                              color: "#fff",
+                              boxShadow: "0 8px 28px rgba(14,165,233,0.38)",
+                            }
+                      }
                     >
                       {!isSubmitting && (
                         <span
                           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ background: "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)" }}
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)",
+                          }}
                         />
                       )}
                       <span className="relative z-10 flex items-center justify-center gap-2">
@@ -800,7 +943,11 @@ export default function Contact() {
                             <motion.span
                               className="w-4 h-4 rounded-full border-2 border-current border-t-transparent"
                               animate={{ rotate: 360 }}
-                              transition={{ duration: 0.75, repeat: Infinity, ease: "linear" }}
+                              transition={{
+                                duration: 0.75,
+                                repeat: Infinity,
+                                ease: "linear",
+                              }}
                             />
                             Sending…
                           </>
@@ -831,7 +978,7 @@ export default function Contact() {
                   <motion.div
                     key="success"
                     initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1  }}
+                    animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4, ease }}
                     className="p-9 flex flex-col items-center justify-center gap-5 text-center min-h-[360px]"
@@ -839,23 +986,31 @@ export default function Contact() {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 280, damping: 16, delay: 0.12 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 280,
+                        damping: 16,
+                        delay: 0.12,
+                      }}
                       className="w-16 h-16 rounded-full flex items-center justify-center"
                       style={{
                         background: "rgba(34,197,94,0.15)",
-                        border:     "1px solid rgba(34,197,94,0.3)",
-                        boxShadow:  "0 0 32px rgba(34,197,94,0.15)",
+                        border: "1px solid rgba(34,197,94,0.3)",
+                        boxShadow: "0 0 32px rgba(34,197,94,0.15)",
                       }}
                     >
                       <Check className="w-7 h-7" style={{ color: "#4ade80" }} />
                     </motion.div>
 
                     <div>
-                      <h3 className={`${playfair.className} ct-text-primary text-2xl font-bold mb-2`}>
+                      <h3
+                        className={`${playfair.className} ct-text-primary text-2xl font-bold mb-2`}
+                      >
                         Message sent!
                       </h3>
                       <p className="ct-muted-text">
-                        Thanks{formData.name ? `, ${formData.name}` : ""}. I&apos;ll reply within 24 hours.
+                        Thanks{formData.name ? `, ${formData.name}` : ""}.
+                        I&apos;ll reply within 24 hours.
                       </p>
                     </div>
 
@@ -875,12 +1030,21 @@ export default function Contact() {
         {/* Scroll nav */}
         <div className="flex justify-center gap-4 mt-16">
           {[
-            { id: "about", Icon: ChevronUpIcon,   label: "Scroll Up",   extra: ""              },
-            { id: "faq",   Icon: ChevronDownIcon, label: "Scroll Down", extra: "animate-bounce" },
+            { id: "about", Icon: ChevronUpIcon, label: "Scroll Up", extra: "" },
+            {
+              id: "faq",
+              Icon: ChevronDownIcon,
+              label: "Scroll Down",
+              extra: "animate-bounce",
+            },
           ].map(({ id, Icon, label, extra }) => (
             <button
               key={id}
-              onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById(id)
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               aria-label={label}
               className={`ct-scroll-btn hover:scale-110 transition-transform p-2.5 rounded-full border ${extra}`}
             >

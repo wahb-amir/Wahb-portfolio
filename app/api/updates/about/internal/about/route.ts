@@ -14,7 +14,7 @@ interface About {
 
 /** Helper: return CORS headers for a given origin (only if it matches allowed origin) */
 function corsHeaders(
-  origin: string | null | undefined
+  origin: string | null | undefined,
 ): Record<string, string> {
   const headers: Record<string, string> = { Vary: "Origin" };
   if (origin && origin === ALLOWED_ORIGIN) {
@@ -51,7 +51,7 @@ export async function GET(req: Request) {
     if (!secret || secret !== process.env.INTERNAL_API_SECRET) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401, headers }
+        { status: 401, headers },
       );
     }
 
@@ -62,7 +62,7 @@ export async function GET(req: Request) {
     if (!latest) {
       return NextResponse.json(
         { error: "No AboutVersion found" },
-        { status: 404, headers }
+        { status: 404, headers },
       );
     }
     const payload = {
@@ -75,7 +75,7 @@ export async function GET(req: Request) {
     console.error("Internal GET About API error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500, headers }
+      { status: 500, headers },
     );
   }
 }
@@ -92,7 +92,7 @@ export async function PUT(req: Request) {
     if (!secret || secret !== process.env.INTERNAL_API_SECRET) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401, headers }
+        { status: 401, headers },
       );
     }
 
@@ -100,7 +100,7 @@ export async function PUT(req: Request) {
     if (!body || typeof body.data !== "object") {
       return NextResponse.json(
         { error: "Invalid payload — provide `data` object" },
-        { status: 400, headers }
+        { status: 400, headers },
       );
     }
 
@@ -120,7 +120,7 @@ export async function PUT(req: Request) {
     try {
       if (!redis) {
         console.warn(
-          "Warning: Redis client is not available. Skipping cache clear for about:payload."
+          "Warning: Redis client is not available. Skipping cache clear for about:payload.",
         );
       } else {
         await clearAboutCache(redis);
@@ -131,13 +131,13 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(
       { success: true, version: created.version },
-      { status: 200, headers }
+      { status: 200, headers },
     );
   } catch (err) {
     console.error("PUT About API error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500, headers }
+      { status: 500, headers },
     );
   }
 }
@@ -154,7 +154,7 @@ export async function DELETE(req: Request) {
     if (!secret || secret !== process.env.INTERNAL_API_SECRET) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401, headers }
+        { status: 401, headers },
       );
     }
 
@@ -166,7 +166,7 @@ export async function DELETE(req: Request) {
     if (!latest) {
       return NextResponse.json(
         { error: "No AboutVersion found" },
-        { status: 404, headers }
+        { status: 404, headers },
       );
     }
 
@@ -192,7 +192,7 @@ export async function DELETE(req: Request) {
     try {
       if (!redis) {
         console.warn(
-          "Warning: Redis client is not available. Skipping cache clear for about:payload."
+          "Warning: Redis client is not available. Skipping cache clear for about:payload.",
         );
       } else {
         await clearAboutCache(redis);
@@ -200,19 +200,19 @@ export async function DELETE(req: Request) {
     } catch (cacheErr) {
       console.error(
         "Warning: failed to clear about cache after DELETE",
-        cacheErr
+        cacheErr,
       );
     }
 
     return NextResponse.json(
       { success: true, version: created.version },
-      { status: 200, headers }
+      { status: 200, headers },
     );
   } catch (err) {
     console.error("DELETE About API error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500, headers }
+      { status: 500, headers },
     );
   }
 }

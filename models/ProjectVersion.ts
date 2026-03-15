@@ -78,7 +78,7 @@ const caseStudySchema = new Schema<CaseStudy>(
     lessons: { type: [String], default: [] },
     callToAction: { type: String },
   },
-  { _id: false }
+  { _id: false },
 );
 
 /* ============================
@@ -116,7 +116,7 @@ const projectSchema = new Schema<Project>(
 
     caseStudy: { type: caseStudySchema, default: undefined },
   },
-  { _id: false }
+  { _id: false },
 );
 
 /* ============================
@@ -128,7 +128,7 @@ const projectVersionSchema = new Schema<ProjectVersionDoc>(
     version: { type: Number, required: true, unique: true },
     projects: { type: [projectSchema], default: [] },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const ProjectVersion: Model<ProjectVersionDoc> =

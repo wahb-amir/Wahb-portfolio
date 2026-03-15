@@ -11,7 +11,9 @@ interface Props {
 }
 
 const scrollTo = (id: string) => {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 export default function NavLinks({ items }: Props) {

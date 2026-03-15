@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
-import { faGithub }      from "@fortawesome/free-brands-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { useClientTheme } from "@/app/hooks/useClientTheme";
 
 interface Props {
@@ -16,12 +16,21 @@ export default function ThemeToggle({ githubUrl }: Props) {
   return (
     <>
       {/* GitHub — no theme dependency, always safe to render */}
-      <IconButton label="GitHub" onClick={() => window.open(githubUrl, "_blank")}>
+      <IconButton
+        label="GitHub"
+        onClick={() => window.open(githubUrl, "_blank")}
+      >
         <FontAwesomeIcon icon={faGithub} className="text-lg" />
       </IconButton>
-      
+
       <IconButton
-        label={mounted ? (isDark ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
+        label={
+          mounted
+            ? isDark
+              ? "Switch to light mode"
+              : "Switch to dark mode"
+            : "Toggle theme"
+        }
         onClick={toggleTheme}
       >
         <span
@@ -30,7 +39,11 @@ export default function ThemeToggle({ githubUrl }: Props) {
         >
           {/* Pre-mount: invisible placeholder — same on server & client */}
           {!mounted && (
-            <FontAwesomeIcon icon={faMoon} className="text-lg opacity-0" aria-hidden />
+            <FontAwesomeIcon
+              icon={faMoon}
+              className="text-lg opacity-0"
+              aria-hidden
+            />
           )}
 
           {/* Post-mount: animated real icon */}
@@ -39,8 +52,8 @@ export default function ThemeToggle({ githubUrl }: Props) {
               <motion.span
                 key={isDark ? "sun" : "moon"}
                 initial={{ opacity: 0, rotate: -30, scale: 0.7 }}
-                animate={{ opacity: 1, rotate: 0,   scale: 1   }}
-                exit={{    opacity: 0, rotate:  30, scale: 0.7 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 30, scale: 0.7 }}
                 transition={{ duration: 0.18, ease: "easeInOut" }}
                 className="absolute inset-0 flex items-center justify-center"
               >

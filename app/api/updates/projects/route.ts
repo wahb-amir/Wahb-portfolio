@@ -1,6 +1,6 @@
 // app/api/updates/projects/route.ts (public)
 import { NextResponse } from "next/server";
-import { getLatestProjectsPayload }from "@/lib/projectsService";
+import { getLatestProjectsPayload } from "@/lib/projectsService";
 
 export async function GET(req: Request) {
   try {
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     console.error("Public API error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

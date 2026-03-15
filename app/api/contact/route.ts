@@ -20,10 +20,13 @@ interface RateLimitEntry {
 const rateLimitStore = new Map<string, RateLimitEntry>();
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const RATE_LIMIT_MAX       = 5;               // max 5 submissions per IP per hour
+const RATE_LIMIT_MAX = 5; // max 5 submissions per IP per hour
 
-function isRateLimited(ip: string): { limited: boolean; retryAfterSec: number } {
-  const now   = Date.now();
+function isRateLimited(ip: string): {
+  limited: boolean;
+  retryAfterSec: number;
+} {
+  const now = Date.now();
   const entry = rateLimitStore.get(ip);
 
   if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
@@ -34,7 +37,7 @@ function isRateLimited(ip: string): { limited: boolean; retryAfterSec: number } 
 
   if (entry.count >= RATE_LIMIT_MAX) {
     const retryAfterSec = Math.ceil(
-      (RATE_LIMIT_WINDOW_MS - (now - entry.windowStart)) / 1000
+      (RATE_LIMIT_WINDOW_MS - (now - entry.windowStart)) / 1000,
     );
     return { limited: true, retryAfterSec };
   }
@@ -45,14 +48,17 @@ function isRateLimited(ip: string): { limited: boolean; retryAfterSec: number } 
 
 // Periodically purge expired entries to prevent memory leaks
 // (runs every 10 min in the same serverless worker lifetime)
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of rateLimitStore.entries()) {
-    if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-      rateLimitStore.delete(key);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [key, entry] of rateLimitStore.entries()) {
+      if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+        rateLimitStore.delete(key);
+      }
     }
-  }
-}, 10 * 60 * 1000);
+  },
+  10 * 60 * 1000,
+);
 
 /* ─────────────────────────────────────────────────────────────
    VALIDATION HELPERS
@@ -75,12 +81,7 @@ const VALID_BUDGETS = new Set([
   "not-sure",
 ]);
 
-const VALID_TIMELINES = new Set([
-  "asap",
-  "1-month",
-  "1-3-months",
-  "flexible",
-]);
+const VALID_TIMELINES = new Set(["asap", "1-month", "1-3-months", "flexible"]);
 
 function sanitize(value: unknown, maxLength = 500): string {
   if (typeof value !== "string") return "";
@@ -93,10 +94,10 @@ function sanitize(value: unknown, maxLength = 500): string {
 function getCORSHeaders(origin: string | null): Record<string, string> {
   if (origin && ALLOWED_ORIGINS.has(origin)) {
     return {
-      "Access-Control-Allow-Origin":  origin,
+      "Access-Control-Allow-Origin": origin,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
-      "Vary":                         "Origin",
+      Vary: "Origin",
     };
   }
   return {};
@@ -106,10 +107,10 @@ function getCORSHeaders(origin: string | null): Record<string, string> {
    CONTACT REQUEST TYPE
    ───────────────────────────────────────────────────────────── */
 interface ContactRequestBody {
-  name:     string;
-  email:    string;
+  name: string;
+  email: string;
   interest: string;
-  budget?:  string;
+  budget?: string;
   timeline?: string;
   message?: string;
 }
@@ -129,26 +130,23 @@ export async function OPTIONS(req: Request) {
    POST — contact form submission
    ───────────────────────────────────────────────────────────── */
 export async function POST(req: Request) {
-  const origin      = req.headers.get("origin");
+  const origin = req.headers.get("origin");
   const corsHeaders = getCORSHeaders(origin);
 
   /* 1 ── Origin check ──────────────────────────────────────── */
 
-  if(!origin) {
+  if (!origin) {
     return NextResponse.json(
       { error: "Origin header is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
-  if ( !ALLOWED_ORIGINS.has(origin)) {
-    return NextResponse.json(
-      { error: "Forbidden" },
-      { status: 403 }
-    );
+  if (!ALLOWED_ORIGINS.has(origin)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   /* 2 ── Resolve real client IP ────────────────────────────── */
-  const headersList =await headers();
+  const headersList = await headers();
   const ip =
     headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     headersList.get("x-real-ip") ??
@@ -164,10 +162,10 @@ export async function POST(req: Request) {
         headers: {
           ...corsHeaders,
           "Retry-After": String(retryAfterSec),
-          "X-RateLimit-Limit":     String(RATE_LIMIT_MAX),
+          "X-RateLimit-Limit": String(RATE_LIMIT_MAX),
           "X-RateLimit-Remaining": "0",
         },
-      }
+      },
     );
   }
 
@@ -178,33 +176,36 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json(
       { error: "Invalid JSON body" },
-      { status: 400, headers: corsHeaders }
+      { status: 400, headers: corsHeaders },
     );
   }
 
   /* 5 ── Sanitise & validate ───────────────────────────────── */
-  const name     = sanitize(body.name,     80);
-  const email    = sanitize(body.email,    254);
+  const name = sanitize(body.name, 80);
+  const email = sanitize(body.email, 254);
   const interest = sanitize(body.interest, 100);
-  const budget   = sanitize(body.budget,   20);
+  const budget = sanitize(body.budget, 20);
   const timeline = sanitize(body.timeline, 20);
-  const message  = sanitize(body.message,  2000);
+  const message = sanitize(body.message, 2000);
 
   const errors: string[] = [];
 
-  if (!name)                             errors.push("name is required");
-  if (name.length < 2)                   errors.push("name is too short");
-  if (!email)                            errors.push("email is required");
-  if (!EMAIL_RE.test(email))             errors.push("email is invalid");
-  if (!interest)                         errors.push("interest is required");
-  if (!VALID_INTERESTS.has(interest))    errors.push("interest value is not allowed");
-  if (budget   && !VALID_BUDGETS.has(budget))    errors.push("budget value is not allowed");
-  if (timeline && !VALID_TIMELINES.has(timeline)) errors.push("timeline value is not allowed");
+  if (!name) errors.push("name is required");
+  if (name.length < 2) errors.push("name is too short");
+  if (!email) errors.push("email is required");
+  if (!EMAIL_RE.test(email)) errors.push("email is invalid");
+  if (!interest) errors.push("interest is required");
+  if (!VALID_INTERESTS.has(interest))
+    errors.push("interest value is not allowed");
+  if (budget && !VALID_BUDGETS.has(budget))
+    errors.push("budget value is not allowed");
+  if (timeline && !VALID_TIMELINES.has(timeline))
+    errors.push("timeline value is not allowed");
 
   if (errors.length > 0) {
     return NextResponse.json(
       { error: "Validation failed", details: errors },
-      { status: 422, headers: corsHeaders }
+      { status: 422, headers: corsHeaders },
     );
   }
 
@@ -216,20 +217,20 @@ export async function POST(req: Request) {
       name,
       email,
       interest,
-      budget:   budget   || "not-sure",
+      budget: budget || "not-sure",
       timeline: timeline || "flexible",
-      message:  message  || "",
+      message: message || "",
     });
 
     return NextResponse.json(
       { ok: true },
-      { status: 200, headers: corsHeaders }
+      { status: 200, headers: corsHeaders },
     );
   } catch (err) {
     console.error("❌ Contact API – DB error:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers: corsHeaders },
     );
   }
 }

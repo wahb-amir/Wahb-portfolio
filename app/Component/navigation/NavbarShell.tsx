@@ -9,13 +9,13 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import NavLinks    from "./NavLinks";
+import NavLinks from "./NavLinks";
 import ThemeToggle from "./ThemeToggle";
-import MobileMenu  from "./MobileMenu";
+import MobileMenu from "./MobileMenu";
 import type { NavItem } from "./navConfig";
 
 interface Props {
-  navItems:  NavItem[];
+  navItems: NavItem[];
   githubUrl: string;
   navHeight: number;
 }
@@ -26,7 +26,7 @@ export default function NavbarShell({ navItems, githubUrl, navHeight }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const lastScrollY = useRef(0);
-  const ticking    = useRef(false);
+  const ticking = useRef(false);
 
   // ── Scroll handler ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -58,7 +58,9 @@ export default function NavbarShell({ navItems, githubUrl, navHeight }: Props) {
   // ── Body scroll-lock when drawer open ──────────────────────────────────────
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [menuOpen]);
 
   return (

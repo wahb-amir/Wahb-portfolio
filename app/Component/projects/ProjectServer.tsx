@@ -114,10 +114,7 @@ function ProjectCardSkeleton({ index }: { index: number }) {
 
 function ProjectsGridSkeleton() {
   return (
-    <div
-      className="ps-grid"
-      aria-label="Loading projects…"
-    >
+    <div className="ps-grid" aria-label="Loading projects…">
       {Array.from({ length: 4 }).map((_, i) => (
         <ProjectCardSkeleton key={i} index={i} />
       ))}
@@ -166,12 +163,15 @@ async function ProjectsGrid() {
     let category = "WebApplication";
     const catSearch =
       (Array.isArray(p.tags) ? p.tags.join(" ") : "") + (p.category ?? "");
-    if (/ecom|shop|store|commerce/i.test(catSearch)) category = "ECommercePlatform";
+    if (/ecom|shop|store|commerce/i.test(catSearch))
+      category = "ECommercePlatform";
     else if (/mobile|pwa/i.test(catSearch)) category = "MobileApplication";
     else if (p.category) category = p.category;
 
     const languages =
-      (Array.isArray(p.languages) && p.languages.length ? p.languages : undefined) ??
+      (Array.isArray(p.languages) && p.languages.length
+        ? p.languages
+        : undefined) ??
       (Array.isArray(p.techStack)
         ? p.techStack.filter((t) =>
             /^(javascript|typescript|python|go|rust|java|c#|php|node)/i.test(t),
@@ -214,7 +214,9 @@ async function ProjectsGrid() {
           "@type": "SoftwareSourceCode",
           "@id": `${uniqueProjectId}#source`,
           name: `${title} — source code`,
-          codeRepository: sameAs.filter((u) => /(github|gitlab|bitbucket)/i.test(u)),
+          codeRepository: sameAs.filter((u) =>
+            /(github|gitlab|bitbucket)/i.test(u),
+          ),
           creator: { "@id": PERSON_ID },
         })
       : undefined;
@@ -259,7 +261,9 @@ async function ProjectsGrid() {
             key={slugify(p.id ?? p.title ?? p.name ?? `project-${i}`)}
             role="listitem"
             aria-label={`Project: ${p.title ?? p.name ?? "Untitled"}`}
-            data-project-id={slugify(p.id ?? p.title ?? p.name ?? `project-${i}`)}
+            data-project-id={slugify(
+              p.id ?? p.title ?? p.name ?? `project-${i}`,
+            )}
             className="ps-card-enter"
             style={{ animationDelay: `${i * 60}ms` }}
           >
@@ -384,11 +388,18 @@ export default function ProjectServer() {
 
           <p className="max-w-xl mx-auto mt-5 text-sm sm:text-base text-gray-500 dark:text-slate-400 leading-relaxed">
             Each entry covers the{" "}
-            <strong className="font-medium text-gray-700 dark:text-slate-300">problem</strong>,{" "}
-            <strong className="font-medium text-gray-700 dark:text-slate-300">approach</strong>,
-            and{" "}
-            <strong className="font-medium text-gray-700 dark:text-slate-300">outcome</strong>.
-            Open a card for the full case study.
+            <strong className="font-medium text-gray-700 dark:text-slate-300">
+              problem
+            </strong>
+            ,{" "}
+            <strong className="font-medium text-gray-700 dark:text-slate-300">
+              approach
+            </strong>
+            , and{" "}
+            <strong className="font-medium text-gray-700 dark:text-slate-300">
+              outcome
+            </strong>
+            . Open a card for the full case study.
           </p>
         </div>
 

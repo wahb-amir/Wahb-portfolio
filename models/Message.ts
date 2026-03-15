@@ -1,34 +1,34 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IMessage extends Document {
-  name:      string;
-  email:     string;
-  interest:  string;
-  budget:    string;
-  timeline:  string;
-  message:   string;
+  name: string;
+  email: string;
+  interest: string;
+  budget: string;
+  timeline: string;
+  message: string;
   createdAt: Date;
 }
 
 const MessageSchema = new Schema<IMessage>(
   {
     name: {
-      type:     String,
+      type: String,
       required: true,
-      trim:     true,
+      trim: true,
       maxlength: 80,
     },
     email: {
-      type:     String,
+      type: String,
       required: true,
-      trim:     true,
+      trim: true,
       lowercase: true,
       maxlength: 254,
     },
     interest: {
-      type:     String,
+      type: String,
       required: true,
-      trim:     true,
+      trim: true,
       enum: [
         "Full-Stack Web Application",
         "Backend Development",
@@ -38,32 +38,31 @@ const MessageSchema = new Schema<IMessage>(
       ],
     },
     budget: {
-      type:    String,
-      trim:    true,
+      type: String,
+      trim: true,
       default: "not-sure",
       enum: ["under-1k", "1k-3k", "3k-8k", "8k-plus", "not-sure"],
     },
     timeline: {
-      type:    String,
-      trim:    true,
+      type: String,
+      trim: true,
       default: "flexible",
       enum: ["asap", "1-month", "1-3-months", "flexible"],
     },
     message: {
-      type:      String,
-      trim:      true,
-      default:   "",
+      type: String,
+      trim: true,
+      default: "",
       maxlength: 2000,
     },
   },
   {
-    timestamps: true, 
-  }
+    timestamps: true,
+  },
 );
 
 // Prevent model re-compilation in Next.js hot-reload
 const Message: Model<IMessage> =
-  mongoose.models.Message ??
-  mongoose.model<IMessage>("Message", MessageSchema);
+  mongoose.models.Message ?? mongoose.model<IMessage>("Message", MessageSchema);
 
 export default Message;

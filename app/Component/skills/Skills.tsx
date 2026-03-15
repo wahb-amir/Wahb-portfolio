@@ -6,70 +6,169 @@ import { useClientTheme } from "@/app/hooks/useClientTheme";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Plus_Jakarta_Sans, DM_Mono } from "next/font/google";
 import {
-  SiHtml5, SiCss, SiTailwindcss, SiJavascript, SiReact,
-  SiNextdotjs, SiNodedotjs, SiExpress, SiMongodb, SiFramer,
-  SiPython, SiPandas, SiNumpy, SiScikitlearn, SiPytorch,
-  SiCplusplus, SiOpencv, SiTypescript, SiPostgresql, SiRedis,
-  SiDocker, SiGithub, SiNginx, SiGithubactions,
+  SiHtml5,
+  SiCss,
+  SiTailwindcss,
+  SiJavascript,
+  SiReact,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiExpress,
+  SiMongodb,
+  SiFramer,
+  SiPython,
+  SiPandas,
+  SiNumpy,
+  SiScikitlearn,
+  SiPytorch,
+  SiCplusplus,
+  SiOpencv,
+  SiTypescript,
+  SiPostgresql,
+  SiRedis,
+  SiDocker,
+  SiGithub,
+  SiNginx,
+  SiGithubactions,
 } from "react-icons/si";
 import type { IconType } from "react-icons";
 
-const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500","600","700","800"] });
-const mono    = DM_Mono({ subsets: ["latin"], weight: ["400","500"] });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+});
+const mono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"] });
 
 /* ─── types ─────────────────────────────────────────────────────────── */
-type SkillDef       = { id: string; name: string; icon: IconType; color: string };
-type GroupDef       = { key: string; title: string; ids: string[]; accentColor: string };
+type SkillDef = { id: string; name: string; icon: IconType; color: string };
+type GroupDef = {
+  key: string;
+  title: string;
+  ids: string[];
+  accentColor: string;
+};
 type GroupWithSkills = GroupDef & { skills: SkillDef[] };
 
 /* ─── data ──────────────────────────────────────────────────────────── */
 const SKILLS: Record<string, SkillDef> = {
-  html:     { id: "html",     name: "HTML",        icon: SiHtml5,          color: "#E34F26" },
-  css:      { id: "css",      name: "CSS",         icon: SiCss,            color: "#1572B6" },
-  tailwind: { id: "tailwind", name: "Tailwind",    icon: SiTailwindcss,    color: "#38B2AC" },
-  js:       { id: "js",       name: "JavaScript",  icon: SiJavascript,     color: "#F7DF1E" },
-  ts:       { id: "ts",       name: "TypeScript",  icon: SiTypescript,     color: "#007ACC" },
-  react:    { id: "react",    name: "React",       icon: SiReact,          color: "#61DAFB" },
-  next:     { id: "next",     name: "Next.js",     icon: SiNextdotjs,      color: "#888888" },
-  framer:   { id: "framer",   name: "Framer",      icon: SiFramer,         color: "#0055FF" },
-  node:     { id: "node",     name: "Node.js",     icon: SiNodedotjs,      color: "#339933" },
-  express:  { id: "express",  name: "Express",     icon: SiExpress,        color: "#888888" },
-  python:   { id: "python",   name: "Python",      icon: SiPython,         color: "#3776AB" },
-  pandas:   { id: "pandas",   name: "Pandas",      icon: SiPandas,         color: "#2b7bb9" },
-  numpy:    { id: "numpy",    name: "NumPy",       icon: SiNumpy,          color: "#4DABCF" },
-  sklearn:  { id: "sklearn",  name: "Scikit",      icon: SiScikitlearn,    color: "#F7931E" },
-  pytorch:  { id: "pytorch",  name: "PyTorch",     icon: SiPytorch,        color: "#EE4C2C" },
-  cpp:      { id: "cpp",      name: "C++",         icon: SiCplusplus,      color: "#00599C" },
-  opencv:   { id: "opencv",   name: "OpenCV",      icon: SiOpencv,         color: "#4C8BF5" },
-  mongodb:  { id: "mongodb",  name: "MongoDB",     icon: SiMongodb,        color: "#47A248" },
-  postgres: { id: "postgres", name: "PostgreSQL",  icon: SiPostgresql,     color: "#336791" },
-  redis:    { id: "redis",    name: "Redis",       icon: SiRedis,          color: "#DC382D" },
-  docker:   { id: "docker",   name: "Docker",      icon: SiDocker,         color: "#2496ED" },
-  nginx:    { id: "nginx",    name: "Nginx",       icon: SiNginx,          color: "#009639" },
-  github:   { id: "github",   name: "GitHub",      icon: SiGithub,         color: "#888888" },
-  gha:      { id: "gha",      name: "GH Actions",  icon: SiGithubactions,  color: "#2088FF" },
+  html: { id: "html", name: "HTML", icon: SiHtml5, color: "#E34F26" },
+  css: { id: "css", name: "CSS", icon: SiCss, color: "#1572B6" },
+  tailwind: {
+    id: "tailwind",
+    name: "Tailwind",
+    icon: SiTailwindcss,
+    color: "#38B2AC",
+  },
+  js: { id: "js", name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
+  ts: { id: "ts", name: "TypeScript", icon: SiTypescript, color: "#007ACC" },
+  react: { id: "react", name: "React", icon: SiReact, color: "#61DAFB" },
+  next: { id: "next", name: "Next.js", icon: SiNextdotjs, color: "#888888" },
+  framer: { id: "framer", name: "Framer", icon: SiFramer, color: "#0055FF" },
+  node: { id: "node", name: "Node.js", icon: SiNodedotjs, color: "#339933" },
+  express: {
+    id: "express",
+    name: "Express",
+    icon: SiExpress,
+    color: "#888888",
+  },
+  python: { id: "python", name: "Python", icon: SiPython, color: "#3776AB" },
+  pandas: { id: "pandas", name: "Pandas", icon: SiPandas, color: "#2b7bb9" },
+  numpy: { id: "numpy", name: "NumPy", icon: SiNumpy, color: "#4DABCF" },
+  sklearn: {
+    id: "sklearn",
+    name: "Scikit",
+    icon: SiScikitlearn,
+    color: "#F7931E",
+  },
+  pytorch: {
+    id: "pytorch",
+    name: "PyTorch",
+    icon: SiPytorch,
+    color: "#EE4C2C",
+  },
+  cpp: { id: "cpp", name: "C++", icon: SiCplusplus, color: "#00599C" },
+  opencv: { id: "opencv", name: "OpenCV", icon: SiOpencv, color: "#4C8BF5" },
+  mongodb: {
+    id: "mongodb",
+    name: "MongoDB",
+    icon: SiMongodb,
+    color: "#47A248",
+  },
+  postgres: {
+    id: "postgres",
+    name: "PostgreSQL",
+    icon: SiPostgresql,
+    color: "#336791",
+  },
+  redis: { id: "redis", name: "Redis", icon: SiRedis, color: "#DC382D" },
+  docker: { id: "docker", name: "Docker", icon: SiDocker, color: "#2496ED" },
+  nginx: { id: "nginx", name: "Nginx", icon: SiNginx, color: "#009639" },
+  github: { id: "github", name: "GitHub", icon: SiGithub, color: "#888888" },
+  gha: {
+    id: "gha",
+    name: "GH Actions",
+    icon: SiGithubactions,
+    color: "#2088FF",
+  },
 };
 
 const GROUPS: GroupDef[] = [
-  { key: "frontend", title: "Frontend",      accentColor: "#06b6d4", ids: ["html","css","tailwind","js","ts","react","next","framer"] },
-  { key: "backend",  title: "Backend & ML",  accentColor: "#8b5cf6", ids: ["node","express","python","pandas","numpy","sklearn","pytorch","cpp"] },
-  { key: "database", title: "Databases",     accentColor: "#10b981", ids: ["mongodb","postgres","redis"] },
-  { key: "devops",   title: "DevOps & Infra",accentColor: "#f59e0b", ids: ["docker","nginx","github","gha"] },
+  {
+    key: "frontend",
+    title: "Frontend",
+    accentColor: "#06b6d4",
+    ids: ["html", "css", "tailwind", "js", "ts", "react", "next", "framer"],
+  },
+  {
+    key: "backend",
+    title: "Backend & ML",
+    accentColor: "#8b5cf6",
+    ids: [
+      "node",
+      "express",
+      "python",
+      "pandas",
+      "numpy",
+      "sklearn",
+      "pytorch",
+      "cpp",
+    ],
+  },
+  {
+    key: "database",
+    title: "Databases",
+    accentColor: "#10b981",
+    ids: ["mongodb", "postgres", "redis"],
+  },
+  {
+    key: "devops",
+    title: "DevOps & Infra",
+    accentColor: "#f59e0b",
+    ids: ["docker", "nginx", "github", "gha"],
+  },
 ];
 
 /* ─── framer variants (heading only — 3 elements) ───────────────────── */
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 22 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25,0.46,0.45,0.94] } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
 };
 const headingStagger: Variants = {
   hidden: {},
-  show:   { transition: { staggerChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.08 } },
 };
 // Card container — only staggers the grid reveal, not individual chips
 const cardReveal: Variants = {
   hidden: { opacity: 0, y: 18 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22,1,0.36,1] } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+  },
 };
 
 /* ─── SkillChip — pure CSS, zero framer-motion ──────────────────────── */
@@ -87,10 +186,15 @@ function SkillChip({
   const Icon = skill.icon;
 
   const iconColor =
-    skill.color === "#F7DF1E" && !isDark ? "#b45309" :
-    skill.color === "#61DAFB" && !isDark ? "#0369a1" :
-    skill.color === "#888888"            ? (isDark ? "#94a3b8" : "#64748b") :
-    skill.color;
+    skill.color === "#F7DF1E" && !isDark
+      ? "#b45309"
+      : skill.color === "#61DAFB" && !isDark
+        ? "#0369a1"
+        : skill.color === "#888888"
+          ? isDark
+            ? "#94a3b8"
+            : "#64748b"
+          : skill.color;
 
   return (
     <div
@@ -98,8 +202,8 @@ function SkillChip({
       style={{
         // CSS variable drives the stagger delay — no JS timer
         ["--chip-i" as string]: index,
-        background:   isDark ? "rgba(5,16,36,0.8)"     : "rgba(255,255,255,0.9)",
-        borderColor:  isDark ? "rgba(255,255,255,0.09)" : "rgba(15,23,42,0.1)",
+        background: isDark ? "rgba(5,16,36,0.8)" : "rgba(255,255,255,0.9)",
+        borderColor: isDark ? "rgba(255,255,255,0.09)" : "rgba(15,23,42,0.1)",
         boxShadow: isDark
           ? "0 2px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)"
           : "0 2px 10px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,1)",
@@ -110,15 +214,17 @@ function SkillChip({
       <div
         aria-hidden
         className="chip-glow absolute inset-0 opacity-0 rounded-2xl pointer-events-none"
-        style={{ background: `radial-gradient(circle at 50% 40%, ${iconColor}18 0%, transparent 70%)` }}
+        style={{
+          background: `radial-gradient(circle at 50% 40%, ${iconColor}18 0%, transparent 70%)`,
+        }}
       />
 
       {/* Icon container */}
       <div
         className="relative w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
         style={{
-          background:  `${iconColor}${isDark ? "1e" : "16"}`,
-          boxShadow:   `inset 0 1px 0 ${iconColor}28`,
+          background: `${iconColor}${isDark ? "1e" : "16"}`,
+          boxShadow: `inset 0 1px 0 ${iconColor}28`,
         }}
       >
         <Icon style={{ color: iconColor, fontSize: "1.45rem" }} aria-hidden />
@@ -135,8 +241,14 @@ function SkillChip({
 }
 
 /* ─── GroupCard — single useInView, chips animate via CSS ───────────── */
-function GroupCard({ group, isDark }: { group: GroupWithSkills; isDark: boolean }) {
-  const ref    = useRef<HTMLDivElement>(null);
+function GroupCard({
+  group,
+  isDark,
+}: {
+  group: GroupWithSkills;
+  isDark: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
@@ -147,12 +259,12 @@ function GroupCard({ group, isDark }: { group: GroupWithSkills; isDark: boolean 
       animate={inView ? "show" : "hidden"}
       className="rounded-2xl border overflow-hidden"
       style={{
-        background:   isDark ? "rgba(7,18,40,0.78)"     : "rgba(255,255,255,0.82)",
-        borderColor:  isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.1)",
+        background: isDark ? "rgba(7,18,40,0.78)" : "rgba(255,255,255,0.82)",
+        borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.1)",
         boxShadow: isDark
           ? `0 4px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04), 0 0 0 1px ${group.accentColor}14`
           : `0 4px 24px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,1), 0 0 0 1px ${group.accentColor}12`,
-        backdropFilter: "blur(18px)",          // kept on card — one composite layer per card (4 total) is fine
+        backdropFilter: "blur(18px)", // kept on card — one composite layer per card (4 total) is fine
         WebkitBackdropFilter: "blur(18px)",
       }}
     >
@@ -160,7 +272,9 @@ function GroupCard({ group, isDark }: { group: GroupWithSkills; isDark: boolean 
       <div
         className="flex items-center justify-between px-5 py-4 border-b"
         style={{
-          borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.07)",
+          borderColor: isDark
+            ? "rgba(255,255,255,0.06)"
+            : "rgba(15,23,42,0.07)",
           background: isDark
             ? `linear-gradient(90deg, ${group.accentColor}14 0%, transparent 60%)`
             : `linear-gradient(90deg, ${group.accentColor}0e 0%, transparent 60%)`,
@@ -170,8 +284,8 @@ function GroupCard({ group, isDark }: { group: GroupWithSkills; isDark: boolean 
           <span
             className="w-2.5 h-2.5 rounded-full flex-shrink-0"
             style={{
-              background:  group.accentColor,
-              boxShadow:   `0 0 8px ${group.accentColor}90, 0 0 16px ${group.accentColor}40`,
+              background: group.accentColor,
+              boxShadow: `0 0 8px ${group.accentColor}90, 0 0 16px ${group.accentColor}40`,
             }}
           />
           <h4
@@ -186,8 +300,8 @@ function GroupCard({ group, isDark }: { group: GroupWithSkills; isDark: boolean 
           className={`${mono.className} text-[11px] font-semibold px-2.5 py-1 rounded-full`}
           style={{
             background: `${group.accentColor}${isDark ? "20" : "16"}`,
-            color:       group.accentColor,
-            border:      `1px solid ${group.accentColor}40`,
+            color: group.accentColor,
+            border: `1px solid ${group.accentColor}40`,
           }}
         >
           {group.skills.length} skills
@@ -199,7 +313,13 @@ function GroupCard({ group, isDark }: { group: GroupWithSkills; isDark: boolean 
         className={`p-4 sm:p-5 grid grid-cols-3 sm:grid-cols-4 gap-3 ${inView ? "chips-visible" : ""}`}
       >
         {group.skills.map((s, i) => (
-          <SkillChip key={s.id} skill={s} isDark={isDark} accentColor={group.accentColor} index={i} />
+          <SkillChip
+            key={s.id}
+            skill={s}
+            isDark={isDark}
+            accentColor={group.accentColor}
+            index={i}
+          />
         ))}
       </div>
     </motion.div>
@@ -211,7 +331,7 @@ export default function SkillsGrouped() {
   const { resolvedTheme } = useClientTheme();
   const isDark = resolvedTheme === "dark";
 
-  const headingRef    = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
   const headingInView = useInView(headingRef, { once: true, margin: "-40px" });
 
   const groups = useMemo<GroupWithSkills[]>(
@@ -219,7 +339,7 @@ export default function SkillsGrouped() {
     [],
   );
 
-  const accent    = isDark ? "#22d3ee" : "#0891b2";
+  const accent = isDark ? "#22d3ee" : "#0891b2";
   const borderCol = isDark ? "rgba(255,255,255,0.07)" : "rgba(15,23,42,0.09)";
 
   return (
@@ -281,11 +401,16 @@ export default function SkillsGrouped() {
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none z-0"
-        style={{ background: isDark ? "rgba(4,10,24,0.5)" : "rgba(244,249,255,0.46)" }}
+        style={{
+          background: isDark ? "rgba(4,10,24,0.5)" : "rgba(244,249,255,0.46)",
+        }}
       />
 
       {/* Blobs */}
-      <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <div
+        aria-hidden
+        className="absolute inset-0 overflow-hidden pointer-events-none z-0"
+      >
         <div
           className="absolute -top-20 right-0 w-[420px] h-[420px] rounded-full blur-[130px]"
           style={{ background: "rgba(6,182,212,0.07)" }}
@@ -308,13 +433,24 @@ export default function SkillsGrouped() {
           variants={fadeUp}
           className={`${mono.className} flex items-center justify-center gap-3 mb-5`}
         >
-          <span className="line-grow h-px w-10 inline-block rounded-full"
-            style={{ background: `linear-gradient(to right, transparent, ${accent})` }} />
-          <span className="text-[11px] tracking-[0.2em] uppercase font-semibold" style={{ color: accent }}>
+          <span
+            className="line-grow h-px w-10 inline-block rounded-full"
+            style={{
+              background: `linear-gradient(to right, transparent, ${accent})`,
+            }}
+          />
+          <span
+            className="text-[11px] tracking-[0.2em] uppercase font-semibold"
+            style={{ color: accent }}
+          >
             Tech Stack
           </span>
-          <span className="line-grow-r h-px w-10 inline-block rounded-full"
-            style={{ background: `linear-gradient(to left, transparent, ${accent})` }} />
+          <span
+            className="line-grow-r h-px w-10 inline-block rounded-full"
+            style={{
+              background: `linear-gradient(to left, transparent, ${accent})`,
+            }}
+          />
         </motion.div>
 
         <motion.h2
@@ -338,7 +474,8 @@ export default function SkillsGrouped() {
           className="text-[0.9rem] sm:text-base max-w-md mx-auto leading-relaxed"
           style={{ color: "#64748b" }}
         >
-          The stack I reach for to ship fast, maintainable, production-ready apps.
+          The stack I reach for to ship fast, maintainable, production-ready
+          apps.
         </motion.p>
       </motion.div>
 
@@ -351,10 +488,25 @@ export default function SkillsGrouped() {
 
       {/* ── SCROLL ARROWS ── */}
       <div className="relative z-10 flex gap-4 mt-14">
-        {([
-          { label: "Scroll up",   Icon: ChevronUpIcon,   fn: () => window.scrollTo({ top: 0, behavior: "smooth" }),                                                  pulse: true  },
-          { label: "Scroll down", Icon: ChevronDownIcon, fn: () => document.getElementById("project-section")?.scrollIntoView({ behavior: "smooth" }), pulse: false },
-        ] as const).map(({ label, Icon, fn, pulse }) => (
+        {(
+          [
+            {
+              label: "Scroll up",
+              Icon: ChevronUpIcon,
+              fn: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+              pulse: true,
+            },
+            {
+              label: "Scroll down",
+              Icon: ChevronDownIcon,
+              fn: () =>
+                document
+                  .getElementById("project-section")
+                  ?.scrollIntoView({ behavior: "smooth" }),
+              pulse: false,
+            },
+          ] as const
+        ).map(({ label, Icon, fn, pulse }) => (
           <button
             key={label}
             onClick={fn}
@@ -362,15 +514,21 @@ export default function SkillsGrouped() {
             className={`scroll-btn p-3 rounded-full border ${pulse ? "animate-pulse" : "animate-bounce"}`}
             style={{
               borderColor: borderCol,
-              background:  isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.7)",
+              background: isDark
+                ? "rgba(255,255,255,0.04)"
+                : "rgba(255,255,255,0.7)",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = `${accent}66`;
-              e.currentTarget.style.background  = isDark ? "rgba(6,182,212,0.1)" : "rgba(6,182,212,0.08)";
+              e.currentTarget.style.background = isDark
+                ? "rgba(6,182,212,0.1)"
+                : "rgba(6,182,212,0.08)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = borderCol;
-              e.currentTarget.style.background  = isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.7)";
+              e.currentTarget.style.background = isDark
+                ? "rgba(255,255,255,0.04)"
+                : "rgba(255,255,255,0.7)";
             }}
           >
             <Icon className="w-5 h-5" style={{ color: accent }} />

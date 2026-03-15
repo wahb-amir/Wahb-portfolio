@@ -168,7 +168,6 @@ export default function CaseStudyHydrate({
           )}
 
           {/* TL;DR */}
-    
 
           {/* Approach */}
           {normalizedCS.approach && (
@@ -402,8 +401,6 @@ export default function CaseStudyHydrate({
                 </p>
               </>
             )}
-
-         
 
             {/* Approach */}
             {normalizedCS.approach && (

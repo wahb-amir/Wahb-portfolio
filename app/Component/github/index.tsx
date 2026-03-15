@@ -12,7 +12,14 @@ export default function GitHubActivity() {
 export function GitHubActivityShell() {
   return (
     <div className="gh-card" style={{ minHeight: 160 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 16,
+        }}
+      >
         <div className="gh-status-dot" />
         <span className="gh-label">GitHub Contributions</span>
       </div>

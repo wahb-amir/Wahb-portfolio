@@ -18,9 +18,9 @@ interface Props {
   // Passing colorScheme from a JS isDark value would re-introduce a
   // hydration mismatch on every parent re-render.
   onMouseEnter: (e: React.MouseEvent, date: string, count: number) => void;
-  onMouseMove:  (e: React.MouseEvent, date: string, count: number) => void;
+  onMouseMove: (e: React.MouseEvent, date: string, count: number) => void;
   onMouseLeave: () => void;
-  onClick:      (e: React.MouseEvent, date: string, count: number) => void;
+  onClick: (e: React.MouseEvent, date: string, count: number) => void;
 }
 
 export default function CalendarDesktop({
@@ -44,7 +44,7 @@ export default function CalendarDesktop({
           data={data}
           theme={{
             light: [...CALENDAR_THEME.light],
-            dark:  [...CALENDAR_THEME.dark],
+            dark: [...CALENDAR_THEME.dark],
           }}
           maxLevel={4}
           blockSize={12}

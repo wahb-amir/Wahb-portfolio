@@ -13,7 +13,7 @@ if (!global.redis) {
   global.redis = new Redis(redisUrl);
   global.redis.on("connect", () => console.log("Redis connected"));
   global.redis.on("error", (err) =>
-    console.error(`Redis error: ${redisUrl}`, err)
+    console.error(`Redis error: ${redisUrl}`, err),
   );
 }
 
@@ -37,7 +37,7 @@ export async function clearProjectCache(redisClient = redisInstance) {
 export async function clearAboutCache(redisClient = redisInstance) {
   if (!redisClient) {
     console.warn(
-      "clearAboutCache: Redis client not available — skipping cache clear."
+      "clearAboutCache: Redis client not available — skipping cache clear.",
     );
     return {
       success: false,

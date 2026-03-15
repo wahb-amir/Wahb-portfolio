@@ -32,7 +32,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         {/* Preconnect for Google Fonts (already loaded via next/font above) */}
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

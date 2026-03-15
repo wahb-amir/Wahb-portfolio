@@ -21,7 +21,7 @@ const query = `
 `;
 
 export async function GET(req: NextRequest) {
-  const username = "wahb-amir"; 
+  const username = "wahb-amir";
 
   try {
     const response = await fetch("https://api.github.com/graphql", {
@@ -30,7 +30,14 @@ export async function GET(req: NextRequest) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${GITHUB_TOKEN}`,
       },
-      body: JSON.stringify({ query, variables: { username, from: ACCOUNT_CREATION_DATE, to: new Date().toISOString()} }),
+      body: JSON.stringify({
+        query,
+        variables: {
+          username,
+          from: ACCOUNT_CREATION_DATE,
+          to: new Date().toISOString(),
+        },
+      }),
     });
 
     if (!response.ok) {
@@ -64,7 +71,7 @@ export async function GET(req: NextRequest) {
     console.error(err);
     return NextResponse.json(
       { error: "Failed to fetch GitHub activity" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

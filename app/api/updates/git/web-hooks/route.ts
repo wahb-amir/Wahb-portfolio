@@ -9,11 +9,11 @@ const SECRET = process.env.WEBHOOK_SECRET || "";
 function verifyGitHubSignature(
   secret: string,
   signatureHeader: string | null,
-  payload: string
+  payload: string,
 ) {
   if (!secret) {
     console.warn(
-      "No webhook secret configured (WEBHOOK_SECRET). Rejecting by default."
+      "No webhook secret configured (WEBHOOK_SECRET). Rejecting by default.",
     );
     return false;
   }
@@ -95,7 +95,7 @@ export async function POST(req: Request) {
       if (ref && (ref.endsWith("/main") || ref.endsWith("/master"))) {
         if (after && before && after === before) {
           console.log(
-            "Push to main/master with identical before/after — skipping."
+            "Push to main/master with identical before/after — skipping.",
           );
         } else if (
           commits.length === 0 &&
@@ -166,7 +166,7 @@ export async function POST(req: Request) {
     await clearProjectCache(redis);
 
     console.log(
-      `Project ${projectId} launch date updated to ${lastPublished} and version bumped to ${projectVersion.version}`
+      `Project ${projectId} launch date updated to ${lastPublished} and version bumped to ${projectVersion.version}`,
     );
 
     return NextResponse.json({
@@ -179,7 +179,7 @@ export async function POST(req: Request) {
     console.error("❌ Error:", err.message || err);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

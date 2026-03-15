@@ -19,18 +19,29 @@ function useTypewriter(text: string, speed = 38, startDelay = 900) {
       };
       tick();
     }, startDelay);
-    return () => { clearTimeout(start); clearTimeout(timeout); };
+    return () => {
+      clearTimeout(start);
+      clearTimeout(timeout);
+    };
   }, [text, speed, startDelay]);
   return displayed;
 }
 
 // Spring presets
 const SPRING = { type: "spring", stiffness: 320, damping: 28 } as const;
-const EASE   = { duration: 0.5, ease: [0.22, 1, 0.36, 1] } as const;
+const EASE = { duration: 0.5, ease: [0.22, 1, 0.36, 1] } as const;
 
 export default function NotFound() {
-  const terminalLine = useTypewriter("wahb@portfolio:~$ find . -name 'this-page'", 42, 700);
-  const resultLine   = useTypewriter("find: 'this-page': No such file or directory", 36, 2600);
+  const terminalLine = useTypewriter(
+    "wahb@portfolio:~$ find . -name 'this-page'",
+    42,
+    700,
+  );
+  const resultLine = useTypewriter(
+    "find: 'this-page': No such file or directory",
+    36,
+    2600,
+  );
 
   return (
     <div
@@ -52,14 +63,14 @@ export default function NotFound() {
       <div
         className="absolute inset-0 opacity-[0.18] dark:opacity-[0.08] pointer-events-none"
         style={{
-          backgroundImage: "radial-gradient(circle, #0ea5e9 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, #0ea5e9 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
       />
 
       {/* ── Main content ───────────────────────────────────────────────────── */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-2xl w-full">
-
         {/* ── 404 numeral — layered with outline + fill ─────────────────────── */}
         <div className="relative select-none mb-2" aria-hidden="true">
           {/* Outline layer — always visible on both themes */}
@@ -142,21 +153,27 @@ export default function NotFound() {
           {/* Terminal body */}
           <div className="px-4 py-3 font-mono text-[12px] md:text-[13px] leading-6 space-y-1 min-h-[72px]">
             <p>
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">wahb</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                wahb
+              </span>
               <span className="text-slate-500 dark:text-slate-500">@</span>
-              <span className="text-sky-600 dark:text-sky-400 font-semibold">portfolio</span>
+              <span className="text-sky-600 dark:text-sky-400 font-semibold">
+                portfolio
+              </span>
               <span className="text-slate-500 dark:text-slate-500">:~$ </span>
               <span className="text-slate-800 dark:text-slate-200">
                 {terminalLine.replace("wahb@portfolio:~$ ", "")}
               </span>
-              {terminalLine.length < "wahb@portfolio:~$ find . -name 'this-page'".length && (
+              {terminalLine.length <
+                "wahb@portfolio:~$ find . -name 'this-page'".length && (
                 <span className="inline-block w-[7px] h-[13px] bg-sky-500 dark:bg-sky-400 ml-0.5 align-middle animate-pulse" />
               )}
             </p>
             {resultLine && (
               <p className="text-red-500 dark:text-red-400">
                 {resultLine}
-                {resultLine.length < "find: 'this-page': No such file or directory".length && (
+                {resultLine.length <
+                  "find: 'this-page': No such file or directory".length && (
                   <span className="inline-block w-[7px] h-[13px] bg-red-400 ml-0.5 align-middle animate-pulse" />
                 )}
               </p>
@@ -187,7 +204,11 @@ export default function NotFound() {
           className="mt-8 flex flex-row items-center justify-center gap-3 flex-wrap"
         >
           {/* Primary */}
-          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} transition={SPRING}>
+          <motion.div
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            transition={SPRING}
+          >
             <Link
               href="/"
               className="
@@ -207,7 +228,11 @@ export default function NotFound() {
           </motion.div>
 
           {/* Secondary */}
-          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} transition={SPRING}>
+          <motion.div
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            transition={SPRING}
+          >
             <Link
               href="/#project-section"
               className="
@@ -236,14 +261,16 @@ export default function NotFound() {
           transition={{ delay: 0.8, duration: 0.5 }}
           className="mt-10"
         >
-          <span className="
+          <span
+            className="
             inline-flex items-center gap-2
             text-[11px] font-mono font-medium tracking-widest uppercase
             text-slate-500 dark:text-slate-500
             px-3 py-1 rounded-full
             border border-slate-300/50 dark:border-slate-700/50
             bg-white/30 dark:bg-slate-900/30
-          ">
+          "
+          >
             <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
             HTTP 404 · Page not found
           </span>

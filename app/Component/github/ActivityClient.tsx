@@ -29,7 +29,13 @@ type TooltipState = {
   top: number;
   pinned: boolean;
 };
-const T0: TooltipState = { visible: false, text: "", left: 0, top: 0, pinned: false };
+const T0: TooltipState = {
+  visible: false,
+  text: "",
+  left: 0,
+  top: 0,
+  pinned: false,
+};
 
 // ── Tooltip island — isolated so calendar grid never re-renders on hover ──────
 const Tooltip = memo(function Tooltip({
@@ -48,12 +54,21 @@ const Tooltip = memo(function Tooltip({
     >
       <span>{state.text}</span>
       <button
-        onClick={(e) => { e.stopPropagation(); onPin(); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onPin();
+        }}
         aria-label={state.pinned ? "Unpin tooltip" : "Pin tooltip"}
         style={{
-          border: "none", background: "transparent", cursor: "pointer",
-          padding: 2, fontSize: 12, lineHeight: 1, color: "inherit",
-          opacity: 0.75, transition: "opacity 0.15s",
+          border: "none",
+          background: "transparent",
+          cursor: "pointer",
+          padding: 2,
+          fontSize: 12,
+          lineHeight: 1,
+          color: "inherit",
+          opacity: 0.75,
+          transition: "opacity 0.15s",
         }}
       >
         {state.pinned ? "📌" : "📍"}
@@ -66,14 +81,22 @@ const Tooltip = memo(function Tooltip({
 const Legend = memo(function Legend({ isDark }: { isDark: boolean }) {
   const pal = isDark ? CALENDAR_THEME.dark : CALENDAR_THEME.light;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12 }}>
+    <div
+      style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12 }}
+    >
       <span className="gh-sub">Less</span>
       <div style={{ display: "flex", gap: 4 }}>
         {pal.map((c, i) => (
-          <div key={i} style={{
-            width: 12, height: 12, background: c, borderRadius: 3,
-            border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`,
-          }} />
+          <div
+            key={i}
+            style={{
+              width: 12,
+              height: 12,
+              background: c,
+              borderRadius: 3,
+              border: `1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`,
+            }}
+          />
         ))}
       </div>
       <span className="gh-sub">More</span>
@@ -86,12 +109,12 @@ export default function ActivityClient() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
-  const [data,     setData]     = useState<DayItem[]>([]);
-  const [loading,  setLoading]  = useState(true);
+  const [data, setData] = useState<DayItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [tooltip,  setTooltip]  = useState<TooltipState>(T0);
+  const [tooltip, setTooltip] = useState<TooltipState>(T0);
   // Gate: don't run fetch or render the calendar until near viewport
-  const [inView,   setInView]   = useState(false);
+  const [inView, setInView] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -108,7 +131,7 @@ export default function ActivityClient() {
           io.disconnect();
         }
       },
-      { rootMargin: "300px" } // pre-load 300px before visible
+      { rootMargin: "300px" }, // pre-load 300px before visible
     );
     io.observe(el);
     return () => io.disconnect();
@@ -134,13 +157,13 @@ export default function ActivityClient() {
           startTransition(() => {
             setData(Array.isArray(json) ? json : []);
             setLoading(false);
-          })
+          }),
         )
         .catch(() =>
           startTransition(() => {
             setData([]);
             setLoading(false);
-          })
+          }),
         );
     };
 
@@ -171,27 +194,29 @@ export default function ActivityClient() {
 
   const totalContributions = useMemo(
     () => processedData.reduce((s, d) => s + (d.count ?? 0), 0),
-    [processedData]
+    [processedData],
   );
 
   const dateRangeDays = useMemo(
     () => (processedData.length ? processedData.length : 0),
-    [processedData]
+    [processedData],
   );
 
   const mobileGrid = useMemo(() => {
     if (!processedData.length) return null;
     const sorted = [...processedData].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
-    const first     = new Date(sorted[0].date);
-    const firstDay  = first.getDay();
-    const cols      = Math.ceil((firstDay + sorted.length) / 7);
-    const grid: (DayItem | null)[][] = Array.from({ length: cols }, () => Array(7).fill(null));
+    const first = new Date(sorted[0].date);
+    const firstDay = first.getDay();
+    const cols = Math.ceil((firstDay + sorted.length) / 7);
+    const grid: (DayItem | null)[][] = Array.from({ length: cols }, () =>
+      Array(7).fill(null),
+    );
     sorted.forEach((d) => {
-      const dt   = new Date(d.date);
+      const dt = new Date(d.date);
       const diff = Math.floor((dt.getTime() - first.getTime()) / 86_400_000);
-      const wk   = Math.floor((firstDay + diff) / 7);
+      const wk = Math.floor((firstDay + diff) / 7);
       if (wk < cols) grid[wk][dt.getDay()] = d;
     });
     return { grid, cols };
@@ -199,39 +224,46 @@ export default function ActivityClient() {
 
   const mobileBlockSize = useMemo(() => {
     if (!mobileGrid || typeof window === "undefined") return 8;
-    const vw  = Math.max(220, window.innerWidth - 32);
+    const vw = Math.max(220, window.innerWidth - 32);
     const gap = 3;
-    const sz  = Math.floor((vw - (mobileGrid.cols - 1) * gap) / mobileGrid.cols);
+    const sz = Math.floor((vw - (mobileGrid.cols - 1) * gap) / mobileGrid.cols);
     return Math.max(4, Math.min(window.innerWidth < 450 ? 9 : 13, sz));
   }, [mobileGrid]);
 
   // ── Tooltip helpers — stable refs ─────────────────────────────────────────
-  const showAt = useCallback((e: React.MouseEvent, text: string, pinned = false) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const left = Math.min(Math.max(8, e.clientX - rect.left - 10), rect.width - 8);
-    const top  = Math.max(6, e.clientY - rect.top - 44);
-    setTooltip({ visible: true, text, left, top, pinned });
-  }, []);
-
-  const hide = useCallback(
-    () => setTooltip((t) => (t.pinned ? t : T0)),
-    []
+  const showAt = useCallback(
+    (e: React.MouseEvent, text: string, pinned = false) => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const left = Math.min(
+        Math.max(8, e.clientX - rect.left - 10),
+        rect.width - 8,
+      );
+      const top = Math.max(6, e.clientY - rect.top - 44);
+      setTooltip({ visible: true, text, left, top, pinned });
+    },
+    [],
   );
+
+  const hide = useCallback(() => setTooltip((t) => (t.pinned ? t : T0)), []);
 
   const fmt = (date: string, count: number) =>
     `${date} — ${count} contribution${count === 1 ? "" : "s"}`;
 
   const onEnter = useCallback(
-    (e: React.MouseEvent, date: string, count: number) => showAt(e, fmt(date, count)),
-    [showAt]
+    (e: React.MouseEvent, date: string, count: number) =>
+      showAt(e, fmt(date, count)),
+    [showAt],
   );
   const onMove = useCallback(
     (e: React.MouseEvent, date: string, count: number) => {
-      setTooltip((t) => { if (!t.visible || t.pinned) return t; return t; });
+      setTooltip((t) => {
+        if (!t.visible || t.pinned) return t;
+        return t;
+      });
       showAt(e, fmt(date, count));
     },
-    [showAt]
+    [showAt],
   );
   const onClick = useCallback(
     (e: React.MouseEvent, date: string, count: number) => {
@@ -239,11 +271,11 @@ export default function ActivityClient() {
       setTooltip((t) => (t.pinned ? T0 : { ...t, pinned: true, text }));
       showAt(e, text, true);
     },
-    [showAt]
+    [showAt],
   );
   const onPin = useCallback(
     () => setTooltip((t) => ({ ...t, pinned: !t.pinned })),
-    []
+    [],
   );
 
   const levelColor = useCallback(
@@ -251,18 +283,27 @@ export default function ActivityClient() {
       const pal = isDark ? CALENDAR_THEME.dark : CALENDAR_THEME.light;
       return pal[Math.max(0, Math.min(pal.length - 1, level))];
     },
-    [isDark]
+    [isDark],
   );
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div ref={containerRef} style={{ width: "100%" }}>
-
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
-                    marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 16,
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div className={`gh-status-dot${!loading && data.length ? " loaded" : ""}`} />
+          <div
+            className={`gh-status-dot${!loading && data.length ? " loaded" : ""}`}
+          />
           <span className="gh-label">
             {isMobile ? "Recent Activity" : "GitHub Contributions"}
           </span>
@@ -275,7 +316,14 @@ export default function ActivityClient() {
           </div>
         )}
         {loading && (
-          <div style={{ width: 120, height: 22, borderRadius: 20, overflow: "hidden" }}>
+          <div
+            style={{
+              width: 120,
+              height: 22,
+              borderRadius: 20,
+              overflow: "hidden",
+            }}
+          >
             <SkeletonBlock />
           </div>
         )}
@@ -284,7 +332,11 @@ export default function ActivityClient() {
       {/* Calendar area — min-height reserved in CSS → no CLS */}
       <div className="gh-calendar-area">
         {loading ? (
-          isMobile ? <PulsingDots /> : <SkeletonGrid />
+          isMobile ? (
+            <PulsingDots />
+          ) : (
+            <SkeletonGrid />
+          )
         ) : !isMobile ? (
           data.length > 0 ? (
             <CalendarDesktop
@@ -295,7 +347,14 @@ export default function ActivityClient() {
               onClick={onClick}
             />
           ) : (
-            <p style={{ fontSize: 13, color: "var(--gh-sub)", textAlign: "center", padding: "24px 0" }}>
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--gh-sub)",
+                textAlign: "center",
+                padding: "24px 0",
+              }}
+            >
               No activity data found.
             </p>
           )
@@ -303,17 +362,33 @@ export default function ActivityClient() {
           (() => {
             const { grid, cols } = mobileGrid;
             const block = mobileBlockSize;
-            const gap   = Math.max(2, Math.round(block * 0.28));
+            const gap = Math.max(2, Math.round(block * 0.28));
             return (
-              <div style={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch",
-                            animation: "gh-fade-up 0.45s 0.05s ease both" }}>
+              <div
+                style={{
+                  width: "100%",
+                  overflowX: "auto",
+                  WebkitOverflowScrolling: "touch",
+                  animation: "gh-fade-up 0.45s 0.05s ease both",
+                }}
+              >
                 <div style={{ display: "inline-flex", gap }}>
                   {grid.map((col, ci) => (
-                    <div key={ci} style={{ display: "flex", flexDirection: "column", gap }}>
+                    <div
+                      key={ci}
+                      style={{ display: "flex", flexDirection: "column", gap }}
+                    >
                       {col.map((cell, ri) => {
-                        const title  = cell ? fmt(cell.date, cell.count) : "No contributions";
-                        const bg     = cell ? levelColor(cell.level) : isDark ? "#0d1520" : "#ebedf0";
-                        const active = tooltip.visible && tooltip.text === title && !!cell;
+                        const title = cell
+                          ? fmt(cell.date, cell.count)
+                          : "No contributions";
+                        const bg = cell
+                          ? levelColor(cell.level)
+                          : isDark
+                            ? "#0d1520"
+                            : "#ebedf0";
+                        const active =
+                          tooltip.visible && tooltip.text === title && !!cell;
                         return (
                           <div
                             key={ri}
@@ -324,16 +399,25 @@ export default function ActivityClient() {
                             onMouseLeave={hide}
                             onClick={(e) => {
                               if (!cell) return;
-                              setTooltip((t) => (t.pinned ? T0 : { ...t, pinned: true, text: title }));
+                              setTooltip((t) =>
+                                t.pinned
+                                  ? T0
+                                  : { ...t, pinned: true, text: title },
+                              );
                               showAt(e, title, !tooltip.pinned);
                             }}
                             style={{
-                              width: block, height: block, background: bg, borderRadius: 3,
+                              width: block,
+                              height: block,
+                              background: bg,
+                              borderRadius: 3,
                               cursor: cell ? "pointer" : "default",
-                              transition: "transform 0.1s ease, box-shadow 0.1s ease",
-                              transform:  active ? "scale(1.2)" : undefined,
-                              boxShadow:  active
-                                ? `0 0 0 1.5px ${isDark ? "#39d353" : "#30a14e"}` : undefined,
+                              transition:
+                                "transform 0.1s ease, box-shadow 0.1s ease",
+                              transform: active ? "scale(1.2)" : undefined,
+                              boxShadow: active
+                                ? `0 0 0 1.5px ${isDark ? "#39d353" : "#30a14e"}`
+                                : undefined,
                             }}
                           />
                         );
@@ -345,7 +429,14 @@ export default function ActivityClient() {
             );
           })()
         ) : (
-          <p style={{ fontSize: 13, color: "var(--gh-sub)", textAlign: "center", padding: "24px 0" }}>
+          <p
+            style={{
+              fontSize: 13,
+              color: "var(--gh-sub)",
+              textAlign: "center",
+              padding: "24px 0",
+            }}
+          >
             No recent activity.
           </p>
         )}
@@ -354,8 +445,16 @@ export default function ActivityClient() {
       {/* Footer */}
       {!loading && isMobile && <Legend isDark={isDark} />}
       {!loading && !isMobile && data.length > 0 && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
-                      marginTop: 10, flexWrap: "wrap", gap: 8 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: 10,
+            flexWrap: "wrap",
+            gap: 8,
+          }}
+        >
           <Legend isDark={isDark} />
           <span className="gh-sub">
             {totalContributions.toLocaleString()} contributions in the last year

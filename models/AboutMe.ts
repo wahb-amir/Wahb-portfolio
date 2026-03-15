@@ -35,7 +35,7 @@ const aboutVersionSchema = new Schema<AboutVersionDoc>(
     version: { type: Number, required: true, unique: true },
     about: aboutSchema,
   },
-  { timestamps: true } // createdAt, updatedAt
+  { timestamps: true }, // createdAt, updatedAt
 );
 
 // --- Export model

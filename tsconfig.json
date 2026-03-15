@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2024",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
@@ -18,9 +14,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "plugins": [
       {
@@ -34,9 +28,9 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/dev/types/**/*.ts"
-, "app/[section]/page.jsx", "app/Component/Contact.tsx"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    ".next/dev/types/**/*.ts",
+    "app/[section]/page.jsx",
+    "app/Component/Contact.tsx"
+  ],
+  "exclude": ["node_modules"]
 }

@@ -45,13 +45,19 @@ export default function Preloader() {
       ctrls.start("filled");
     }, drawDuration + fillDelay);
 
-    const t2 = window.setTimeout(() => {
-      setStartExit(true);
-    }, drawDuration + fillDelay + showHold);
+    const t2 = window.setTimeout(
+      () => {
+        setStartExit(true);
+      },
+      drawDuration + fillDelay + showHold,
+    );
 
-    const t3 = window.setTimeout(() => {
-      setVisible(false);
-    }, drawDuration + fillDelay + showHold + tileDuration + maxExtra);
+    const t3 = window.setTimeout(
+      () => {
+        setVisible(false);
+      },
+      drawDuration + fillDelay + showHold + tileDuration + maxExtra,
+    );
 
     return () => {
       clearTimeout(t1);
@@ -182,7 +188,7 @@ export default function Preloader() {
       <div className="absolute inset-0 z-30 grid grid-cols-5 grid-rows-5">
         {grid.cells.map((cell) => {
           const maxDist = Math.sqrt(
-            ((grid.n - 1) / 2) ** 2 + ((grid.n - 1) / 2) ** 2
+            ((grid.n - 1) / 2) ** 2 + ((grid.n - 1) / 2) ** 2,
           );
           const norm = cell.dist / maxDist; // 0..1
           const tileDelay = norm * 0.12; // seconds, smaller

@@ -4,14 +4,14 @@ import React, { useRef } from "react";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { useReducedMotion, useInView } from "framer-motion";
-import { Engine,IOptions,RecursivePartial } from "@tsparticles/engine";
+import { Engine, IOptions, RecursivePartial } from "@tsparticles/engine";
 
 const Particles = dynamic(
   () =>
     import("@tsparticles/react").then(
-      (mod) => (mod as any).Particles ?? (mod as any).default
+      (mod) => (mod as any).Particles ?? (mod as any).default,
     ),
-  { ssr: false, loading: () => null }
+  { ssr: false, loading: () => null },
 ) as unknown as React.ComponentType<any>;
 
 interface CustomParticlesProps {

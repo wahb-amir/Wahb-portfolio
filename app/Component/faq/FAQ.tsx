@@ -145,14 +145,20 @@ function PlusMinusIcon({ open }: { open: boolean }) {
     >
       {/* Horizontal bar — always visible */}
       <motion.line
-        x1="2" y1="7" x2="12" y2="7"
+        x1="2"
+        y1="7"
+        x2="12"
+        y2="7"
         stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"
       />
       {/* Vertical bar — rotates to 0° (disappears into horiz) when open */}
       <motion.line
-        x1="7" y1="2" x2="7" y2="12"
+        x1="7"
+        y1="2"
+        x2="7"
+        y2="12"
         stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"
@@ -197,7 +203,7 @@ function FAQCard({
         "transition-shadow duration-300",
         isOpen
           ? "border-sky-300/50 dark:border-sky-700/40 bg-white/90 dark:bg-slate-800/70 shadow-[0_4px_24px_-4px_rgba(14,165,233,0.12)]"
-          : "border-slate-200/80 dark:border-slate-700/40 bg-white/55 dark:bg-slate-900/40 hover:shadow-[0_2px_12px_-2px_rgba(14,165,233,0.07)]"
+          : "border-slate-200/80 dark:border-slate-700/40 bg-white/55 dark:bg-slate-900/40 hover:shadow-[0_2px_12px_-2px_rgba(14,165,233,0.07)]",
       )}
     >
       {/* ── Left accent bar — grows top-down on open ── */}
@@ -240,7 +246,7 @@ function FAQCard({
               "transition-colors duration-200",
               isOpen
                 ? "text-sky-700 dark:text-sky-300"
-                : "text-slate-800 dark:text-slate-200"
+                : "text-slate-800 dark:text-slate-200",
             )}
           >
             {item.q}
@@ -256,7 +262,7 @@ function FAQCard({
             "transition-colors duration-200",
             isOpen
               ? "border-sky-300 bg-sky-50 text-sky-600 dark:border-sky-700 dark:bg-sky-900/30 dark:text-sky-400"
-              : "border-slate-200 bg-white/80 text-slate-500 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400 group-hover:border-sky-200 dark:group-hover:border-sky-800"
+              : "border-slate-200 bg-white/80 text-slate-500 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400 group-hover:border-sky-200 dark:group-hover:border-sky-800",
           )}
         >
           <PlusMinusIcon open={isOpen} />
@@ -322,7 +328,7 @@ function CategoryPill({
         "transition-colors duration-200 overflow-hidden",
         active
           ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm"
-          : "bg-white/70 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-sky-300 dark:hover:border-sky-700"
+          : "bg-white/70 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-sky-300 dark:hover:border-sky-700",
       )}
     >
       {/* Active background ripple — expands outward from center */}
@@ -346,7 +352,9 @@ function CategoryPill({
 // ─── Main Section ─────────────────────────────────────────────────────────────
 export default function FAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [activeCategory, setActiveCategory] = useState<FAQCategory | "All">("All");
+  const [activeCategory, setActiveCategory] = useState<FAQCategory | "All">(
+    "All",
+  );
 
   const headingRef = useRef<HTMLDivElement>(null);
   // Trigger entrance animations when the section scrolls into view
@@ -359,7 +367,6 @@ export default function FAQ() {
 
   const toggleFAQ = (globalIdx: number) =>
     setActiveIndex(activeIndex === globalIdx ? null : globalIdx);
-
 
   return (
     <section
@@ -382,14 +389,14 @@ export default function FAQ() {
       <div
         className="absolute inset-0 -z-10 opacity-[0.3] dark:opacity-[0.1]"
         style={{
-          backgroundImage: "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
           backgroundSize: "28px 28px",
         }}
       />
       <div className="absolute inset-0 -z-20 bg-slate-950 hidden dark:block" />
 
       <div className="relative z-10 max-w-3xl w-full mx-auto">
-
         {/* ── Header ─────────────────────────────────────────────────────────── */}
         <div ref={headingRef} className="text-center mb-10">
           {/* Badge */}
@@ -426,7 +433,8 @@ export default function FAQ() {
             transition={{ duration: 0.4, delay: 0.14, ease: "easeOut" }}
             className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-md mx-auto"
           >
-            Everything clients and recruiters typically want to know — answered upfront.
+            Everything clients and recruiters typically want to know — answered
+            upfront.
           </motion.p>
         </div>
 
@@ -442,7 +450,10 @@ export default function FAQ() {
           <CategoryPill
             label="All"
             active={activeCategory === "All"}
-            onClick={() => { setActiveCategory("All"); setActiveIndex(null); }}
+            onClick={() => {
+              setActiveCategory("All");
+              setActiveIndex(null);
+            }}
           />
           {CATEGORIES.map((cat) => (
             <CategoryPill
@@ -450,7 +461,10 @@ export default function FAQ() {
               label={cat}
               count={faqList.filter((f) => f.category === cat).length}
               active={activeCategory === cat}
-              onClick={() => { setActiveCategory(cat); setActiveIndex(null); }}
+              onClick={() => {
+                setActiveCategory(cat);
+                setActiveIndex(null);
+              }}
             />
           ))}
         </motion.div>
@@ -481,7 +495,7 @@ export default function FAQ() {
                       <span
                         className={cn(
                           "inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full border",
-                          categoryMeta[item.category].pill
+                          categoryMeta[item.category].pill,
                         )}
                       >
                         {item.category}

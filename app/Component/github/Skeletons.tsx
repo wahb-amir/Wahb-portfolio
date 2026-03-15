@@ -4,19 +4,12 @@
 // SKELETON_SKIP is pre-computed at module level (deterministic LCG) so the
 // pattern is identical on server and client — no hydration mismatch.
 
-import {
-  SKELETON_COLS,
-  SKELETON_ROWS,
-  SKELETON_SKIP,
-} from "./config";
+import { SKELETON_COLS, SKELETON_ROWS, SKELETON_SKIP } from "./config";
 
 // Individual shimmer cell — uses CSS class defined in the server shell
 export function SkeletonBlock({ delay = 0 }: { delay?: number }) {
   return (
-    <div
-      className="gh-skel-block"
-      style={{ animationDelay: `${delay}ms` }}
-    />
+    <div className="gh-skel-block" style={{ animationDelay: `${delay}ms` }} />
   );
 }
 
@@ -46,20 +39,22 @@ export function SkeletonGrid() {
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${SKELETON_COLS}, 12px)`,
-          gridTemplateRows:    `repeat(${SKELETON_ROWS}, 12px)`,
+          gridTemplateRows: `repeat(${SKELETON_ROWS}, 12px)`,
           gap: 4,
         }}
       >
         {Array.from({ length: SKELETON_COLS * SKELETON_ROWS }).map((_, i) => {
-          const col   = Math.floor(i / SKELETON_ROWS);
-          const row   = i % SKELETON_ROWS;
+          const col = Math.floor(i / SKELETON_ROWS);
+          const row = i % SKELETON_ROWS;
           const delay = (col * 20 + row * 8) % 400;
-          const skip  = SKELETON_SKIP[i];
+          const skip = SKELETON_SKIP[i];
           return (
             <div
               key={i}
               style={{
-                width: 12, height: 12, borderRadius: 3,
+                width: 12,
+                height: 12,
+                borderRadius: 3,
                 opacity: skip ? 0 : 1,
                 overflow: "hidden",
               }}

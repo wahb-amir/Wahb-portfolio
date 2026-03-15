@@ -86,7 +86,7 @@ export async function GET(req: Request) {
     if (!isValidSecret(secret)) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401, headers }
+        { status: 401, headers },
       );
     }
 
@@ -98,7 +98,7 @@ export async function GET(req: Request) {
     if (!latest) {
       return NextResponse.json(
         { error: "No project versions found in DB" },
-        { status: 404, headers }
+        { status: 404, headers },
       );
     }
 
@@ -112,7 +112,7 @@ export async function GET(req: Request) {
     console.error("Internal API error (GET):", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500, headers }
+      { status: 500, headers },
     );
   }
 }
@@ -126,7 +126,7 @@ export async function PUT(req: Request) {
     if (!isValidSecret(secret)) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401, headers }
+        { status: 401, headers },
       );
     }
 
@@ -134,7 +134,7 @@ export async function PUT(req: Request) {
     if (!body || (!body.project && !body.projects)) {
       return NextResponse.json(
         { error: "Invalid payload — provide `project` or `projects`" },
-        { status: 400, headers }
+        { status: 400, headers },
       );
     }
 
@@ -148,8 +148,8 @@ export async function PUT(req: Request) {
     const incoming = body.project
       ? [body.project]
       : Array.isArray(body.projects)
-      ? body.projects
-      : [];
+        ? body.projects
+        : [];
 
     // helper: check equal by _id/id/slug (string compare)
     const areProjectsEqual = (a: Matchable, b: Matchable): boolean => {
@@ -194,13 +194,13 @@ export async function PUT(req: Request) {
         version: created.version,
         projectsCount: baseProjects.length,
       },
-      { status: 200, headers }
+      { status: 200, headers },
     );
   } catch (err) {
     console.error("PUT handler error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500, headers }
+      { status: 500, headers },
     );
   }
 }
@@ -214,7 +214,7 @@ export async function DELETE(req: Request) {
     if (!isValidSecret(secret)) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401, headers }
+        { status: 401, headers },
       );
     }
 
@@ -222,7 +222,7 @@ export async function DELETE(req: Request) {
     if (!body) {
       return NextResponse.json(
         { error: "Invalid payload" },
-        { status: 400, headers }
+        { status: 400, headers },
       );
     }
 
@@ -242,7 +242,7 @@ export async function DELETE(req: Request) {
         {
           error: "Provide `projectId`/`projectIds` or `slug`/`slugs` to delete",
         },
-        { status: 400, headers }
+        { status: 400, headers },
       );
     }
 
@@ -267,7 +267,7 @@ export async function DELETE(req: Request) {
     if (toKeep.length === baseProjects.length) {
       return NextResponse.json(
         { error: "No matching projects found to delete" },
-        { status: 404, headers }
+        { status: 404, headers },
       );
     }
 
@@ -285,13 +285,13 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json(
       { success: true, version: created.version, projectsCount: toKeep.length },
-      { status: 200, headers }
+      { status: 200, headers },
     );
   } catch (err) {
     console.error("DELETE handler error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500, headers }
+      { status: 500, headers },
     );
   }
 }

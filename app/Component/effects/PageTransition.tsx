@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 type PageTransitionProps = {
   children: React.ReactNode;
-};  
+};
 export default function PageTransition({ children }: PageTransitionProps) {
   return (
     <motion.div

@@ -21,7 +21,7 @@ export default function ContributionCard({
   description,
   highlight,
   links,
-}: ContributionCardProps ) {
+}: ContributionCardProps) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 

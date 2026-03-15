@@ -45,10 +45,9 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
     cs && Object.keys(cs).length > 0
       ? {
           ...cs,
-          launch:
-            cs.launch?.date
-              ? cs.launch
-              : launchDate
+          launch: cs.launch?.date
+            ? cs.launch
+            : launchDate
               ? { date: launchDate }
               : cs.launch,
         }
@@ -81,8 +80,8 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
   const repoLinks: string[] = Array.isArray(githubLink)
     ? githubLink.filter(Boolean).map(String)
     : githubLink
-    ? [String(githubLink)]
-    : [];
+      ? [String(githubLink)]
+      : [];
 
   // Pick a category color accent
   const categoryColors: Record<string, string> = {
@@ -140,7 +139,6 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
 
       {/* ── CONTENT ── */}
       <div className="p-5 flex flex-col flex-1 min-w-0 gap-3">
-
         {/* Title + Role */}
         <div>
           <h3

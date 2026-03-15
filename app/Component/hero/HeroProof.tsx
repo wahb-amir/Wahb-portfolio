@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 const PROOF = "Next.js frontends · Node.js backends · GitHub automation";
 
 export default function HeroProof() {
-  const [mounted,     setMounted]     = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const ref = useRef<HTMLParagraphElement>(null);
 
@@ -54,7 +54,9 @@ export default function HeroProof() {
           background-clip: text;
         }
 
-        ${!reduceMotion ? `
+        ${
+          !reduceMotion
+            ? `
           @keyframes proof-gradient-shift {
             0%   { background-position: 0%   50%; }
             50%  { background-position: 100% 50%; }
@@ -66,7 +68,9 @@ export default function HeroProof() {
           .dark .proof-text {
             animation: proof-gradient-shift 6s ease infinite;
           }
-        ` : ""}
+        `
+            : ""
+        }
       `}</style>
 
       <p
@@ -76,7 +80,7 @@ export default function HeroProof() {
         // opacity/translate driven by inline style so the static className
         // stays identical between server and client
         style={{
-          opacity:   mounted ? 1 : 0,
+          opacity: mounted ? 1 : 0,
           transform: mounted ? "translateY(0)" : "translateY(12px)",
           transitionDelay: mounted ? "0ms" : "900ms",
         }}

@@ -24,17 +24,20 @@ export default function Contribution() {
   const contributions = [
     {
       title: "Open Source Project",
-      description: "Contributed features and bug fixes to popular React libraries.",
+      description:
+        "Contributed features and bug fixes to popular React libraries.",
       link: "https://github.com/",
     },
     {
       title: "Portfolio Website",
-      description: "Built a fully responsive, animated portfolio using Next.js & Tailwind.",
+      description:
+        "Built a fully responsive, animated portfolio using Next.js & Tailwind.",
       link: "#",
     },
     {
       title: "Tech Blog Articles",
-      description: "Authored articles on performance optimization and modern web tools.",
+      description:
+        "Authored articles on performance optimization and modern web tools.",
       link: "#",
     },
   ];
@@ -71,8 +74,11 @@ export default function Contribution() {
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: index * 0.2 }}
-            className={`p-6 rounded-xl shadow-lg hover:scale-105 transition transform ${isDark ? "bg-[#1e293b] hover:bg-[#334155]" : "bg-white hover:bg-blue-50"
-              }`}
+            className={`p-6 rounded-xl shadow-lg hover:scale-105 transition transform ${
+              isDark
+                ? "bg-[#1e293b] hover:bg-[#334155]"
+                : "bg-white hover:bg-blue-50"
+            }`}
           >
             <h3 className="text-2xl font-semibold mb-2">{item.title}</h3>
             <p className="text-sm sm:text-base">{item.description}</p>
@@ -86,7 +92,8 @@ export default function Contribution() {
         transition={{ duration: 1, delay: 0.6 }}
         className="mt-12 text-sm sm:text-base text-gray-700 dark:text-slate-300 drop-shadow-sm"
       >
-        Check out my work and contributions to the web development ecosystem 🌐💻
+        Check out my work and contributions to the web development ecosystem
+        🌐💻
       </motion.p>
     </section>
   );

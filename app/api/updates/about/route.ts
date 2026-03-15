@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     if (!payload) {
       return NextResponse.json(
         { error: "No About payload found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -37,7 +37,7 @@ export async function GET(req: Request) {
     console.error("Public About API error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

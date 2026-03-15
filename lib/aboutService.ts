@@ -1,5 +1,5 @@
 // // lib/aboutService.ts
-// import redis from "@/lib/redis"; 
+// import redis from "@/lib/redis";
 // import { connectToDB } from "@/lib/db";
 // import AboutVersion from "@/models/AboutMe";
 // export type AboutPayload = {
@@ -109,7 +109,7 @@ export default async function getLatestAboutPayload(options?: {
   const { clientVersion = null } = options ?? {};
 
   const payload: AboutPayload = {
-    version: null,             // no versioning in static mode
+    version: null, // no versioning in static mode
     data: about as AboutData,
   };
 

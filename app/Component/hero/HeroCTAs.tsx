@@ -1,7 +1,9 @@
 "use client";
 
 function scrollTo(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 export default function HeroCTAs() {
@@ -10,7 +12,10 @@ export default function HeroCTAs() {
       {/* Primary CTA */}
       <a
         href="/#project-section"
-        onClick={(e) => { e.preventDefault(); scrollTo("project-section"); }}
+        onClick={(e) => {
+          e.preventDefault();
+          scrollTo("project-section");
+        }}
         className="
           inline-flex items-center gap-2
           px-6 py-3 rounded-xl
@@ -45,7 +50,10 @@ export default function HeroCTAs() {
       {/* Secondary CTA */}
       <a
         href="/#contact"
-        onClick={(e) => { e.preventDefault(); scrollTo("contact"); }}
+        onClick={(e) => {
+          e.preventDefault();
+          scrollTo("contact");
+        }}
         className="
           inline-flex items-center justify-center
           px-5 py-3 rounded-xl

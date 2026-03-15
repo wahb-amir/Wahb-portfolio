@@ -4,54 +4,80 @@
    ─────────────────────────────────────────────── */
 
 :root {
-  --gh-bg:          rgba(248, 250, 253, 0.92);
-  --gh-border:      rgba(0, 0, 0, 0.06);
-  --gh-heading:     #0f172a;
-  --gh-sub:         #9ca3af;
-  --gh-badge-bg:    rgba(48, 161, 78, 0.09);
-  --gh-badge-clr:   #216e39;
-  --gh-tip-bg:      #ffffff;
-  --gh-tip-clr:     #0f172a;
-  --gh-tip-shadow:  0 8px 28px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
-  --gh-card-shadow: 0 2px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
-  --gh-skel-base:   #e8edf2;
-  --gh-skel-shine:  #f4f7fa;
-  --gh-skel-dot:    #30a14e;
-  --gh-dot-idle:    #d1d8e0;
+  --gh-bg: rgba(248, 250, 253, 0.92);
+  --gh-border: rgba(0, 0, 0, 0.06);
+  --gh-heading: #0f172a;
+  --gh-sub: #9ca3af;
+  --gh-badge-bg: rgba(48, 161, 78, 0.09);
+  --gh-badge-clr: #216e39;
+  --gh-tip-bg: #ffffff;
+  --gh-tip-clr: #0f172a;
+  --gh-tip-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  --gh-card-shadow:
+    0 2px 20px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --gh-skel-base: #e8edf2;
+  --gh-skel-shine: #f4f7fa;
+  --gh-skel-dot: #30a14e;
+  --gh-dot-idle: #d1d8e0;
 }
 
 .dark {
-  --gh-bg:          rgba(13, 19, 33, 0.75);
-  --gh-border:      rgba(255, 255, 255, 0.07);
-  --gh-heading:     #c9d8eb;
-  --gh-sub:         #4a6380;
-  --gh-badge-bg:    rgba(38, 166, 65, 0.14);
-  --gh-badge-clr:   #39d353;
-  --gh-tip-bg:      #0b1320;
-  --gh-tip-clr:     #d4e4f5;
-  --gh-tip-shadow:  0 8px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
-  --gh-card-shadow: 0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
-  --gh-skel-base:   #0d1b2a;
-  --gh-skel-shine:  #162032;
-  --gh-skel-dot:    #26a641;
-  --gh-dot-idle:    #2a3a50;
+  --gh-bg: rgba(13, 19, 33, 0.75);
+  --gh-border: rgba(255, 255, 255, 0.07);
+  --gh-heading: #c9d8eb;
+  --gh-sub: #4a6380;
+  --gh-badge-bg: rgba(38, 166, 65, 0.14);
+  --gh-badge-clr: #39d353;
+  --gh-tip-bg: #0b1320;
+  --gh-tip-clr: #d4e4f5;
+  --gh-tip-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --gh-card-shadow:
+    0 4px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --gh-skel-base: #0d1b2a;
+  --gh-skel-shine: #162032;
+  --gh-skel-dot: #26a641;
+  --gh-dot-idle: #2a3a50;
 }
 
 @keyframes gh-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 @keyframes gh-pulse-dot {
-  0%, 100% { transform: scale(0.7); opacity: 0.4; }
-  50%       { transform: scale(1.2); opacity: 1; }
+  0%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
 }
 @keyframes gh-fade-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes gh-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(57, 211, 83, 0); }
-  50%       { box-shadow: 0 0 14px 2px rgba(57, 211, 83, 0.18); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(57, 211, 83, 0);
+  }
+  50% {
+    box-shadow: 0 0 14px 2px rgba(57, 211, 83, 0.18);
+  }
 }
 
 .gh-card {
@@ -83,9 +109,9 @@
   border-radius: 4px;
   background: linear-gradient(
     90deg,
-    var(--gh-skel-base)  25%,
+    var(--gh-skel-base) 25%,
     var(--gh-skel-shine) 50%,
-    var(--gh-skel-base)  75%
+    var(--gh-skel-base) 75%
   );
   background-size: 200% 100%;
   animation: gh-shimmer 1.6s ease-in-out infinite;

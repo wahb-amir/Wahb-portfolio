@@ -3,10 +3,10 @@
 
 export const CALENDAR_THEME = {
   light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
-  dark:  ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+  dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
 } as const;
 
-export const DAYS_MOBILE   = Math.round(4.5 * 30.4375); // ~137
+export const DAYS_MOBILE = Math.round(4.5 * 30.4375); // ~137
 export const SKELETON_COLS = 53;
 export const SKELETON_ROWS = 7;
 
@@ -26,7 +26,7 @@ export const SKELETON_SKIP: boolean[] = Array.from(
   (_, i) => {
     const col = Math.floor(i / SKELETON_ROWS);
     return col < 2 && rand() > 0.92;
-  }
+  },
 );
 
 export type DayItem = { date: string; count: number; level: number };

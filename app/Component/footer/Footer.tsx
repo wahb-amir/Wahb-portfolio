@@ -12,35 +12,55 @@ import React, { useEffect, useRef, useState } from "react";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import dynamic from "next/dynamic";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { SiGithub, SiNextdotjs, SiTailwindcss, SiMongodb } from "react-icons/si";
-import { ArrowUpRight, ExternalLink, Heart, MapPin, Coffee, Code2, Zap } from "lucide-react";
+import {
+  SiGithub,
+  SiNextdotjs,
+  SiTailwindcss,
+  SiMongodb,
+} from "react-icons/si";
+import {
+  ArrowUpRight,
+  ExternalLink,
+  Heart,
+  MapPin,
+  Coffee,
+  Code2,
+  Zap,
+} from "lucide-react";
 
-const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400","700","900"] });
-const dmSans   = DM_Sans({ subsets: ["latin"] });
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+});
+const dmSans = DM_Sans({ subsets: ["latin"] });
 
 const LazyBackgroundEffect = dynamic(
   () => import("../effects/BackgroundEffect"),
-  { ssr: false, loading: () => null }
+  { ssr: false, loading: () => null },
 );
 
 const NAV_LINKS = [
-  { label: "Skills",   id: "skills"          },
-  { label: "Projects", id: "project-section"  },
-  { label: "About",    id: "about"            },
-  { label: "Contact",  id: "contact"          },
-  { label: "FAQ",      id: "faq"              },
+  { label: "Skills", id: "skills" },
+  { label: "Projects", id: "project-section" },
+  { label: "About", id: "about" },
+  { label: "Contact", id: "contact" },
+  { label: "FAQ", id: "faq" },
 ];
 
 const EXT_LINKS = [
-  { label: "GitHub",        href: "https://github.com/wahb-amir",  icon: SiGithub     },
-  { label: "Client Portal", href: "https://dashboard.wahb.space",  icon: ExternalLink },
+  { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
+  {
+    label: "Client Portal",
+    href: "https://dashboard.wahb.space",
+    icon: ExternalLink,
+  },
 ];
 
 const STACK = [
-  { label: "Next.js",  icon: SiNextdotjs  },
+  { label: "Next.js", icon: SiNextdotjs },
   { label: "Tailwind", icon: SiTailwindcss },
-  { label: "MongoDB",  icon: SiMongodb    },
-  { label: "Framer",   icon: Zap          },
+  { label: "MongoDB", icon: SiMongodb },
+  { label: "Framer", icon: Zap },
 ];
 
 const STATUS_LINES = [
@@ -51,21 +71,24 @@ const STATUS_LINES = [
 ];
 
 export default function Footer() {
-  const ref    = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   const [statusIdx, setStatusIdx] = useState(0);
   const [year] = useState(() => new Date().getFullYear());
 
   useEffect(() => {
-    const id = setInterval(() => setStatusIdx((i) => (i + 1) % STATUS_LINES.length), 3500);
+    const id = setInterval(
+      () => setStatusIdx((i) => (i + 1) % STATUS_LINES.length),
+      3500,
+    );
     return () => clearInterval(id);
   }, []);
 
   const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
   const fade = (delay = 0) => ({
-    initial:    { opacity: 0, y: 20 },
-    animate:    inView ? { opacity: 1, y: 0 } : {},
+    initial: { opacity: 0, y: 20 },
+    animate: inView ? { opacity: 1, y: 0 } : {},
     transition: { duration: 0.55, delay, ease },
   });
 
@@ -154,15 +177,21 @@ export default function Footer() {
       {/* Top shimmer border — CSS-var driven, no JS */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: "var(--ft-shimmer)", opacity: "var(--ft-shimmer-opacity)" as never }}
+        style={{
+          background: "var(--ft-shimmer)",
+          opacity: "var(--ft-shimmer-opacity)" as never,
+        }}
       />
 
       {/* Ambient glow */}
       <div
         className="pointer-events-none absolute"
         style={{
-          bottom: 0, left: "50%", transform: "translateX(-50%)",
-          width: 600, height: 280,
+          bottom: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 600,
+          height: 280,
           borderRadius: "50%",
           background: "var(--ft-glow-bg)",
           filter: "blur(40px)",
@@ -170,12 +199,13 @@ export default function Footer() {
       />
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-8">
-
         {/* ══ TOP GRID ══ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-
           {/* Col 1: Brand */}
-          <motion.div {...fade(0)} className="md:col-span-1 flex flex-col gap-4">
+          <motion.div
+            {...fade(0)}
+            className="md:col-span-1 flex flex-col gap-4"
+          >
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm select-none"
@@ -187,14 +217,16 @@ export default function Footer() {
               >
                 W
               </div>
-              <span className={`${playfair.className} text-xl font-bold ft-text-primary`}>
+              <span
+                className={`${playfair.className} text-xl font-bold ft-text-primary`}
+              >
                 Wahb Amir
               </span>
             </div>
 
             <p className="ft-text-muted text-sm leading-relaxed max-w-xs font-medium">
-              Full-stack engineer crafting fast, maintainable web products — from
-              landing pages to production SaaS.
+              Full-stack engineer crafting fast, maintainable web products —
+              from landing pages to production SaaS.
             </p>
 
             <div className="ft-text-muted flex items-center gap-1.5 text-xs font-medium">
@@ -205,18 +237,24 @@ export default function Footer() {
             {/* Status ticker */}
             <div
               className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full text-xs font-semibold border ft-accent-text"
-              style={{ background: "var(--ft-status-bg)", borderColor: "var(--ft-status-border)" }}
+              style={{
+                background: "var(--ft-status-bg)",
+                borderColor: "var(--ft-status-border)",
+              }}
             >
               <span
                 className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse ft-accent-text"
-                style={{ background: "var(--ft-accent)", boxShadow: "0 0 5px var(--ft-accent)" }}
+                style={{
+                  background: "var(--ft-accent)",
+                  boxShadow: "0 0 5px var(--ft-accent)",
+                }}
               />
               <AnimatePresence mode="wait">
                 <motion.span
                   key={statusIdx}
-                  initial={{ opacity: 0, y: 6  }}
-                  animate={{ opacity: 1, y: 0  }}
-                  exit={{   opacity: 0, y: -6  }}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.28 }}
                   className="whitespace-nowrap"
                 >
@@ -235,14 +273,27 @@ export default function Footer() {
               <button
                 key={id}
                 type="button"
-                onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                onClick={() =>
+                  document
+                    .getElementById(id)
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
                 className="ft-text-muted group flex items-center gap-2 text-sm font-medium w-fit transition-colors duration-150 hover:ft-accent-text"
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ft-accent)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ft-text-muted)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--ft-accent)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--ft-text-muted)")
+                }
               >
                 <span
                   className="h-px transition-all duration-200 group-hover:w-5"
-                  style={{ width: "14px", background: "var(--ft-accent)", display: "block", flexShrink: 0 }}
+                  style={{
+                    width: "14px",
+                    background: "var(--ft-accent)",
+                    display: "block",
+                    flexShrink: 0,
+                  }}
                 />
                 {label}
               </button>
@@ -262,14 +313,16 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ft-text-muted group inline-flex items-center gap-2 text-sm font-medium w-fit"
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ft-accent)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ft-text-muted)")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--ft-accent)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "var(--ft-text-muted)")
+                  }
                 >
                   <Icon className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
                   {label}
-                  <ArrowUpRight
-                    className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 ft-accent-text"
-                  />
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 ft-accent-text" />
                 </a>
               ))}
             </div>
@@ -288,9 +341,9 @@ export default function Footer() {
                     transition={{ duration: 0.35, delay: 0.3 + i * 0.07 }}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg border"
                     style={{
-                      background:  "var(--ft-pill-bg)",
+                      background: "var(--ft-pill-bg)",
                       borderColor: "var(--ft-pill-border)",
-                      color:       "var(--ft-pill-text)",
+                      color: "var(--ft-pill-text)",
                     }}
                   >
                     <SIcon className="w-3 h-3 ft-accent-text" />
@@ -303,7 +356,10 @@ export default function Footer() {
         </div>
 
         {/* ══ DIVIDER ══ */}
-        <div className="w-full h-px mb-6" style={{ background: "var(--ft-divider)" }} />
+        <div
+          className="w-full h-px mb-6"
+          style={{ background: "var(--ft-divider)" }}
+        />
 
         {/* ══ BOTTOM BAR ══ */}
         <motion.div
@@ -325,18 +381,28 @@ export default function Footer() {
               transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 2.5 }}
               className="inline-flex"
             >
-              <Heart className="w-3.5 h-3.5" style={{ color: "#e11d48", fill: "#e11d48" }} />
+              <Heart
+                className="w-3.5 h-3.5"
+                style={{ color: "#e11d48", fill: "#e11d48" }}
+              />
             </motion.span>
             &amp;
             {/* Coffee icon colour is a fixed amber — same in both themes, no branching needed */}
-            <Coffee className="w-3.5 h-3.5" style={{ color: "var(--ft-coffee)" }} />
+            <Coffee
+              className="w-3.5 h-3.5"
+              style={{ color: "var(--ft-coffee)" }}
+            />
             in the late hours
           </p>
 
           {/* Back to top */}
           <button
             type="button"
-            onClick={() => document.getElementById("hero-section")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            onClick={() =>
+              document
+                .getElementById("hero-section")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
             className="ft-accent-text group inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-200 hover:scale-105"
           >
             Back to top
@@ -344,10 +410,18 @@ export default function Footer() {
               className="w-5 h-5 rounded-full flex items-center justify-center border transition-all duration-200 group-hover:-translate-y-0.5"
               style={{
                 borderColor: "var(--ft-back-top-border)",
-                background:  "var(--ft-back-top-bg)",
+                background: "var(--ft-back-top-bg)",
               }}
             >
-              <svg className="w-2.5 h-2.5" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                className="w-2.5 h-2.5"
+                viewBox="0 0 10 10"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M5 8V2M2 5l3-3 3 3" />
               </svg>
             </span>
