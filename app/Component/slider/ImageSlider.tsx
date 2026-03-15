@@ -31,65 +31,54 @@ export default function ProjectImage({
 
   const flatImages = images.flat?.() ?? images;
 
-  /**
-   * 🧠 IMPORTANT
-   * Until mounted, render the SAME markup the server rendered
-   * to avoid hydration mismatch
-   */
+  // ── SSR / pre-mount: match server markup exactly to avoid hydration mismatch ──
   if (!mounted) {
     if (serverPreview) {
-      // eslint-disable-next-line @next/next/no-img-element
       return (
-        <div className="w-full" style={{ height }}>
+        <div className="w-full h-full bg-gray-50 dark:bg-slate-900">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={serverPreview}
             alt={`${title} preview`}
-            className="object-cover rounded-lg w-full h-full"
+            className="w-full h-full object-contain"
             loading="lazy"
           />
         </div>
       );
     }
-
     return (
-      <div
-        className="w-full bg-gray-100 dark:bg-slate-800"
-        style={{ height }}
-      />
+      <div className="w-full h-full bg-gray-100 dark:bg-slate-800" />
     );
   }
 
-  /**
-   * 🎯 Client-only interactive slider
-   */
+  // ── No images ──
   if (!flatImages.length) {
     return (
-      <div
-        className="w-full bg-gray-100 dark:bg-slate-800"
-        style={{ height }}
-      />
+      <div className="w-full h-full bg-gray-100 dark:bg-slate-800" />
     );
   }
 
+  // ── Client slider ──
   return (
-    <div className="relative mx-auto max-w-full px-4 sm:px-6 md:px-8">
+    <div className="relative w-full h-full">
       <div
         ref={sliderRef}
-        className="keen-slider rounded-xl overflow-hidden w-full"
+        className="keen-slider w-full h-full overflow-hidden"
         style={{ height }}
       >
         {flatImages.map((src, i) => (
           <div
             key={i}
-            className="keen-slider__slide relative"
-            style={{ height, overflow: "hidden" }}
+            className="keen-slider__slide relative w-full"
+            style={{ height, minWidth: 0 }}
           >
             <Image
               src={src}
               alt={`${title} slide ${i + 1}`}
               fill
-              className="object-cover rounded-lg"
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+              // object-contain: always shows the full image, no zoom/crop
+              className="object-contain"
+              sizes="(max-width: 640px) 100vw, 50vw"
               quality={80}
               loading="lazy"
             />
@@ -97,24 +86,27 @@ export default function ProjectImage({
         ))}
       </div>
 
-      {/* Controls */}
-      <button
-        onClick={() => slider.current?.prev()}
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full z-10"
-        aria-label="Previous Slide"
-        style={{ touchAction: "manipulation" }}
-      >
-        ◀
-      </button>
-
-      <button
-        onClick={() => slider.current?.next()}
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full z-10"
-        aria-label="Next Slide"
-        style={{ touchAction: "manipulation" }}
-      >
-        ▶
-      </button>
+      {/* Prev / Next — only show if more than one image */}
+      {flatImages.length > 1 && (
+        <>
+          <button
+            onClick={() => slider.current?.prev()}
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full z-10 transition-colors"
+            aria-label="Previous slide"
+            style={{ touchAction: "manipulation" }}
+          >
+            ◀
+          </button>
+          <button
+            onClick={() => slider.current?.next()}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full z-10 transition-colors"
+            aria-label="Next slide"
+            style={{ touchAction: "manipulation" }}
+          >
+            ▶
+          </button>
+        </>
+      )}
     </div>
   );
 }
