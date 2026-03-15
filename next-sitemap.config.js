@@ -1,11 +1,9 @@
-import { IConfig } from "next-sitemap";
-
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: "https://wahb.space",
   generateRobotsTxt: true,
   exclude: ["*"],
-  additionalPaths: async (config: IConfig) => [
+  additionalPaths: async (config) => [
     // ── Portfolio pages ───────────────────────────────────────────────────────
 
     // Homepage — max priority
