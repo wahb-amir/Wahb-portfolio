@@ -294,7 +294,13 @@ export const structuredData = {
       areaServed: "Worldwide",
       description:
         "Pixel-perfect responsive frontends, component-driven UI, animations and accessibility with React, Next.js and Tailwind CSS.",
-      keywords: ["React", "Next.js", "Tailwind", "Framer Motion", "Accessibility"],
+      keywords: [
+        "React",
+        "Next.js",
+        "Tailwind",
+        "Framer Motion",
+        "Accessibility",
+      ],
     },
     {
       "@type": "Service",
@@ -327,7 +333,13 @@ export const structuredData = {
       areaServed: "Worldwide",
       description:
         "Technical SEO, structured data (JSON-LD), site performance optimization, CLS/LCP improvements and search engine indexability auditing.",
-      keywords: ["SEO", "structured data", "performance", "Lighthouse", "indexability"],
+      keywords: [
+        "SEO",
+        "structured data",
+        "performance",
+        "Lighthouse",
+        "indexability",
+      ],
     },
     {
       "@type": "Service",

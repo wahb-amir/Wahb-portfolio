@@ -46,16 +46,12 @@ export default function ProjectImage({
         </div>
       );
     }
-    return (
-      <div className="w-full h-full bg-gray-100 dark:bg-slate-800" />
-    );
+    return <div className="w-full h-full bg-gray-100 dark:bg-slate-800" />;
   }
 
   // ── No images ──
   if (!flatImages.length) {
-    return (
-      <div className="w-full h-full bg-gray-100 dark:bg-slate-800" />
-    );
+    return <div className="w-full h-full bg-gray-100 dark:bg-slate-800" />;
   }
 
   // ── Client slider ──

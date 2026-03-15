@@ -168,7 +168,6 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
 
         {/* ── CONTENT ── */}
         <div className="p-5 sm:p-6 flex flex-col flex-1 min-w-0 max-w-full overflow-hidden gap-4">
-
           {/* Title + Role */}
           <div className="space-y-1">
             <h3

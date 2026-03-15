@@ -144,12 +144,22 @@ function PlusMinusIcon({ open }: { open: boolean }) {
       transition={{ duration: 0.28, times: [0, 0.4, 1], ease: "easeOut" }}
     >
       <motion.line
-        x1="2" y1="7" x2="12" y2="7"
-        stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
+        x1="2"
+        y1="7"
+        x2="12"
+        y2="7"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
       />
       <motion.line
-        x1="7" y1="2" x2="7" y2="12"
-        stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
+        x1="7"
+        y1="2"
+        x2="7"
+        y2="12"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
         animate={{ scaleY: open ? 0 : 1, opacity: open ? 0 : 1 }}
         transition={{ duration: 0.22, ease: EASE_SMOOTH }}
         style={{ originX: "7px", originY: "7px" }}
@@ -327,7 +337,9 @@ function CategoryPill({
 // ─── Main Section ─────────────────────────────────────────────────────────────
 export default function FAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [activeCategory, setActiveCategory] = useState<FAQCategory | "All">("All");
+  const [activeCategory, setActiveCategory] = useState<FAQCategory | "All">(
+    "All",
+  );
 
   const headingRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(headingRef, { once: true, margin: "-80px" });
@@ -360,7 +372,8 @@ export default function FAQ() {
       <div
         className="absolute inset-0 -z-10 opacity-[0.3] dark:opacity-[0.1]"
         style={{
-          backgroundImage: "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
           backgroundSize: "28px 28px",
         }}
       />
@@ -400,7 +413,8 @@ export default function FAQ() {
             transition={{ duration: 0.4, delay: 0.14, ease: "easeOut" }}
             className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-md mx-auto"
           >
-            Everything clients and recruiters typically want to know — answered upfront.
+            Everything clients and recruiters typically want to know — answered
+            upfront.
           </motion.p>
         </div>
 
@@ -416,7 +430,10 @@ export default function FAQ() {
           <CategoryPill
             label="All"
             active={activeCategory === "All"}
-            onClick={() => { setActiveCategory("All"); setActiveIndex(null); }}
+            onClick={() => {
+              setActiveCategory("All");
+              setActiveIndex(null);
+            }}
           />
           {CATEGORIES.map((cat) => (
             <CategoryPill
@@ -424,7 +441,10 @@ export default function FAQ() {
               label={cat}
               count={faqList.filter((f) => f.category === cat).length}
               active={activeCategory === cat}
-              onClick={() => { setActiveCategory(cat); setActiveIndex(null); }}
+              onClick={() => {
+                setActiveCategory(cat);
+                setActiveIndex(null);
+              }}
             />
           ))}
         </motion.div>

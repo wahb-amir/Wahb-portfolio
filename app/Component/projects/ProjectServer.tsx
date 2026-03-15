@@ -279,7 +279,10 @@ async function ProjectsGrid() {
 
       {/* ── View All Projects button ── */}
       {hasMore && (
-        <div className="ps-card-enter mt-10" style={{ animationDelay: "180ms" }}>
+        <div
+          className="ps-card-enter mt-10"
+          style={{ animationDelay: "180ms" }}
+        >
           <Link
             href="/projects"
             className="

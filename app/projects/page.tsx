@@ -85,11 +85,7 @@ async function AllProjectsGrid() {
   }
 
   return (
-    <div
-      className="all-projects-grid"
-      role="list"
-      aria-label="All projects"
-    >
+    <div className="all-projects-grid" role="list" aria-label="All projects">
       {projects.map((p, i) => (
         <div
           key={slugify(p.id ?? p.title ?? p.name ?? `project-${i}`)}
@@ -149,7 +145,8 @@ export default function ProjectsPage() {
         }
       `}</style>
 
-      <main id="Project-page"
+      <main
+        id="Project-page"
         className="
           relative flex flex-col items-center justify-start
           min-h-[65vh] sm:min-h-[72vh]
@@ -160,8 +157,7 @@ export default function ProjectsPage() {
         "
         aria-label="Projects Page"
         role="section"
-        >
-
+      >
         {/* ── Back link ── */}
         <div className="w-full max-w-56rem mb-8 self-start max-w-[56rem] mx-auto">
           <Link
