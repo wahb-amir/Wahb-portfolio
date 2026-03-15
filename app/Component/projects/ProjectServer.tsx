@@ -346,21 +346,23 @@ export default function ProjectServer() {
         }
 
         /* ── Grid layout ──
-           Mobile:  1 column, cards full width, comfortable max-width
-           Desktop: 2 columns, capped at 2 — never stretches to 3+
+           Mobile:  1 column, max 480px so card doesn't balloon on wide phones
+           Desktop: 2 columns, 72rem total → each card ~33rem — readable, not cramped
         */
         .ps-grid {
           display: grid;
-          gap: 1.5rem;
+          gap: 2rem;
           width: 100%;
-          max-width: 56rem;     /* tighter cap so 2 cards don't get too wide */
+          max-width: 480px;
           padding-inline: 0.5rem;
           align-items: start;
-          grid-template-columns: 1fr;          /* mobile: 1 column */
+          grid-template-columns: 1fr;
+          margin-inline: auto;
         }
         @media (min-width: 640px) {
           .ps-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));  /* desktop: always 2 */
+            max-width: 72rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 

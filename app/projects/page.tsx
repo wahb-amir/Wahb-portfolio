@@ -110,15 +110,17 @@ export default function ProjectsPage() {
       <style>{`
         .all-projects-grid {
           display: grid;
-          gap: 1.5rem;
+          gap: 2rem;
           width: 100%;
-          max-width: 56rem;
+          max-width: 480px;
           padding-inline: 0.5rem;
           align-items: start;
           grid-template-columns: 1fr;
+          margin-inline: auto;
         }
         @media (min-width: 640px) {
           .all-projects-grid {
+            max-width: 72rem;
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
@@ -138,8 +140,7 @@ export default function ProjectsPage() {
         }
       `}</style>
 
-      <main  id="hero-section"
-        className="
+      <main className="
           relative flex flex-col items-center justify-start
           min-h-[65vh] sm:min-h-[72vh]
           px-4 xs:px-6 text-center
@@ -147,13 +148,15 @@ export default function ProjectsPage() {
           pt-[env(safe-area-inset-top)]
           bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
         "
-        aria-label="Projects">
+        aria-label="Projects Page"
+        id="project-page"
+      >
 
         {/* ── Back link ── */}
         <div className="w-full max-w-56rem mb-8 self-start max-w-[56rem] mx-auto">
           <Link
             href="/#project-section"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-900 dark:text-white/90 hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
