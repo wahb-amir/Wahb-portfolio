@@ -14,7 +14,7 @@ const STACK = [
   "Node.js",
   "TypeScript",
   "PostgreSQL",
-  "GitHub APIs"
+  "GitHub APIs",
 ] as const;
 
 export default function Hero() {
@@ -170,7 +170,8 @@ export default function Hero() {
                   "linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #6366f1 100%)",
               }}
             >
-              <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-slate-900">
+              {/* Removed 'overflow-hidden' from this div */}
+              <div className="relative w-full h-full rounded-full bg-white dark:bg-slate-900">
                 <Avatar />
               </div>
             </div>
@@ -178,7 +179,10 @@ export default function Hero() {
 
           {/* ── Availability badge ── */}
           <div className="h-fade-up h-d2 mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-300/60 dark:border-emerald-700/50 bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400">
-            <span className="avail-dot w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" aria-hidden="true" />
+            <span
+              className="avail-dot w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"
+              aria-hidden="true"
+            />
             Available for new projects
           </div>
 
@@ -222,7 +226,9 @@ export default function Hero() {
             aria-label="View EcoLens — 3rd Place Hack for Humanity 2026"
           >
             {/* Trophy icon */}
-            <span className="text-base leading-none" aria-hidden="true">🏆</span>
+            <span className="text-base leading-none" aria-hidden="true">
+              🏆
+            </span>
 
             {/* Text */}
             <span className="flex flex-col items-start leading-tight">
