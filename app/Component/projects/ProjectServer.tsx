@@ -345,33 +345,34 @@ export default function ProjectServer() {
           background: linear-gradient(to top, #0a1628, transparent);
         }
 
-        /* ── Grid layout ──
-           Mobile:  1 column, max 480px so card doesn't balloon on wide phones
-           Desktop: 2 columns, 72rem total → each card ~33rem — readable, not cramped
-        */
+        /* ── Grid layout ── */
         .ps-grid {
           display: grid;
-          gap: 2rem;
+          gap: 1.5rem;
           width: 100%;
-          max-width: 480px;
-          padding-inline: 0.5rem;
+          max-width: min(100%, 72rem);
+          box-sizing: border-box;
           align-items: start;
-          grid-template-columns: 1fr;
-          margin-inline: auto;
+          grid-template-columns: minmax(0, 1fr);
         }
         @media (min-width: 640px) {
           .ps-grid {
-            max-width: 72rem;
+            gap: 2rem;
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 
-        /* ── Card entrance animation ── */
+        /* ── Card entrance animation ──
+           min-width: 0 is the critical fix — grid children default to
+           min-width: auto which lets them blow past their column boundary */
         @keyframes ps-card-enter {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
         .ps-card-enter {
+          min-width: 0;
+          max-width: 100%;
+          box-sizing: border-box;
           animation: ps-card-enter 0.45s ease both;
         }
 
@@ -388,6 +389,7 @@ export default function ProjectServer() {
       <section
         id="project-section"
         className="relative flex flex-col justify-start items-center px-4 xs:px-6 text-center pb-[6.25rem] text-black overflow-hidden pt-[env(safe-area-inset-top)] dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]"
+        style={{ overflowX: "hidden" }}
         role="region"
         aria-labelledby="projects-heading"
         data-keywords="projects,portfolio,case-studies,projects-grid"

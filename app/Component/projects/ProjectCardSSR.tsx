@@ -110,15 +110,16 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
       <article
         className="project-card group relative rounded-2xl overflow-hidden border transition-all duration-300
           hover:-translate-y-1 hover:shadow-2xl focus-within:shadow-2xl
-          w-full h-full flex flex-col
+          w-full max-w-full flex flex-col
           border-gray-100/80 bg-white
           dark:border-slate-700/60 dark:bg-slate-800/50
           backdrop-blur-sm shadow-sm"
+        style={{ boxSizing: "border-box", minWidth: 0 }}
         aria-labelledby={`project-${safeId}`}
         data-project-id={project.id ?? safeId}
       >
         {/* ── IMAGE AREA ── */}
-        <div className="relative w-full overflow-hidden bg-gray-50 dark:bg-slate-900" style={{ height: "clamp(11rem, 22vw, 16rem)" }}>
+        <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-gray-50 dark:bg-slate-900">
           {/* Bottom gradient overlay */}
           <div
             className="absolute bottom-0 inset-x-0 h-16 z-10 pointer-events-none"
@@ -166,13 +167,13 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
         </div>
 
         {/* ── CONTENT ── */}
-        <div className="p-5 sm:p-6 flex flex-col flex-1 min-w-0 gap-4">
+        <div className="p-5 sm:p-6 flex flex-col flex-1 min-w-0 max-w-full overflow-hidden gap-4">
 
           {/* Title + Role */}
           <div className="space-y-1">
             <h3
               id={`project-${safeId}`}
-              className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 dark:text-white leading-snug"
+              className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 dark:text-white leading-snug break-words"
             >
               {title}
             </h3>
