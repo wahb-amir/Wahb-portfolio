@@ -1,5 +1,99 @@
 [
   {
+    "id": "ecolens",
+    "title": "EcoLens — AI Waste Classifier",
+    "role": "Full-Stack Engineer & ML Integrator",
+    "badge": {
+      "label": "🏆 3rd Place — Hack for Humanity 2026",
+      "sub": "775 participants · Solo build · International"
+    },
+    "images": [
+      "/Project/EcoLens/dashboard.png",
+      "/Project/EcoLens/leaderboard.jpg",
+      "/Project/EcoLens/achivements.png"
+    ],
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "MongoDB",
+      "HuggingFace",
+      "Framer Motion",
+      "JWT",
+      "SMTP",
+      "Tailwind"
+    ],
+    "short": "Point your camera at any waste item and instantly get an AI classification, real environmental impact data, and points toward a global leaderboard — turning recycling from a one-off action into a measurable habit.",
+    "liveLink": "https://eco.wahb.space",
+    "githubLink": "https://github.com/wahb-amir/ecolens",
+    "problem": "People want to recycle but don't know what goes where or how much their small actions actually matter. The gap between awareness and action is a UX problem as much as an information problem.",
+    "process": [
+      "Designed the core loop: Identify → Quantify → Reward — so every scan produces a visible, cumulative result",
+      "Built a serverless Next.js backend that proxies image predictions through a HuggingFace-hosted ML model",
+      "Implemented a custom achievements engine with material-specific badges and a global leaderboard",
+      "Engineered an OTP-based auth system with JWT in HTTP-only cookies and token rotation",
+      "Applied conservative environmental impact formulas (CO₂, water, energy) tied to confidence scores and estimated weight",
+      "Iterated mobile camera and upload flows through multiple rounds to reduce UX friction"
+    ],
+    "outcome": "Placed 3rd out of 775 international participants at Hack for Humanity 2026 — built entirely solo. Delivered a production-grade app with a real ML pipeline, gamified engagement system, and robust auth — not a prototype.",
+    "stats": {
+      "placement": "🏆 3rd Place — Hack for Humanity 2026",
+      "participants": "775 international participants",
+      "build": "Solo — design, ML integration, backend, frontend, deployment"
+    },
+    "category": "Platform",
+    "launch": {
+      "date": "March 2026"
+    },
+    "caseStudy": {
+      "tlDr": "Built and shipped an AI-powered waste classification app solo in one month — placed 3rd internationally at Hack for Humanity 2026 out of 775 participants. EcoLens turns a photo of any waste item into an AI label, estimated CO₂/water/energy impact, and gamified points — bridging the gap between environmental awareness and measurable daily action.",
+      "problem": "Most people want to recycle responsibly but face two blockers: they don't know what material something is, and they have no sense of whether their effort matters at scale. Existing recycling apps either give dry information with no feedback loop, or require manual input. EcoLens was built to solve both: real-time AI classification plus cumulative impact that compounds over time.",
+      "constraints": "One-month hackathon window, solo build, no budget for paid ML APIs, and a requirement to ship a judge-ready product — not a demo. Weight estimation from a 2D image, label ambiguity from the model, and auth reliability under edge cases were the hardest technical constraints.",
+      "myRole": "Everything — product design, ML integration, backend architecture, frontend, auth system, achievements engine, deployment, and the submission video.",
+      "responsibilities": [
+        "Designed and built the full prediction pipeline: client image → POST /api/predict → HuggingFace proxy → label normalization → point & impact calculation → MongoDB write → frontend update",
+        "Built a custom achievements engine with material-specific badges (plastic, paper, glass, metal, organic) and a global leaderboard with real-time rank updates",
+        "Engineered OTP-based email verification with SMTP, JWT auth in HTTP-only cookies, and token rotation in /api/user — including transactional user creation with rollback on email failure",
+        "Implemented conservative environmental impact formulas: CO₂ = (estimated_weight_g / 1000) × EF_kg/tonne, with parallel calculations for water saved and energy saved",
+        "Handled low-confidence scan suppression — scans returning 'unknown' or below confidence threshold are not logged, keeping impact data honest",
+        "Designed a responsive UI with camera and upload flows, a lifetime impact dashboard, and Framer Motion animations — then iterated mobile UX through multiple rounds to reduce permission and cropping friction"
+      ],
+      "approach": [
+        "Started with the core loop first — get one scan working end-to-end before building any gamification",
+        "Chose HuggingFace Spaces for the ML endpoint to stay within zero budget with no cold-start penalty",
+        "Kept impact math conservative and transparent — approximate weight ranges per category, documented multipliers, no inflated numbers",
+        "Built auth last but made it robust: OTP + JWT + token rotation + transactional rollback — the kind of detail that breaks apps at demo time",
+        "Submitted a structured video covering the problem, live demo, and architecture overview — knowing presentation is scored equally alongside code"
+      ],
+      "technicalSolution": [
+        "Next.js (App Router) for the full stack — serverless API routes handle prediction proxy, auth, achievements, and leaderboard",
+        "HuggingFace Space hosts the image classification model; results are proxied server-side to normalize labels and strip raw confidence scores from the client",
+        "MongoDB stores users, scan history, achievement state, and leaderboard rankings — Mongoose handles schema validation and transactional user creation",
+        "JWT in HTTP-only cookies with token rotation on every /api/user call — SMTP OTP for email verification via Nodemailer",
+        "SWR for client-side data fetching — dashboard and leaderboard update reactively without full page reloads",
+        "Framer Motion for scan result animations, badge unlocks, and dashboard entrance sequences",
+        "Tailwind for consistent, responsive UI across camera, upload, dashboard, and leaderboard views"
+      ],
+      "architectureNotes": "Fully serverless within Next.js — no separate backend process. Client sends a base64 image to POST /api/predict. The route proxies to the HuggingFace endpoint, receives labels + confidence scores, maps the top label to one of six categories (plastic, paper, glass, metal, organic, other), computes points and impact using estimated weight ranges per category, writes the scan to MongoDB, updates the user's cumulative stats and achievement state, then returns the enriched result to the client in a single response. Low-confidence results and 'unknown' labels are rejected before the write step — keeping impact data honest. Auth is handled via /api/user: OTP is generated and emailed on registration, verified on the next call, and a JWT is issued into an HTTP-only cookie with rotation on every subsequent authenticated request.",
+      "outcomes": {
+        "qualitative": "Placed 3rd internationally at Hack for Humanity 2026 — solo build, 775 participants. Judges scored the project on impact, innovation, design, and presentation. The predict → persist → notify pipeline held up under demo conditions, auth edge cases were handled, and the leaderboard and achievements gave the project a live, working feel rather than a static prototype."
+      },
+      "proofPoints": [
+        "3rd place finish at Hack for Humanity 2026 — 775 international participants, solo build.",
+        "Full ML pipeline shipped within a 1-month hackathon window with zero paid API budget.",
+        "Auth system handles OTP verification, JWT rotation, and transactional rollback — no auth failures during judging.",
+        "Conservative impact formulas with confidence-gated scan logging — data integrity over inflated numbers."
+      ],
+      "lessons": [
+        "Integrating ML is more than wiring up a model — UX around low confidence, error states, and mobile camera flows determines whether the product feels real or broken.",
+        "Small auth details (cookie naming consistency, token rotation, OTP edge cases) break apps more reliably than mis-tuned models. Get auth right before building features on top of it.",
+        "Conservative math builds more trust than impressive-looking numbers. Judges and users both notice when impact estimates feel inflated.",
+        "Gamification works — the leaderboard and badges gave the project energy during the demo that a plain scan tool would not have had.",
+        "Presentation is half the score. A clear problem statement, live demo, and architecture walkthrough in the video matter as much as the code."
+      ],
+      "callToAction": "Want to see the full pipeline in action or discuss how to integrate ML into a production web app? Check the live demo or reach out directly."
+    }
+  },
+  {
     "id": "client-dev-platform",
     "title": "Client & Developer Collaboration Platform",
     "role": "Full-Stack Engineer",
@@ -39,7 +133,7 @@
     },
     "category": "Platform",
     "launch": {
-      "date": "Monday 22,2025"
+      "date": "October 2025"
     },
     "caseStudy": {
       "tlDr": "Built a single-platform collaboration tool that replaced fragmented email/chat processes and automated progress reporting — improving transparency and reducing manual status updates for developers and clients.",
@@ -54,10 +148,10 @@
         "Owned deployments and monitoring (automated builds and secure hosting)"
       ],
       "approach": [
-        "Took feedBack from 5 user (clients) to capture the main pain points",
-        "Mapped out user journeys for three personas (client, manager, developer)",
-        "Prioritized features into an MVP: quotes, messaging, progress tracking, GitHub sync",
-        "Iterated rapidly with 1-week sprints and early feedback from two pilot clients"
+        "Gathered feedback from 5 pilot clients to identify the most painful friction points",
+        "Mapped user journeys for three personas: client, manager, and developer",
+        "Prioritized features into a tight MVP: quotes, messaging, progress tracking, GitHub sync",
+        "Iterated with 1-week sprints and early feedback from two pilot clients before full launch"
       ],
       "technicalSolution": [
         "Next.js + React for server-side rendered pages and fast UX",
@@ -111,7 +205,7 @@
     },
     "category": "Web",
     "launch": {
-      "date": "Sat 20,2025"
+      "date": "October 2025"
     },
     "caseStudy": {
       "tlDr": "Built a performant e-commerce demo that demonstrates secure checkout, mobile-first UX, and an admin view — ideal as an MVP for small businesses.",

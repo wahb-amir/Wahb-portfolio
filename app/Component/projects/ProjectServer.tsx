@@ -6,6 +6,7 @@ import React, { Suspense } from "react";
 import ProjectCardSSR from "./ProjectCardSSR";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
 import Arrow from "../navigation/Arrow";
+import Link from "next/link";
 
 type ProjectsPayload<T = unknown> = {
   version: string | number | null;
@@ -81,7 +82,6 @@ function slugify(input?: string, fallback = "untitled") {
 }
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
-// Uses only Tailwind dark: classes — resolved by CSS, never by JS.
 function ProjectCardSkeleton({ index }: { index: number }) {
   return (
     <article
@@ -115,7 +115,7 @@ function ProjectCardSkeleton({ index }: { index: number }) {
 function ProjectsGridSkeleton() {
   return (
     <div className="ps-grid" aria-label="Loading projects…">
-      {Array.from({ length: 4 }).map((_, i) => (
+      {Array.from({ length: 2 }).map((_, i) => (
         <ProjectCardSkeleton key={i} index={i} />
       ))}
     </div>
@@ -145,7 +145,12 @@ async function ProjectsGrid() {
     const key = (p.id || p.title || p.name || JSON.stringify(p)).toString();
     if (key && !uniqueProjectsMap.has(key)) uniqueProjectsMap.set(key, p);
   });
-  const projects = Array.from(uniqueProjectsMap.values());
+
+  const allProjects = Array.from(uniqueProjectsMap.values());
+
+  // ── Only show first 2 on homepage ──
+  const projects = allProjects.slice(0, 2);
+  const hasMore = allProjects.length > 2;
 
   // Build JSON-LD
   const seenIds = new Set<string>();
@@ -272,6 +277,43 @@ async function ProjectsGrid() {
         ))}
       </div>
 
+      {/* ── View All Projects button ── */}
+      {hasMore && (
+        <div className="ps-card-enter mt-10" style={{ animationDelay: "180ms" }}>
+          <Link
+            href="/projects"
+            className="
+              group inline-flex items-center gap-2.5
+              px-6 py-3 rounded-full
+              text-sm font-semibold
+              border border-cyan-300/70 dark:border-cyan-700/60
+              text-cyan-700 dark:text-cyan-300
+              bg-cyan-50/80 dark:bg-cyan-950/30
+              hover:bg-cyan-100 dark:hover:bg-cyan-900/40
+              hover:border-cyan-400 dark:hover:border-cyan-500
+              transition-all duration-200
+              hover:-translate-y-0.5
+              shadow-sm hover:shadow-md hover:shadow-cyan-200/40 dark:hover:shadow-cyan-900/40
+            "
+          >
+            View all projects
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </Link>
+        </div>
+      )}
+
       {graph?.length > 0 && jsonLdGraph && (
         <script
           type="application/ld+json"
@@ -286,19 +328,7 @@ async function ProjectsGrid() {
 export default function ProjectServer() {
   return (
     <>
-      {/*
-        All theming via CSS custom properties + .dark selector.
-        next-themes adds class="dark" to <html> via a blocking inline script
-        BEFORE first paint — so these variables are already correct when the
-        browser renders any pixel. Zero JS, zero flash, zero mismatch.
-
-        Move this <style> block to your globals.css if you prefer —
-        it is extracted to a static sheet at build time either way.
-      */}
       <style>{`
-        /* ── Section background — light / dark ── */
-       
-
         /* ── Top glow — light / dark ── */
         #project-section .ps-glow-top {
           background: radial-gradient(ellipse at center, rgba(34,211,238,0.10) 0%, transparent 70%);
@@ -315,15 +345,23 @@ export default function ProjectServer() {
           background: linear-gradient(to top, #0a1628, transparent);
         }
 
-        /* ── Grid layout (shared between skeleton + real grid) ── */
+        /* ── Grid layout ──
+           Mobile:  1 column, cards full width, comfortable max-width
+           Desktop: 2 columns, capped at 2 — never stretches to 3+
+        */
         .ps-grid {
           display: grid;
           gap: 1.5rem;
           width: 100%;
-          max-width: 72rem;
+          max-width: 56rem;     /* tighter cap so 2 cards don't get too wide */
           padding-inline: 0.5rem;
           align-items: start;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          grid-template-columns: 1fr;          /* mobile: 1 column */
+        }
+        @media (min-width: 640px) {
+          .ps-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));  /* desktop: always 2 */
+          }
         }
 
         /* ── Card entrance animation ── */
@@ -347,7 +385,7 @@ export default function ProjectServer() {
 
       <section
         id="project-section"
-        className="relative flex flex-col justify-start items-center px-4 xs:px-6 text-center pb-[6.25rem] text-black  overflow-hidden pt-[env(safe-area-inset-top)]   dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]"
+        className="relative flex flex-col justify-start items-center px-4 xs:px-6 text-center pb-[6.25rem] text-black overflow-hidden pt-[env(safe-area-inset-top)] dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]"
         role="region"
         aria-labelledby="projects-heading"
         data-keywords="projects,portfolio,case-studies,projects-grid"
@@ -359,7 +397,6 @@ export default function ProjectServer() {
         >
           <div className="ps-glow-top absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-3xl" />
           <div className="ps-fade-bottom absolute bottom-0 inset-x-0 h-40" />
-          {/* Dot grid is now part of the section background-image above */}
         </div>
 
         {/* ── Header ── */}
@@ -374,10 +411,10 @@ export default function ProjectServer() {
             id="projects-heading"
             className="font-extrabold tracking-tight text-4xl sm:text-5xl text-gray-900 dark:text-white leading-tight"
           >
-            Things I've{" "}
+            Things I&apos;ve{" "}
             <span className="relative inline-block">
               <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">
-                Built & Shipped
+                Built &amp; Shipped
               </span>
               <span
                 className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 opacity-60"
