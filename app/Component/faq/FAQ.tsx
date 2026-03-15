@@ -54,7 +54,7 @@ const faqList: FAQItem[] = [
   {
     category: "Technical",
     q: "Can you integrate AI or Computer Vision into my existing web app?",
-    a: "Yes. I specialise in pairing modern Next.js/React frontends with practical AI — particularly lightweight computer vision models for object recognition and image processing that run efficiently on standard hardware, no expensive cloud GPU required.",
+    a: "Yes — and I've shipped it in production. EcoLens, my most recent project, is an AI-powered waste classifier I built solo: image → HuggingFace ML endpoint → server-side label normalisation → environmental impact calculation → gamified user dashboard. It placed 3rd at Hack for Humanity 2026 out of 474 participants. I specialise in pairing Next.js/React frontends with practical AI — models that run efficiently on standard hardware, no expensive cloud GPU required.",
   },
   {
     category: "Technical",
@@ -91,6 +91,11 @@ const faqList: FAQItem[] = [
     q: "Are you open to full-time, part-time, or contract positions?",
     a: "Yes — recruiters are welcome. I'm open to full-time remote roles, contract engagements, and part-time collaborations, provided the work is in my stack (Next.js, Node.js, TypeScript, AI/ML adjacent). The best starting point is my GitHub (github.com/wahb-amir) and the projects here on this portfolio.",
   },
+  {
+    category: "About",
+    q: "How much experience do you have, and can I trust you with a production project?",
+    a: "I've been coding seriously for just over a year — self-taught, with 10+ deployed Next.js projects, my own Linux servers, and a 3rd place finish at an international hackathon (Hack for Humanity 2026, 474 participants, solo build). I don't just build things that look good in demos — EcoLens shipped with OTP auth, JWT token rotation, a full ML pipeline, and a transactional MongoDB write layer. I hold my work to production standards, not student standards.",
+  },
 ];
 
 const CATEGORIES: FAQCategory[] = ["Process", "Technical", "Business", "About"];
@@ -122,15 +127,11 @@ const categoryMeta: Record<
 };
 
 // ─── Spring presets ──────────────────────────────────────────────────────────
-// Snappy spring for interactive elements (buttons, icon swaps)
 const SPRING_SNAPPY = { type: "spring", stiffness: 420, damping: 30 } as const;
-// Gentle spring for layout shifts (accordion, card enter)
 const SPRING_SOFT = { type: "spring", stiffness: 280, damping: 28 } as const;
-// Easing for opacity / height (no spring overshoot on clip paths)
 const EASE_SMOOTH = [0.32, 0, 0.12, 1] as const;
 
 // ─── PlusMinusIcon ────────────────────────────────────────────────────────────
-// Morphs between + and − via independent SVG line rotations
 function PlusMinusIcon({ open }: { open: boolean }) {
   return (
     <motion.svg
@@ -139,29 +140,16 @@ function PlusMinusIcon({ open }: { open: boolean }) {
       viewBox="0 0 14 14"
       fill="none"
       aria-hidden="true"
-      // Subtle scale bounce on the whole icon when toggled
       animate={{ scale: open ? [1, 0.82, 1] : [1, 0.82, 1] }}
       transition={{ duration: 0.28, times: [0, 0.4, 1], ease: "easeOut" }}
     >
-      {/* Horizontal bar — always visible */}
       <motion.line
-        x1="2"
-        y1="7"
-        x2="12"
-        y2="7"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
+        x1="2" y1="7" x2="12" y2="7"
+        stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
       />
-      {/* Vertical bar — rotates to 0° (disappears into horiz) when open */}
       <motion.line
-        x1="7"
-        y1="2"
-        x2="7"
-        y2="12"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
+        x1="7" y1="2" x2="7" y2="12"
+        stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
         animate={{ scaleY: open ? 0 : 1, opacity: open ? 0 : 1 }}
         transition={{ duration: 0.22, ease: EASE_SMOOTH }}
         style={{ originX: "7px", originY: "7px" }}
@@ -190,7 +178,6 @@ function FAQCard({
   return (
     <motion.div
       layout
-      // Card entrance: slide up + fade, staggered by index
       initial={shouldReduce ? false : { opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -206,17 +193,14 @@ function FAQCard({
           : "border-slate-200/80 dark:border-slate-700/40 bg-white/55 dark:bg-slate-900/40 hover:shadow-[0_2px_12px_-2px_rgba(14,165,233,0.07)]",
       )}
     >
-      {/* ── Left accent bar — grows top-down on open ── */}
       <motion.div
         className={`absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b ${meta.bar} rounded-l-2xl`}
         initial={{ scaleY: 0 }}
         animate={{ scaleY: isOpen ? 1 : 0 }}
-        // Grows from the top — originY: 0
         style={{ originY: 0 }}
         transition={{ duration: 0.3, ease: EASE_SMOOTH }}
       />
 
-      {/* ── Trigger button ── */}
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
@@ -224,9 +208,7 @@ function FAQCard({
                    focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/40
                    rounded-2xl gap-4 select-none"
       >
-        {/* Number + question */}
         <div className="flex items-start gap-3 min-w-0">
-          {/* Gradient number fades up independently */}
           <motion.span
             className={`mt-[3px] text-[11px] font-bold tabular-nums shrink-0
                         bg-gradient-to-br ${meta.accent} bg-clip-text text-transparent`}
@@ -237,7 +219,6 @@ function FAQCard({
             {String(globalIndex + 1).padStart(2, "0")}
           </motion.span>
 
-          {/* Question text slides 2px left on open — subtle depth cue */}
           <motion.span
             animate={{ x: isOpen ? 2 : 0 }}
             transition={SPRING_SNAPPY}
@@ -253,7 +234,6 @@ function FAQCard({
           </motion.span>
         </div>
 
-        {/* Icon container — press scale on click */}
         <motion.span
           whileTap={{ scale: 0.85 }}
           transition={SPRING_SNAPPY}
@@ -269,7 +249,6 @@ function FAQCard({
         </motion.span>
       </button>
 
-      {/* ── Answer panel ── */}
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
@@ -277,14 +256,12 @@ function FAQCard({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            // Height uses spring; opacity leads slightly ahead
             transition={{
               height: { ...SPRING_SOFT, damping: 32 },
               opacity: { duration: 0.22, ease: "easeOut" },
             }}
             className="overflow-hidden"
           >
-            {/* Answer text itself slides up 6px as it appears */}
             <motion.div
               initial={{ y: 8 }}
               animate={{ y: 0 }}
@@ -320,7 +297,6 @@ function CategoryPill({
       onClick={onClick}
       role="tab"
       aria-selected={active}
-      // Physical press feel
       whileTap={{ scale: 0.93 }}
       transition={SPRING_SNAPPY}
       className={cn(
@@ -331,7 +307,6 @@ function CategoryPill({
           : "bg-white/70 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-sky-300 dark:hover:border-sky-700",
       )}
     >
-      {/* Active background ripple — expands outward from center */}
       {active && (
         <motion.span
           layoutId="pill-bg"
@@ -352,12 +327,9 @@ function CategoryPill({
 // ─── Main Section ─────────────────────────────────────────────────────────────
 export default function FAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [activeCategory, setActiveCategory] = useState<FAQCategory | "All">(
-    "All",
-  );
+  const [activeCategory, setActiveCategory] = useState<FAQCategory | "All">("All");
 
   const headingRef = useRef<HTMLDivElement>(null);
-  // Trigger entrance animations when the section scrolls into view
   const isInView = useInView(headingRef, { once: true, margin: "-80px" });
 
   const filtered =
@@ -372,10 +344,10 @@ export default function FAQ() {
     <section
       id="faq"
       aria-labelledby="faq-heading"
-      className="relative w-full min-h-screen py-24 px-6 flex flex-col items-center justify-center overflow-hidden  text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-t from-[#00bfff44] to-[#00b1ff88]"
+      className="relative w-full min-h-screen py-24 px-6 flex flex-col items-center justify-center overflow-hidden text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-t from-[#00bfff44] to-[#00b1ff88]"
       style={{ fontFamily: "'Poppins', 'Inter', system-ui, sans-serif" }}
     >
-      {/* ── Background ─────────────────────────────────────────────────────── */}
+      {/* ── Background ── */}
       <div
         className="absolute inset-0 -z-10"
         style={{
@@ -385,21 +357,18 @@ export default function FAQ() {
             "#f8fafc",
         }}
       />
-      {/* Dot grid — pure CSS, zero JS cost */}
       <div
         className="absolute inset-0 -z-10 opacity-[0.3] dark:opacity-[0.1]"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
           backgroundSize: "28px 28px",
         }}
       />
       <div className="absolute inset-0 -z-20 bg-slate-950 hidden dark:block" />
 
       <div className="relative z-10 max-w-3xl w-full mx-auto">
-        {/* ── Header ─────────────────────────────────────────────────────────── */}
+        {/* ── Header ── */}
         <div ref={headingRef} className="text-center mb-10">
-          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -412,7 +381,6 @@ export default function FAQ() {
             </span>
           </motion.div>
 
-          {/* Heading — slightly delayed after badge */}
           <motion.h2
             id="faq-heading"
             initial={{ opacity: 0, y: 14 }}
@@ -426,19 +394,17 @@ export default function FAQ() {
             Frequently Asked Questions
           </motion.h2>
 
-          {/* Subheading — last to arrive */}
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.4, delay: 0.14, ease: "easeOut" }}
             className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-md mx-auto"
           >
-            Everything clients and recruiters typically want to know — answered
-            upfront.
+            Everything clients and recruiters typically want to know — answered upfront.
           </motion.p>
         </div>
 
-        {/* ── Category filter ─────────────────────────────────────────────────── */}
+        {/* ── Category filter ── */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -450,10 +416,7 @@ export default function FAQ() {
           <CategoryPill
             label="All"
             active={activeCategory === "All"}
-            onClick={() => {
-              setActiveCategory("All");
-              setActiveIndex(null);
-            }}
+            onClick={() => { setActiveCategory("All"); setActiveIndex(null); }}
           />
           {CATEGORIES.map((cat) => (
             <CategoryPill
@@ -461,31 +424,25 @@ export default function FAQ() {
               label={cat}
               count={faqList.filter((f) => f.category === cat).length}
               active={activeCategory === cat}
-              onClick={() => {
-                setActiveCategory(cat);
-                setActiveIndex(null);
-              }}
+              onClick={() => { setActiveCategory(cat); setActiveIndex(null); }}
             />
           ))}
         </motion.div>
 
-        {/* ── FAQ list ────────────────────────────────────────────────────────── */}
+        {/* ── FAQ list ── */}
         <motion.div layout className="space-y-3">
           <AnimatePresence mode="popLayout" initial={false}>
             {filtered.map((item, localIdx) => {
               const globalIdx = faqList.indexOf(item);
-              // Stagger: max 5 items visually stagger (0.06s each), rest skip
               const delay = isInView ? Math.min(localIdx, 4) * 0.055 : 0;
 
               return (
                 <motion.div
                   key={globalIdx}
                   layout
-                  // Filter exit: slide left + fade
                   exit={{ opacity: 0, x: -8, scale: 0.98 }}
                   transition={{ duration: 0.2, ease: "easeIn" }}
                 >
-                  {/* Category tag — only in "All" view */}
                   {activeCategory === "All" && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -516,7 +473,7 @@ export default function FAQ() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ── Footer CTA ──────────────────────────────────────────────────────── */}
+        {/* ── Footer CTA ── */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -529,7 +486,6 @@ export default function FAQ() {
             Still have a question not covered here?
           </p>
 
-          {/* CTA — scale + glow on hover */}
           <motion.a
             href="#contact"
             whileHover={{ scale: 1.04 }}
@@ -541,7 +497,6 @@ export default function FAQ() {
                        transition-shadow duration-300"
           >
             Reach out directly
-            {/* Arrow: translates right AND scales up on hover */}
             <motion.span
               className="inline-flex"
               initial={false}
@@ -552,7 +507,6 @@ export default function FAQ() {
             </motion.span>
           </motion.a>
 
-          {/* Scroll-to-top */}
           <motion.button
             onClick={() =>
               document
@@ -575,11 +529,11 @@ export default function FAQ() {
         </motion.div>
       </div>
 
-      {/* Hidden SEO identity */}
       <div className="sr-only" aria-hidden="false">
         Wahb Amir — canonical identity: https://wahb.space. Official GitHub:
         https://github.com/wahb-amir. Official projects:
-        https://dashboard.wahb.space and https://boltform.wahb.space.
+        https://dashboard.wahb.space, https://boltform.wahb.space, and
+        https://eco.wahb.space.
       </div>
     </section>
   );
