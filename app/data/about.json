@@ -1,12 +1,12 @@
 {
-  "bio": "Hi, I'm Wahb. I enjoy building useful things and solving problems, which led me to teach myself how to code. I'm happiest when I'm creating practical tools—whether that's a web application, a backend service, or exploring computer vision. Lately, I've been working on helping computers understand images, such as recognizing objects or separating them from the background, with a focus on making these systems run well on everyday hardware rather than relying on powerful cloud machines. Alongside this, I build full-stack web applications and manage my own servers, keeping my work grounded in real-world needs.",
+  "bio": "Hi, I'm Wahb — a self-taught full-stack developer who started coding just over a year ago and hasn't stopped shipping since. I build practical tools: web apps, backend services, and AI-powered systems. Most recently, I placed 3rd out of 775 participants at Hack for Humanity 2026 with EcoLens, an AI waste classifier I built solo. I care about making things that actually work — fast, reliable, and grounded in real-world needs.",
   "quickFacts": [
+    "🏆 3rd Place — Hack for Humanity 2026 (solo, 775 participants)",
     "Builds clean, user-friendly web applications",
-    "Creates and manages full projects from idea to deployment",
-    "Works with image-based AI systems and experiments with practical machine learning",
-    "Comfortable running and maintaining apps on Linux servers",
-    "Enjoys breaking down complex problems into simple, working solutions",
-    "Focused on long-term growth, fundamentals, and real-world impact"
+    "Ships full projects end-to-end — from idea to deployed product",
+    "Integrates AI & computer vision into real, working apps",
+    "Manages own Linux servers and self-hosted infrastructure",
+    "Focused on fundamentals, clean architecture, and long-term growth"
   ],
   "startDate": "2025-03-22T00:00:00Z",
   "timeline": [
@@ -24,15 +24,24 @@
     },
     {
       "title": "Summer 2025",
-      "desc": "Launched multiple real projects and ran them on my own servers."
+      "desc": "Launched multiple real projects and ran them on my own Linux servers."
+    },
+    {
+      "title": "Late 2025",
+      "desc": "Deepened focus on performance, Core Web Vitals, and production-grade code quality."
+    },
+    {
+      "title": "March 2026",
+      "desc": "🏆 Placed 3rd at Hack for Humanity 2026 — built EcoLens solo, an AI-powered waste classifier with gamified impact tracking, competing against 775 participants internationally.",
+      "highlight": true
     },
     {
       "title": "Now",
-      "desc": "Improving code quality, working with structured databases, and building more reliable systems."
+      "desc": "Contributing to open source, strengthening DSA fundamentals, and deploying lightweight AI models into real products."
     },
     {
       "title": "Next",
-      "desc": "Strengthening problem-solving skills through data structures & algorithms, and deploying lightweight AI models into real products."
+      "desc": "Deeper distributed systems knowledge, Kafka, and scaling production infrastructure."
     }
   ]
 }
