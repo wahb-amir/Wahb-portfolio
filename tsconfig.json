@@ -31,6 +31,6 @@
     ".next/dev/types/**/*.ts",
     "app/[section]/page.jsx",
     "app/Component/Contact.tsx"
-  ],
+, "next-sitemap.config.js"  ],
   "exclude": ["node_modules"]
 }
