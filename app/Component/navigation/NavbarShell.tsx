@@ -1,10 +1,5 @@
 "use client";
 
-// ─── Client Island: Scroll Shell ─────────────────────────────────────────────
-// Owns ONLY the scroll-driven visible/compact state.
-// All children (NavLinks, ThemeToggle, MobileMenu) are separate client islands
-// so they each carry the minimum reactive surface area.
-
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
