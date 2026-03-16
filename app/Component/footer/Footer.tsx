@@ -18,6 +18,8 @@ import {
   SiTailwindcss,
   SiMongodb,
 } from "react-icons/si";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import {
   ArrowUpRight,
   ExternalLink,
@@ -27,6 +29,7 @@ import {
   Code2,
   Zap,
 } from "lucide-react";
+import type { IconType } from "react-icons";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -47,13 +50,10 @@ const NAV_LINKS = [
   { label: "FAQ", id: "faq" },
 ];
 
-const EXT_LINKS = [
+const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] = [
   { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
-  {
-    label: "Client Portal",
-    href: "https://dashboard.wahb.space",
-    icon: ExternalLink,
-  },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/wahb-amir", icon: faLinkedin, isFA: true },
+  { label: "Client Portal", href: "https://dashboard.wahb.space", icon: ExternalLink, isFA: false },
 ];
 
 const STACK = [
@@ -306,7 +306,7 @@ export default function Footer() {
               <p className="ft-accent-text text-[10px] font-bold uppercase tracking-[0.22em] mb-1">
                 Find me online
               </p>
-              {EXT_LINKS.map(({ label, href, icon: Icon }) => (
+              {EXT_LINKS.map(({ label, href, icon: Icon, isFA }) => (
                 <a
                   key={label}
                   href={href}
@@ -320,7 +320,11 @@ export default function Footer() {
                     (e.currentTarget.style.color = "var(--ft-text-muted)")
                   }
                 >
-                  <Icon className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
+                  {isFA ? (
+                    <FontAwesomeIcon icon={Icon} className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
+                  ) : (
+                    <Icon className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
+                  )}
                   {label}
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 ft-accent-text" />
                 </a>
@@ -387,7 +391,6 @@ export default function Footer() {
               />
             </motion.span>
             &amp;
-            {/* Coffee icon colour is a fixed amber — same in both themes, no branching needed */}
             <Coffee
               className="w-3.5 h-3.5"
               style={{ color: "var(--ft-coffee)" }}
