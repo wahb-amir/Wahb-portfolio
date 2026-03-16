@@ -63,7 +63,7 @@ const projects = [
     name: "EcoLens — AI Waste Classifier",
     url: "https://eco.wahb.space",
     description:
-      "AI-powered waste classifier that identifies materials from a photo, estimates CO₂/water/energy impact, and gamifies recycling with badges and a global leaderboard. Placed 3rd at Hack for Humanity 2026 (474 participants, solo build).",
+      "AI-powered waste classifier that identifies materials from a photo, estimates CO₂/water/energy impact, and gamifies recycling with badges and a global leaderboard. Placed 3rd at Hack for Humanity 2026 (775 participants, solo build).",
     applicationCategory: "WebApplication",
     programmingLanguage: ["TypeScript", "Python"],
     softwareRequirements: [
