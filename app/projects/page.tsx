@@ -86,16 +86,22 @@ async function AllProjectsGrid() {
 
   return (
     <div className="all-projects-grid" role="list" aria-label="All projects">
-      {projects.map((p, i) => (
-        <div
-          key={slugify(p.id ?? p.title ?? p.name ?? `project-${i}`)}
-          role="listitem"
-          className="ps-card-enter"
-          style={{ animationDelay: `${i * 55}ms` }}
-        >
-          <ProjectCardSSR project={p} />
-        </div>
-      ))}
+      {projects.map((p, i) => {
+        const slug = slugify(p.id ?? p.title ?? p.name ?? `project-${i}`);
+        return (
+          <div
+            key={slug}
+            role="listitem"
+            className="ps-card-enter"
+            style={{ animationDelay: `${i * 55}ms` }}
+          >
+           <ProjectCardSSR
+  project={p}
+  viewUrl={`/projects/${slug}`}
+/>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -129,14 +135,6 @@ export default function ProjectsPage() {
           box-sizing: border-box;
           animation: ps-card-enter 0.45s ease both;
         }
-        @keyframes ps-card-enter {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .ps-card-enter {
-          animation: ps-card-enter 0.45s ease both;
-        }
-        /* Page background */
         .projects-page-bg {
           background: linear-gradient(to bottom, #f0f9ff, #ffffff);
         }
@@ -146,29 +144,43 @@ export default function ProjectsPage() {
       `}</style>
 
       <main
-        id="Project-page"
+        id="project-page"
         className="
           relative flex flex-col items-center justify-start
           min-h-[65vh] sm:min-h-[72vh]
           px-4 xs:px-6 text-center
           pb-28 overflow-hidden
           pt-[env(safe-area-inset-top)]
-          bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+          bg-white text-black dark:bg-[#0b1220] dark:text-white
+          bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
         "
-        aria-label="Projects Page"
-        role="section"
+        role="main"
+        aria-label="All Projects"
       >
-        {/* ── Back link ── */}
-        <div className="w-full max-w-56rem mb-8 self-start max-w-[56rem] mx-auto">
+        {/* ── cd .. back button ── */}
+        <div className="w-full max-w-[72rem] mx-auto mb-8 flex items-center">
           <Link
             href="/#project-section"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline"
+            className="
+              inline-flex items-center gap-2
+              px-3 py-1.5 rounded-lg
+              font-mono text-xs font-semibold
+              border border-slate-200/80 dark:border-slate-700/60
+              text-slate-600 dark:text-slate-400
+              bg-white/70 dark:bg-slate-800/50
+              hover:border-cyan-400 dark:hover:border-cyan-600
+              hover:text-cyan-700 dark:hover:text-cyan-300
+              hover:bg-cyan-50/60 dark:hover:bg-cyan-950/30
+              transition-all duration-150
+              shadow-sm
+            "
+            aria-label="Back to portfolio"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
               fill="currentColor"
-              className="w-3.5 h-3.5"
+              className="w-3 h-3"
               aria-hidden="true"
             >
               <path
@@ -177,7 +189,7 @@ export default function ProjectsPage() {
                 clipRule="evenodd"
               />
             </svg>
-            Back to portfolio
+            cd ..
           </Link>
         </div>
 

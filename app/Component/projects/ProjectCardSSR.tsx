@@ -24,6 +24,13 @@ export type Project = {
   [k: string]: any;
 };
 
+// When viewUrl is provided the case study drawer is hidden and a
+// "View project →" link to that URL is shown instead.
+type ProjectCardSSRProps = {
+  project: Project;
+  viewUrl?: string;
+};
+
 function formatKey(k: string) {
   return k
     .replace(/([A-Z])/g, " $1")
@@ -31,7 +38,7 @@ function formatKey(k: string) {
     .replace(/^./, (s) => s.toUpperCase());
 }
 
-export default function ProjectCardSSR({ project }: { project: Project }) {
+export default function ProjectCardSSR({ project, viewUrl }: ProjectCardSSRProps) {
   const title = project.title ?? project.name ?? "Untitled Project";
   const role = project.role ?? "Contributor";
   const images = Array.isArray(project.images) ? project.images : [];
@@ -168,6 +175,7 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
 
         {/* ── CONTENT ── */}
         <div className="p-5 sm:p-6 flex flex-col flex-1 min-w-0 max-w-full overflow-hidden gap-4">
+
           {/* Title + Role */}
           <div className="space-y-1">
             <h3
@@ -247,13 +255,46 @@ export default function ProjectCardSSR({ project }: { project: Project }) {
               />
             </div>
             <div className="flex items-center gap-2">
-              <CaseStudyHydrate
-                normalizedCS={normalizedCS}
-                role={role}
-                liveLink={liveLink}
-                outcome={project.outcome}
-                stats={stats}
-              />
+              {viewUrl ? (
+                // Projects listing page — link to the individual project page
+                <a
+                  href={viewUrl}
+                  className="
+                    inline-flex items-center gap-1.5
+                    px-3 py-1.5 rounded-lg
+                    text-xs font-semibold
+                    border border-cyan-300/70 dark:border-cyan-700/60
+                    text-cyan-700 dark:text-cyan-300
+                    bg-cyan-50/80 dark:bg-cyan-950/30
+                    hover:bg-cyan-100 dark:hover:bg-cyan-900/40
+                    transition-colors duration-150
+                  "
+                >
+                  View project
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </a>
+              ) : (
+                // Individual project page — full case study drawer
+                <CaseStudyHydrate
+                  normalizedCS={normalizedCS}
+                  role={role}
+                  liveLink={liveLink}
+                  outcome={project.outcome}
+                  stats={stats}
+                />
+              )}
             </div>
           </div>
         </div>
