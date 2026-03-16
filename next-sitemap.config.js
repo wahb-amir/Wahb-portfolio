@@ -69,14 +69,7 @@ module.exports = {
       lastmod: new Date().toISOString(),
     },
 
-    // ── Developer profiles ────────────────────────────────────────────────────
-
-    {
-      loc: `https://github.com/wahb-amir`,
-      priority: 0.8,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
+  
 
     // ── LLM / AI metadata ─────────────────────────────────────────────────────
 
