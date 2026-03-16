@@ -37,7 +37,16 @@
       "role": "Creator & Sole Developer",
       "award": "3rd Place — Hack for Humanity 2026 (474 participants, solo, international)",
       "description": "AI-powered waste classifier. Users point their camera or upload a photo of waste to receive an AI material classification (plastic, paper, glass, metal, organic), estimated environmental impact (CO₂ offset, water saved, energy saved), and gamified points toward a global leaderboard. Built with a full ML pipeline: Next.js serverless API → HuggingFace model → label normalisation → impact calculation → MongoDB write. OTP auth with JWT in HTTP-only cookies and token rotation.",
-      "tech": ["Next.js", "TypeScript", "MongoDB", "HuggingFace", "Framer Motion", "JWT", "SMTP", "Tailwind"],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "MongoDB",
+        "HuggingFace",
+        "Framer Motion",
+        "JWT",
+        "SMTP",
+        "Tailwind"
+      ],
       "github": "https://github.com/wahb-amir/ecolens",
       "datePublished": "2026-03-01"
     },
@@ -47,7 +56,14 @@
       "type": "Web Application / SaaS",
       "role": "Creator & Lead Developer",
       "description": "A unified workspace where clients can request project quotes, track development progress, message developers, and see real-time GitHub-synced updates — replacing fragmented email and spreadsheet workflows.",
-      "tech": ["Next.js", "React", "Node.js", "MongoDB", "Tailwind", "GitHub API"],
+      "tech": [
+        "Next.js",
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Tailwind",
+        "GitHub API"
+      ],
       "github": "https://github.com/wahb-amir/dashboard",
       "datePublished": "2025-10-01"
     },
@@ -158,12 +174,28 @@
     "majorUpdateNote": "March 2026 — Added EcoLens project and Hack for Humanity 2026 3rd place achievement. Added /projects page."
   },
   "skills": [
-    "HTML", "CSS", "Tailwind", "JavaScript", "TypeScript",
-    "React", "Next.js", "Node.js", "Express",
-    "Python", "Pandas", "NumPy", "PyTorch",
-    "MongoDB", "PostgreSQL", "Redis",
-    "Docker", "NGINX", "GitHub Actions",
-    "HuggingFace", "Framer Motion", "SWR"
+    "HTML",
+    "CSS",
+    "Tailwind",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "Express",
+    "Python",
+    "Pandas",
+    "NumPy",
+    "PyTorch",
+    "MongoDB",
+    "PostgreSQL",
+    "Redis",
+    "Docker",
+    "NGINX",
+    "GitHub Actions",
+    "HuggingFace",
+    "Framer Motion",
+    "SWR"
   ],
   "notes": {
     "developer": "Keep this file updated when adding projects or achievements. Prefer explicit repo URLs rather than relying on redirects.",

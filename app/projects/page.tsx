@@ -95,10 +95,7 @@ async function AllProjectsGrid() {
             className="ps-card-enter"
             style={{ animationDelay: `${i * 55}ms` }}
           >
-           <ProjectCardSSR
-  project={p}
-  viewUrl={`/projects/${slug}`}
-/>
+            <ProjectCardSSR project={p} viewUrl={`/projects/${slug}`} />
           </div>
         );
       })}

@@ -69,8 +69,6 @@ module.exports = {
       lastmod: new Date().toISOString(),
     },
 
-  
-
     // ── LLM / AI metadata ─────────────────────────────────────────────────────
 
     {

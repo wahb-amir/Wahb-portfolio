@@ -38,7 +38,10 @@ function formatKey(k: string) {
     .replace(/^./, (s) => s.toUpperCase());
 }
 
-export default function ProjectCardSSR({ project, viewUrl }: ProjectCardSSRProps) {
+export default function ProjectCardSSR({
+  project,
+  viewUrl,
+}: ProjectCardSSRProps) {
   const title = project.title ?? project.name ?? "Untitled Project";
   const role = project.role ?? "Contributor";
   const images = Array.isArray(project.images) ? project.images : [];
@@ -175,7 +178,6 @@ export default function ProjectCardSSR({ project, viewUrl }: ProjectCardSSRProps
 
         {/* ── CONTENT ── */}
         <div className="p-5 sm:p-6 flex flex-col flex-1 min-w-0 max-w-full overflow-hidden gap-4">
-
           {/* Title + Role */}
           <div className="space-y-1">
             <h3
