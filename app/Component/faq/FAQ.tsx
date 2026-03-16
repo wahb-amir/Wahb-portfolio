@@ -54,7 +54,7 @@ const faqList: FAQItem[] = [
   {
     category: "Technical",
     q: "Can you integrate AI or Computer Vision into my existing web app?",
-    a: "Yes — and I've shipped it in production. EcoLens, my most recent project, is an AI-powered waste classifier I built solo: image → HuggingFace ML endpoint → server-side label normalisation → environmental impact calculation → gamified user dashboard. It placed 3rd at Hack for Humanity 2026 out of 474 participants. I specialise in pairing Next.js/React frontends with practical AI — models that run efficiently on standard hardware, no expensive cloud GPU required.",
+    a: "Yes — and I've shipped it in production. EcoLens, my most recent project, is an AI-powered waste classifier I built solo: image → HuggingFace ML endpoint → server-side label normalisation → environmental impact calculation → gamified user dashboard. It placed 3rd at Hack for Humanity 2026 out of 775 participants. I specialise in pairing Next.js/React frontends with practical AI — models that run efficiently on standard hardware, no expensive cloud GPU required.",
   },
   {
     category: "Technical",
@@ -94,7 +94,7 @@ const faqList: FAQItem[] = [
   {
     category: "About",
     q: "How much experience do you have, and can I trust you with a production project?",
-    a: "I've been coding seriously for just over a year — self-taught, with 10+ deployed Next.js projects, my own Linux servers, and a 3rd place finish at an international hackathon (Hack for Humanity 2026, 474 participants, solo build). I don't just build things that look good in demos — EcoLens shipped with OTP auth, JWT token rotation, a full ML pipeline, and a transactional MongoDB write layer. I hold my work to production standards, not student standards.",
+    a: "I've been coding seriously for just over a year — self-taught, with 10+ deployed Next.js projects, my own Linux servers, and a 3rd place finish at an international hackathon (Hack for Humanity 2026, 775 participants, solo build). I don't just build things that look good in demos — EcoLens shipped with OTP auth, JWT token rotation, a full ML pipeline, and a transactional MongoDB write layer. I hold my work to production standards, not student standards.",
   },
 ];
 
