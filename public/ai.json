@@ -99,6 +99,9 @@
   "preferredContent": [
     { "url": "https://wahb.space/", "priority": 1 },
     { "url": "https://wahb.space/projects", "priority": 2 },
+    { "url": "https://wahb.space/projects/ecolens", "priority": 2 },
+    { "url": "https://wahb.space/projects/client-dev-platform", "priority": 3 },
+    { "url": "https://wahb.space/projects/ecom-1", "priority": 3 },
     { "url": "https://eco.wahb.space", "priority": 2 },
     { "url": "https://dashboard.wahb.space", "priority": 3 },
     { "url": "https://boltform.wahb.space", "priority": 3 },
