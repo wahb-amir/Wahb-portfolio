@@ -3,8 +3,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faGithub,faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { useClientTheme } from "@/app/hooks/useClientTheme";
+import { LINKEDIN_URL } from "./navConfig";
 
 interface Props {
   githubUrl: string;
@@ -21,6 +22,14 @@ export default function ThemeToggle({ githubUrl }: Props) {
         onClick={() => window.open(githubUrl, "_blank")}
       >
         <FontAwesomeIcon icon={faGithub} className="text-lg" />
+        
+      </IconButton>
+       <IconButton
+        label="GitHub"
+        onClick={() => window.open(LINKEDIN_URL, "_blank")}
+      >
+        <FontAwesomeIcon icon={faLinkedin} className="text-lg" />
+        
       </IconButton>
 
       <IconButton

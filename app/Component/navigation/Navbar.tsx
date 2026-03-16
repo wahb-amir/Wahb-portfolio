@@ -7,6 +7,7 @@ export default function Navbar() {
       navItems={NAV_ITEMS}
       githubUrl={GITHUB_URL}
       navHeight={NAV_HEIGHT}
+      linkdinUrl={LINKEDIN_URL}
     />
   );
 }

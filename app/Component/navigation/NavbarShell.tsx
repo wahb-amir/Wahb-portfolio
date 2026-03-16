@@ -13,9 +13,10 @@ interface Props {
   navItems: NavItem[];
   githubUrl: string;
   navHeight: number;
+  linkdinUrl: string;
 }
 
-export default function NavbarShell({ navItems, githubUrl, navHeight }: Props) {
+export default function NavbarShell({ navItems, githubUrl, navHeight,linkdinUrl }: Props) {
   const [visible, setVisible] = useState(true);
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
