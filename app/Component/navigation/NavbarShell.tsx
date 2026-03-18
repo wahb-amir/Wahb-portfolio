@@ -16,7 +16,7 @@ interface Props {
   linkdinUrl: string;
 }
 
-export default function NavbarShell({ navItems, githubUrl, navHeight,linkdinUrl }: Props) {
+export default function NavbarShell({ navItems, githubUrl, navHeight, linkdinUrl }: Props) {
   const [visible, setVisible] = useState(true);
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,7 +74,7 @@ export default function NavbarShell({ navItems, githubUrl, navHeight,linkdinUrl 
               : "py-3 px-6 bg-white/10 dark:bg-white/5 border-white/20 dark:border-white/10"
           }`}
         >
-          {/* LEFT – Logo (static image, no hydration cost beyond the click handler) */}
+          {/* LEFT – Logo */}
           <div className="flex-1 flex justify-start">
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -103,9 +103,11 @@ export default function NavbarShell({ navItems, githubUrl, navHeight,linkdinUrl 
               <ThemeToggle githubUrl={githubUrl} />
             </div>
 
+            {/* linkdinUrl forwarded so MobileMenu can render the LinkedIn icon */}
             <MobileMenu
               navItems={navItems}
               githubUrl={githubUrl}
+              linkdinUrl={linkdinUrl}
               isOpen={menuOpen}
               onToggle={() => setMenuOpen((prev) => !prev)}
             />

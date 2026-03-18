@@ -14,8 +14,9 @@ import {
   faBriefcase,
   faEnvelope,
   faQuestion,
+
 } from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faGithub ,faLinkedin} from "@fortawesome/free-brands-svg-icons";
 
 import type { NavItem } from "./navConfig";
 
@@ -30,6 +31,7 @@ const ICON_MAP: Record<string, IconDefinition> = {
 interface Props {
   navItems: NavItem[];
   githubUrl: string;
+  linkdinUrl: string;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -42,6 +44,7 @@ const scrollTo = (id: string) =>
 export default function MobileMenu({
   navItems,
   githubUrl,
+  linkdinUrl,
   isOpen,
   onToggle,
 }: Props) {
@@ -175,6 +178,18 @@ export default function MobileMenu({
                 >
                   <FontAwesomeIcon icon={faGithub} />
                   <span>GitHub</span>
+                </a>
+                <a
+                  href={linkdinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 p-5 rounded-2xl font-bold shadow-sm
+                             transition-colors duration-300
+                             bg-slate-100 dark:bg-white/5
+                             text-slate-800 dark:text-slate-100"
+                >
+                  <FontAwesomeIcon icon={faLinkedin} />
+                  <span>linkedin</span>
                 </a>
               </div>
             </div>
