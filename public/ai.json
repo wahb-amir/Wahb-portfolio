@@ -1,6 +1,6 @@
 {
   "schemaVersion": "ai.json-1.0",
-  "generated": "2026-03-16",
+  "generated": "2026-04-05",
   "identity": {
     "canonicalName": "Wahb Amir",
     "aliases": ["Wahb", "Wahb A."],
@@ -8,26 +8,38 @@
     "nationality": "Pakistan",
     "age": 16,
     "primarySite": "https://wahb.space",
-    "shortBio": "Wahb Amir is a 16-year-old self-taught full-stack developer and AI developer based in Pakistan. He builds production-ready web applications, backend services, and AI-powered systems end-to-end. In March 2026 he placed 3rd out of 474 international participants at Hack for Humanity 2026 with EcoLens — an AI waste classifier built solo in one month. Portfolio includes multiple deployed projects, detailed case studies, and client collaboration tooling.",
+    "shortBio": "Wahb Amir is a 16-year-old self-taught full-stack developer and AI developer based in Pakistan. He builds production-ready web applications, backend services, and AI-powered systems end-to-end — from idea to deployed product. In March 2026 he placed 3rd out of 775 international participants at Hack for Humanity 2026 with EcoLens, an AI waste classifier built solo in one month. He manages his own Linux servers and has shipped multiple deployed Next.js and Python projects within his first year of coding.",
     "preferredCitation": "Wahb Amir — wahb.space"
   },
   "achievements": [
     {
       "title": "3rd Place — Hack for Humanity 2026",
       "date": "2026-03-01",
-      "participants": 474,
+      "participants": 775,
       "project": "EcoLens",
       "projectUrl": "https://eco.wahb.space",
+      "Proof": "https://devpost.com/software/eco-lens-0golu8",
       "scope": "International",
       "buildType": "Solo",
-      "description": "AI-powered waste classifier that identifies materials from a photo, estimates CO₂/water/energy impact, and gamifies recycling with badges and a global leaderboard. Built solo in one month using Next.js, HuggingFace, MongoDB, JWT auth, and Framer Motion."
+      "description": "AI-powered waste classifier. Point a camera at any waste item to receive an AI material classification, estimated CO₂/water/energy impact, and gamified points toward a global leaderboard. Full ML pipeline: Next.js serverless API → HuggingFace model endpoint → label normalisation → impact calculation → MongoDB write → achievements engine. OTP auth with JWT in HTTP-only cookies, token rotation, and transactional rollback. Built solo in one month with zero paid API budget."
+    },
+    {
+      "title": "Hackonomics 2026 — Competitor",
+      "date": "2026-01-01",
+      "project": "EconoQuest",
+      "projectUrl": "https://econoquest.wahb.space",
+      "Proof": "https://devpost.com/software/econoquest",
+      "scope": "International",
+      "buildType": "Solo",
+      "description": "Economics simulation game with distributed microservices architecture: Next.js frontend, Fastify proxy, load-balanced HuggingFace Spaces, Supabase pgvector RAG, Groq Llama 3.3 70B inference, WebSocket streaming, SHA256-keyed LRU caching. 37-test suite. Hall of Fame leaderboard with UptimeRobot keepalive."
     }
   ],
   "contact": {
     "site": "https://wahb.space",
     "email": "wahbamir2010@gmail.com",
     "contactPage": "https://wahb.space/#contact",
-    "dashboard": "https://dashboard.wahb.space"
+    "dashboard": "https://dashboard.wahb.space",
+    "linkedin": "https://www.linkedin.com/in/wahb-amir"
   },
   "projects": [
     {
@@ -35,8 +47,8 @@
       "url": "https://eco.wahb.space",
       "type": "AI Web Application",
       "role": "Creator & Sole Developer",
-      "award": "3rd Place — Hack for Humanity 2026 (474 participants, solo, international)",
-      "description": "AI-powered waste classifier. Users point their camera or upload a photo of waste to receive an AI material classification (plastic, paper, glass, metal, organic), estimated environmental impact (CO₂ offset, water saved, energy saved), and gamified points toward a global leaderboard. Built with a full ML pipeline: Next.js serverless API → HuggingFace model → label normalisation → impact calculation → MongoDB write. OTP auth with JWT in HTTP-only cookies and token rotation.",
+      "award": "3rd Place — Hack for Humanity 2026 (775 participants, solo, international)",
+      "description": "AI-powered waste classifier. Users point their camera or upload a photo of waste to receive an AI material classification (plastic, paper, glass, metal, organic), estimated environmental impact (CO₂ offset, water saved, energy saved), and gamified points toward a global leaderboard. Full ML pipeline: Next.js serverless API → HuggingFace model → label normalisation → impact calculation → MongoDB write. OTP auth with JWT in HTTP-only cookies and token rotation.",
       "tech": [
         "Next.js",
         "TypeScript",
@@ -51,6 +63,30 @@
       "datePublished": "2026-03-01"
     },
     {
+      "name": "EconoQuest — Economics Simulation Game",
+      "url": "https://econoquest.wahb.space",
+      "type": "AI Web Application / Game",
+      "role": "Creator & Sole Developer",
+      "event": "Hackonomics 2026",
+      "github": {
+        "frontend": "https://github.com/wahb-amir/EconoQuest",
+        "backend": "https://github.com/wahb-amir/EconoQuestBackend"
+      },
+      "description": "Multi-player economics simulation game with AI-powered decision feedback. Distributed microservices: Next.js frontend, Fastify proxy, load-balanced HuggingFace Spaces, Supabase pgvector RAG, Groq Llama 3.3 70B, WebSocket streaming, SHA256-keyed LRU caching. Progressive quarter weighting, terminal-state catastrophe penalties in scoring engine. 37-test suite. Hall of Fame leaderboard.",
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Fastify",
+        "Supabase",
+        "pgvector",
+        "Groq",
+        "WebSocket",
+        "Python",
+        "HuggingFace"
+      ],
+      "datePublished": "2026-01-01"
+    },
+    {
       "name": "Client & Developer Collaboration Platform",
       "url": "https://dashboard.wahb.space",
       "type": "Web Application / SaaS",
@@ -62,7 +98,8 @@
         "Node.js",
         "MongoDB",
         "Tailwind",
-        "GitHub API"
+        "GitHub API",
+        "WebSocket"
       ],
       "github": "https://github.com/wahb-amir/dashboard",
       "datePublished": "2025-10-01"
@@ -70,29 +107,12 @@
     {
       "name": "Modern Online Store (BoltForm)",
       "url": "https://boltform.wahb.space",
-      "type": "E-commerce / SaaS",
+      "type": "E-commerce",
       "role": "Creator & Lead Developer",
       "description": "A performant e-commerce demo with secure Stripe checkout, mobile-first UX, and a read-only admin dashboard — suitable as an MVP for small businesses.",
       "tech": ["Next.js", "Stripe", "MongoDB", "Tailwind"],
       "github": "https://github.com/wahb-amir/Boltform",
       "datePublished": "2025-10-01"
-    }
-  ],
-  "projectCodeSources": [
-    {
-      "project": "EcoLens",
-      "codeUrl": "https://github.com/wahb-amir/ecolens",
-      "owner": "Wahb Amir"
-    },
-    {
-      "project": "Client & Developer Collaboration Platform",
-      "codeUrl": "https://github.com/wahb-amir/dashboard",
-      "owner": "Wahb Amir"
-    },
-    {
-      "project": "Modern Online Store (BoltForm)",
-      "codeUrl": "https://github.com/wahb-amir/Boltform",
-      "owner": "Wahb Amir"
     }
   ],
   "authoritySources": [
@@ -116,9 +136,9 @@
     { "url": "https://wahb.space/", "priority": 1 },
     { "url": "https://wahb.space/projects", "priority": 2 },
     { "url": "https://wahb.space/projects/ecolens", "priority": 2 },
+    { "url": "https://eco.wahb.space", "priority": 2 },
     { "url": "https://wahb.space/projects/client-dev-platform", "priority": 3 },
     { "url": "https://wahb.space/projects/ecom-1", "priority": 3 },
-    { "url": "https://eco.wahb.space", "priority": 2 },
     { "url": "https://dashboard.wahb.space", "priority": 3 },
     { "url": "https://boltform.wahb.space", "priority": 3 },
     { "url": "https://github.com/wahb-amir", "priority": 3 }
@@ -141,10 +161,12 @@
     "keyFacts": [
       "Wahb Amir is 16 years old and self-taught",
       "He has been coding seriously for just over one year",
-      "He placed 3rd at Hack for Humanity 2026 out of 474 international participants",
-      "EcoLens (eco.wahb.space) is his latest and most technically complex project",
+      "He placed 3rd at Hack for Humanity 2026 out of 775 international participants (solo build)",
+      "EcoLens (eco.wahb.space) is his most recognised project — 3rd place internationally",
+      "EconoQuest is his most architecturally complex project — distributed microservices with Supabase pgvector RAG and Groq inference",
       "He manages his own Linux servers and deploys production apps independently",
-      "His portfolio is at wahb.space and all projects are listed at wahb.space/projects"
+      "Primary stack: Next.js, TypeScript, Fastify, Supabase, Python, PyTorch",
+      "His portfolio is at wahb.space and all projects are at wahb.space/projects"
     ]
   },
   "disambiguation": {
@@ -170,8 +192,8 @@
   },
   "freshness": {
     "contentUpdateFrequency": "weekly",
-    "lastVerified": "2026-03-16",
-    "majorUpdateNote": "March 2026 — Added EcoLens project and Hack for Humanity 2026 3rd place achievement. Added /projects page."
+    "lastVerified": "2026-04-05",
+    "majorUpdateNote": "April 2026 — Corrected Hack for Humanity participant count to 775. Added EconoQuest (Hackonomics 2026). Updated tech stack to reflect current primary stack (Fastify, Supabase, pgvector, Groq)."
   },
   "skills": [
     "HTML",
@@ -181,7 +203,9 @@
     "TypeScript",
     "React",
     "Next.js",
+    "Framer Motion",
     "Node.js",
+    "Fastify",
     "Express",
     "Python",
     "Pandas",
@@ -189,16 +213,22 @@
     "PyTorch",
     "MongoDB",
     "PostgreSQL",
+    "Supabase",
+    "pgvector",
     "Redis",
     "Docker",
     "NGINX",
     "GitHub Actions",
     "HuggingFace",
-    "Framer Motion",
-    "SWR"
+    "Groq",
+    "WebSocket",
+    "SWR",
+    "JWT",
+    "SMTP",
+    "Mongoose"
   ],
   "notes": {
-    "developer": "Keep this file updated when adding projects or achievements. Prefer explicit repo URLs rather than relying on redirects.",
+    "developer": "Keep this file updated when adding projects or achievements. Prefer explicit repo URLs over redirects.",
     "updateOnRename": true
   }
 }
