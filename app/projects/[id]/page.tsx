@@ -75,6 +75,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type JudgeScoreCategory = {
+  label: string;
+  score: number;
+};
+
+type JudgeScores = {
+  outOf: number;
+  source?: string;
+  categories: JudgeScoreCategory[];
+};
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function SectionBox({
@@ -143,6 +156,121 @@ function StatCard({ label, value }: { label: string; value: string }) {
         {value}
       </span>
     </div>
+  );
+}
+
+function JudgeScoresChart({ judgeScores }: { judgeScores: JudgeScores }) {
+  const CHART_H = 160;
+  const MAX = judgeScores.outOf;
+
+  // One distinct gradient per bar — intentionally varied
+  const palette: [string, string][] = [
+    ["#8B5CF6", "#7C3AED"], // violet   — Design
+    ["#06B6D4", "#3B82F6"], // cyan     — Presentation
+    ["#10B981", "#0D9488"], // emerald  — Overall
+    ["#F43F5E", "#EC4899"], // rose     — Impact
+    ["#F59E0B", "#F97316"], // amber    — Innovation
+  ];
+
+  const overall = judgeScores.categories.find(
+    (c) => c.label.toLowerCase() === "overall",
+  );
+
+  return (
+    <SectionBox label="Judge Scores" icon="🏅" accent="from-yellow-400 to-amber-500">
+      {judgeScores.source && (
+        <p className="text-[11px] text-gray-400 dark:text-slate-500 mb-5 -mt-1">
+          {judgeScores.source}
+        </p>
+      )}
+
+      {/* Chart area */}
+      <div className="relative" style={{ height: `${CHART_H + 52}px` }}>
+
+        {/* Horizontal grid lines */}
+        {[1, 2, 3, 4, 5].map((tick) => (
+          <div
+            key={tick}
+            className="absolute left-7 right-0"
+            style={{ bottom: `${(tick / MAX) * CHART_H + 32}px` }}
+          >
+            <span className="absolute -left-6 -top-2 text-[9px] tabular-nums text-gray-300 dark:text-slate-600 select-none">
+              {tick}
+            </span>
+            <div className="border-t border-dashed border-gray-100 dark:border-slate-700/50 w-full" />
+          </div>
+        ))}
+
+        {/* Bars */}
+        <div
+          className="absolute left-7 right-0 flex items-end justify-around gap-3"
+          style={{ bottom: "32px" }}
+        >
+          {judgeScores.categories.map((cat, i) => {
+            const barH = Math.round((cat.score / MAX) * CHART_H);
+            const [colorFrom, colorTo] = palette[i % palette.length];
+            return (
+              <div
+                key={cat.label}
+                className="flex flex-col items-center gap-1.5 flex-1 min-w-0"
+              >
+                {/* Score above bar */}
+                <span
+                  className="text-[11px] font-bold tabular-nums"
+                  style={{ color: colorFrom }}
+                >
+                  {cat.score.toFixed(2)}
+                </span>
+
+                {/* Bar */}
+                <div
+                  className="w-full rounded-t-lg"
+                  style={{
+                    height: `${barH}px`,
+                    background: `linear-gradient(to top, ${colorFrom}, ${colorTo})`,
+                    transformOrigin: "bottom",
+                    animation: `grow-bar 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.07}s both`,
+                    opacity: 0.9,
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Baseline */}
+        <div
+          className="absolute left-7 right-0 border-t border-gray-200 dark:border-slate-600"
+          style={{ bottom: "32px" }}
+        />
+
+        {/* Category labels */}
+        <div
+          className="absolute left-7 right-0 flex justify-around gap-3"
+          style={{ bottom: "4px" }}
+        >
+          {judgeScores.categories.map((cat) => (
+            <div key={cat.label} className="flex-1 min-w-0 text-center">
+              <span className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight block truncate">
+                {cat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Overall callout */}
+      {overall && (
+        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700/50 flex items-baseline gap-2">
+          <span className="text-2xl font-extrabold text-gray-800 dark:text-white tabular-nums">
+            {overall.score.toFixed(2)}
+          </span>
+          <span className="text-xs text-gray-400 dark:text-slate-500">
+            / {MAX} overall &nbsp;·&nbsp; 3rd of 775 participants
+          </span>
+        </div>
+      )}
+    </SectionBox>
   );
 }
 
@@ -263,6 +391,10 @@ export default async function ProjectPage({ params }: Props) {
         .fade-up-2 { animation-delay: 0.12s; }
         .fade-up-3 { animation-delay: 0.20s; }
         .fade-up-4 { animation-delay: 0.28s; }
+        @keyframes grow-bar {
+          from { transform: scaleY(0); }
+          to   { transform: scaleY(1); }
+        }
       `}</style>
 
       <ProjectJsonLd project={project} id={id} />
@@ -577,6 +709,15 @@ export default async function ProjectPage({ params }: Props) {
               </SectionBox>
             )}
           </div>
+
+          {/* ── Judge Scores — full width, optional ── */}
+          {cs.judgeScores &&
+            Array.isArray(cs.judgeScores.categories) &&
+            cs.judgeScores.categories.length > 0 && (
+              <div className="fade-up fade-up-4 mb-4 mt-4">
+                <JudgeScoresChart judgeScores={cs.judgeScores} />
+              </div>
+            )}
 
           {/* ── Lessons — full width ── */}
           {Array.isArray(cs.lessons) && cs.lessons.length > 0 && (

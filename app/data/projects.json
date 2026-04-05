@@ -7,6 +7,17 @@
       "label": "🏆 3rd Place — Hack for Humanity 2026",
       "sub": "775 participants · Solo build · International"
     },
+    "judgeScores": {
+  "outOf": 5,
+  "source": "Official post-event results · Hack for Humanity 2026",
+  "categories": [
+    { "label": "Design",       "score": 4.18 },
+    { "label": "Presentation", "score": 4.18 },
+    { "label": "Overall",      "score": 3.98 },
+    { "label": "Impact",       "score": 3.82 },
+    { "label": "Innovation",   "score": 3.73 }
+  ]
+},
     "images": [
       "/Project/EcoLens/dashboard.png",
       "/Project/EcoLens/leaderboard.jpg",
