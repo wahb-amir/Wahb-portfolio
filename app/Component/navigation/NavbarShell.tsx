@@ -16,7 +16,12 @@ interface Props {
   linkdinUrl: string;
 }
 
-export default function NavbarShell({ navItems, githubUrl, navHeight, linkdinUrl }: Props) {
+export default function NavbarShell({
+  navItems,
+  githubUrl,
+  navHeight,
+  linkdinUrl,
+}: Props) {
   const [visible, setVisible] = useState(true);
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -86,6 +91,7 @@ export default function NavbarShell({ navItems, githubUrl, navHeight, linkdinUrl
                 src="/logo.png"
                 alt="Home"
                 fill
+                sizes="(max-width: 768px) 100vw, 200px"
                 priority
                 className="rounded-full object-cover border-2 border-cyan-400 shadow-md"
               />
