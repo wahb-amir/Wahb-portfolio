@@ -1,1056 +1,574 @@
 "use client";
 
-/**
- * Contact.tsx
- * Theme is 100% CSS custom-property driven.
- *
- * The core fix: instead of computing tokens in JS as
- *   const accent = isDark ? "#38bdf8" : "#0284c7"
- * and writing style={{ color: accent }}, we define CSS vars:
- *   .contact-root { --ct-accent: #0284c7 }
- *   .dark .contact-root { --ct-accent: #38bdf8 }
- * and write style={{ color: "var(--ct-accent)" }}.
- *
- * The inline style VALUE is now the literal string "var(--ct-accent)"
- * on BOTH server and client — identical, no hydration mismatch.
- * The browser resolves the var at paint time, reading .dark from <html>.
- *
- * isDark is completely removed from this file.
- * The only state that changes before/after mount is `mounted` which
- * gates the LazyBackgroundEffect (correct) — nothing else.
- */
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
-import React, { useEffect, useRef, useState } from "react";
-import { Playfair_Display, DM_Sans } from "next/font/google";
-import { SiGithub } from "react-icons/si";
-import { MdEmail } from "react-icons/md";
-import {
-  motion,
-  AnimatePresence,
-  useInView,
-  useReducedMotion,
-  cubicBezier,
-} from "framer-motion";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ArrowUpRight,
-  Sparkles,
-  Code2,
-  Globe,
-  ShoppingCart,
-  Wrench,
-  Zap,
-  Clock,
-  Layers,
-  ShieldCheck,
-  Check,
-  ChevronsUpDown,
-  DollarSign,
-  CalendarClock,
-  User,
-  AtSign,
-  MessageSquare,
-} from "lucide-react";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800", "900"],
-});
-const dmSans = DM_Sans({ subsets: ["latin"] });
-
-const CONTACT_EMAIL = "wahbamir2010@gmail.com";
-const CLIENT_PORTAL = "https://dashboard.wahb.space";
-const CLIENT_QUOTE = `${CLIENT_PORTAL}#request-quote`;
+const EMAIL = "wahbamir2010@gmail.com";
+const GITHUB = "https://github.com/wahb-amir";
+const CLIENT_PORTAL = "https://dashboard.wahb.space#request-quote";
 
 const SERVICES = [
-  {
-    value: "Full-Stack Web Application",
-    label: "Full-Stack Web App",
-    icon: Globe,
-  },
-  { value: "Backend Development", label: "Backend & APIs", icon: Code2 },
-  { value: "SEO Optimization", label: "SEO & Performance", icon: Sparkles },
-  { value: "E-commerce Store", label: "E-commerce Store", icon: ShoppingCart },
-  { value: "Custom Web Solution", label: "Custom Solution", icon: Wrench },
+  "Full-Stack Web App",
+  "Backend & APIs",
+  "SEO & Performance",
+  "E-Commerce Store",
+  "Custom Solution",
 ];
 
-const BUDGET_OPTIONS = [
-  { value: "under-1k", label: "Under $1,000" },
-  { value: "1k-3k", label: "$1,000 – $3,000" },
-  { value: "3k-8k", label: "$3,000 – $8,000" },
-  { value: "8k-plus", label: "$8,000+" },
-  { value: "not-sure", label: "Not sure yet" },
+const BUDGETS = ["<$1K", "$1–3K", "$3–8K", "$8K+", "Open"];
+const BUDGET_FULL = [
+  "Under $1,000",
+  "$1,000–$3,000",
+  "$3,000–$8,000",
+  "$8,000+",
+  "Not sure yet",
 ];
 
-const TIMELINE_OPTIONS = [
-  { value: "asap", label: "ASAP" },
-  { value: "1-month", label: "Within 1 month" },
-  { value: "1-3-months", label: "1–3 months" },
-  { value: "flexible", label: "Flexible" },
-];
+const TIMELINES = ["ASAP", "~1 Mo.", "1–3 Mo.", "Flexible"];
+const TIMELINE_FULL = ["ASAP", "Within 1 month", "1–3 months", "Flexible"];
 
-const TRUST_ITEMS = [
-  { icon: Zap, text: "Reply within 24 hours" },
-  { icon: Clock, text: "MVPs shipped in weeks, not months" },
-  { icon: Layers, text: "Full ownership from design to deploy" },
-  { icon: ShieldCheck, text: "Clean code, tested & maintainable" },
-];
+const TICKER =
+  "AVAILABLE FOR NEW PROJECTS · FULL-STACK ENGINEERING · BACKEND & APIS · SEO OPTIMIZATION · E-COMMERCE · SHIPS FAST · CLEAN CODE · TESTED & MAINTAINABLE · ";
 
-/* ─── CSS-var-aware Custom Select ─────────────────────────────── */
-interface SelectOption {
-  value: string;
-  label: string;
-}
+const TERMINAL_ROWS = [
+  ["STATUS", "AVAILABLE", true],
+  ["REPLY", "< 24 HOURS", false],
+  ["DELIVERY", "WEEKS, NOT MONTHS", false],
+  ["OWNERSHIP", "DESIGN → DEPLOY", false],
+] as const;
 
-const CustomSelect: React.FC<{
-  id: string;
-  value: string;
-  options: SelectOption[];
-  onChange: (val: string) => void;
-  icon: React.ReactNode;
-}> = ({ id, value, options, onChange, icon }) => {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node))
-        setOpen(false);
-    };
-    document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
-  }, []);
-
-  const selected = options.find((o) => o.value === value);
-
-  return (
-    <div ref={ref} className="ct-select-root relative" id={id}>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className={`ct-select-btn w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm font-medium border transition-all duration-200 ${open ? "ct-select-btn--open" : ""}`}
-      >
-        <span className="ct-accent-text" style={{ flexShrink: 0 }}>
-          {icon}
-        </span>
-        <span className="flex-1 text-left truncate ct-text-primary">
-          {selected?.label ?? "Select…"}
-        </span>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="ct-muted-text"
-          style={{ flexShrink: 0 }}
-        >
-          <ChevronsUpDown className="w-3.5 h-3.5" />
-        </motion.span>
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.ul
-            initial={{ opacity: 0, y: -6, scaleY: 0.96 }}
-            animate={{ opacity: 1, y: 0, scaleY: 1 }}
-            exit={{ opacity: 0, y: -4, scaleY: 0.96 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="ct-dropdown absolute z-50 left-0 right-0 mt-1.5 rounded-xl border overflow-hidden py-1 shadow-xl"
-            style={{ transformOrigin: "top" }}
-          >
-            {options.map((opt) => {
-              const isActive = opt.value === value;
-              return (
-                <li key={opt.value}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onChange(opt.value);
-                      setOpen(false);
-                    }}
-                    className={`ct-dropdown-item w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors duration-100 ${isActive ? "ct-dropdown-item--active" : ""}`}
-                  >
-                    <span className="font-medium">{opt.label}</span>
-                    {isActive && (
-                      <Check className="w-3.5 h-3.5 ct-accent-text" />
-                    )}
-                  </button>
-                </li>
-              );
-            })}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
-/* ─── Icon Input ──────────────────────────────────────────────── */
-const IconInput: React.FC<
-  React.InputHTMLAttributes<HTMLInputElement> & { icon: React.ReactNode }
-> = ({ icon, ...props }) => {
-  const [focused, setFocused] = useState(false);
-  return (
-    <div
-      className={`ct-field flex items-center gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}
-    >
-      <span
-        className={focused ? "ct-accent-text" : "ct-muted-text"}
-        style={{ flexShrink: 0 }}
-      >
-        {icon}
-      </span>
-      <input
-        {...props}
-        onFocus={(e) => {
-          setFocused(true);
-          props.onFocus?.(e);
-        }}
-        onBlur={(e) => {
-          setFocused(false);
-          props.onBlur?.(e);
-        }}
-        className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ct-text-primary"
-      />
-    </div>
-  );
-};
-
-/* ─── Icon Textarea ───────────────────────────────────────────── */
-const IconTextarea: React.FC<
-  React.TextareaHTMLAttributes<HTMLTextAreaElement> & { icon: React.ReactNode }
-> = ({ icon, ...props }) => {
-  const [focused, setFocused] = useState(false);
-  return (
-    <div
-      className={`ct-field flex gap-3 w-full px-4 py-3 rounded-xl border transition-all duration-200 ${focused ? "ct-field--focused" : ""}`}
-    >
-      <span
-        className={`mt-0.5 ${focused ? "ct-accent-text" : "ct-muted-text"}`}
-        style={{ flexShrink: 0 }}
-      >
-        {icon}
-      </span>
-      <textarea
-        {...props}
-        onFocus={(e) => {
-          setFocused(true);
-          props.onFocus?.(e);
-        }}
-        onBlur={(e) => {
-          setFocused(false);
-          props.onBlur?.(e);
-        }}
-        className="flex-1 bg-transparent text-sm outline-none resize-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ct-text-primary"
-      />
-    </div>
-  );
-};
-
-/* ─── Main component ──────────────────────────────────────────── */
 export default function Contact() {
-  const reduceMotion = useReducedMotion();
-
+  const [svc, setSvc] = useState(0);
+  const [bud, setBud] = useState(4);
+  const [tl, setTl] = useState(3);
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
+    "idle"
   );
   const [copied, setCopied] = useState(false);
-  const [selectedService, setSelectedService] = useState(
-    "Full-Stack Web Application",
-  );
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-    budget: "not-sure",
-    timeline: "flexible",
-  });
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
-  const ref = useRef<HTMLDivElement | null>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const upd =
+    (k: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((p) => ({ ...p, [k]: e.target.value }));
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+    } catch {}
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2200);
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, interest: selectedService }),
+        body: JSON.stringify({
+          ...form,
+          service: SERVICES[svc],
+          budget: BUDGET_FULL[bud],
+          timeline: TIMELINE_FULL[tl],
+        }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Something went wrong");
+      if (!res.ok) throw new Error();
       setStatus("sent");
-      setFormData({
-        name: "",
-        email: "",
-        message: "",
-        budget: "not-sure",
-        timeline: "flexible",
-      });
-      setTimeout(() => setStatus("idle"), 5000);
-    } catch (err) {
-      console.error(err);
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 3000);
-    }
-  };
-
-  const copyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(CONTACT_EMAIL);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setForm({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus("idle"), 8000);
     } catch {
-      window.location.href = `mailto:${CONTACT_EMAIL}`;
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3500);
     }
   };
 
-  const ease = cubicBezier(0.22, 1, 0.36, 1);
-  const fadeUp = (delay = 0) =>
-    reduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 32 },
-          animate: inView ? { opacity: 1, y: 0 } : {},
-          transition: { duration: 0.65, delay, ease },
-        };
-
-  const isSubmitting = status === "sending";
-  const isSent = status === "sent";
+  const ease = [0.22, 1, 0.36, 1] as const;
+  const fd = (delay = 0) => ({
+    initial: { opacity: 0, y: 28 },
+    animate: inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 },
+    transition: { duration: 0.55, delay, ease },
+  });
 
   return (
     <section
       ref={ref}
-      className={`contact-root ${dmSans.className} relative min-h-screen flex flex-col items-center justify-center overflow-hidden
-        bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
-        dark:from-[#00bfff18] dark:to-[#0078aa2e]
-        text-black dark:text-white`}
       id="contact"
+      className="relative min-h-screen bg-gradient-to-b from-[#00b1ff15] to-[#00bfff05] dark:bg-transparent dark:from-transparent dark:to-transparent text-gray-900 dark:text-gray-100 overflow-hidden font-mono"
     >
-      {/* ── CSS custom properties: all theme tokens in one place ── */}
       <style>{`
-        /* ─── Light tokens ─────────────────────────────────────── */
-        .contact-root {
-          --ct-accent:        #0284c7;
-          --ct-accent-muted:  rgba(2,132,199,0.1);
-          --ct-text-primary:  #0f172a;
-          --ct-text-muted:    #475569;
-          --ct-card-bg:       rgba(255,255,255,0.85);
-          --ct-card-border:   rgba(0,0,0,0.1);
-          --ct-field-bg:      rgba(255,255,255,0.7);
-          --ct-field-border:  rgba(0,0,0,0.15);
-          --ct-field-focus-ring: rgba(2,132,199,0.15);
-          --ct-select-bg:     rgba(255,255,255,0.95);
-          --ct-dropdown-bg:   #ffffff;
-          --ct-hover-bg:      rgba(14,165,233,0.1);
-          --ct-glow-1-opacity: 0.18;
-          --ct-glow-2-opacity: 0.14;
-          --ct-shimmer-line:  "linear-gradient(90deg, transparent 0%, #024f80 30%, #0369a1 70%, transparent 100%)";
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+        .ct-ticker-inner {
+          display: inline-flex;
+          white-space: nowrap;
+          animation: ct-scroll 36s linear infinite;
+        }
+        .ct-ticker-inner:hover { animation-play-state: paused; }
+        @keyframes ct-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
 
-        /* ─── Dark tokens ──────────────────────────────────────── */
-        .dark .contact-root,
-        :is(.dark) .contact-root {
-          --ct-accent:        #38bdf8;
-          --ct-accent-muted:  rgba(56,189,248,0.15);
-          --ct-text-primary:  #f8fafc;
-          --ct-text-muted:    #cbd5e1;
-          --ct-card-bg:       rgba(15,23,42,0.75);
-          --ct-card-border:   rgba(255,255,255,0.15);
-          --ct-field-bg:      rgba(255,255,255,0.08);
-          --ct-field-border:  rgba(255,255,255,0.15);
-          --ct-field-focus-ring: rgba(56,189,248,0.25);
-          --ct-select-bg:     rgba(15,23,42,0.85);
-          --ct-dropdown-bg:   #0f172a;
-          --ct-hover-bg:      rgba(56,189,248,0.15);
-          --ct-glow-1-opacity: 0.06;
-          --ct-glow-2-opacity: 0.05;
+        .ct-cursor { animation: ct-blink 1s step-end infinite; }
+        @keyframes ct-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        .ct-pulse-dot {
+          animation: ct-pulse 2.5s ease-in-out infinite;
+        }
+        @keyframes ct-pulse {
+          0%   { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.6); }
+          70%  { box-shadow: 0 0 0 7px rgba(0, 212, 255, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
         }
 
-        /* ─── Utility classes (all var-driven) ─────────────────── */
-        .ct-accent-text   { color: var(--ct-accent); }
-        .ct-text-primary  { color: var(--ct-text-primary); }
-        .ct-muted-text    { color: var(--ct-text-muted); }
-
-        /* ─── Glow blobs ───────────────────────────────────────── */
-        .ct-glow-1 {
-          top: -5%; left: -8%;
-          width: 700px; height: 700px;
-          background: radial-gradient(circle, rgba(14,165,233,var(--ct-glow-1-opacity)) 0%, transparent 70%);
-          filter: blur(55px);
+        /* ── HIGH-CONTRAST INPUT PLACEHOLDERS ── */
+        input::placeholder,
+        textarea::placeholder {
+          color: #6b7280;
+          font-weight: 400;
+          opacity: 1;
         }
-        .ct-glow-2 {
-          bottom: -10%; right: -5%;
-          width: 600px; height: 600px;
-          background: radial-gradient(circle, rgba(14,165,233,var(--ct-glow-2-opacity)) 0%, transparent 70%);
-          filter: blur(55px);
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+          color: #9ca3af;
+          font-weight: 400;
+          opacity: 1;
         }
 
-        /* ─── Card ─────────────────────────────────────────────── */
-        .ct-card {
-          background:     var(--ct-card-bg);
-          border-color:   var(--ct-card-border);
-          backdrop-filter: blur(16px);
-        }
-        .ct-form-card {
-          background:     var(--ct-card-bg);
-          border-color:   var(--ct-card-border);
-          backdrop-filter: blur(20px);
-        }
-        .dark .ct-form-card,
-        :is(.dark) .ct-form-card {
-          box-shadow: 0 24px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
-        }
-        .ct-form-card {
-          box-shadow: 0 20px 60px rgba(14,165,233,0.12), inset 0 1px 0 rgba(255,255,255,0.95);
-        }
-
-        /* ─── Field (input/textarea wrapper) ───────────────────── */
-        .ct-field {
-          background:   var(--ct-field-bg);
-          border-color: var(--ct-field-border);
-          box-shadow:   none;
-        }
-        .ct-field--focused {
-          border-color: var(--ct-accent);
-          box-shadow:   0 0 0 3px var(--ct-field-focus-ring);
-        }
-
-        /* ─── Select ───────────────────────────────────────────── */
-        .ct-select-btn {
-          background:   var(--ct-select-bg);
-          border-color: var(--ct-field-border);
-          color:        var(--ct-text-primary);
-          box-shadow:   none;
-        }
-        .ct-select-btn--open {
-          border-color: var(--ct-accent);
-          box-shadow:   0 0 0 3px var(--ct-field-focus-ring);
-        }
-        .ct-dropdown {
-          background:   var(--ct-dropdown-bg);
-          border-color: var(--ct-field-border);
-        }
-        .ct-dropdown-item {
-          background: transparent;
-          color:      var(--ct-text-primary);
-        }
-        .ct-dropdown-item:hover,
-        .ct-dropdown-item--active {
-          background: var(--ct-hover-bg);
-          color:      var(--ct-accent);
-        }
-
-        /* ─── Service buttons ──────────────────────────────────── */
-        .ct-service-btn {
-          border-color: var(--ct-card-border);
-          background:   transparent;
-          color:        var(--ct-text-muted);
-        }
-        .ct-service-btn--active {
-          border-color: color-mix(in srgb, var(--ct-accent) 50%, transparent);
-          background:   var(--ct-accent-muted);
-          color:        var(--ct-accent);
-        }
-        .ct-service-icon {
-          background: var(--ct-card-border);
-        }
-        .ct-service-icon--active {
-          background: var(--ct-accent-muted);
-        }
-
-        /* ─── Trust strip ──────────────────────────────────────── */
-        .ct-trust-icon {
-          background:   var(--ct-accent-muted);
-          border: 1px solid color-mix(in srgb, var(--ct-accent) 20%, transparent);
-        }
-
-        /* ─── Email copy chip ──────────────────────────────────── */
-        .ct-email-chip {
-          border-color:    color-mix(in srgb, var(--ct-accent) 30%, transparent);
-          background:      color-mix(in srgb, var(--ct-accent) 10%, transparent);
-          color:           var(--ct-accent);
-          backdrop-filter: blur(8px);
-        }
-        .ct-copy-pill {
-          background: rgba(0,0,0,0.06);
-          color:      var(--ct-text-muted);
-        }
-        .dark .ct-copy-pill,
-        :is(.dark) .ct-copy-pill {
-          background: rgba(255,255,255,0.1);
-          color:      var(--ct-text-muted);
-        }
-        .ct-copy-pill--copied {
-          background: rgba(22,163,74,0.12);
-          color: #15803d;
-        }
-        .dark .ct-copy-pill--copied,
-        :is(.dark) .ct-copy-pill--copied {
-          background: rgba(34,197,94,0.2);
-          color: #86efac;
-        }
-
-        /* ─── GitHub link ──────────────────────────────────────── */
-        .ct-gh-link {
-          border-color:    var(--ct-card-border);
-          background:      rgba(0,0,0,0.05);
-          color:           var(--ct-text-muted);
-          backdrop-filter: blur(8px);
-        }
-        .dark .ct-gh-link,
-        :is(.dark) .ct-gh-link {
-          background: rgba(255,255,255,0.08);
-        }
-
-        /* ─── Scroll buttons ────────────────────────────────────  */
-        .ct-scroll-btn {
-          border-color:    var(--ct-card-border);
-          background:      rgba(0,0,0,0.05);
-          color:           var(--ct-accent);
-          backdrop-filter: blur(8px);
-        }
-        .dark .ct-scroll-btn,
-        :is(.dark) .ct-scroll-btn {
-          background: rgba(255,255,255,0.08);
-        }
-
-        /* ─── Availability badge ───────────────────────────────── */
-        .ct-avail-badge {
-          color:        var(--ct-accent);
-          border-color: var(--ct-accent-muted);
-          background:   var(--ct-accent-muted);
-        }
-        .ct-avail-dot {
-          background: var(--ct-accent);
-          box-shadow: 0 0 5px var(--ct-accent);
-        }
-
-        /* ─── Service pill (active indicator) ──────────────────── */
-        .ct-service-pill {
-          background:   var(--ct-accent-muted);
-          color:        var(--ct-accent);
-          border: 1px solid color-mix(in srgb, var(--ct-accent) 25%, transparent);
-        }
-
-        /* ─── Submit button disabled state ─────────────────────── */
-        .ct-submit-disabled {
-          background: rgba(0,0,0,0.08);
-          color:      var(--ct-text-muted);
-        }
-        .dark .ct-submit-disabled,
-        :is(.dark) .ct-submit-disabled {
-          background: rgba(255,255,255,0.1);
+        input:focus,
+        textarea:focus {
+          outline: none;
         }
       `}</style>
 
-      {/* Grain */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: "180px",
-        }}
-      />
+      {/* Responsive Dot Grid Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(#0088cc22_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#00b1ff15_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
 
-      {/* Ambient glows — opacity from CSS vars, no isDark branching */}
+      {/* ─── Ticker ─── */}
       <div
-        className="ct-glow-1 pointer-events-none absolute rounded-full"
+        className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm"
         aria-hidden
-      />
-      <div
-        className="ct-glow-2 pointer-events-none absolute rounded-full"
-        aria-hidden
-      />
-
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-        {/* ══ HEADING ══ */}
-        <div className="mb-14 md:mb-20">
-          <motion.div {...fadeUp(0)}>
-            <span className="ct-avail-badge mb-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] px-3.5 py-1.5 rounded-full border">
-              <span className="ct-avail-dot w-1.5 h-1.5 rounded-full animate-pulse" />
-              Available for new projects
-            </span>
-          </motion.div>
-
-          <motion.h2
-            {...fadeUp(0.09)}
-            className={`${playfair.className} font-black leading-[0.9] tracking-tight mt-3`}
-            style={{ fontSize: "clamp(2.9rem, 8.5vw, 7rem)" }}
-          >
-            <span className="ct-text-primary block">Got an idea?</span>
-            <span
-              style={{
-                display: "block",
-                background:
-                  "linear-gradient(105deg, #0ea5e9 0%, #38bdf8 48%, #7dd3fc 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                fontStyle: "italic",
-              }}
-            >
-              Let&apos;s ship it.
-            </span>
-          </motion.h2>
-
-          <motion.p
-            {...fadeUp(0.18)}
-            className="ct-muted-text mt-5 max-w-lg text-base md:text-lg leading-relaxed"
-          >
-            I&apos;m Wahb — a full-stack developer who turns rough ideas into
-            production-ready products. Tell me what you&apos;re building.
-          </motion.p>
-
-          {/* Action row */}
-          <motion.div
-            {...fadeUp(0.26)}
-            className="mt-8 flex items-center gap-3 flex-wrap"
-          >
-            {/* Email copy chip */}
-            <button
-              type="button"
-              onClick={copyEmail}
-              aria-label={`Copy email ${CONTACT_EMAIL}`}
-              className="ct-email-chip group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 hover:scale-[1.02]"
-            >
-              <MdEmail className="w-4 h-4" />
-              <span className="hidden sm:inline">{CONTACT_EMAIL}</span>
-              <span className="sm:hidden">Email me</span>
-
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={copied ? "c" : "u"}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.14 }}
-                  className={`text-xs px-2 py-0.5 rounded-md ${copied ? "ct-copy-pill--copied" : "ct-copy-pill"}`}
-                  role="status"
-                  aria-live="polite"
-                >
-                  {copied ? "Copied ✓" : "Copy"}
-                </motion.span>
-              </AnimatePresence>
-            </button>
-
-            {/* GitHub */}
-            <a
-              href="https://github.com/wahb-amir"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="ct-gh-link inline-flex items-center justify-center w-10 h-10 rounded-xl border transition-all duration-200 hover:scale-105"
-            >
-              <SiGithub className="w-4 h-4" />
-            </a>
-
-            {/* CTA */}
-            <a
-              href={CLIENT_QUOTE}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-[1.03] hover:brightness-110"
-              style={{
-                background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
-                color: "#fff",
-                boxShadow: "0 6px 22px rgba(14,165,233,0.4)",
-              }}
-            >
-              Request a quote
-              <ArrowUpRight className="w-4 h-4" />
-            </a>
-          </motion.div>
+      >
+        <div className="ct-ticker-inner py-2.5 font-mono text-[10px] font-bold tracking-[0.18em] text-gray-600 dark:text-gray-400">
+          {(TICKER + TICKER).repeat(2)}
         </div>
+      </div>
 
-        {/* ══ GRID ══ */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-          {/* ── LEFT ── */}
-          <motion.div
-            {...fadeUp(0.2)}
-            className="lg:col-span-2 flex flex-col gap-5"
-          >
-            {/* Service picker */}
-            <div className="ct-card rounded-2xl border p-5">
-              <p className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
-                What do you need?
-              </p>
-              <div className="flex flex-col gap-2">
-                {SERVICES.map(({ value, label, icon: Icon }, i) => {
-                  const active = selectedService === value;
-                  return (
-                    <motion.button
-                      key={value}
-                      type="button"
-                      onClick={() => setSelectedService(value)}
-                      initial={reduceMotion ? {} : { opacity: 0, x: -14 }}
-                      animate={inView ? { opacity: 1, x: 0 } : {}}
-                      transition={{
-                        duration: 0.4,
-                        delay: 0.24 + i * 0.06,
-                        ease,
-                      }}
-                      whileHover={{ x: 4 }}
-                      className={`ct-service-btn ${active ? "ct-service-btn--active" : ""} flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium border transition-colors duration-150`}
-                    >
-                      <span
-                        className={`${active ? "ct-service-icon--active" : "ct-service-icon"} w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-150`}
-                      >
-                        <Icon
-                          className={`w-3.5 h-3.5 ${active ? "ct-accent-text" : "ct-muted-text"}`}
-                        />
-                      </span>
-                      <span className="flex-1">{label}</span>
-                      {active && (
-                        <motion.span
-                          layoutId="service-tick"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="ct-accent-text"
-                        >
-                          <Check className="w-3.5 h-3.5" />
-                        </motion.span>
-                      )}
-                    </motion.button>
-                  );
-                })}
-              </div>
+      {/* ─── Main canvas ─── */}
+      <div className="relative z-10">
+        <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 py-16 pb-20">
+
+          {/* ══ Hero ══ */}
+          <motion.div {...fd(0)} className="mb-[52px]">
+            <div className="flex items-center gap-2.5 mb-6">
+              <div className="w-[7px] h-[7px] rounded-full shrink-0 bg-[#0088cc] dark:bg-[#00d4ff] ct-pulse-dot" />
+              <span className="text-[10px] uppercase tracking-[0.22em] text-[#0077b3] dark:text-[#00d4ff] font-bold">
+                Available for new projects
+              </span>
+              <span className="text-[10px] tracking-[0.1em] text-gray-500 dark:text-gray-400 ml-2 hidden sm:inline">
+                / {new Date().getFullYear()} / WAHB
+              </span>
             </div>
 
-            {/* Trust strip */}
-            <div className="ct-card rounded-2xl border p-5">
-              <p className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
-                Working with me
-              </p>
-              <div className="space-y-3">
-                {TRUST_ITEMS.map(({ icon: TIcon, text }, i) => (
-                  <motion.div
-                    key={text}
-                    initial={reduceMotion ? {} : { opacity: 0, y: 10 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.32 + i * 0.07, ease }}
-                    className="flex items-center gap-3"
+            <div className="leading-[0.9] tracking-[0.01em] font-['Bebas_Neue',sans-serif] text-[clamp(52px,10.5vw,118px)]">
+              <span className="block text-gray-900 dark:text-white">LET&apos;S BUILD</span>
+              <span className="block text-[#0077b3] dark:text-[#00d4ff]">
+                SOMETHING
+              </span>
+              <span className="block text-gray-400 dark:text-gray-500">
+                DIFFERENT
+                <span className="ct-cursor text-[#0077b3] dark:text-[#00d4ff]">_</span>
+              </span>
+            </div>
+
+            <p className="mt-7 text-[13px] text-gray-700 dark:text-gray-300 tracking-[0.03em] leading-[2.0] max-w-[540px]">
+              Full-stack engineer. Production-ready products, shipped fast.
+              <br />
+              Tell me what you&apos;re building.
+            </p>
+          </motion.div>
+
+          {/* ══ Service selector ══ */}
+          <motion.div {...fd(0.08)} className="mb-14">
+            <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
+              — What do you need?
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {SERVICES.map((sv, i) => (
+                <button
+                  key={sv}
+                  className={`font-mono text-[11px] font-bold tracking-[0.08em] uppercase px-[18px] py-[10px] border transition-all duration-150 ${
+                    svc === i
+                      ? "border-[#0077b3] bg-[#0077b3] text-white dark:border-[#00d4ff] dark:bg-[#00d4ff] dark:text-[#0b1220] shadow-sm"
+                      : "border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:text-[#0077b3] hover:border-[#0077b3] hover:bg-[#0077b3]/5 dark:hover:text-[#00d4ff] dark:hover:border-[#00d4ff]/60 dark:hover:bg-gray-700"
+                  }`}
+                  onClick={() => setSvc(i)}
+                  type="button"
+                >
+                  {sv}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* ══ Two-column grid ══ */}
+          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-12 md:gap-16 items-start">
+
+            {/* ── Left: info panel ── */}
+            <motion.div {...fd(0.14)} className="flex flex-col gap-9">
+
+              {/* Terminal status */}
+              <div>
+                <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
+                  — Status
+                </div>
+                <div className="border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 overflow-hidden">
+                  {TERMINAL_ROWS.map(([k, v, accent]) => (
+                    <div
+                      key={k}
+                      className="flex gap-3.5 px-4 py-[9px] border-b border-gray-200 dark:border-gray-800 last:border-b-0 text-[11px] tracking-[0.04em]"
+                    >
+                      <span className="text-gray-600 dark:text-gray-400 min-w-[80px] shrink-0 font-bold">
+                        {k}
+                      </span>
+                      <span
+                        className={
+                          accent
+                            ? "text-[#0077b3] dark:text-[#00d4ff] font-bold"
+                            : "text-gray-900 dark:text-gray-200 font-semibold"
+                        }
+                      >
+                        {v}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Direct contact links */}
+              <div>
+                <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
+                  — Reach out
+                </div>
+                <div className="flex flex-col gap-2">
+                  <button
+                    className={`block w-full border px-4 py-[12px] font-mono text-[11px] tracking-[0.06em] font-bold text-left uppercase transition-all ${
+                      copied
+                        ? "border-[#16a34a] text-[#16a34a] bg-green-50 dark:border-[#4ade80] dark:text-[#4ade80] dark:bg-green-900/30"
+                        : "border-gray-400 dark:border-gray-700 text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 hover:border-[#0077b3] hover:text-[#0077b3] hover:bg-[#0077b3]/5 dark:hover:border-[#00d4ff]/60 dark:hover:text-[#00d4ff] dark:hover:bg-gray-700"
+                    }`}
+                    onClick={copy}
+                    type="button"
                   >
-                    <span className="ct-trust-icon w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <TIcon className="w-4 h-4 ct-accent-text" />
-                    </span>
-                    <span className="ct-muted-text text-sm font-medium">
-                      {text}
-                    </span>
-                  </motion.div>
+                    {copied ? "✓ Copied to clipboard" : `@ ${EMAIL}`}
+                  </button>
+                  <a
+                    href={GITHUB}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full border border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-[12px] font-mono text-[11px] font-bold tracking-[0.06em] text-left uppercase text-gray-800 dark:text-gray-200 transition-all hover:border-[#0077b3] hover:text-[#0077b3] hover:bg-[#0077b3]/5 dark:hover:border-[#00d4ff]/60 dark:hover:text-[#00d4ff] dark:hover:bg-gray-700"
+                  >
+                    GH / WAHB-AMIR ↗
+                  </a>
+                  <a
+                    href={CLIENT_PORTAL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full border border-[#0077b3] dark:border-[#00d4ff]/50 bg-[#0077b3]/8 dark:bg-[#00d4ff]/10 px-4 py-[12px] font-mono text-[11px] font-bold tracking-[0.06em] text-left uppercase text-[#0077b3] dark:text-[#00d4ff] transition-all hover:border-[#0077b3] hover:bg-[#0077b3]/15 dark:hover:border-[#00d4ff] dark:hover:bg-[#00d4ff]/20"
+                  >
+                    Request Quote → Client Portal
+                  </a>
+                </div>
+              </div>
+
+              {/* Section navigation */}
+              <div className="flex gap-2 pt-2 border-t border-gray-300 dark:border-gray-800">
+                {[
+                  { label: "↑ About", id: "about" },
+                  { label: "↓ FAQ", id: "faq" },
+                ].map(({ label, id }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className="font-mono text-[10px] font-bold tracking-[0.12em] uppercase text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 px-3.5 py-[8px] cursor-pointer transition-all hover:text-[#0077b3] hover:border-[#0077b3] dark:hover:text-[#00d4ff] dark:hover:border-[#00d4ff]/60 dark:hover:bg-gray-700"
+                  >
+                    {label}
+                  </button>
                 ))}
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* ── RIGHT: FORM ── */}
-          <motion.div {...fadeUp(0.3)} className="lg:col-span-3">
-            <div className="ct-form-card rounded-2xl border relative overflow-hidden">
-              {/* Top shimmer — fixed colour, no isDark branching */}
-              <div
-                className="absolute top-0 left-0 right-0 h-px"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent 0%, #0ea5e9 40%, #38bdf8 60%, transparent 100%)",
-                  opacity: 0.85,
-                }}
-              />
-
+            {/* ── Right: form ── */}
+            <motion.div {...fd(0.2)}>
               <AnimatePresence mode="wait">
-                {!isSent ? (
+                {status === "sent" ? (
+                  /* ── Success state ── */
+                  <motion.div
+                    key="sent"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="relative border border-gray-300 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md px-6 sm:px-10 py-[72px] text-center"
+                  >
+                    <div className="absolute -top-1.5 -left-1.5 w-4 h-4 border-t-[1.5px] border-l-[1.5px] border-[#0077b3] dark:border-[#00d4ff] pointer-events-none" />
+                    <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-[1.5px] border-r-[1.5px] border-[#0077b3] dark:border-[#00d4ff] pointer-events-none" />
+
+                    <div className="leading-none mb-3.5 font-['Bebas_Neue',sans-serif] text-[clamp(42px,7vw,80px)] text-[#0077b3] dark:text-[#00d4ff]">
+                      BRIEF RECEIVED
+                    </div>
+                    <div className="text-[12px] text-gray-700 dark:text-gray-300 font-bold tracking-[0.1em] mb-8 uppercase">
+                      Reply incoming within 24 hours.
+                    </div>
+                    <button
+                      onClick={() => setStatus("idle")}
+                      className="bg-transparent border-none text-[10px] tracking-[0.15em] font-bold text-gray-600 dark:text-gray-400 underline cursor-pointer uppercase font-mono hover:text-gray-900 dark:hover:text-white transition-colors"
+                    >
+                      SEND ANOTHER →
+                    </button>
+                  </motion.div>
+                ) : (
+                  /* ── Form ── */
                   <motion.form
                     key="form"
-                    onSubmit={handleSubmit}
-                    className="p-7 md:p-9 space-y-6"
-                    aria-busy={isSubmitting}
+                    onSubmit={submit}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0, scale: 0.97 }}
-                    transition={{ duration: 0.3 }}
+                    exit={{ opacity: 0 }}
+                    className="border border-gray-300 dark:border-gray-700 bg-white/95 dark:bg-gray-900/90 backdrop-blur-md shadow-sm dark:shadow-xl"
+                    aria-busy={status === "sending"}
                   >
-                    <div>
-                      <h3
-                        className={`${playfair.className} ct-text-primary text-2xl md:text-3xl font-bold leading-snug`}
-                      >
-                        Tell me about your project
-                        <span style={{ color: "#0ea5e9" }}>.</span>
-                      </h3>
-                      <p className="ct-muted-text mt-1.5 text-sm">
-                        All fields optional except name &amp; email.
-                      </p>
-                    </div>
-
-                    {/* Name */}
-                    <div className="space-y-1.5">
-                      <label
-                        className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
-                        htmlFor="name"
-                      >
-                        Your name
-                      </label>
-                      <IconInput
-                        id="name"
-                        type="text"
-                        name="name"
-                        required
-                        placeholder="e.g. Alex Johnson"
-                        value={formData.name}
-                        onChange={handleChange}
-                        icon={<User className="w-4 h-4" />}
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div className="space-y-1.5">
-                      <label
-                        className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
-                        htmlFor="email"
-                      >
-                        Your email
-                      </label>
-                      <IconInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        required
-                        placeholder="you@company.com"
-                        value={formData.email}
-                        onChange={handleChange}
-                        icon={<AtSign className="w-4 h-4" />}
-                      />
-                    </div>
-
-                    {/* Budget + Timeline */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label
-                          className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
-                          htmlFor="budget"
-                        >
-                          Budget
-                        </label>
-                        <CustomSelect
-                          id="budget"
-                          value={formData.budget}
-                          options={BUDGET_OPTIONS}
-                          onChange={(val) =>
-                            setFormData((p) => ({ ...p, budget: val }))
-                          }
-                          icon={<DollarSign className="w-4 h-4" />}
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <label
-                          className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
-                          htmlFor="timeline"
-                        >
-                          Timeline
-                        </label>
-                        <CustomSelect
-                          id="timeline"
-                          value={formData.timeline}
-                          options={TIMELINE_OPTIONS}
-                          onChange={(val) =>
-                            setFormData((p) => ({ ...p, timeline: val }))
-                          }
-                          icon={<CalendarClock className="w-4 h-4" />}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Message */}
-                    <div className="space-y-1.5">
-                      <label
-                        className="ct-text-primary text-[10px] font-bold uppercase tracking-[0.18em]"
-                        htmlFor="message"
-                      >
-                        Project details{" "}
-                        <span
-                          className="ct-muted-text"
-                          style={{ textTransform: "none", letterSpacing: 0 }}
-                        >
-                          (optional)
-                        </span>
-                      </label>
-                      <IconTextarea
-                        id="message"
-                        name="message"
-                        rows={4}
-                        placeholder="What are you building? Any tech preferences? What's the main goal?"
-                        value={formData.message}
-                        onChange={handleChange}
-                        icon={<MessageSquare className="w-4 h-4" />}
-                      />
-                    </div>
-
-                    {/* Active service pill */}
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="ct-muted-text text-xs font-medium">
-                        Service:
+                    {/* Form header bar */}
+                    <div className="border-b border-gray-200 dark:border-gray-700 px-5 sm:px-7 py-3.5 flex justify-between items-center bg-gray-50/80 dark:bg-gray-950/80">
+                      <span className="text-[9px] tracking-[0.25em] text-gray-600 dark:text-gray-400 uppercase font-bold">
+                        Project Brief · {new Date().getFullYear()}
                       </span>
                       <AnimatePresence mode="wait">
                         <motion.span
-                          key={selectedService}
-                          initial={{ opacity: 0, scale: 0.85 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.85 }}
-                          transition={{ duration: 0.2 }}
-                          className="ct-service-pill inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
+                          key={SERVICES[svc]}
+                          initial={{ opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 4 }}
+                          transition={{ duration: 0.18 }}
+                          className="text-[9px] font-bold tracking-[0.12em] border border-[#0077b3]/50 dark:border-[#00d4ff]/40 px-2.5 py-[3px] uppercase text-[#0077b3] dark:text-[#00d4ff] bg-[#0077b3]/8 dark:bg-[#00d4ff]/10"
                         >
-                          {React.createElement(
-                            SERVICES.find((s) => s.value === selectedService)
-                              ?.icon ?? Globe,
-                            { className: "w-3 h-3" },
-                          )}
-                          {SERVICES.find((s) => s.value === selectedService)
-                            ?.label ?? selectedService}
+                          {SERVICES[svc]}
                         </motion.span>
                       </AnimatePresence>
                     </div>
 
-                    {/* Submit */}
+                    {/* Form body */}
+                    <div className="px-5 sm:px-7 pt-9 pb-7 flex flex-col gap-11">
+
+                      {/* 01 — Who are you */}
+                      <div className="relative">
+                        <div
+                          className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]"
+                          aria-hidden
+                        >
+                          01
+                        </div>
+                        <div className="relative z-10">
+                          <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
+                            Who are you?
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
+                            <div>
+                              <label
+                                className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold"
+                                htmlFor="ct-name"
+                              >
+                                Name *
+                              </label>
+                              <input
+                                className="block w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-none px-3 py-3 font-mono text-[13px] font-semibold text-gray-900 dark:text-white outline-none transition-all focus:border-[#0077b3] focus:bg-white dark:focus:border-[#00d4ff] dark:focus:bg-gray-900"
+                                id="ct-name"
+                                type="text"
+                                name="name"
+                                required
+                                placeholder="Alex Johnson"
+                                value={form.name}
+                                onChange={upd("name")}
+                              />
+                            </div>
+                            <div>
+                              <label
+                                className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold"
+                                htmlFor="ct-email"
+                              >
+                                Email *
+                              </label>
+                              <input
+                                className="block w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-none px-3 py-3 font-mono text-[13px] font-semibold text-gray-900 dark:text-white outline-none transition-all focus:border-[#0077b3] focus:bg-white dark:focus:border-[#00d4ff] dark:focus:bg-gray-900"
+                                id="ct-email"
+                                type="email"
+                                name="email"
+                                required
+                                placeholder="you@company.com"
+                                value={form.email}
+                                onChange={upd("email")}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 02 — Budget & Timeline */}
+                      <div className="relative">
+                        <div
+                          className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]"
+                          aria-hidden
+                        >
+                          02
+                        </div>
+                        <div className="relative z-10">
+                          <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
+                            Budget &amp; Timeline
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div>
+                              <div className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 mb-3 font-bold">
+                                Budget
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                {BUDGETS.map((b, i) => (
+                                  <button
+                                    key={b}
+                                    type="button"
+                                    className={`font-mono text-[11px] font-bold px-3.5 py-2 border transition-all tracking-[0.04em] ${
+                                      bud === i
+                                        ? "border-[#0077b3] text-white bg-[#0077b3] dark:border-[#00d4ff] dark:text-[#0b1220] dark:bg-[#00d4ff] shadow-sm"
+                                        : "border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-300 hover:border-[#0077b3] hover:text-[#0077b3] hover:bg-[#0077b3]/5 dark:hover:border-[#00d4ff]/60 dark:hover:text-[#00d4ff] dark:hover:bg-gray-700"
+                                    }`}
+                                    onClick={() => setBud(i)}
+                                  >
+                                    {b}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 mb-3 font-bold">
+                                Timeline
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                {TIMELINES.map((t, i) => (
+                                  <button
+                                    key={t}
+                                    type="button"
+                                    className={`font-mono text-[11px] font-bold px-3.5 py-2 border transition-all tracking-[0.04em] ${
+                                      tl === i
+                                        ? "border-[#0077b3] text-white bg-[#0077b3] dark:border-[#00d4ff] dark:text-[#0b1220] dark:bg-[#00d4ff] shadow-sm"
+                                        : "border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-300 hover:border-[#0077b3] hover:text-[#0077b3] hover:bg-[#0077b3]/5 dark:hover:border-[#00d4ff]/60 dark:hover:text-[#00d4ff] dark:hover:bg-gray-700"
+                                    }`}
+                                    onClick={() => setTl(i)}
+                                  >
+                                    {t}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 03 — Project Details */}
+                      <div className="relative">
+                        <div
+                          className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]"
+                          aria-hidden
+                        >
+                          03
+                        </div>
+                        <div className="relative z-10">
+                          <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
+                            Project Details
+                          </div>
+                          <label
+                            className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold"
+                            htmlFor="ct-msg"
+                          >
+                            Describe your project{" "}
+                            <span className="normal-case tracking-normal text-gray-500 dark:text-gray-400 font-normal">
+                              (optional)
+                            </span>
+                          </label>
+                          <textarea
+                            className="block w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-none px-3 py-3 font-mono text-[13px] font-semibold text-gray-900 dark:text-white outline-none transition-all focus:border-[#0077b3] focus:bg-white dark:focus:border-[#00d4ff] dark:focus:bg-gray-900 resize-none leading-loose"
+                            id="ct-msg"
+                            name="message"
+                            rows={4}
+                            placeholder="What are you building? Tech preferences? Main goals?"
+                            value={form.message}
+                            onChange={upd("message")}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Submit button */}
                     <button
                       type="submit"
-                      disabled={isSubmitting}
-                      className={`group relative w-full py-4 rounded-xl font-bold text-sm overflow-hidden transition-all duration-300 hover:scale-[1.015] active:scale-[0.99] ${isSubmitting ? "ct-submit-disabled" : ""}`}
-                      style={
-                        isSubmitting
-                          ? {}
-                          : {
-                              background:
-                                "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
-                              color: "#fff",
-                              boxShadow: "0 8px 28px rgba(14,165,233,0.38)",
-                            }
-                      }
+                      disabled={status === "sending"}
+                      className={`w-full p-[22px] font-mono text-[13px] font-bold tracking-[0.14em] uppercase flex items-center justify-center gap-3 cursor-pointer border-none transition-all duration-300 ${
+                        status === "sending"
+                          ? "bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                          : "bg-[#0077b3] text-white dark:bg-[#00d4ff] dark:text-[#0b1220] hover:tracking-[0.22em] hover:bg-[#005f8f] dark:hover:bg-[#33ddff]"
+                      }`}
                     >
-                      {!isSubmitting && (
-                        <span
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)",
-                          }}
-                        />
+                      {status === "sending" ? (
+                        <>
+                          <motion.span
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              duration: 0.85,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                            className="inline-block w-3.5 h-3.5 rounded-full border-2 border-gray-400 border-t-gray-700 dark:border-gray-600 dark:border-t-gray-300"
+                          />
+                          TRANSMITTING
+                        </>
+                      ) : (
+                        <>
+                          SEND BRIEF
+                          <ArrowRight size={15} />
+                        </>
                       )}
-                      <span className="relative z-10 flex items-center justify-center gap-2">
-                        {isSubmitting ? (
-                          <>
-                            <motion.span
-                              className="w-4 h-4 rounded-full border-2 border-current border-t-transparent"
-                              animate={{ rotate: 360 }}
-                              transition={{
-                                duration: 0.75,
-                                repeat: Infinity,
-                                ease: "linear",
-                              }}
-                            />
-                            Sending…
-                          </>
-                        ) : (
-                          <>
-                            Send Message
-                            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                          </>
-                        )}
-                      </span>
                     </button>
 
+                    {/* Error message */}
                     <AnimatePresence>
                       {status === "error" && (
-                        <motion.p
-                          initial={{ opacity: 0, y: 4 }}
-                          animate={{ opacity: 1, y: 0 }}
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="text-center text-sm font-medium"
-                          style={{ color: "#f87171" }}
+                          className="px-7 py-3 text-[11px] font-bold tracking-[0.08em] text-red-700 dark:text-red-400 border-t border-gray-300 dark:border-gray-800 bg-red-50 dark:bg-red-900/20 uppercase"
                         >
-                          Something went wrong. Try emailing me directly.
-                        </motion.p>
+                          ✗ Failed — email me directly: {EMAIL}
+                        </motion.div>
                       )}
                     </AnimatePresence>
                   </motion.form>
-                ) : (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4, ease }}
-                    className="p-9 flex flex-col items-center justify-center gap-5 text-center min-h-[360px]"
-                  >
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 280,
-                        damping: 16,
-                        delay: 0.12,
-                      }}
-                      className="w-16 h-16 rounded-full flex items-center justify-center"
-                      style={{
-                        background: "rgba(34,197,94,0.15)",
-                        border: "1px solid rgba(34,197,94,0.3)",
-                        boxShadow: "0 0 32px rgba(34,197,94,0.15)",
-                      }}
-                    >
-                      <Check className="w-7 h-7" style={{ color: "#4ade80" }} />
-                    </motion.div>
-
-                    <div>
-                      <h3
-                        className={`${playfair.className} ct-text-primary text-2xl font-bold mb-2`}
-                      >
-                        Message sent!
-                      </h3>
-                      <p className="ct-muted-text">
-                        Thanks{formData.name ? `, ${formData.name}` : ""}.
-                        I&apos;ll reply within 24 hours.
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => setStatus("idle")}
-                      className="ct-accent-text text-sm underline underline-offset-2 font-medium"
-                    >
-                      Send another message
-                    </button>
-                  </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-          </motion.div>
-        </div>
+            </motion.div>
+          </div>
 
-        {/* Scroll nav */}
-        <div className="flex justify-center gap-4 mt-16">
-          {[
-            { id: "about", Icon: ChevronUpIcon, label: "Scroll Up", extra: "" },
-            {
-              id: "faq",
-              Icon: ChevronDownIcon,
-              label: "Scroll Down",
-              extra: "animate-bounce",
-            },
-          ].map(({ id, Icon, label, extra }) => (
-            <button
-              key={id}
-              onClick={() =>
-                document
-                  .getElementById(id)
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              aria-label={label}
-              className={`ct-scroll-btn hover:scale-110 transition-transform p-2.5 rounded-full border ${extra}`}
-            >
-              <Icon className="w-5 h-5" />
-            </button>
-          ))}
+          {/* ══ Footer bar ══ */}
+          <div className="border-t border-gray-300 dark:border-gray-800 mt-16 pt-6 flex justify-between items-center flex-wrap gap-3">
+            <span className="text-[9px] tracking-[0.22em] text-gray-600 dark:text-gray-400 uppercase font-bold">
+              Wahb · Full-Stack Engineer · {new Date().getFullYear()}
+            </span>
+            <span className="text-[9px] tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase font-bold">
+              Available · Remote · Worldwide
+            </span>
+          </div>
         </div>
       </div>
     </section>
