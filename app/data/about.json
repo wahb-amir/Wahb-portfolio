@@ -37,12 +37,17 @@
       "highlight": true
     },
     {
+      "title": "April 2026",
+      "desc": "🏆 Won the Technical Award at Hackonomics 2026 — built EconoQuest solo, an economics simulation game with a microservices backend, competing against 1481 participants internationally.",
+      "highlight": true
+    },
+    {
       "title": "Now",
-      "desc": "Contributing to open source, strengthening DSA fundamentals, and deploying lightweight AI models into real products."
+      "desc": "Going deep on DSA, mathematics, and ML fundamentals — building the foundation for serious AI/ML research."
     },
     {
       "title": "Next",
-      "desc": "Deeper distributed systems knowledge, Kafka, and scaling production infrastructure."
+      "desc": "Building an end-to-end ML audio pipeline for speaker diarization and publishing original research."
     }
   ]
 }
