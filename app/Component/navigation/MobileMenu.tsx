@@ -14,9 +14,8 @@ import {
   faBriefcase,
   faEnvelope,
   faQuestion,
-
 } from "@fortawesome/free-solid-svg-icons";
-import { faGithub ,faLinkedin} from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 
 import type { NavItem } from "./navConfig";
 

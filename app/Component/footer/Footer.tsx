@@ -50,11 +50,22 @@ const NAV_LINKS = [
   { label: "FAQ", id: "faq" },
 ];
 
-const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] = [
-  { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/wahb-amir", icon: faLinkedin, isFA: true },
-  { label: "Client Portal", href: "https://dashboard.wahb.space", icon: ExternalLink, isFA: false },
-];
+const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] =
+  [
+    { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/wahb-amir",
+      icon: faLinkedin,
+      isFA: true,
+    },
+    {
+      label: "Client Portal",
+      href: "https://dashboard.wahb.space",
+      icon: ExternalLink,
+      isFA: false,
+    },
+  ];
 
 const STACK = [
   { label: "Next.js", icon: SiNextdotjs },
@@ -321,7 +332,10 @@ export default function Footer() {
                   }
                 >
                   {isFA ? (
-                    <FontAwesomeIcon icon={Icon} className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
+                    <FontAwesomeIcon
+                      icon={Icon}
+                      className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text"
+                    />
                   ) : (
                     <Icon className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
                   )}

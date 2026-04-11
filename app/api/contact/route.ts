@@ -69,11 +69,11 @@ setInterval(
  *   "SEO Optimization" | "E-commerce Store" | "Custom Web Solution"
  */
 const SERVICE_MAP: Record<string, string> = {
-  "Full-Stack Web App":   "Full-Stack Web Application",
-  "Backend & APIs":       "Backend Development",
-  "SEO & Performance":    "SEO Optimization",
-  "E-Commerce Store":     "E-commerce Store",
-  "Custom Solution":      "Custom Web Solution",
+  "Full-Stack Web App": "Full-Stack Web Application",
+  "Backend & APIs": "Backend Development",
+  "SEO & Performance": "SEO Optimization",
+  "E-Commerce Store": "E-commerce Store",
+  "Custom Solution": "Custom Web Solution",
 };
 
 /**
@@ -82,11 +82,11 @@ const SERVICE_MAP: Record<string, string> = {
  * DB enum expects slugs: "under-1k" | "1k-3k" | "3k-8k" | "8k-plus" | "not-sure"
  */
 const BUDGET_MAP: Record<string, string> = {
-  "Under $1,000":    "under-1k",
-  "$1,000–$3,000":   "1k-3k",
-  "$3,000–$8,000":   "3k-8k",
-  "$8,000+":         "8k-plus",
-  "Not sure yet":    "not-sure",
+  "Under $1,000": "under-1k",
+  "$1,000–$3,000": "1k-3k",
+  "$3,000–$8,000": "3k-8k",
+  "$8,000+": "8k-plus",
+  "Not sure yet": "not-sure",
 };
 
 /**
@@ -95,10 +95,10 @@ const BUDGET_MAP: Record<string, string> = {
  * DB enum expects slugs: "asap" | "1-month" | "1-3-months" | "flexible"
  */
 const TIMELINE_MAP: Record<string, string> = {
-  "ASAP":           "asap",
+  ASAP: "asap",
   "Within 1 month": "1-month",
-  "1–3 months":     "1-3-months",
-  "Flexible":       "flexible",
+  "1–3 months": "1-3-months",
+  Flexible: "flexible",
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -206,27 +206,27 @@ export async function POST(req: Request) {
   }
 
   /* 5 ── Sanitise raw strings ──────────────────────────────── */
-  const name     = sanitize(body.name, 80);
-  const email    = sanitize(body.email, 254);
-  const service  = sanitize(body.service, 100);   // display label
-  const budget   = sanitize(body.budget, 100);    // display label
-  const timeline = sanitize(body.timeline, 100);  // display label
-  const message  = sanitize(body.message, 2000);
+  const name = sanitize(body.name, 80);
+  const email = sanitize(body.email, 254);
+  const service = sanitize(body.service, 100); // display label
+  const budget = sanitize(body.budget, 100); // display label
+  const timeline = sanitize(body.timeline, 100); // display label
+  const message = sanitize(body.message, 2000);
 
   /* 6 ── Map display labels → DB enum slugs ────────────────── */
-  const interest    = SERVICE_MAP[service]  ?? null;
-  const budgetSlug  = BUDGET_MAP[budget]    ?? "not-sure";
+  const interest = SERVICE_MAP[service] ?? null;
+  const budgetSlug = BUDGET_MAP[budget] ?? "not-sure";
   const timelineSlug = TIMELINE_MAP[timeline] ?? "flexible";
 
   /* 7 ── Validate ──────────────────────────────────────────── */
   const errors: string[] = [];
 
-  if (!name)              errors.push("name is required");
-  if (name.length < 2)    errors.push("name is too short");
-  if (!email)             errors.push("email is required");
+  if (!name) errors.push("name is required");
+  if (name.length < 2) errors.push("name is too short");
+  if (!email) errors.push("email is required");
   if (!EMAIL_RE.test(email)) errors.push("email is invalid");
-  if (!service)           errors.push("service is required");
-  if (!interest)          errors.push(`service "${service}" is not a recognised option`);
+  if (!service) errors.push("service is required");
+  if (!interest) errors.push(`service "${service}" is not a recognised option`);
 
   if (errors.length > 0) {
     return NextResponse.json(
@@ -242,7 +242,7 @@ export async function POST(req: Request) {
     await Message.create({
       name,
       email,
-      interest,          // mapped DB enum value
+      interest, // mapped DB enum value
       budget: budgetSlug,
       timeline: timelineSlug,
       message: message || "",

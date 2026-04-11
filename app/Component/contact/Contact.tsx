@@ -44,7 +44,7 @@ export default function Contact() {
   const [tl, setTl] = useState(3);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
+    "idle",
   );
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -162,7 +162,6 @@ export default function Contact() {
       {/* ─── Main canvas ─── */}
       <div className="relative z-10">
         <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 py-16 pb-20">
-
           {/* ══ Hero ══ */}
           <motion.div {...fd(0)} className="mb-[52px]">
             <div className="flex items-center gap-2.5 mb-6">
@@ -176,13 +175,17 @@ export default function Contact() {
             </div>
 
             <div className="leading-[0.9] tracking-[0.01em] font-['Bebas_Neue',sans-serif] text-[clamp(52px,10.5vw,118px)]">
-              <span className="block text-gray-900 dark:text-white">LET&apos;S BUILD</span>
+              <span className="block text-gray-900 dark:text-white">
+                LET&apos;S BUILD
+              </span>
               <span className="block text-[#0077b3] dark:text-[#00d4ff]">
                 SOMETHING
               </span>
               <span className="block text-gray-400 dark:text-gray-500">
                 DIFFERENT
-                <span className="ct-cursor text-[#0077b3] dark:text-[#00d4ff]">_</span>
+                <span className="ct-cursor text-[#0077b3] dark:text-[#00d4ff]">
+                  _
+                </span>
               </span>
             </div>
 
@@ -218,10 +221,8 @@ export default function Contact() {
 
           {/* ══ Two-column grid ══ */}
           <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-12 md:gap-16 items-start">
-
             {/* ── Left: info panel ── */}
             <motion.div {...fd(0.14)} className="flex flex-col gap-9">
-
               {/* Terminal status */}
               <div>
                 <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
@@ -363,7 +364,6 @@ export default function Contact() {
 
                     {/* Form body */}
                     <div className="px-5 sm:px-7 pt-9 pb-7 flex flex-col gap-11">
-
                       {/* 01 — Who are you */}
                       <div className="relative">
                         <div

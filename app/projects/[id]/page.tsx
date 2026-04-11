@@ -177,7 +177,11 @@ function JudgeScoresChart({ judgeScores }: { judgeScores: JudgeScores }) {
   );
 
   return (
-    <SectionBox label="Judge Scores" icon="🏅" accent="from-yellow-400 to-amber-500">
+    <SectionBox
+      label="Judge Scores"
+      icon="🏅"
+      accent="from-yellow-400 to-amber-500"
+    >
       {judgeScores.source && (
         <p className="text-[11px] text-gray-400 dark:text-slate-500 mb-5 -mt-1">
           {judgeScores.source}
@@ -186,7 +190,6 @@ function JudgeScoresChart({ judgeScores }: { judgeScores: JudgeScores }) {
 
       {/* Chart area */}
       <div className="relative" style={{ height: `${CHART_H + 52}px` }}>
-
         {/* Horizontal grid lines */}
         {[1, 2, 3, 4, 5].map((tick) => (
           <div

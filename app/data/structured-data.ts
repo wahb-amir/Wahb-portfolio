@@ -127,7 +127,6 @@ const projects = [
 export const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
-  
     {
       "@type": "DigitalDocument",
       "@id": "https://wahb.space/#ai-json",
