@@ -10,16 +10,20 @@ export default function Avatar() {
           from { opacity: 0; transform: scale(0.5) rotate(-15deg); }
           to   { opacity: 1; transform: scale(1)   rotate(0deg);   }
         }
+        @keyframes trophy-pop-2 {
+          from { opacity: 0; transform: scale(0.5) rotate(15deg); }
+          to   { opacity: 1; transform: scale(1)   rotate(0deg);  }
+        }
       `}</style>
 
-      {/* Glow ring — lowest layer */}
+      {/* Glow ring */}
       <div
         className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"
         style={{ zIndex: 0 }}
         aria-hidden="true"
       />
 
-      {/* Avatar image — middle layer */}
+      {/* Avatar image */}
       <figure
         className="relative mx-auto rounded-full p-1 bg-white dark:bg-slate-900 ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden"
         style={{ zIndex: 1 }}
@@ -34,7 +38,7 @@ export default function Avatar() {
         />
       </figure>
 
-      {/* Trophy badge — top layer, outside figure so overflow-hidden doesn't clip it */}
+      {/* Badge 1 — Hack for Humanity (top right) */}
       <div
         aria-label="3rd Place — Hack for Humanity 2026"
         title="3rd Place — Hack for Humanity 2026"
@@ -48,8 +52,7 @@ export default function Avatar() {
           bg-yellow-400 dark:bg-yellow-500
           text-yellow-900
           shadow-md shadow-yellow-400/50
-          select-none
-          pointer-events-none
+          select-none pointer-events-none
         "
         style={{
           zIndex: 50,
@@ -57,6 +60,30 @@ export default function Avatar() {
         }}
       >
         🏆 3rd
+      </div>
+
+      {/* Badge 2 — Hackonomics Technical Award (top left) */}
+      <div
+        aria-label="Technical Award — Hackonomics 2026"
+        title="Technical Award — Hackonomics 2026"
+        className="
+          absolute -top-1 -left-1
+          inline-flex items-center gap-0.5
+          px-1.5 py-0.5
+          rounded-full
+          text-[10px] font-black leading-none
+          border border-blue-300/80 dark:border-blue-500/60
+          bg-blue-400 dark:bg-blue-500
+          text-blue-900
+          shadow-md shadow-blue-400/50
+          select-none pointer-events-none
+        "
+        style={{
+          zIndex: 50,
+          animation: "trophy-pop-2 0.4s cubic-bezier(0.22,1,0.36,1) 1.1s both",
+        }}
+      >
+        🏆 Tech
       </div>
     </div>
   );

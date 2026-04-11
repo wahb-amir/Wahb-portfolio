@@ -226,6 +226,7 @@ export default function Hero() {
             aria-label="View EcoLens — 3rd Place Hack for Humanity 2026"
           >
             {/* Trophy icon */}
+
             <span className="text-base leading-none" aria-hidden="true">
               🏆
             </span>
@@ -233,10 +234,10 @@ export default function Hero() {
             {/* Text */}
             <span className="flex flex-col items-start leading-tight">
               <span className="text-xs font-black tracking-wide uppercase">
-                3rd Place · Hack for Humanity 2026
+                Technical Award · Hackonomics 2026
               </span>
               <span className="text-[10px] font-medium opacity-75">
-                EcoLens · AI waste classifier · 775 participants
+                EconoQuest · Economics simulation · 1481 participants
               </span>
             </span>
 
