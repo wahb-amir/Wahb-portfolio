@@ -19,7 +19,7 @@ import {
   SiPython,
   SiPandas,
   SiNumpy,
-  SiScikitlearn,
+  SiFastify,
   SiPytorch,
   SiCplusplus,
   SiOpencv,
@@ -74,11 +74,11 @@ const SKILLS: Record<string, SkillDef> = {
   python: { id: "python", name: "Python", icon: SiPython, color: "#3776AB" },
   pandas: { id: "pandas", name: "Pandas", icon: SiPandas, color: "#2b7bb9" },
   numpy: { id: "numpy", name: "NumPy", icon: SiNumpy, color: "#4DABCF" },
-  sklearn: {
-    id: "sklearn",
-    name: "Scikit",
-    icon: SiScikitlearn,
-    color: "#F7931E",
+  fastify: {
+    id: "fastify",
+    name: "Fastify",
+    icon: SiFastify,
+    color: "#000000",
   },
   pytorch: {
     id: "pytorch",
@@ -129,7 +129,7 @@ const GROUPS: GroupDef[] = [
       "python",
       "pandas",
       "numpy",
-      "sklearn",
+      "fastify",
       "pytorch",
       "cpp",
     ],
@@ -194,7 +194,11 @@ function SkillChip({
           ? isDark
             ? "#94a3b8"
             : "#64748b"
-          : skill.color;
+          : skill.color === "#000000"
+            ? isDark
+              ? "#e2e8f0"
+              : "#1e293b"
+            : skill.color;
 
   return (
     <div
