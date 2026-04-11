@@ -478,7 +478,15 @@ export const structuredData = {
       areaServed: "Worldwide",
       description:
         "Integrating applied AI tools, RAG pipelines, and LLM-powered features into production web systems for enhanced user experience and automation.",
-      keywords: ["AI", "RAG", "LangChain", "LLM", "Machine Learning", "Embedding", "NLP"],
+      keywords: [
+        "AI",
+        "RAG",
+        "LangChain",
+        "LLM",
+        "Machine Learning",
+        "Embedding",
+        "NLP",
+      ],
     },
   ],
 };

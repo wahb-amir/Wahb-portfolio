@@ -4,7 +4,11 @@
   "identity": {
     "canonicalName": "Wahb Amir",
     "aliases": ["Wahb", "Wahb A."],
-    "primaryProfessions": ["Full-Stack Web Developer", "AI Developer", "RAG Architect"],
+    "primaryProfessions": [
+      "Full-Stack Web Developer",
+      "AI Developer",
+      "RAG Architect"
+    ],
     "nationality": "Pakistan",
     "age": 16,
     "experience": "Self-taught, coding seriously for just over one year",
@@ -51,7 +55,21 @@
       "award": "Technical Award — Hackonomics 2026 (1481 participants, solo, international)",
       "date": "2026-04-01",
       "description": "Browser-based economics simulation with a full RAG advisory pipeline, Socratic AI advisor, and real-time WebSocket streaming — built solo on free infrastructure. Players govern a nation across 7–8 fiscal years adjusting 8 real policy levers affecting 10 outcome metrics, guided by a Socratic AI (Llama 3.3 70B via Groq) that retrieves context from 99 game-situated RAG chunks in Supabase pgvector and never gives direct answers. Three-tier architecture: React frontend → Fastify gateway (cookie proxying, LRU caching, load balancing) → HuggingFace-hosted RAG/inference services. Pure-Python conflict detector runs before every LLM call. 7-archetype classification system at zero inference cost. WebSocket streaming bug fixed by bypassing React batching via index ref. Zero cloud spend.",
-      "tech": ["React", "Fastify", "Node.js", "Python", "LangChain", "Llama 3.3 70B", "Groq", "pgvector", "Supabase", "HuggingFace Spaces", "WebSocket", "JWT", "TypeScript"],
+      "tech": [
+        "React",
+        "Fastify",
+        "Node.js",
+        "Python",
+        "LangChain",
+        "Llama 3.3 70B",
+        "Groq",
+        "pgvector",
+        "Supabase",
+        "HuggingFace Spaces",
+        "WebSocket",
+        "JWT",
+        "TypeScript"
+      ],
       "github": {
         "frontend": "https://github.com/wahb-amir/EconoQuest",
         "backend": "https://github.com/wahb-amir/EconoQuestBackend"
@@ -66,7 +84,17 @@
       "award": "3rd Place — Hack for Humanity 2026 (775 participants, solo, international)",
       "date": "2026-03-01",
       "description": "AI-powered waste classification app built solo in one month. Point a camera at any waste item to receive an AI material label, estimated CO₂/water/energy impact, and gamified points toward a global leaderboard. Full ML pipeline: Next.js serverless API → HuggingFace model endpoint → label normalisation → impact calculation → MongoDB write → achievements engine. OTP auth with JWT in HTTP-only cookies, token rotation, and transactional rollback. Six material categories, confidence-gated scan logging, custom achievements engine. Zero paid API budget.",
-      "tech": ["Next.js", "TypeScript", "MongoDB", "HuggingFace", "Framer Motion", "JWT", "SMTP", "Tailwind", "SWR"],
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "MongoDB",
+        "HuggingFace",
+        "Framer Motion",
+        "JWT",
+        "SMTP",
+        "Tailwind",
+        "SWR"
+      ],
       "github": "https://github.com/wahb-amir/ecolens"
     },
     {
@@ -77,7 +105,15 @@
       "role": "Creator & Lead Developer",
       "date": "2026-02-01",
       "description": "Unified workspace where clients request quotes, track progress, message developers, and see real-time GitHub-synced updates. Replaced fragmented email/chat workflows. GitHub Actions + webhooks automatically map commits and PRs to project tasks. Role-based access control, JWT auth, real-time in-app and email notifications.",
-      "tech": ["Next.js", "React", "Node.js", "MongoDB", "Tailwind", "GitHub API", "GitHub Actions"],
+      "tech": [
+        "Next.js",
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Tailwind",
+        "GitHub API",
+        "GitHub Actions"
+      ],
       "github": "https://github.com/wahb-amir/dashboard"
     },
     {
