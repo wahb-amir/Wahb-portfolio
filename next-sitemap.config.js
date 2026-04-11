@@ -2,7 +2,7 @@
 module.exports = {
   siteUrl: "https://wahb.space",
   generateRobotsTxt: true,
-  exclude: ["*"],
+  exclude: [],
   additionalPaths: async (config) => [
     // ── Portfolio pages ───────────────────────────────────────────────────────
 
