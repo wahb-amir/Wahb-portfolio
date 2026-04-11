@@ -19,7 +19,7 @@ const skills = [
   "Python",
   "Pandas",
   "NumPy",
-  "Scikit-learn",
+  "Fastify",
   "PyTorch",
   "OpenCV",
   "C++",
