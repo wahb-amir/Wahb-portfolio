@@ -1,5 +1,111 @@
 [
   {
+    "id": "econoquest",
+    "title": "EconoQuest — AI Economics Simulator",
+    "role": "Full-Stack Engineer, AI/RAG Architect & Simulation Designer",
+    "badge": {
+      "label": "🏆 Hackonomics 2026 Submission",
+      "sub": "Solo build · International hackathon"
+    },
+    "images": [
+      "/Project/EconoQuest/landing.png",
+      "/Project/EconoQuest/nation-selection.png",
+      "/Project/EconoQuest/playground.jpg",
+      "/Project/EconoQuest/report.jpg",
+      "/Project/EconoQuest/hall-of-fame.jpg"
+    ],
+    "tech": [
+      "React",
+      "Fastify",
+      "Node.js",
+      "Python",
+      "LangChain",
+      "Llama 3.3 70B",
+      "Groq",
+      "pgvector",
+      "Supabase",
+      "HuggingFace Spaces",
+      "WebSocket",
+      "JWT"
+    ],
+    "short": "Govern a nation across 7–8 fiscal years, adjusting 8 real policy levers and watching 10 economic metrics respond — guided by a Socratic AI advisor powered by a full RAG pipeline, not generic hints.",
+    "liveLink": "https://econoquest.wahb.space",
+    "githubLink": [
+      "https://github.com/wahb-amir/EconoQuest",
+      "https://github.com/wahb-amir/EconoQuestBackend"
+    ],
+    "problem": "Economics education teaches consequences by description, not by experience. You can read that printing money causes inflation — but you don't feel it until you've made the choice yourself and watched your currency collapse two rounds later. EconoQuest was built to close that gap: compound causality you live with, not memorize.",
+    "process": [
+      "Designed a 7–8 round simulation engine with 8 policy levers (tax, interest rates, spending, R&D, tariffs, money supply, foreign lending, wealth fund risk) mapping to 10 outcome metrics",
+      "Built a full RAG pipeline: game state embedded → pgvector retrieval from 99 knowledge chunks across 5 layers → Llama 3.3 70B via Groq streamed over WebSocket",
+      "Engineered a Fastify gateway handling cross-domain auth, same-domain cookie proxying, LRU caching keyed by state hash, and load balancing across two HuggingFace Spaces per service",
+      "Designed 99 game-situated RAG chunks (game mechanics, dangerous combos, crisis playbooks, round strategy, historical analogies — Weimar, Volcker, Singapore, Zimbabwe)",
+      "Built a pure-Python conflict detector that flags dangerous policy pairs before any LLM call — domain expertise as logic, not inference",
+      "Fixed a WebSocket streaming bug where Groq tokens arriving within the same millisecond collapsed React's batch buffer — solved by accumulating tokens via index ref, bypassing batching entirely",
+      "Designed a 7-archetype system and an AI-narrated mandate timeline review generated at game end"
+    ],
+    "outcome": "Submitted to Hackonomics 2026 — built entirely solo. Delivered a production-grade economics simulation with a full RAG pipeline, Socratic AI advisor, conflict detection system, real-time WebSocket streaming, and a competitive Hall of Fame — on zero cloud spend.",
+    "stats": {
+      "placement": "Hackonomics 2026 Submission",
+      "infrastructure": "100% free — HuggingFace Spaces, Supabase, Groq, zero cloud spend",
+      "build": "Solo — simulation engine, RAG pipeline, gateway, streaming layer, frontend, deployment"
+    },
+    "category": "Platform",
+    "launch": {
+      "date": "April 2026"
+    },
+    "caseStudy": {
+      "tlDr": "Built a browser-based economics simulation with a full RAG advisory pipeline, Socratic AI advisor, and real-time WebSocket streaming — solo, on free infrastructure, for Hackonomics 2026. Players govern a nation across 7–8 fiscal years, adjusting real policy levers and living with the compound consequences — guided by a Socratic AI that asks pointed questions using their actual numbers and never gives answers.",
+      "problem": "Economics education describes consequences; it doesn't produce them. Reading about the Weimar Republic gives you a fact. Making a money-printing decision at round 3 and watching it compress real salaries by round 5 gives you intuition. EconoQuest was designed to be the second kind of learning — a simulation where early policy decisions constrain your options for years, and every outcome is traceable to a choice you made.",
+      "constraints": "Free infrastructure only — no paid cloud, no paid ML APIs. Solo build. The Socratic constraint was technically the hardest: a capable model defaults to being helpful, and helpful usually means giving the answer. Getting Llama 3.3 70B to ask a question that makes the player think harder — using their actual numbers — required more prompt engineering than any other part of the system. WebSocket streaming on free HuggingFace infrastructure introduced a batching bug that required bypassing React's state update mechanism entirely.",
+      "myRole": "Everything — simulation engine design, RAG architecture and knowledge base authoring, Fastify gateway, WebSocket streaming layer, conflict detector, archetype system, React frontend, cross-domain auth, and deployment.",
+      "responsibilities": [
+        "Designed and built the full simulation engine: 8 policy levers mapping to 10 outcome metrics (GDP growth, inflation, unemployment, debt-to-GDP, currency strength, trade balance, innovation index, real salaries, citizen mood, sovereign fund growth) across 7–8 rounds",
+        "Authored 99 game-situated RAG knowledge chunks across 5 layers: game mechanics, dangerous policy combinations, crisis playbooks, round strategy, and historical analogies (Weimar, Volcker, Singapore, Zimbabwe) — each written as a game-aware assertion, not a textbook fact",
+        "Built the full RAG pipeline: game state embedding → pgvector retrieval in Supabase → prompt construction with retrieved context → Llama 3.3 70B via Groq streaming over WebSocket",
+        "Built a pure-Python conflict detector that flags dangerous policy pairs (money printing into high inflation, rate cuts with a weak currency) before any LLM call — faster, cheaper, and more reliable than model inference",
+        "Engineered the Fastify gateway: same-domain cookie proxying for browser sessions, JWT in WebSocket URL for streaming connections, LRU caching keyed by state hash and prompt version, request queuing across two HuggingFace Spaces per service",
+        "Fixed a WebSocket streaming bug where tokens arriving within the same millisecond collapsed React's batch buffer — solved by accumulating tokens directly into the messages array via an index ref, bypassing React's batching entirely",
+        "Designed a 7-archetype classification system running at zero inference cost using pure logic priority checks, and an AI-narrated mandate timeline that reviews every policy choice at game end"
+      ],
+      "approach": [
+        "Get the simulation loop working before anything else — one round of policy → consequence → metric update, end to end, before building the advisor or gamification",
+        "Write the RAG knowledge base as game-situated assertions rather than economic facts. The model doesn't know what EconoQuest is — the retrieved context tells it. Every chunk had to be specific enough to retrieve on a real game state, not general enough to match anything",
+        "Enforce the Socratic constraint via prompt structure, not model capability. A capable model wants to give answers; the prompt had to structurally prevent it while still letting the model use the player's actual numbers",
+        "Run domain expertise as code, not inference. The conflict detector catches the most dangerous policy pairs in pure Python before touching the LLM — cheaper, faster, and more deterministic than asking the model to notice the same thing",
+        "Use free infrastructure as a design constraint, not a limitation. LRU caching keyed by state hash, load balancing across two HuggingFace Spaces per service, and KV caching (why streaming is 5 seconds, not 35) are architectural decisions that emerged from the zero-budget constraint"
+      ],
+      "technicalSolution": [
+        "React frontend with WebSocket streaming — fixed a critical batching bug by accumulating tokens via index ref instead of setState, bypassing React's update coalescing for real-time stream rendering",
+        "Fastify gateway handles all cross-cutting concerns: cookie proxying, JWT issuance for WebSocket connections, LRU cache keyed by state hash + prompt version, request queuing, and load balancing across two HuggingFace Spaces per service",
+        "RAG pipeline: game state → embedding → pgvector retrieval in Supabase → context injection → Llama 3.3 70B via Groq → WebSocket stream to client. 99 chunks across 5 knowledge layers",
+        "Pure-Python conflict detector runs before every LLM call, flagging dangerous policy pairs using domain logic with zero token cost",
+        "7-archetype classification system determined by pure priority-order logic checks — zero inference cost, instant result",
+        "AI-narrated mandate timeline generated at game end: a full review of every policy choice across the entire run, not a score",
+        "Hall of Fame leaderboard ranking mandates by weighted score (economic performance × nation difficulty) to incentivize high-risk, high-reward play"
+      ],
+      "architectureNotes": "Three-tier architecture on free infrastructure. React frontend communicates with a Fastify gateway via HTTP (authenticated flows) and WebSocket (streaming advisory responses). The gateway handles auth (same-domain cookie proxying for the browser session, JWT-in-URL for the WebSocket connection), LRU caching keyed by state hash and prompt version, and load balancing across two HuggingFace Spaces per service. Advisory requests flow through the conflict detector first — pure Python, zero tokens — then into the RAG pipeline: game state is embedded, pgvector in Supabase retrieves the most relevant of 99 knowledge chunks, a situated prompt is constructed, and Llama 3.3 70B via Groq streams the response back over WebSocket. KV caching keeps the streaming latency at ~5 seconds rather than 35. The archetype system and mandate timeline run entirely client-side at game end with no additional inference cost.",
+      "outcomes": {
+        "qualitative": "Submitted to Hackonomics 2026 as a solo build — zero cloud spend, production-grade architecture. The Socratic advisor generates genuinely situated hints using real game state: players get told about Weimar Germany because their specific inflation and money supply figures matched that RAG chunk, not because it was a random example. The WebSocket streaming pipeline held under demo conditions. The conflict detector eliminated the most dangerous false-positive advisor hints without touching the LLM."
+      },
+      "proofPoints": [
+        "Full RAG pipeline shipped on zero cloud budget — HuggingFace Spaces, Supabase pgvector, Groq, all free tier.",
+        "99 game-situated knowledge chunks authored across 5 layers — each written as a specific game-aware assertion, not a textbook fact.",
+        "WebSocket streaming bug fixed by bypassing React's batching — tokens accumulate via index ref directly into the messages array.",
+        "Conflict detector runs in pure Python before every LLM call — domain expertise as deterministic logic, not inference.",
+        "Entire stack — gateway, RAG pipeline, simulation engine, frontend — built and deployed solo."
+      ],
+      "lessons": [
+        "RAG chunk design determines advisor quality more than model capability. Writing chunks as game-situated assertions — specific to EconoQuest's mechanics, not macroeconomics in general — was the single highest-leverage design decision in the project.",
+        "Socratic prompting is harder to enforce than expected. A capable model defaults to helpfulness, which usually means giving the answer. Structural prompt constraints matter more than instructions.",
+        "Domain expertise as code beats domain expertise as inference. The conflict detector is faster, cheaper, and more reliable than asking the model to notice dangerous policy pairs on its own.",
+        "Free infrastructure constraints produce better architecture. LRU caching, load balancing across Spaces, and KV cache utilization are patterns that scale — they emerged from a zero-budget constraint and would survive a paid infrastructure migration unchanged.",
+        "Streaming bugs are invisible until demo day. React's state batching collapsing a WebSocket stream produces silence — no error, no crash, just nothing rendering. Fix the stream first, then build the UI around it."
+      ],
+      "callToAction": "Want to see the full RAG pipeline and simulation engine in action, or discuss production AI advisory systems built on free infrastructure? Try the live demo or reach out directly."
+    }
+  },
+  {
     "id": "ecolens",
     "title": "EcoLens — AI Waste Classifier",
     "role": "Full-Stack Engineer & ML Integrator",
@@ -8,16 +114,16 @@
       "sub": "775 participants · Solo build · International"
     },
     "judgeScores": {
-  "outOf": 5,
-  "source": "Official post-event results · Hack for Humanity 2026",
-  "categories": [
-    { "label": "Design",       "score": 4.18 },
-    { "label": "Presentation", "score": 4.18 },
-    { "label": "Overall",      "score": 3.98 },
-    { "label": "Impact",       "score": 3.82 },
-    { "label": "Innovation",   "score": 3.73 }
-  ]
-},
+      "outOf": 5,
+      "source": "Official post-event results · Hack for Humanity 2026",
+      "categories": [
+        { "label": "Design", "score": 4.18 },
+        { "label": "Presentation", "score": 4.18 },
+        { "label": "Overall", "score": 3.98 },
+        { "label": "Impact", "score": 3.82 },
+        { "label": "Innovation", "score": 3.73 }
+      ]
+    },
     "images": [
       "/Project/EcoLens/dashboard.png",
       "/Project/EcoLens/leaderboard.jpg",
