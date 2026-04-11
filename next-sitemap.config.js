@@ -31,6 +31,12 @@ module.exports = {
       lastmod: new Date().toISOString(),
     },
     {
+      loc: `${config.siteUrl}/projects/econoquest`,
+      priority: 1.0,
+      changefreq: "weekly",
+      lastmod: new Date().toISOString(),
+    },
+    {
       loc: `${config.siteUrl}/projects/client-dev-platform`,
       priority: 0.9,
       changefreq: "weekly",
@@ -48,6 +54,12 @@ module.exports = {
     // EcoLens — 3rd Place Hack for Humanity 2026
     {
       loc: `https://eco.wahb.space`,
+      priority: 1.0,
+      changefreq: "weekly",
+      lastmod: new Date().toISOString(),
+    },
+    {
+      loc: `https://econoquest.wahb.space`,
       priority: 1.0,
       changefreq: "weekly",
       lastmod: new Date().toISOString(),
@@ -73,13 +85,13 @@ module.exports = {
 
     {
       loc: `${config.siteUrl}/llms.txt`,
-      priority: 0.5,
+      priority: 0.7,
       changefreq: "monthly",
       lastmod: new Date().toISOString(),
     },
     {
       loc: `${config.siteUrl}/ai.json`,
-      priority: 0.5,
+      priority: 0.7,
       changefreq: "monthly",
       lastmod: new Date().toISOString(),
     },
