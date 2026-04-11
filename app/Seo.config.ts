@@ -3,18 +3,30 @@ import { Metadata } from "next";
 export const siteMetadata: Metadata = {
   title: "Wahb Amir | Full-Stack Engineer & AI Developer",
   description:
-    "Wahb Amir is a full-stack engineer and AI developer building high-performance web applications, practical AI tools, and scalable systems — from idea to production.",
+    "Wahb Amir is a full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems — Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026.",
   metadataBase: new URL("https://wahb.space"),
   keywords: [
     "Wahb Amir",
     "full-stack engineer",
     "AI developer",
+    "RAG pipeline",
+    "LangChain",
     "Next.js",
     "React",
     "Node.js",
+    "Fastify",
+    "TypeScript",
+    "Supabase",
+    "pgvector",
+    "Groq",
+    "WebSocket",
     "Tailwind CSS",
     "web performance",
     "machine learning",
+    "EconoQuest",
+    "EcoLens",
+    "Hackonomics 2026",
+    "Hack for Humanity 2026",
     "portfolio",
   ],
   authors: [{ name: "Wahb Amir", url: "https://wahb.space" }],
@@ -42,7 +54,7 @@ export const siteMetadata: Metadata = {
   openGraph: {
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
-      "Portfolio of Wahb Amir — building high-performance web applications, practical AI tools, and scalable systems from idea to production.",
+      "Portfolio of Wahb Amir — Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026. Building high-performance web apps, RAG pipelines, and scalable systems from idea to production.",
     url: "https://wahb.space",
     siteName: "Wahb Amir Portfolio",
     images: [
@@ -60,7 +72,7 @@ export const siteMetadata: Metadata = {
     card: "summary_large_image",
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
-      "Portfolio of Wahb Amir — building high-performance web apps and practical AI tools.",
+      "Technical Award — Hackonomics 2026 · 3rd Place — Hack for Humanity 2026. Building high-performance web apps and practical AI tools.",
     images: ["https://wahb.space/og-image.png"],
   },
   icons: {

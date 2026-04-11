@@ -59,6 +59,34 @@ const faqEntries = [
 // Adding a project: add one entry here; the rest of the graph is generated automatically.
 const projects = [
   {
+    id: "https://wahb.space/#project-econoquest",
+    name: "EconoQuest — AI Economics Simulator",
+    url: "https://econoquest.wahb.space",
+    description:
+      "Browser-based economics simulation with a full RAG advisory pipeline, Socratic AI advisor (Llama 3.3 70B via Groq), and real-time WebSocket streaming — built solo on 100% free infrastructure. Players govern a nation across 7–8 fiscal years adjusting 8 real policy levers affecting 10 outcome metrics. 99 game-situated RAG knowledge chunks in Supabase pgvector. Pure-Python conflict detector runs before every LLM call. 7-archetype classification system at zero inference cost. Won the Technical Award at Hackonomics 2026 (1481 participants, solo build). Case study: https://wahb.space/projects/econoquest",
+    applicationCategory: "WebApplication",
+    programmingLanguage: ["TypeScript", "Python"],
+    softwareRequirements: [
+      "React",
+      "Fastify",
+      "Node.js",
+      "LangChain",
+      "Groq",
+      "Llama 3.3 70B",
+      "Supabase",
+      "pgvector",
+      "HuggingFace Spaces",
+      "WebSocket",
+      "JWT",
+    ],
+    sameAs: [
+      "https://github.com/wahb-amir/EconoQuest",
+      "https://github.com/wahb-amir/EconoQuestBackend",
+    ],
+    award: "https://wahb.space/#award-econoquest-technical",
+    datePublished: "2026-04-01",
+  },
+  {
     id: "https://wahb.space/#project-ecolens",
     name: "EcoLens — AI Waste Classifier",
     url: "https://eco.wahb.space",
@@ -76,7 +104,6 @@ const projects = [
       "JWT",
       "Nodemailer",
     ],
-
     sameAs: [
       "https://github.com/wahb-amir/ecolens",
       "https://devpost.com/software/eco-lens-0golu8",
@@ -161,7 +188,7 @@ export const structuredData = {
       email: "mailto:wahbamir2010@gmail.com",
       jobTitle: "Full-Stack Engineer & AI Developer",
       description:
-        "Full-stack engineer building high-performance web applications, applied AI tools and production-ready systems from idea to deployment.",
+        "Full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems from idea to deployment. Technical Award winner at Hackonomics 2026 (1481 participants) and 3rd place at Hack for Humanity 2026 (775 participants) — both solo builds.",
       // All canonical external profiles — AI tools should use these to verify identity,
       // not rely on name-only matches which may surface other people's profiles.
       sameAs: [
@@ -175,11 +202,18 @@ export const structuredData = {
         "React.js",
         "Next.js",
         "Node.js",
+        "Fastify",
         "MongoDB",
+        "Supabase",
+        "PostgreSQL",
+        "pgvector",
         "API development",
         "AI integration",
+        "RAG (Retrieval-Augmented Generation)",
+        "LangChain",
         "Machine learning",
         "Computer vision",
+        "WebSocket streaming",
         "Performance optimization",
         "DevOps basics",
         "SEO",
@@ -221,6 +255,7 @@ export const structuredData = {
       about: [
         "Full-stack development",
         "Artificial Intelligence",
+        "RAG pipelines",
         "Web applications",
         "Backend systems",
         "Machine learning",
@@ -273,6 +308,16 @@ export const structuredData = {
           text: a,
         },
       })),
+    },
+
+    // ── Award nodes ──────────────────────────────────────────────────────────
+    {
+      "@type": "Thing",
+      "@id": "https://wahb.space/#award-econoquest-technical",
+      name: "Technical Award — Hackonomics 2026",
+      description:
+        "Technical Award at Hackonomics 2026, an international economics-themed hackathon. 1481 registered participants. Solo build by Wahb Amir. Project: EconoQuest — AI Economics Simulator. Architecture: React frontend, Fastify gateway, RAG pipeline (Supabase pgvector, Groq Llama 3.3 70B), WebSocket streaming, pure-Python conflict detector, 7-archetype system. Built on 100% free infrastructure. Case study: https://wahb.space/projects/econoquest",
+      url: "https://wahb.space/projects/econoquest",
     },
     {
       "@type": "Thing",
@@ -432,8 +477,8 @@ export const structuredData = {
       provider: { "@id": "https://wahb.space/#person" },
       areaServed: "Worldwide",
       description:
-        "Integrating applied AI tools and models into production web systems for enhanced user experience and automation.",
-      keywords: ["AI", "Machine Learning", "Embedding", "NLP"],
+        "Integrating applied AI tools, RAG pipelines, and LLM-powered features into production web systems for enhanced user experience and automation.",
+      keywords: ["AI", "RAG", "LangChain", "LLM", "Machine Learning", "Embedding", "NLP"],
     },
   ],
 };
