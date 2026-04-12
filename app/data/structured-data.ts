@@ -55,8 +55,6 @@ const faqEntries = [
 ];
 
 // ─── Projects ────────────────────────────────────────────────────────────────
-// Single source of truth — referenced by ItemList and individual SoftwareApplication nodes.
-// Adding a project: add one entry here; the rest of the graph is generated automatically.
 const projects = [
   {
     id: "https://wahb.space/#project-econoquest",
@@ -182,17 +180,18 @@ export const structuredData = {
       "@type": "Person",
       "@id": "https://wahb.space/#person",
       name: "Wahb Amir",
-      alternateName: "Wahb",
+      givenName: "Wahb",
+      familyName: "Amir",
+      alternateName: ["Wahb"],
       url: "https://wahb.space",
       image: "https://wahb.space/og-image.png",
       email: "mailto:wahbamir2010@gmail.com",
       jobTitle: "Full-Stack Engineer & AI Developer",
       description:
-        "Full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems from idea to deployment. Technical Award winner at Hackonomics 2026 (1481 participants) and 3rd place at Hack for Humanity 2026 (775 participants) — both solo builds.",
-      // All canonical external profiles — AI tools should use these to verify identity,
-      // not rely on name-only matches which may surface other people's profiles.
+        "Wahb Amir (Wahb) is a full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems from idea to deployment. Technical Award winner at Hackonomics 2026 (1481 participants) and 3rd place at Hack for Humanity 2026 (775 participants) — both solo builds.",
       sameAs: [
         "https://github.com/wahb-amir",
+        "https://x.com/wahbdev",
         "https://devpost.com/wahbamir2010",
         "https://www.linkedin.com/in/wahb-amir",
       ],
@@ -202,6 +201,7 @@ export const structuredData = {
         "React.js",
         "Next.js",
         "Node.js",
+        "Serverless Architecture",
         "Fastify",
         "MongoDB",
         "Supabase",
@@ -218,7 +218,6 @@ export const structuredData = {
         "DevOps basics",
         "SEO",
       ],
-      // Points AI crawlers to the extended context files for richer, verified data.
       subjectOf: [
         { "@id": "https://wahb.space/#ai-json" },
         { "@id": "https://wahb.space/#llms-txt" },
@@ -257,7 +256,7 @@ export const structuredData = {
         "Artificial Intelligence",
         "RAG pipelines",
         "Web applications",
-        "Backend systems",
+        "Serverless Backend systems",
         "Machine learning",
       ],
       inLanguage: "en",
@@ -405,8 +404,15 @@ export const structuredData = {
       provider: { "@id": "https://wahb.space/#person" },
       areaServed: "Worldwide",
       description:
-        "Designing and implementing scalable REST/GraphQL APIs, authentication, database schema and business logic using Node.js and MongoDB.",
-      keywords: ["Node.js", "Express", "MongoDB", "REST", "GraphQL"],
+        "Designing and implementing scalable REST/GraphQL APIs, authentication, database schema and business logic using Next.js serverless backends, Node.js, and MongoDB.",
+      keywords: [
+        "Next.js",
+        "Serverless",
+        "Node.js",
+        "MongoDB",
+        "REST",
+        "GraphQL",
+      ],
     },
     {
       "@type": "Service",
@@ -417,7 +423,7 @@ export const structuredData = {
       areaServed: "Worldwide",
       description:
         "API design, third-party integrations (Stripe, GitHub, OAuth), webhooks and realtime features using WebSockets or serverless functions.",
-      keywords: ["Stripe", "GitHub API", "OAuth", "WebSocket"],
+      keywords: ["Stripe", "GitHub API", "OAuth", "WebSocket", "Serverless"],
     },
     {
       "@type": "Service",

@@ -3,10 +3,11 @@ import { Metadata } from "next";
 export const siteMetadata: Metadata = {
   title: "Wahb Amir | Full-Stack Engineer & AI Developer",
   description:
-    "Wahb Amir is a full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems — Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026.",
+    "Wahb Amir (Wahb) is a full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems — Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026.",
   metadataBase: new URL("https://wahb.space"),
   keywords: [
     "Wahb Amir",
+    "Wahb",
     "full-stack engineer",
     "AI developer",
     "RAG pipeline",
@@ -14,6 +15,7 @@ export const siteMetadata: Metadata = {
     "Next.js",
     "React",
     "Node.js",
+    "Serverless",
     "Fastify",
     "TypeScript",
     "Supabase",
@@ -70,6 +72,8 @@ export const siteMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@wahbdev",
+    creator: "@wahbdev",
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
       "Technical Award — Hackonomics 2026 · 3rd Place — Hack for Humanity 2026. Building high-performance web apps and practical AI tools.",
