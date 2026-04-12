@@ -2,10 +2,7 @@
 
 /**
  * Footer.tsx
- * Same CSS custom-property pattern as Contact.tsx — all design tokens
- * live in .footer-root / .dark .footer-root, inline style values are
- * static strings like "var(--ft-accent)" that are identical on server
- * and client. Zero isDark branching = zero hydration mismatch.
+ * All theming via Tailwind dark: variants — no CSS custom properties.
  */
 
 import React, { useEffect, useRef, useState } from "react";
@@ -18,8 +15,8 @@ import {
   SiTailwindcss,
   SiMongodb,
 } from "react-icons/si";
+import { faGithub, faLinkedin, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import {
   ArrowUpRight,
   ExternalLink,
@@ -29,7 +26,6 @@ import {
   Code2,
   Zap,
 } from "lucide-react";
-import type { IconType } from "react-icons";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -50,22 +46,27 @@ const NAV_LINKS = [
   { label: "FAQ", id: "faq" },
 ];
 
-const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] =
-  [
-    { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
-    {
-      label: "LinkedIn",
-      href: "https://www.linkedin.com/in/wahb-amir",
-      icon: faLinkedin,
-      isFA: true,
-    },
-    {
-      label: "Client Portal",
-      href: "https://dashboard.wahb.space",
-      icon: ExternalLink,
-      isFA: false,
-    },
-  ];
+const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] = [
+  { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/wahb-amir",
+    icon: faLinkedin,
+    isFA: true,
+  },
+  {
+    label: "X / Twitter",
+    href: "https://x.com/wahbdev",
+    icon: faXTwitter,
+    isFA: true,
+  },
+  {
+    label: "Client Portal",
+    href: "https://dashboard.wahb.space",
+    icon: ExternalLink,
+    isFA: false,
+  },
+];
 
 const STACK = [
   { label: "Next.js", icon: SiNextdotjs },
@@ -109,68 +110,13 @@ export default function Footer() {
       initial={{ opacity: 0 }}
       animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: 0.6 }}
-      className={`footer-root ${dmSans.className} relative w-full overflow-hidden
+      className={`${dmSans.className} relative w-full overflow-hidden
         bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
         dark:from-[#00bfff18] dark:to-[#0078aa2e]
         text-black dark:text-white`}
       role="contentinfo"
       aria-label="Site footer"
     >
-      <style>{`
-        /* ─── Light tokens ─────────────────────────────────────── */
-        .footer-root {
-          --ft-accent:         #024f80;
-          --ft-text-primary:   #0a1628;
-          --ft-text-muted:     #1e3a52;
-          --ft-text-subtle:    #2c4a63;
-          --ft-divider:        rgba(10,22,40,0.18);
-          --ft-status-bg:      rgba(2,79,128,0.1);
-          --ft-status-border:  rgba(2,79,128,0.28);
-          --ft-pill-bg:        rgba(255,255,255,0.55);
-          --ft-pill-border:    rgba(10,22,40,0.2);
-          --ft-pill-text:      #1e3a52;
-          --ft-logo-grad:      linear-gradient(135deg, #024f80, #013a5e);
-          --ft-logo-shadow:    rgba(2,79,128,0.3);
-          --ft-shimmer:        linear-gradient(90deg, transparent 0%, #024f80 30%, #0369a1 70%, transparent 100%);
-          --ft-shimmer-opacity: 0.4;
-          --ft-glow-bg:        radial-gradient(ellipse, rgba(0,80,140,0.06) 0%, transparent 70%);
-          --ft-watermark:      rgba(10,22,40,0.28);
-          --ft-back-top-border: rgba(2,79,128,0.3);
-          --ft-back-top-bg:    rgba(2,79,128,0.1);
-          --ft-coffee:         #78350f;
-        }
-
-        /* ─── Dark tokens ──────────────────────────────────────── */
-        .dark .footer-root,
-        :is(.dark) .footer-root {
-          --ft-accent:         #38bdf8;
-          --ft-text-primary:   #f0f9ff;
-          --ft-text-muted:     #94a3b8;
-          --ft-text-subtle:    #ffffff;
-          --ft-divider:        rgba(255,255,255,0.09);
-          --ft-status-bg:      rgba(56,189,248,0.12);
-          --ft-status-border:  rgba(56,189,248,0.22);
-          --ft-pill-bg:        rgba(56,189,248,0.1);
-          --ft-pill-border:    rgba(56,189,248,0.18);
-          --ft-pill-text:      #94a3b8;
-          --ft-logo-grad:      linear-gradient(135deg, #0ea5e9, #0284c7);
-          --ft-logo-shadow:    rgba(14,165,233,0.35);
-          --ft-shimmer:        linear-gradient(90deg, transparent 0%, #0ea5e9 30%, #38bdf8 70%, transparent 100%);
-          --ft-shimmer-opacity: 0.5;
-          --ft-glow-bg:        radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 70%);
-          --ft-watermark:      rgba(255,255,255,0.12);
-          --ft-back-top-border: rgba(56,189,248,0.35);
-          --ft-back-top-bg:    rgba(56,189,248,0.1);
-          --ft-coffee:         #92400e;
-        }
-
-        /* ─── Utility classes ──────────────────────────────────── */
-        .ft-accent-text   { color: var(--ft-accent); }
-        .ft-text-primary  { color: var(--ft-text-primary); }
-        .ft-text-muted    { color: var(--ft-text-muted); }
-        .ft-text-subtle   { color: var(--ft-text-subtle); }
-      `}</style>
-
       {/* Background effect */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <LazyBackgroundEffect />
@@ -185,81 +131,40 @@ export default function Footer() {
         }}
       />
 
-      {/* Top shimmer border — CSS-var driven, no JS */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{
-          background: "var(--ft-shimmer)",
-          opacity: "var(--ft-shimmer-opacity)" as never,
-        }}
-      />
+      {/* Top shimmer border */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-40 dark:opacity-50" />
 
       {/* Ambient glow */}
-      <div
-        className="pointer-events-none absolute"
-        style={{
-          bottom: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 600,
-          height: 280,
-          borderRadius: "50%",
-          background: "var(--ft-glow-bg)",
-          filter: "blur(40px)",
-        }}
-      />
+      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[280px] rounded-full bg-sky-500/5 dark:bg-sky-500/7 blur-[40px]" />
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-8">
         {/* ══ TOP GRID ══ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+
           {/* Col 1: Brand */}
-          <motion.div
-            {...fade(0)}
-            className="md:col-span-1 flex flex-col gap-4"
-          >
+          <motion.div {...fade(0)} className="md:col-span-1 flex flex-col gap-4">
             <div className="flex items-center gap-3">
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm select-none"
-                style={{
-                  background: "var(--ft-logo-grad)",
-                  color: "#fff",
-                  boxShadow: "0 4px 14px var(--ft-logo-shadow)",
-                }}
-              >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm select-none text-white bg-gradient-to-br from-sky-700 to-sky-900 dark:from-sky-500 dark:to-sky-600 shadow-lg shadow-sky-500/30">
                 W
               </div>
-              <span
-                className={`${playfair.className} text-xl font-bold ft-text-primary`}
-              >
+              <span className={`${playfair.className} text-xl font-bold text-slate-900 dark:text-sky-50`}>
                 Wahb Amir
               </span>
             </div>
 
-            <p className="ft-text-muted text-sm leading-relaxed max-w-xs font-medium">
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-xs font-medium">
               Full-stack engineer crafting fast, maintainable web products —
               from landing pages to production SaaS.
             </p>
 
-            <div className="ft-text-muted flex items-center gap-1.5 text-xs font-medium">
-              <MapPin className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
+            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-400">
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-sky-700 dark:text-sky-400" />
               Based anywhere with good Wi-Fi
             </div>
 
             {/* Status ticker */}
-            <div
-              className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full text-xs font-semibold border ft-accent-text"
-              style={{
-                background: "var(--ft-status-bg)",
-                borderColor: "var(--ft-status-border)",
-              }}
-            >
-              <span
-                className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse ft-accent-text"
-                style={{
-                  background: "var(--ft-accent)",
-                  boxShadow: "0 0 5px var(--ft-accent)",
-                }}
-              />
+            <div className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full text-xs font-semibold border text-sky-700 dark:text-sky-400 bg-sky-500/10 dark:bg-sky-400/10 border-sky-600/30 dark:border-sky-400/25">
+              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse bg-sky-700 dark:bg-sky-400 shadow-[0_0_5px] shadow-sky-500" />
               <AnimatePresence mode="wait">
                 <motion.span
                   key={statusIdx}
@@ -277,7 +182,7 @@ export default function Footer() {
 
           {/* Col 2: Nav */}
           <motion.div {...fade(0.1)} className="flex flex-col gap-3">
-            <p className="ft-accent-text text-[10px] font-bold uppercase tracking-[0.22em] mb-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-1 text-sky-700 dark:text-sky-400">
               Navigation
             </p>
             {NAV_LINKS.map(({ label, id }) => (
@@ -289,23 +194,9 @@ export default function Footer() {
                     .getElementById(id)
                     ?.scrollIntoView({ behavior: "smooth", block: "start" })
                 }
-                className="ft-text-muted group flex items-center gap-2 text-sm font-medium w-fit transition-colors duration-150 hover:ft-accent-text"
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--ft-accent)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--ft-text-muted)")
-                }
+                className="group flex items-center gap-2 text-sm font-medium w-fit text-slate-600 dark:text-slate-400 hover:text-sky-700 dark:hover:text-sky-400 transition-colors duration-150"
               >
-                <span
-                  className="h-px transition-all duration-200 group-hover:w-5"
-                  style={{
-                    width: "14px",
-                    background: "var(--ft-accent)",
-                    display: "block",
-                    flexShrink: 0,
-                  }}
-                />
+                <span className="h-px w-3.5 group-hover:w-5 transition-all duration-200 bg-sky-700 dark:bg-sky-400 block flex-shrink-0" />
                 {label}
               </button>
             ))}
@@ -314,7 +205,7 @@ export default function Footer() {
           {/* Col 3: External + Stack */}
           <motion.div {...fade(0.2)} className="flex flex-col gap-6">
             <div className="flex flex-col gap-3">
-              <p className="ft-accent-text text-[10px] font-bold uppercase tracking-[0.22em] mb-1">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-1 text-sky-700 dark:text-sky-400">
                 Find me online
               </p>
               {EXT_LINKS.map(({ label, href, icon: Icon, isFA }) => (
@@ -323,31 +214,25 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ft-text-muted group inline-flex items-center gap-2 text-sm font-medium w-fit"
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "var(--ft-accent)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "var(--ft-text-muted)")
-                  }
+                  className="group inline-flex items-center gap-2 text-sm font-medium w-fit text-slate-600 dark:text-slate-400 hover:text-sky-700 dark:hover:text-sky-400 transition-colors duration-150"
                 >
                   {isFA ? (
                     <FontAwesomeIcon
                       icon={Icon}
-                      className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text"
+                      className="w-3.5 h-3.5 flex-shrink-0 text-sky-700 dark:text-sky-400"
                     />
                   ) : (
-                    <Icon className="w-3.5 h-3.5 flex-shrink-0 ft-accent-text" />
+                    <Icon className="w-3.5 h-3.5 flex-shrink-0 text-sky-700 dark:text-sky-400" />
                   )}
                   {label}
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 ft-accent-text" />
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 text-sky-700 dark:text-sky-400" />
                 </a>
               ))}
             </div>
 
             {/* Stack badges */}
             <div>
-              <p className="ft-accent-text text-[10px] font-bold uppercase tracking-[0.22em] mb-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-3 text-sky-700 dark:text-sky-400">
                 Built with
               </p>
               <div className="flex flex-wrap gap-2">
@@ -357,14 +242,9 @@ export default function Footer() {
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ duration: 0.35, delay: 0.3 + i * 0.07 }}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg border"
-                    style={{
-                      background: "var(--ft-pill-bg)",
-                      borderColor: "var(--ft-pill-border)",
-                      color: "var(--ft-pill-text)",
-                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg border bg-white/55 dark:bg-sky-400/10 border-slate-200/70 dark:border-sky-400/20 text-slate-600 dark:text-slate-400"
                   >
-                    <SIcon className="w-3 h-3 ft-accent-text" />
+                    <SIcon className="w-3 h-3 text-sky-700 dark:text-sky-400" />
                     {label}
                   </motion.span>
                 ))}
@@ -374,10 +254,7 @@ export default function Footer() {
         </div>
 
         {/* ══ DIVIDER ══ */}
-        <div
-          className="w-full h-px mb-6"
-          style={{ background: "var(--ft-divider)" }}
-        />
+        <div className="w-full h-px mb-6 bg-slate-900/20 dark:bg-white/10" />
 
         {/* ══ BOTTOM BAR ══ */}
         <motion.div
@@ -385,30 +262,24 @@ export default function Footer() {
           className="flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           {/* Copyright */}
-          <p className="ft-text-subtle flex items-center gap-1.5 flex-wrap justify-center sm:justify-start text-xs font-medium">
-            <Code2 className="w-3.5 h-3.5 ft-accent-text" />
+          <p className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start text-xs font-medium text-white dark:text-white">
+            <Code2 className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
             <span>© {year} Wahb Amir.</span>
             <span>Designed &amp; built by me, for me.</span>
           </p>
 
           {/* Sign-off */}
-          <p className="ft-text-subtle flex items-center gap-1.5 text-xs font-medium">
+          <p className="flex items-center gap-1.5 text-xs font-medium text-white dark:text-white">
             Made with
             <motion.span
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 2.5 }}
               className="inline-flex"
             >
-              <Heart
-                className="w-3.5 h-3.5"
-                style={{ color: "#e11d48", fill: "#e11d48" }}
-              />
+              <Heart className="w-3.5 h-3.5 text-rose-600 fill-rose-600" />
             </motion.span>
             &amp;
-            <Coffee
-              className="w-3.5 h-3.5"
-              style={{ color: "var(--ft-coffee)" }}
-            />
+            <Coffee className="w-3.5 h-3.5 text-amber-800 dark:text-amber-600" />
             in the late hours
           </p>
 
@@ -420,16 +291,10 @@ export default function Footer() {
                 .getElementById("hero-section")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" })
             }
-            className="ft-accent-text group inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-200 hover:scale-105"
+            className="group inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-200 hover:scale-105 text-sky-700 dark:text-sky-400"
           >
             Back to top
-            <span
-              className="w-5 h-5 rounded-full flex items-center justify-center border transition-all duration-200 group-hover:-translate-y-0.5"
-              style={{
-                borderColor: "var(--ft-back-top-border)",
-                background: "var(--ft-back-top-bg)",
-              }}
-            >
+            <span className="w-5 h-5 rounded-full flex items-center justify-center border transition-all duration-200 group-hover:-translate-y-0.5 border-sky-600/30 dark:border-sky-400/35 bg-sky-500/10 dark:bg-sky-400/10">
               <svg
                 className="w-2.5 h-2.5"
                 viewBox="0 0 10 10"
@@ -445,10 +310,7 @@ export default function Footer() {
           </button>
         </motion.div>
 
-        <p
-          className="mt-6 text-center text-[10px] select-none font-medium"
-          style={{ color: "var(--ft-watermark)" }}
-        >
+        <p className="mt-6 text-center text-[10px] select-none font-medium text-slate-900/30 dark:text-white/15">
           wahb.space · v2.0 · {year}
         </p>
 
@@ -456,12 +318,6 @@ export default function Footer() {
          * ── AI / LLM crawler identity block ──────────────────────────────────
          * Visually hidden, screen-reader hidden (aria-hidden), but fully
          * readable by web crawlers and AI systems that fetch raw HTML.
-         * DO NOT REMOVE — this is the canonical disambiguation anchor for AI
-         * tools. It explicitly names the wrong Devpost project to prevent
-         * mis-attribution to a similarly-named submission by a different author.
-         *
-         * To add a project: append its canonical URL to the list below and
-         * mirror the change in structured-data.ts and public/ai.json.
          */}
         <p
           aria-hidden="true"
