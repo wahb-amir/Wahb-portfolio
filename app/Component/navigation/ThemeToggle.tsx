@@ -3,31 +3,39 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
-import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faLinkedin, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import { useClientTheme } from "@/app/hooks/useClientTheme";
 import { LINKEDIN_URL } from "./navConfig";
 
 interface Props {
   githubUrl: string;
+  xUrl: string;
 }
 
-export default function ThemeToggle({ githubUrl }: Props) {
+export default function ThemeToggle({ githubUrl, xUrl }: Props) {
   const { isDark, mounted, toggleTheme } = useClientTheme();
 
   return (
     <>
-      {/* GitHub — no theme dependency, always safe to render */}
       <IconButton
         label="GitHub"
         onClick={() => window.open(githubUrl, "_blank")}
       >
         <FontAwesomeIcon icon={faGithub} className="text-lg" />
       </IconButton>
+
       <IconButton
-        label="GitHub"
+        label="LinkedIn"
         onClick={() => window.open(LINKEDIN_URL, "_blank")}
       >
         <FontAwesomeIcon icon={faLinkedin} className="text-lg" />
+      </IconButton>
+
+      <IconButton
+        label="X / Twitter"
+        onClick={() => window.open(xUrl, "_blank")}
+      >
+        <FontAwesomeIcon icon={faXTwitter} className="text-lg" />
       </IconButton>
 
       <IconButton
@@ -44,7 +52,6 @@ export default function ThemeToggle({ githubUrl }: Props) {
           className="relative flex items-center justify-center w-[1em] h-[1em]"
           suppressHydrationWarning
         >
-          {/* Pre-mount: invisible placeholder — same on server & client */}
           {!mounted && (
             <FontAwesomeIcon
               icon={faMoon}
@@ -53,7 +60,6 @@ export default function ThemeToggle({ githubUrl }: Props) {
             />
           )}
 
-          {/* Post-mount: animated real icon */}
           <AnimatePresence mode="wait" initial={false}>
             {mounted && (
               <motion.span

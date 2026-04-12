@@ -14,6 +14,7 @@ interface Props {
   githubUrl: string;
   navHeight: number;
   linkdinUrl: string;
+  xUrl: string;
 }
 
 export default function NavbarShell({
@@ -21,6 +22,7 @@ export default function NavbarShell({
   githubUrl,
   navHeight,
   linkdinUrl,
+  xUrl,
 }: Props) {
   const [visible, setVisible] = useState(true);
   const [compact, setCompact] = useState(false);
@@ -106,14 +108,16 @@ export default function NavbarShell({
           {/* RIGHT – Theme toggle + GitHub (desktop) + Hamburger (mobile) */}
           <div className="flex-1 flex justify-end items-center gap-3">
             <div className="hidden md:flex gap-2">
-              <ThemeToggle githubUrl={githubUrl} />
+              {/* Pass xUrl so ThemeToggle can render the X/Twitter icon */}
+              <ThemeToggle githubUrl={githubUrl} xUrl={xUrl} />
             </div>
 
-            {/* linkdinUrl forwarded so MobileMenu can render the LinkedIn icon */}
+            {/* xUrl forwarded so MobileMenu can render the X/Twitter icon */}
             <MobileMenu
               navItems={navItems}
               githubUrl={githubUrl}
               linkdinUrl={linkdinUrl}
+              xUrl={xUrl}
               isOpen={menuOpen}
               onToggle={() => setMenuOpen((prev) => !prev)}
             />

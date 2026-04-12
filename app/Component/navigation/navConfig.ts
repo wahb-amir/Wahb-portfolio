@@ -13,4 +13,5 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const GITHUB_URL = "https://github.com/wahb-amir";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/wahb-amir";
+export const X_URL = "https://x.com/wahbdev"; //Twitter 
 export const NAV_HEIGHT = 72;

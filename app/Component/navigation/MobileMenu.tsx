@@ -15,7 +15,7 @@ import {
   faEnvelope,
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
-import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faLinkedin, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 
 import type { NavItem } from "./navConfig";
 
@@ -31,6 +31,7 @@ interface Props {
   navItems: NavItem[];
   githubUrl: string;
   linkdinUrl: string;
+  xUrl: string;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -44,6 +45,7 @@ export default function MobileMenu({
   navItems,
   githubUrl,
   linkdinUrl,
+  xUrl,
   isOpen,
   onToggle,
 }: Props) {
@@ -52,11 +54,8 @@ export default function MobileMenu({
 
   const toggleTheme = () => setTheme(isDark ? "light" : "dark");
 
-  // Drive bar color through framer-motion's animate so it interpolates
-  // instead of snapping — className swaps are instant, motion values aren't.
   const barColor = isDark ? "#ffffff" : "#000000";
 
-  // Per-bar animation targets
   const barAnims = [
     isOpen ? { rotate: 45, y: 8, opacity: 1 } : { rotate: 0, y: 0, opacity: 1 },
     isOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 },
@@ -81,7 +80,6 @@ export default function MobileMenu({
             animate={{ ...anim, backgroundColor: barColor }}
             transition={{
               duration: 0.2,
-              // Give the color its own longer ease so it doesn't snap
               backgroundColor: { duration: 0.4, ease: "easeInOut" },
             }}
             className="block w-6 h-0.5 rounded-full"
@@ -101,9 +99,8 @@ export default function MobileMenu({
             animate={{
               opacity: 1,
               y: 0,
-              // framer-motion interpolates backgroundColor, unlike Tailwind dark: which snaps
               backgroundColor: isDark
-                ? "rgba(2, 6, 23)" // slate-950
+                ? "rgba(2, 6, 23)"
                 : "rgba(255, 255, 255)",
             }}
             exit={{ opacity: 0, y: -40 }}
@@ -140,12 +137,10 @@ export default function MobileMenu({
 
               {/* Action row */}
               <div className="grid grid-cols-2 gap-3 mt-4">
-                {/* Theme toggle — icon cross-fades on switch */}
+                {/* Theme toggle */}
                 <button
                   onClick={toggleTheme}
-                  aria-label={
-                    isDark ? "Switch to light mode" : "Switch to dark mode"
-                  }
+                  aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
                   className="flex items-center justify-center gap-2 p-5 rounded-2xl font-bold shadow-sm
                              transition-colors duration-300
                              bg-slate-100 dark:bg-white/5
@@ -178,6 +173,7 @@ export default function MobileMenu({
                   <FontAwesomeIcon icon={faGithub} />
                   <span>GitHub</span>
                 </a>
+
                 <a
                   href={linkdinUrl}
                   target="_blank"
@@ -188,7 +184,20 @@ export default function MobileMenu({
                              text-slate-800 dark:text-slate-100"
                 >
                   <FontAwesomeIcon icon={faLinkedin} />
-                  <span>linkedin</span>
+                  <span>LinkedIn</span>
+                </a>
+
+                <a
+                  href={xUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 p-5 rounded-2xl font-bold shadow-sm
+                             transition-colors duration-300
+                             bg-slate-100 dark:bg-white/5
+                             text-slate-800 dark:text-slate-100"
+                >
+                  <FontAwesomeIcon icon={faXTwitter} />
+                  <span>X</span>
                 </a>
               </div>
             </div>

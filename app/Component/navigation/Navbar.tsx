@@ -1,5 +1,5 @@
 import NavbarShell from "./NavbarShell";
-import { NAV_ITEMS, GITHUB_URL, NAV_HEIGHT, LINKEDIN_URL } from "./navConfig";
+import { NAV_ITEMS, GITHUB_URL, NAV_HEIGHT, LINKEDIN_URL ,X_URL} from "./navConfig";
 
 export default function Navbar() {
   return (
@@ -8,6 +8,7 @@ export default function Navbar() {
       githubUrl={GITHUB_URL}
       navHeight={NAV_HEIGHT}
       linkdinUrl={LINKEDIN_URL}
+      xUrl={X_URL}
     />
   );
 }
