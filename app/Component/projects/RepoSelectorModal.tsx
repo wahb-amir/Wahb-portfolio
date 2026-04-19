@@ -2,33 +2,54 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
-type repoSelectorModalProps = {
+type RepoSelectorModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  repoLinks: string[];
+  repoLinks: {
+    name: string;
+    url: string;
+  }[];
   projectTitle: string;
 };
+
 const RepoSelectorModal = ({
   isOpen,
   onClose,
   repoLinks,
   projectTitle,
-}: repoSelectorModalProps) => {
+}: RepoSelectorModalProps) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    if (isOpen) {
-      document.body.style.overflow = "hidden"; // Lock scroll
-    }
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = "unset"; // Unlock scroll
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
 
-  if (!isOpen || !mounted) return null;
+  if (!isOpen) return null;
 
-  const linkNames = ["Dev Dashboard Repository", "Client Dashboard Repository"];
+  const SkeletonModal = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl dark:bg-slate-800">
+        <div className="mb-2 h-6 w-48 animate-pulse rounded bg-gray-200 dark:bg-slate-700" />
+        <div className="mb-6 h-4 w-72 animate-pulse rounded bg-gray-200 dark:bg-slate-700" />
+
+        <div className="space-y-3">
+          <div className="h-12 w-full animate-pulse rounded-md bg-cyan-200/70 dark:bg-slate-700" />
+          <div className="h-12 w-full animate-pulse rounded-md bg-cyan-200/70 dark:bg-slate-700" />
+        </div>
+      </div>
+    </div>
+  );
 
   const modalContent = (
     <div
@@ -47,7 +68,7 @@ const RepoSelectorModal = ({
           <XMarkIcon className="h-6 w-6" />
         </button>
 
-        <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white pr-8">
+        <h3 className="mb-2 pr-8 text-xl font-bold text-gray-900 dark:text-white">
           Select Repository
         </h3>
         <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
@@ -55,18 +76,19 @@ const RepoSelectorModal = ({
         </p>
 
         <div className="space-y-3">
-          {repoLinks.map((link, index) => (
+          {repoLinks.map((repo, index) => (
             <a
-              key={index}
-              href={link}
+              key={repo.url || index}
+              href={repo.url}
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}
               className="group flex w-full items-center justify-between rounded-md bg-cyan-500 px-4 py-3 text-white transition-all hover:bg-cyan-600 hover:shadow-md dark:bg-cyan-700 dark:hover:bg-cyan-600"
             >
-              <span className="font-semibold text-sm sm:text-base">
-                {linkNames[index] || `Repository ${index + 1}`}
+              <span className="text-sm font-semibold sm:text-base">
+                {repo.name}
               </span>
+
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -85,6 +107,10 @@ const RepoSelectorModal = ({
       </div>
     </div>
   );
+
+  if (!mounted) {
+    return SkeletonModal;
+  }
 
   return createPortal(modalContent, document.body);
 };

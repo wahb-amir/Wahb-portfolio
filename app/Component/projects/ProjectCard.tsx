@@ -10,7 +10,10 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 type Props = {
   title?: string;
   liveLink?: string | null;
-  repoLinks?: string[];
+  repoLinks?: {
+    name: string;
+    url: string;
+  }[];
 };
 
 export default function ActionsHydrate({
@@ -41,7 +44,7 @@ export default function ActionsHydrate({
 
           {repoLinks.length === 1 && (
             <a
-              href={repoLinks[0]}
+              href={repoLinks[0].url}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium"
@@ -57,12 +60,12 @@ export default function ActionsHydrate({
                 {repoLinks.map((r, i) => (
                   <li key={i}>
                     <a
-                      href={r}
+                      href={r.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm"
                     >
-                      {r}
+                      {r.name}
                     </a>
                   </li>
                 ))}
@@ -115,7 +118,7 @@ export default function ActionsHydrate({
 
         {repoLinks.length === 1 && (
           <a
-            href={repoLinks[0]}
+            href={repoLinks[0].url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-sm font-medium"

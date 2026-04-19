@@ -30,10 +30,10 @@
     ],
     "short": "Govern a nation across 7–8 fiscal years, adjusting 8 real policy levers and watching 10 economic metrics respond — guided by a Socratic AI advisor powered by a full RAG pipeline, not generic hints.",
     "liveLink": "https://econoquest.wahb.space",
-    "githubLink": [
-      "https://github.com/wahb-amir/EconoQuest",
-      "https://github.com/wahb-amir/EconoQuestBackend"
-    ],
+    "githubLink": {
+      "backend": "https://github.com/wahb-amir/EconoQuest",
+      "frontend": "https://github.com/wahb-amir/EconoQuestBackend"
+    },
     "problem": "Economics education teaches consequences by description, not by experience. You can read that printing money causes inflation — but you don't feel it until you've made the choice yourself and watched your currency collapse two rounds later. EconoQuest was built to close that gap: compound causality you live with, not memorize.",
     "process": [
       "Designed a 7–8 round simulation engine with 8 policy levers (tax, interest rates, spending, R&D, tariffs, money supply, foreign lending, wealth fund risk) mapping to 10 outcome metrics",
@@ -130,7 +130,9 @@
     ],
     "short": "Point your camera at any waste item and instantly get an AI classification, real environmental impact data, and points toward a global leaderboard — turning recycling from a one-off action into a measurable habit.",
     "liveLink": "https://eco.wahb.space",
-    "githubLink": "https://github.com/wahb-amir/ecolens",
+    "githubLink": {
+      "": "https://github.com/wahb-amir/ecolens"
+    },
     "problem": "People want to recycle but don't know what goes where or how much their small actions actually matter. The gap between awareness and action is a UX problem as much as an information problem.",
     "process": [
       "Designed the core loop: Identify → Quantify → Reward — so every scan produces a visible, cumulative result",
@@ -230,10 +232,10 @@
     ],
     "short": "A single workspace where clients can request project quotes, track progress, message developers, and see real-time updates — without chasing emails or spreadsheets.",
     "liveLink": "https://dashboard.wahb.space",
-    "githubLink": [
-      "https://github.com/wahb-amir/dev-dashboard",
-      "https://github.com/wahb-amir/dashboard"
-    ],
+    "githubLink": {
+      "dev-dashboard": "https://github.com/wahb-amir/dev-dashboard",
+      "dashboard": "https://github.com/wahb-amir/dashboard"
+    },
     "problem": "Clients and developers were using emails, chats, and separate tools to manage projects, making communication confusing and progress hard to track.",
     "process": [
       "Created a client dashboard where users can request quotes, view project timelines, and message their assigned developers",
@@ -307,7 +309,9 @@
     "tech": ["Next.js", "Stripe", "Secure Login", "Tailwind", "MongoDB"],
     "short": "A clean, fast online store where users can browse products, add items to a cart, and check out — with a simple admin view for managing products safely.",
     "liveLink": "https://boltform.wahb.space/",
-    "githubLink": "https://github.com/wahb-amir/Boltform",
+    "githubLink": {
+      "": "https://github.com/wahb-amir/Boltform"
+    },
     "problem": "Small businesses need an easy-to-use online store with secure checkout and basic admin visibility, without exposing sensitive system access.",
     "process": [
       "Designed a modern, mobile-friendly shopping experience",

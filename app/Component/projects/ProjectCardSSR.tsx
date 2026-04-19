@@ -92,11 +92,15 @@ export default function ProjectCardSSR({
     .toLowerCase()
     .slice(0, 60);
 
-  const repoLinks: string[] = Array.isArray(githubLink)
-    ? githubLink.filter(Boolean).map(String)
-    : githubLink
-      ? [String(githubLink)]
-      : [];
+  const repoLinks =
+  githubLink && typeof githubLink === "object"
+    ? Object.entries(githubLink)
+        .filter(([, url]) => Boolean(url))
+        .map(([key, url]) => ({
+          name: `${key.charAt(0).toUpperCase()}${key.slice(1)} Repository`,
+          url: String(url),
+        }))
+    : [];
 
   const categoryColors: Record<string, string> = {
     Platform: "from-violet-500 to-purple-600",
