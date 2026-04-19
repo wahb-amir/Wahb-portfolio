@@ -11,6 +11,7 @@ import {
 type Metric = { metric?: string; value?: string; note?: string };
 
 type CS = {
+  id?:string
   tlDr?: string;
   problem?: string;
   constraints?: string;
@@ -318,21 +319,41 @@ export default function CaseStudyHydrate({
   }
 
   // Interactive animated version after mount
+  console.log(normalizedCS)
   return (
     <div className="w-full">
       <button
-        onClick={() => {
-          setOpen((s) => {
-            const next = !s;
-            // mirror the native details open state if present
-            if (detailsRef.current) detailsRef.current.open = next;
-            return next;
-          });
-        }}
         aria-expanded={open}
         className="text-sm font-semibold text-cyan-700 dark:text-cyan-400 hover:underline focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded"
       >
-        {open ? "Hide case study" : "View case study"}
+        <a
+          href={`/projects/${normalizedCS.id}`}
+          className="
+                    inline-flex items-center gap-1.5
+                    px-3 py-1.5 rounded-lg
+                    text-xs font-semibold
+                    border border-cyan-300/70 dark:border-cyan-700/60
+                    text-cyan-700 dark:text-cyan-300
+                    bg-cyan-50/80 dark:bg-cyan-950/30
+                    hover:bg-cyan-100 dark:hover:bg-cyan-900/40
+                    transition-colors duration-150
+                  "
+        >
+          View project
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className="w-3 h-3"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </a>
       </button>
 
       <AnimatePresence initial={false}>

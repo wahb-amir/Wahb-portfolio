@@ -55,32 +55,34 @@ export default function ProjectCardSSR({
   const badge = project.badge ?? null;
 
   const normalizedCS =
-    cs && Object.keys(cs).length > 0
-      ? {
-          ...cs,
-          launch: cs.launch?.date
-            ? cs.launch
-            : launchDate
-              ? { date: launchDate }
-              : cs.launch,
-        }
-      : {
-          tlDr: short || undefined,
-          problem: project.problem ?? undefined,
-          myRole: role,
-          approach: project.process?.length ? project.process : undefined,
-          outcomes: {
-            qualitative: project.outcome ?? undefined,
-            quantitative:
-              stats && Object.keys(stats).length
-                ? Object.entries(stats).map(([k, v]) => ({
-                    metric: formatKey(k),
-                    value: String(v),
-                  }))
-                : undefined,
-          },
-          launch: launchDate ? { date: launchDate } : undefined,
-        };
+  cs && Object.keys(cs).length > 0
+    ? {
+        ...cs,
+        id: cs.id ?? project.id, 
+        launch: cs.launch?.date
+          ? cs.launch
+          : launchDate
+            ? { date: launchDate }
+            : cs.launch,
+      }
+    : {
+        id: project.id, 
+        tlDr: short || undefined,
+        problem: project.problem ?? undefined,
+        myRole: role,
+        approach: project.process?.length ? project.process : undefined,
+        outcomes: {
+          qualitative: project.outcome ?? undefined,
+          quantitative:
+            stats && Object.keys(stats).length
+              ? Object.entries(stats).map(([k, v]) => ({
+                  metric: formatKey(k),
+                  value: String(v),
+                }))
+              : undefined,
+        },
+        launch: launchDate ? { date: launchDate } : undefined,
+      };
 
   const baseId = (project.id && String(project.id)) || title;
   const safeId = baseId
