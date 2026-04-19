@@ -159,22 +159,54 @@ function StatCard({ label, value }: { label: string; value: string }) {
   );
 }
 
-function JudgeScoresChart({ judgeScores }: { judgeScores: JudgeScores }) {
-  const CHART_H = 160;
-  const MAX = judgeScores.outOf;
+// ─── Drop-in replacement ────────────────────────────────────────────────────
+// Replace the existing JudgeScoresChart function + update the <style> block
+// ────────────────────────────────────────────────────────────────────────────
 
-  // One distinct gradient per bar — intentionally varied
-  const palette: [string, string][] = [
-    ["#8B5CF6", "#7C3AED"], // violet   — Design
-    ["#06B6D4", "#3B82F6"], // cyan     — Presentation
-    ["#10B981", "#0D9488"], // emerald  — Overall
-    ["#F43F5E", "#EC4899"], // rose     — Impact
-    ["#F59E0B", "#F97316"], // amber    — Innovation
-  ];
+// ── 1. ADD these keyframes to your existing <style> block ────────────────────
+//
+//   @keyframes bar-slide {
+//     from { transform: scaleX(0); }
+//     to   { transform: scaleX(1); }
+//   }
+//   @keyframes ring-spin {
+//     from { stroke-dashoffset: var(--circ); }
+//     to   { stroke-dashoffset: var(--dash); }
+//   }
+//   @keyframes pop-in {
+//     from { opacity: 0; transform: scale(0.85); }
+//     to   { opacity: 1; transform: scale(1); }
+//   }
+//   @keyframes num-fade {
+//     from { opacity: 0; transform: translateY(6px); }
+//     to   { opacity: 1; transform: translateY(0); }
+//   }
+//
+// ── 2. REPLACE the JudgeScoresChart function with this ───────────────────────
+
+function JudgeScoresChart({ judgeScores }: { judgeScores: JudgeScores }) {
+  const MAX = judgeScores.outOf;
+  const R = 54;
+  const CIRC = +(2 * Math.PI * R).toFixed(4); // 339.292
 
   const overall = judgeScores.categories.find(
     (c) => c.label.toLowerCase() === "overall",
   );
+  const categories = judgeScores.categories.filter(
+    (c) => c.label.toLowerCase() !== "overall",
+  );
+
+  const overallPct = overall ? overall.score / MAX : 0;
+  const dashOffset = +(CIRC * (1 - overallPct)).toFixed(4);
+
+  // Per-category accent colours — intentionally distinct
+  const accents: [string, string][] = [
+    ["#8B5CF6", "#7C3AED"], // violet   – Design
+    ["#06B6D4", "#3B82F6"], // cyan     – Presentation
+    ["#F43F5E", "#EC4899"], // rose     – Impact
+    ["#F59E0B", "#F97316"], // amber    – Innovation
+    ["#10B981", "#0D9488"], // emerald  – extra
+  ];
 
   return (
     <SectionBox
@@ -182,101 +214,214 @@ function JudgeScoresChart({ judgeScores }: { judgeScores: JudgeScores }) {
       icon="🏅"
       accent="from-yellow-400 to-amber-500"
     >
+      {/* Source line */}
       {judgeScores.source && (
         <p className="text-[11px] text-gray-400 dark:text-slate-500 mb-5 -mt-1">
           {judgeScores.source}
         </p>
       )}
 
-      {/* Chart area */}
-      <div className="relative" style={{ height: `${CHART_H + 52}px` }}>
-        {/* Horizontal grid lines */}
-        {[1, 2, 3, 4, 5].map((tick) => (
-          <div
-            key={tick}
-            className="absolute left-7 right-0"
-            style={{ bottom: `${(tick / MAX) * CHART_H + 32}px` }}
-          >
-            <span className="absolute -left-6 -top-2 text-[9px] tabular-nums text-gray-300 dark:text-slate-600 select-none">
-              {tick}
-            </span>
-            <div className="border-t border-dashed border-gray-100 dark:border-slate-700/50 w-full" />
-          </div>
-        ))}
+      {/* ── Layout: ring left · bars right ── */}
+      <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
 
-        {/* Bars */}
-        <div
-          className="absolute left-7 right-0 flex items-end justify-around gap-3"
-          style={{ bottom: "32px" }}
-        >
-          {judgeScores.categories.map((cat, i) => {
-            const barH = Math.round((cat.score / MAX) * CHART_H);
-            const [colorFrom, colorTo] = palette[i % palette.length];
+        {/* ── Ring gauge ── */}
+        {overall && (
+          <div
+            className="flex flex-col items-center gap-3 shrink-0"
+            style={{ animation: "pop-in 0.6s cubic-bezier(0.16,1,0.3,1) both" }}
+          >
+            <div className="relative" style={{ width: 148, height: 148 }}>
+              <svg
+                width="148"
+                height="148"
+                viewBox="0 0 148 148"
+                style={{ transform: "rotate(-90deg)" }}
+                aria-hidden="true"
+              >
+                <defs>
+                  <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#F59E0B" />
+                    <stop offset="50%" stopColor="#EF4444" />
+                    <stop offset="100%" stopColor="#EC4899" />
+                  </linearGradient>
+                  <filter id="ringGlow">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                </defs>
+
+                {/* Track ring */}
+                <circle
+                  cx="74" cy="74" r={R}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="10"
+                  className="text-gray-100 dark:text-slate-700/60"
+                />
+
+                {/* Score arc */}
+                <circle
+                  cx="74" cy="74" r={R}
+                  fill="none"
+                  stroke="url(#ringGrad)"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                  strokeDasharray={CIRC}
+                  strokeDashoffset={dashOffset}
+                  style={{
+                    // CSS custom props carry the dynamic values into the keyframe
+                    ["--circ" as string]: CIRC,
+                    ["--dash" as string]: dashOffset,
+                    animation:
+                      "ring-spin 1.1s cubic-bezier(0.16,1,0.3,1) 0.15s both",
+                  }}
+                />
+              </svg>
+
+              {/* Centre label */}
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center"
+                style={{
+                  animation: "num-fade 0.5s ease 0.7s both",
+                }}
+              >
+                <span className="text-[28px] font-extrabold leading-none text-gray-900 dark:text-white tabular-nums">
+                  {overall.score.toFixed(2)}
+                </span>
+                <span className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">
+                  / {MAX}
+                </span>
+              </div>
+            </div>
+
+            {/* Ranking pill */}
+            <div className="flex flex-col items-center gap-1">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 dark:from-amber-500 dark:to-yellow-400 text-amber-900 text-[11px] font-black tracking-wider shadow-sm">
+                🥉 3rd of 775
+              </span>
+              <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider">
+                Overall
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* ── Category bars ── */}
+        <div className="flex-1 flex flex-col justify-center gap-4 w-full min-w-0">
+          {categories.map((cat, i) => {
+            const pct = (cat.score / MAX) * 100;
+            const [colorFrom, colorTo] = accents[i % accents.length];
+
             return (
               <div
                 key={cat.label}
-                className="flex flex-col items-center gap-1.5 flex-1 min-w-0"
+                style={{
+                  animation: `num-fade 0.45s ease ${0.1 + i * 0.08}s both`,
+                }}
               >
-                {/* Score above bar */}
-                <span
-                  className="text-[11px] font-bold tabular-nums"
-                  style={{ color: colorFrom }}
-                >
-                  {cat.score.toFixed(2)}
-                </span>
+                {/* Label row */}
+                <div className="flex items-baseline justify-between mb-1.5">
+                  <span className="text-xs font-semibold text-gray-600 dark:text-slate-300">
+                    {cat.label}
+                  </span>
+                  <span
+                    className="text-sm font-black tabular-nums"
+                    style={{ color: colorFrom }}
+                  >
+                    {cat.score.toFixed(2)}
+                    <span className="text-[10px] font-medium text-gray-300 dark:text-slate-600 ml-1">
+                      /{MAX}
+                    </span>
+                  </span>
+                </div>
 
-                {/* Bar */}
-                <div
-                  className="w-full rounded-t-lg"
-                  style={{
-                    height: `${barH}px`,
-                    background: `linear-gradient(to top, ${colorFrom}, ${colorTo})`,
-                    transformOrigin: "bottom",
-                    animation: `grow-bar 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.07}s both`,
-                    opacity: 0.9,
-                  }}
-                />
+                {/* Bar track */}
+                <div className="relative h-2.5 rounded-full overflow-hidden bg-gray-100 dark:bg-slate-700/60">
+                  {/* Fill */}
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full"
+                    style={{
+                      width: `${pct}%`,
+                      background: `linear-gradient(to right, ${colorFrom}, ${colorTo})`,
+                      transformOrigin: "left center",
+                      animation: `bar-slide 0.75s cubic-bezier(0.16,1,0.3,1) ${0.2 + i * 0.1}s both`,
+                    }}
+                  />
+
+                  {/* Subtle shimmer tick at the tip */}
+                  <div
+                    className="absolute inset-y-0 w-1 rounded-full opacity-60"
+                    style={{
+                      left: `calc(${pct}% - 2px)`,
+                      background: colorTo,
+                      filter: "blur(2px)",
+                      transformOrigin: "left center",
+                      animation: `bar-slide 0.75s cubic-bezier(0.16,1,0.3,1) ${0.2 + i * 0.1}s both`,
+                    }}
+                  />
+                </div>
               </div>
             );
           })}
-        </div>
 
-        {/* Baseline */}
-        <div
-          className="absolute left-7 right-0 border-t border-gray-200 dark:border-slate-600"
-          style={{ bottom: "32px" }}
-        />
-
-        {/* Category labels */}
-        <div
-          className="absolute left-7 right-0 flex justify-around gap-3"
-          style={{ bottom: "4px" }}
-        >
-          {judgeScores.categories.map((cat) => (
-            <div key={cat.label} className="flex-1 min-w-0 text-center">
-              <span className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight block truncate">
-                {cat.label}
+          {/* Mini legend: score context */}
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[10px] text-gray-300 dark:text-slate-600 font-medium">0</span>
+            {[1, 2, 3, 4, 5].map((tick) => (
+              <span
+                key={tick}
+                className="text-[10px] text-gray-300 dark:text-slate-600 font-medium"
+              >
+                {tick}
               </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-
-      {/* Overall callout */}
-      {overall && (
-        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700/50 flex items-baseline gap-2">
-          <span className="text-2xl font-extrabold text-gray-800 dark:text-white tabular-nums">
-            {overall.score.toFixed(2)}
-          </span>
-          <span className="text-xs text-gray-400 dark:text-slate-500">
-            / {MAX} overall &nbsp;·&nbsp; 3rd of 775 participants
-          </span>
-        </div>
-      )}
     </SectionBox>
   );
 }
 
+
+// ── 3. UPDATED <style> block ─────────────────────────────────────────────────
+// Paste this as your full <style> string inside the page component's JSX.
+// It merges your existing animations with the three new ones needed above.
+
+const UPDATED_STYLE_BLOCK = `
+  .page-bg {
+    background: linear-gradient(to bottom, #f0f9ff, #ffffff);
+  }
+  .dark .page-bg {
+    background: linear-gradient(to bottom, #0b1220, #0d1627);
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fade-up 0.5s ease both; }
+  .fade-up-1 { animation-delay: 0.05s; }
+  .fade-up-2 { animation-delay: 0.12s; }
+  .fade-up-3 { animation-delay: 0.20s; }
+  .fade-up-4 { animation-delay: 0.28s; }
+
+  /* ── New animations for JudgeScoresChart ── */
+  @keyframes bar-slide {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+  @keyframes ring-spin {
+    from { stroke-dashoffset: var(--circ); }
+    to   { stroke-dashoffset: var(--dash); }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes num-fade {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+`;
 // ─── JSON-LD ──────────────────────────────────────────────────────────────────
 function ProjectJsonLd({ project, id }: { project: any; id: string }) {
   const title = project.title ?? project.name ?? "Project";

@@ -113,17 +113,6 @@
       "label": "🏆 3rd Place — Hack for Humanity 2026",
       "sub": "775 participants · Solo build · International"
     },
-    "judgeScores": {
-      "outOf": 5,
-      "source": "Official post-event results · Hack for Humanity 2026",
-      "categories": [
-        { "label": "Design", "score": 4.18 },
-        { "label": "Presentation", "score": 4.18 },
-        { "label": "Overall", "score": 3.98 },
-        { "label": "Impact", "score": 3.82 },
-        { "label": "Innovation", "score": 3.73 }
-      ]
-    },
     "images": [
       "/Project/EcoLens/dashboard.png",
       "/Project/EcoLens/leaderboard.jpg",
@@ -166,6 +155,17 @@
       "problem": "Most people want to recycle responsibly but face two blockers: they don't know what material something is, and they have no sense of whether their effort matters at scale. Existing recycling apps either give dry information with no feedback loop, or require manual input. EcoLens was built to solve both: real-time AI classification plus cumulative impact that compounds over time.",
       "constraints": "One-month hackathon window, solo build, no budget for paid ML APIs, and a requirement to ship a judge-ready product — not a demo. Weight estimation from a 2D image, label ambiguity from the model, and auth reliability under edge cases were the hardest technical constraints.",
       "myRole": "Everything — product design, ML integration, backend architecture, frontend, auth system, achievements engine, deployment, and the submission video.",
+      "judgeScores": {
+        "outOf": 5,
+        "source": "Official post-event results · Hack for Humanity 2026",
+        "categories": [
+          { "label": "Design", "score": 4.18 },
+          { "label": "Presentation", "score": 4.18 },
+          { "label": "Overall", "score": 3.98 },
+          { "label": "Impact", "score": 3.82 },
+          { "label": "Innovation", "score": 3.73 }
+        ]
+      },
       "responsibilities": [
         "Designed and built the full prediction pipeline: client image → POST /api/predict → HuggingFace proxy → label normalization → point & impact calculation → MongoDB write → frontend update",
         "Built a custom achievements engine with material-specific badges (plastic, paper, glass, metal, organic) and a global leaderboard with real-time rank updates",
