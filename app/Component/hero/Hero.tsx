@@ -201,7 +201,7 @@ export default function Hero() {
 
           {/* ── H2: Value prop ── */}
           <h2 className="h-fade-up h-d4 mt-3 text-base xs:text-lg sm:text-xl font-semibold text-slate-700 dark:text-slate-200 max-w-md mx-auto leading-snug">
-            I ship production-ready SaaS &amp; developer tools.
+            I build AI-powered SaaS and real-time apps that run in production.
           </h2>
 
           {/* ── Tech stack chips ── */}
@@ -236,8 +236,9 @@ export default function Hero() {
               <span className="text-xs font-black tracking-wide uppercase">
                 Technical Award · Hackonomics 2026
               </span>
-              <span className="text-[10px] font-medium opacity-75">
-                EconoQuest · Economics simulation · 1481 participants
+
+              <span className="text-[10px] font-medium opacity-75 w-full">
+                Selected among 179 ranked projects
               </span>
             </span>
 
