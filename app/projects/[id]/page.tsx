@@ -53,9 +53,7 @@ function normalizeRepoLinks(githubLink: unknown): RepoLink[] {
       .map((item, index) => {
         if (typeof item === "string") {
           const url = item.trim();
-          return url
-            ? { name: `Repository ${index + 1}`, url }
-            : null;
+          return url ? { name: `Repository ${index + 1}`, url } : null;
         }
 
         if (item && typeof item === "object" && "url" in item) {
@@ -77,7 +75,9 @@ function normalizeRepoLinks(githubLink: unknown): RepoLink[] {
 
   if (typeof githubLink === "object") {
     return Object.entries(githubLink as Record<string, unknown>)
-      .filter(([, value]) => typeof value === "string" && value.trim().length > 0)
+      .filter(
+        ([, value]) => typeof value === "string" && value.trim().length > 0,
+      )
       .map(([key, value]) => ({
         name: `${formatKey(key)} Repository`,
         url: String(value).trim(),
@@ -106,7 +106,9 @@ async function getAllProjects() {
 
 async function getProject(id: string) {
   const projects = await getAllProjects();
-  return projects.find((p) => slugify(p.id ?? p.title ?? p.name) === id) ?? null;
+  return (
+    projects.find((p) => slugify(p.id ?? p.title ?? p.name) === id) ?? null
+  );
 }
 
 export async function generateStaticParams() {
@@ -127,7 +129,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `${title} — a project by Wahb Amir`;
 
   const badge = project.badge?.label ? ` · ${project.badge.label}` : "";
-  const firstImage = Array.isArray(project.images) ? project.images[0] : undefined;
+  const firstImage = Array.isArray(project.images)
+    ? project.images[0]
+    : undefined;
 
   return {
     title: `${title}${badge} — Wahb Amir`,
@@ -406,7 +410,9 @@ function ProjectJsonLd({ project, id }: { project: any; id: string }) {
         url,
         description: project.caseStudy?.tlDr ?? project.short,
         applicationCategory:
-          project.category === "ECommerce" ? "ECommercePlatform" : "WebApplication",
+          project.category === "ECommerce"
+            ? "ECommercePlatform"
+            : "WebApplication",
         operatingSystem: "Web",
         author: {
           "@type": "Person",
@@ -775,17 +781,18 @@ export default async function ProjectPage({ params }: Props) {
             </div>
           )}
 
-          {Array.isArray(cs.responsibilities) && cs.responsibilities.length > 0 && (
-            <div className="fade-up fade-up-4 mb-4">
-              <SectionBox
-                label="Responsibilities"
-                icon="✅"
-                accent="from-emerald-500 to-teal-500"
-              >
-                <ListItems items={cs.responsibilities} />
-              </SectionBox>
-            </div>
-          )}
+          {Array.isArray(cs.responsibilities) &&
+            cs.responsibilities.length > 0 && (
+              <div className="fade-up fade-up-4 mb-4">
+                <SectionBox
+                  label="Responsibilities"
+                  icon="✅"
+                  accent="from-emerald-500 to-teal-500"
+                >
+                  <ListItems items={cs.responsibilities} />
+                </SectionBox>
+              </div>
+            )}
 
           {Array.isArray(cs.technicalSolution) &&
             cs.technicalSolution.length > 0 && (

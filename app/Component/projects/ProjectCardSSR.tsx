@@ -55,34 +55,34 @@ export default function ProjectCardSSR({
   const badge = project.badge ?? null;
 
   const normalizedCS =
-  cs && Object.keys(cs).length > 0
-    ? {
-        ...cs,
-        id: cs.id ?? project.id, 
-        launch: cs.launch?.date
-          ? cs.launch
-          : launchDate
-            ? { date: launchDate }
-            : cs.launch,
-      }
-    : {
-        id: project.id, 
-        tlDr: short || undefined,
-        problem: project.problem ?? undefined,
-        myRole: role,
-        approach: project.process?.length ? project.process : undefined,
-        outcomes: {
-          qualitative: project.outcome ?? undefined,
-          quantitative:
-            stats && Object.keys(stats).length
-              ? Object.entries(stats).map(([k, v]) => ({
-                  metric: formatKey(k),
-                  value: String(v),
-                }))
-              : undefined,
-        },
-        launch: launchDate ? { date: launchDate } : undefined,
-      };
+    cs && Object.keys(cs).length > 0
+      ? {
+          ...cs,
+          id: cs.id ?? project.id,
+          launch: cs.launch?.date
+            ? cs.launch
+            : launchDate
+              ? { date: launchDate }
+              : cs.launch,
+        }
+      : {
+          id: project.id,
+          tlDr: short || undefined,
+          problem: project.problem ?? undefined,
+          myRole: role,
+          approach: project.process?.length ? project.process : undefined,
+          outcomes: {
+            qualitative: project.outcome ?? undefined,
+            quantitative:
+              stats && Object.keys(stats).length
+                ? Object.entries(stats).map(([k, v]) => ({
+                    metric: formatKey(k),
+                    value: String(v),
+                  }))
+                : undefined,
+          },
+          launch: launchDate ? { date: launchDate } : undefined,
+        };
 
   const baseId = (project.id && String(project.id)) || title;
   const safeId = baseId
@@ -93,14 +93,14 @@ export default function ProjectCardSSR({
     .slice(0, 60);
 
   const repoLinks =
-  githubLink && typeof githubLink === "object"
-    ? Object.entries(githubLink)
-        .filter(([, url]) => Boolean(url))
-        .map(([key, url]) => ({
-          name: `${key.charAt(0).toUpperCase()}${key.slice(1)} Repository`,
-          url: String(url),
-        }))
-    : [];
+    githubLink && typeof githubLink === "object"
+      ? Object.entries(githubLink)
+          .filter(([, url]) => Boolean(url))
+          .map(([key, url]) => ({
+            name: `${key.charAt(0).toUpperCase()}${key.slice(1)} Repository`,
+            url: String(url),
+          }))
+      : [];
 
   const categoryColors: Record<string, string> = {
     Platform: "from-violet-500 to-purple-600",

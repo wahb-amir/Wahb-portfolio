@@ -11,7 +11,7 @@ import {
 type Metric = { metric?: string; value?: string; note?: string };
 
 type CS = {
-  id?:string
+  id?: string;
   tlDr?: string;
   problem?: string;
   constraints?: string;
@@ -319,7 +319,7 @@ export default function CaseStudyHydrate({
   }
 
   // Interactive animated version after mount
-  console.log(normalizedCS)
+  console.log(normalizedCS);
   return (
     <div className="w-full">
       <button
