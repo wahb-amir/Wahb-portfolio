@@ -133,20 +133,160 @@ Paths under `app/api/updates/internal/*` and `app/api/updates/git/*` are interna
 ## Folder structure (important bits under `/app`)
 
 ```
-app/
-├─ api/
-│  ├─ contact/                 # contact form API
-│  ├─ updates/
-│  │  ├─ about/                # public about route
-│  │  ├─ projects/             # public projects route
-│  │  ├─ internal/             # internal routes (fetch from MongoDB)
-│  │  │  ├─ about/internal
-│  │  │  └─ projects
-│  │  └─ git/
-│  │     └─ web-hooks          # git webhook receiver
-│
-├─ Component/                  # React components
-└─ ...
+├── app
+│   ├── api
+│   │   ├── contact
+│   │   │   └── route.ts
+│   │   ├── github-activity
+│   │   │   └── route.ts
+│   │   └── updates
+│   │       ├── about
+│   │       │   ├── internal
+│   │       │   │   └── about
+│   │       │   │       └── route.ts
+│   │       │   └── route.ts
+│   │       ├── git
+│   │       │   └── web-hooks
+│   │       │       └── route.ts
+│   │       ├── internal
+│   │       │   └── projects
+│   │       │       └── route.ts
+│   │       └── projects
+│   │           └── route.ts
+│   ├── Component
+│   │   ├── about
+│   │   │   ├── AboutServer.tsx
+│   │   │   └── About.tsx
+│   │   ├── avatar
+│   │   │   └── Avatar.tsx
+│   │   ├── case-study
+│   │   │   └── CaseStudy.tsx
+│   │   ├── contact
+│   │   │   └── Contact.tsx
+│   │   ├── contributions
+│   │   │   ├── ContributionCard.tsx
+│   │   │   └── Contribution.tsx
+│   │   ├── effects
+│   │   │   ├── BackgroundEffect.tsx
+│   │   │   ├── CustomParticles.tsx
+│   │   │   └── PageTransition.tsx
+│   │   ├── faq
+│   │   │   └── FAQ.tsx
+│   │   ├── footer
+│   │   │   └── Footer.tsx
+│   │   ├── github
+│   │   │   ├── ActivityClient.tsx
+│   │   │   ├── CalendarDesktop.tsx
+│   │   │   ├── config.ts
+│   │   │   ├── github-activity.css
+│   │   │   ├── index.tsx
+│   │   │   └── Skeletons.tsx
+│   │   ├── hero
+│   │   │   ├── HeroCTAs.tsx
+│   │   │   ├── HeroProof.tsx
+│   │   │   ├── HeroScrollHint.tsx
+│   │   │   └── Hero.tsx
+│   │   ├── navigation
+│   │   │   ├── Arrow.tsx
+│   │   │   ├── MobileMenu.tsx
+│   │   │   ├── NavbarShell.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── navConfig.ts
+│   │   │   ├── NavLinks.tsx
+│   │   │   └── ThemeToggle.tsx
+│   │   ├── projects
+│   │   │   ├── ProjectCardSSR.tsx
+│   │   │   ├── ProjectCard.tsx
+│   │   │   ├── ProjectServer.tsx
+│   │   │   └── RepoSelectorModal.tsx
+│   │   ├── skills
+│   │   │   ├── SkillServer.tsx
+│   │   │   └── Skills.tsx
+│   │   ├── slider
+│   │   │   └── ImageSlider.tsx
+│   │   └── ui
+│   │       └── Preloader.tsx
+│   ├── data
+│   │   ├── about.json
+│   │   ├── projects.json
+│   │   └── structured-data.ts
+│   ├── globals.css
+│   ├── hooks
+│   │   └── useClientTheme.ts
+│   ├── layout.tsx
+│   ├── not-found.tsx
+│   ├── page.module.css
+│   ├── page.tsx
+│   ├── projects
+│   │   ├── [id]
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── Seo.config.ts
+│   └── tailwind-out.css
+├── eslint.config.mjs
+├── jsconfig.json
+├── lib
+│   ├── aboutService.ts
+│   ├── a.js
+│   ├── a.ts
+│   ├── db.ts
+│   ├── projectsService.ts
+│   ├── rate-limit.ts
+│   └── redis.ts
+├── models
+│   ├── AboutMe.ts
+│   ├── Message.ts
+│   └── ProjectVersion.ts
+├── next.config.ts
+├── next-env.d.ts
+├── next-sitemap.config.js
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── postcss.config.js
+├── public
+│   ├── ai.json
+│   ├── apple-touch-icon.png
+│   ├── Avatar.png
+│   ├── Avatar.svg
+│   ├── favicon-96x96.png
+│   ├── favicon.ico
+│   ├── favicon.svg
+│   ├── favicon.zip
+│   ├── llms.txt
+│   ├── logo.png
+│   ├── og-image.png
+│   ├── Project
+│   │   ├── EcoLens
+│   │   │   ├── achivements.png
+│   │   │   ├── dashboard.png
+│   │   │   └── leaderboard.jpg
+│   │   ├── Ecom
+│   │   │   ├── light-men.png
+│   │   │   ├── light-product.png
+│   │   │   ├── light-shop.png
+│   │   │   ├── light-women.png
+│   │   │   └── stripe.png
+│   │   ├── EconoQuest
+│   │   │   ├── hall-of-fame.jpg
+│   │   │   ├── landing.png
+│   │   │   ├── nation-selection.png
+│   │   │   ├── playground.jpg
+│   │   │   └── report.jpg
+│   │   └── Platform
+│   │       ├── Dashboard.png
+│   │       ├── home.png
+│   │       ├── projects.png
+│   │       └── Quote.png
+│   ├── robots.txt
+│   ├── sitemap-0.xml
+│   ├── sitemap.xml
+│   ├── site.webmanifest
+│   ├── Wahb_Amir_Resume.pdf
+├── README.md
+├── tailwind.config.js
+└── tsconfig.json
+
 ```
 
 (Adjust paths above if your actual filesystem differs.)
