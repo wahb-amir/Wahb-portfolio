@@ -10,8 +10,9 @@ import nodemailer from "nodemailer";
 const ALLOWED_ORIGINS = new Set([
   "https://wahb.space",
   "https://www.wahb.space",
-  "https://dashboard.wahb.space",
-  ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
+  ...(process.env.PRODUCTION === "development"
+    ? ["http://localhost:3000"]
+    : []),
 ]);
 
 interface RateLimitEntry {
@@ -225,7 +226,7 @@ export async function POST(req: Request) {
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #6b7280;">Reason</td>
                   <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; font-weight: 600; color: #111827; text-transform: capitalize;">
-                    <span style="background-color: #f3f4f6; padding: 4px 10px; border-radius: 12px; font-size: 12px;">${reason.replace('_', ' ')}</span>
+                    <span style="background-color: #f3f4f6; padding: 4px 10px; border-radius: 12px; font-size: 12px;">${reason.replace("_", " ")}</span>
                   </td>
                 </tr>
               </tbody>
@@ -251,9 +252,9 @@ export async function POST(req: Request) {
     // 3. Dispatch Email
     await transporter.sendMail({
       from: `"Portfolio Alerts" <${process.env.GMAIL_USER}>`, // Send via authenticated email to avoid DMARC spam flags
-      replyTo: email, 
+      replyTo: email,
       to: process.env.GMAIL_USER, // Send to yourself
-      subject: `[Portfolio] New message from ${name} - ${reason.replace('_', ' ')}`,
+      subject: `[Portfolio] New message from ${name} - ${reason.replace("_", " ")}`,
       html: emailHtml,
     });
 

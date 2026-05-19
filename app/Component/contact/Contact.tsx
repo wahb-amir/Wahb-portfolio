@@ -32,9 +32,16 @@ const TERMINAL_ROWS = [
 ] as const;
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", message: "", reason: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+    reason: "",
+  });
   const [reasonOpen, setReasonOpen] = useState(false);
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const reasonRef = useRef<HTMLDivElement>(null);
@@ -62,7 +69,9 @@ export default function Contact() {
   }, [reasonOpen]);
 
   const copy = async () => {
-    try { await navigator.clipboard.writeText(EMAIL); } catch {}
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+    } catch {}
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
   };
@@ -105,7 +114,10 @@ export default function Contact() {
     >
       <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(#0088cc22_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#00b1ff15_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
 
-      <div className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm" aria-hidden>
+      <div
+        className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm"
+        aria-hidden
+      >
         <div className="inline-flex whitespace-nowrap animate-[ticker_36s_linear_infinite] hover:[animation-play-state:paused] py-2.5 font-mono text-[10px] font-bold tracking-[0.18em] text-gray-600 dark:text-gray-400">
           {(TICKER + TICKER).repeat(2)}
         </div>
@@ -124,11 +136,17 @@ export default function Contact() {
           </div>
 
           <div className="leading-[0.9] tracking-[0.01em] font-['Bebas_Neue',sans-serif] text-[clamp(52px,10.5vw,118px)]">
-            <span className="block text-gray-900 dark:text-white">LET&apos;S BUILD</span>
-            <span className="block text-[#0077b3] dark:text-[#00d4ff]">SOMETHING</span>
+            <span className="block text-gray-900 dark:text-white">
+              LET&apos;S BUILD
+            </span>
+            <span className="block text-[#0077b3] dark:text-[#00d4ff]">
+              SOMETHING
+            </span>
             <span className="block text-gray-400 dark:text-gray-500">
               DIFFERENT
-              <span className="animate-[blink_1s_step-end_infinite] text-[#0077b3] dark:text-[#00d4ff]">_</span>
+              <span className="animate-[blink_1s_step-end_infinite] text-[#0077b3] dark:text-[#00d4ff]">
+                _
+              </span>
             </span>
           </div>
 
@@ -153,15 +171,17 @@ export default function Contact() {
                   BOOK A DEMO CALL
                 </div>
                 <p className="text-[12px] text-gray-600 dark:text-gray-400 leading-relaxed max-w-[400px]">
-                  15-min intro, 30-min deep-dive, or a full 60-min strategy session.
-                  Fastest way to move your project forward.
+                  15-min intro, 30-min deep-dive, or a full 60-min strategy
+                  session. Fastest way to move your project forward.
                 </p>
                 <div className="flex items-center gap-4 mt-4">
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] text-[#0077b3] dark:text-[#00d4ff] uppercase">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#0077b3] dark:bg-[#00d4ff] animate-pulse" />
                     Slots available this week
                   </span>
-                  <span className="text-[10px] text-gray-500 dark:text-gray-500 tracking-[0.08em]">· Free · No commitment</span>
+                  <span className="text-[10px] text-gray-500 dark:text-gray-500 tracking-[0.08em]">
+                    · Free · No commitment
+                  </span>
                 </div>
               </div>
 
@@ -174,7 +194,10 @@ export default function Contact() {
                 >
                   <Calendar size={13} />
                   Schedule Now
-                  <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
+                  <ArrowRight
+                    size={13}
+                    className="transition-transform duration-200 group-hover:translate-x-1"
+                  />
                 </a>
                 <a
                   href={CLIENT_PORTAL}
@@ -208,9 +231,20 @@ export default function Contact() {
               </div>
               <div className="border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 overflow-hidden">
                 {TERMINAL_ROWS.map(([k, v, accent]) => (
-                  <div key={k} className="flex gap-3.5 px-4 py-[9px] border-b border-gray-200 dark:border-gray-800 last:border-b-0 text-[11px] tracking-[0.04em]">
-                    <span className="text-gray-600 dark:text-gray-400 min-w-[80px] shrink-0 font-bold">{k}</span>
-                    <span className={accent ? "text-[#0077b3] dark:text-[#00d4ff] font-bold" : "text-gray-900 dark:text-gray-200 font-semibold"}>
+                  <div
+                    key={k}
+                    className="flex gap-3.5 px-4 py-[9px] border-b border-gray-200 dark:border-gray-800 last:border-b-0 text-[11px] tracking-[0.04em]"
+                  >
+                    <span className="text-gray-600 dark:text-gray-400 min-w-[80px] shrink-0 font-bold">
+                      {k}
+                    </span>
+                    <span
+                      className={
+                        accent
+                          ? "text-[#0077b3] dark:text-[#00d4ff] font-bold"
+                          : "text-gray-900 dark:text-gray-200 font-semibold"
+                      }
+                    >
                       {v}
                     </span>
                   </div>
@@ -287,7 +321,10 @@ export default function Contact() {
                   <div className="px-5 sm:px-7 pt-8 pb-7 flex flex-col gap-9">
                     {/* 01 — Identity */}
                     <div className="relative z-10">
-                      <div className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]" aria-hidden>
+                      <div
+                        className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]"
+                        aria-hidden
+                      >
                         01
                       </div>
                       <div className="relative z-10">
@@ -296,7 +333,10 @@ export default function Contact() {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                           <div>
-                            <label className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold" htmlFor="ct-name">
+                            <label
+                              className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold"
+                              htmlFor="ct-name"
+                            >
                               Name *
                             </label>
                             <input
@@ -310,7 +350,10 @@ export default function Contact() {
                             />
                           </div>
                           <div>
-                            <label className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold" htmlFor="ct-email">
+                            <label
+                              className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold"
+                              htmlFor="ct-email"
+                            >
                               Email *
                             </label>
                             <input
@@ -329,8 +372,11 @@ export default function Contact() {
 
                     {/* 02 — Reason */}
                     {/* Fixed stack order. Needs to be higher than z-10 so the dropdown covers the next section */}
-                    <div className="relative z-30"> 
-                      <div className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]" aria-hidden>
+                    <div className="relative z-30">
+                      <div
+                        className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]"
+                        aria-hidden
+                      >
                         02
                       </div>
                       <div className="relative z-10">
@@ -339,15 +385,23 @@ export default function Contact() {
                         </div>
                         <div ref={reasonRef} className="relative">
                           {/* Hidden input to hijack native form validation for the custom dropdown */}
-                          <input 
-                            type="text" 
-                            tabIndex={-1} 
-                            value={form.reason} 
-                            required 
-                            className="absolute opacity-0 w-0 h-0 pointer-events-none" 
-                            onChange={() => {}} 
-                            onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Please select a reason')}
-                            onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
+                          <input
+                            type="text"
+                            tabIndex={-1}
+                            value={form.reason}
+                            required
+                            className="absolute opacity-0 w-0 h-0 pointer-events-none"
+                            onChange={() => {}}
+                            onInvalid={(e) =>
+                              (e.target as HTMLInputElement).setCustomValidity(
+                                "Please select a reason",
+                              )
+                            }
+                            onInput={(e) =>
+                              (e.target as HTMLInputElement).setCustomValidity(
+                                "",
+                              )
+                            }
                           />
                           <button
                             type="button"
@@ -358,7 +412,11 @@ export default function Contact() {
                                 : "border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600"
                             } ${!selectedReason ? "text-gray-400 dark:text-gray-600" : "text-gray-900 dark:text-white"}`}
                           >
-                            <span>{selectedReason ? selectedReason.label : "Select a reason…"}</span>
+                            <span>
+                              {selectedReason
+                                ? selectedReason.label
+                                : "Select a reason…"}
+                            </span>
                             <ChevronDown
                               size={14}
                               className={`text-gray-500 dark:text-gray-400 transition-transform duration-200 ${reasonOpen ? "rotate-180" : ""}`}
@@ -397,14 +455,20 @@ export default function Contact() {
 
                     {/* 03 — Message */}
                     <div className="relative z-10">
-                      <div className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]" aria-hidden>
+                      <div
+                        className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]"
+                        aria-hidden
+                      >
                         03
                       </div>
                       <div className="relative z-10">
                         <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
                           Message *
                         </div>
-                        <label className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold" htmlFor="ct-msg">
+                        <label
+                          className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold"
+                          htmlFor="ct-msg"
+                        >
                           Describe your request
                         </label>
                         <textarea
@@ -433,7 +497,11 @@ export default function Contact() {
                       <>
                         <motion.span
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 0.85, repeat: Infinity, ease: "linear" }}
+                          transition={{
+                            duration: 0.85,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
                           className="inline-block w-3.5 h-3.5 rounded-full border-2 border-gray-400 border-t-gray-700 dark:border-gray-600 dark:border-t-gray-300"
                         />
                         TRANSMITTING

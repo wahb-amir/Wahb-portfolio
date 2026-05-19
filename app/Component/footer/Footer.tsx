@@ -15,7 +15,11 @@ import {
   SiTailwindcss,
   SiMongodb,
 } from "react-icons/si";
-import { faGithub, faLinkedin, faXTwitter } from "@fortawesome/free-brands-svg-icons";
+import {
+  faGithub,
+  faLinkedin,
+  faXTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ArrowUpRight,
@@ -46,27 +50,28 @@ const NAV_LINKS = [
   { label: "FAQ", id: "faq" },
 ];
 
-const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] = [
-  { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/wahb-amir",
-    icon: faLinkedin,
-    isFA: true,
-  },
-  {
-    label: "X / Twitter",
-    href: "https://x.com/wahbdev",
-    icon: faXTwitter,
-    isFA: true,
-  },
-  {
-    label: "Client Portal",
-    href: "https://dashboard.wahb.space",
-    icon: ExternalLink,
-    isFA: false,
-  },
-];
+const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] =
+  [
+    { label: "GitHub", href: "https://github.com/wahb-amir", icon: SiGithub },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/wahb-amir",
+      icon: faLinkedin,
+      isFA: true,
+    },
+    {
+      label: "X / Twitter",
+      href: "https://x.com/wahbdev",
+      icon: faXTwitter,
+      isFA: true,
+    },
+    {
+      label: "Client Portal",
+      href: "https://dashboard.wahb.space",
+      icon: ExternalLink,
+      isFA: false,
+    },
+  ];
 
 const STACK = [
   { label: "Next.js", icon: SiNextdotjs },
@@ -140,14 +145,18 @@ export default function Footer() {
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-8">
         {/* ══ TOP GRID ══ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-
           {/* Col 1: Brand */}
-          <motion.div {...fade(0)} className="md:col-span-1 flex flex-col gap-4">
+          <motion.div
+            {...fade(0)}
+            className="md:col-span-1 flex flex-col gap-4"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm select-none text-white bg-gradient-to-br from-sky-700 to-sky-900 dark:from-sky-500 dark:to-sky-600 shadow-lg shadow-sky-500/30">
                 W
               </div>
-              <span className={`${playfair.className} text-xl font-bold text-slate-900 dark:text-sky-50`}>
+              <span
+                className={`${playfair.className} text-xl font-bold text-slate-900 dark:text-sky-50`}
+              >
                 Wahb Amir
               </span>
             </div>

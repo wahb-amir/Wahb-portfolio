@@ -15,7 +15,11 @@ import {
   faEnvelope,
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
-import { faGithub, faLinkedin, faXTwitter } from "@fortawesome/free-brands-svg-icons";
+import {
+  faGithub,
+  faLinkedin,
+  faXTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 
 import type { NavItem } from "./navConfig";
 
@@ -140,7 +144,9 @@ export default function MobileMenu({
                 {/* Theme toggle */}
                 <button
                   onClick={toggleTheme}
-                  aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                  aria-label={
+                    isDark ? "Switch to light mode" : "Switch to dark mode"
+                  }
                   className="flex items-center justify-center gap-2 p-5 rounded-2xl font-bold shadow-sm
                              transition-colors duration-300
                              bg-slate-100 dark:bg-white/5
