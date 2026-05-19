@@ -9,11 +9,15 @@ const GITHUB = "https://github.com/wahb-amir";
 const CLIENT_PORTAL = "https://dashboard.wahb.space#request-quote";
 const CAL_LINK = "https://cal.com/wahb-amir/15min";
 
+// Expanded reasons for contact
 const REASONS = [
-  { value: "collaboration", label: "Collaboration" },
-  { value: "hiring", label: "Hiring / Opportunity" },
-  { value: "hackathon", label: "Hackathon / Project Invite" },
-  { value: "question", label: "Question" },
+  { value: "freelance", label: "Freelance / Contract Work" },
+  { value: "collaboration", label: "Project Collaboration" },
+  { value: "hiring", label: "Hiring / Full-time Opportunity" },
+  { value: "hackathon", label: "Hackathon / Event Invite" },
+  { value: "mentorship", label: "Mentorship / Advice" },
+  { value: "bug_report", label: "Bug Report / Feedback" },
+  { value: "question", label: "General Question" },
   { value: "other", label: "Other" },
 ];
 
@@ -46,7 +50,6 @@ export default function Contact() {
     setReasonOpen(false);
   };
 
-  // Close dropdown on outside click
   React.useEffect(() => {
     if (!reasonOpen) return;
     const handler = (e: MouseEvent) => {
@@ -66,6 +69,8 @@ export default function Contact() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.reason || !form.message) return; // Fallback safety
+
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
@@ -98,10 +103,8 @@ export default function Contact() {
       id="contact"
       className="relative min-h-screen bg-gradient-to-b from-[#00b1ff15] to-[#00bfff05] dark:bg-transparent dark:from-transparent dark:to-transparent text-gray-900 dark:text-gray-100 overflow-hidden font-mono"
     >
-      {/* Dot grid */}
       <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(#0088cc22_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#00b1ff15_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
 
-      {/* Ticker */}
       <div className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm" aria-hidden>
         <div className="inline-flex whitespace-nowrap animate-[ticker_36s_linear_infinite] hover:[animation-play-state:paused] py-2.5 font-mono text-[10px] font-bold tracking-[0.18em] text-gray-600 dark:text-gray-400">
           {(TICKER + TICKER).repeat(2)}
@@ -109,8 +112,6 @@ export default function Contact() {
       </div>
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 py-16 pb-20">
-
-        {/* ── Hero header ── */}
         <motion.div {...fd(0)} className="mb-14">
           <div className="flex items-center gap-2.5 mb-6">
             <div className="w-[7px] h-[7px] rounded-full shrink-0 bg-[#0088cc] dark:bg-[#00d4ff] animate-[pulse-ring_2.5s_ease-in-out_infinite]" />
@@ -138,13 +139,11 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        {/* ── PRIMARY CTA: Book a Call ── */}
         <motion.div {...fd(0.06)} className="mb-16">
           <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
             — Preferred: Schedule a call
           </div>
           <div className="border border-[#0077b3]/30 dark:border-[#00d4ff]/25 bg-[#0077b3]/5 dark:bg-[#00d4ff]/8 p-6 sm:p-8 relative overflow-hidden">
-            {/* Corner accents */}
             <div className="absolute top-0 left-0 w-5 h-5 border-t-[1.5px] border-l-[1.5px] border-[#0077b3] dark:border-[#00d4ff]" />
             <div className="absolute bottom-0 right-0 w-5 h-5 border-b-[1.5px] border-r-[1.5px] border-[#0077b3] dark:border-[#00d4ff]" />
 
@@ -191,7 +190,6 @@ export default function Contact() {
           </div>
         </motion.div>
 
-        {/* ── DIVIDER: async fallback ── */}
         <motion.div {...fd(0.1)} className="mb-12">
           <div className="flex items-center gap-4">
             <div className="flex-1 h-px bg-gray-300 dark:bg-gray-800" />
@@ -200,17 +198,10 @@ export default function Contact() {
             </span>
             <div className="flex-1 h-px bg-gray-300 dark:bg-gray-800" />
           </div>
-          <p className="text-center text-[11px] text-gray-600 dark:text-gray-200 mt-3 tracking-[0.04em]">
-            Prefer not to book a call? Leave a message for collaborations, questions, or detailed proposals.
-          </p>
         </motion.div>
 
-        {/* ── Two-column ── */}
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-12 md:gap-16 items-start">
-
-          {/* Left panel */}
           <motion.div {...fd(0.14)} className="flex flex-col gap-9">
-            {/* Terminal status */}
             <div>
               <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
                 — Status
@@ -227,7 +218,6 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Direct links */}
             <div>
               <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
                 — Reach out
@@ -254,23 +244,8 @@ export default function Contact() {
                 </a>
               </div>
             </div>
-
-            {/* Nav */}
-            <div className="flex gap-2 pt-2 border-t border-gray-300 dark:border-gray-800">
-              {[{ label: "↑ About", id: "about" }, { label: "↓ FAQ", id: "faq" }].map(({ label, id }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "center" })}
-                  className="font-mono text-[10px] font-bold tracking-[0.12em] uppercase text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 px-3.5 py-[8px] cursor-pointer transition-all hover:text-[#0077b3] hover:border-[#0077b3] dark:hover:text-[#00d4ff] dark:hover:border-[#00d4ff]/60 dark:hover:bg-gray-700"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
           </motion.div>
 
-          {/* Right: form */}
           <motion.div {...fd(0.2)}>
             <AnimatePresence mode="wait">
               {status === "sent" ? (
@@ -289,23 +264,6 @@ export default function Contact() {
                   <div className="text-[12px] text-gray-700 dark:text-gray-300 font-bold tracking-[0.1em] mb-8 uppercase">
                     Reply incoming within 24 hours.
                   </div>
-                  <a
-                    href={CAL_LINK}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 text-[10px] tracking-[0.15em] font-bold text-[#0077b3] dark:text-[#00d4ff] uppercase font-mono hover:underline transition-colors mb-4"
-                  >
-                    <Calendar size={11} />
-                    Book a call for faster reply
-                  </a>
-                  <div>
-                    <button
-                      onClick={() => setStatus("idle")}
-                      className="bg-transparent border-none text-[10px] tracking-[0.15em] font-bold text-gray-600 dark:text-gray-400 underline cursor-pointer uppercase font-mono hover:text-gray-900 dark:hover:text-white transition-colors"
-                    >
-                      SEND ANOTHER →
-                    </button>
-                  </div>
                 </motion.div>
               ) : (
                 <motion.form
@@ -314,10 +272,9 @@ export default function Contact() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="border border-gray-300 dark:border-gray-700 bg-white/95 dark:bg-gray-900/90 backdrop-blur-md shadow-sm dark:shadow-xl"
+                  className="border border-gray-300 dark:border-gray-700 bg-white/95 dark:bg-gray-900/90 backdrop-blur-md shadow-sm dark:shadow-xl relative z-10"
                   aria-busy={status === "sending"}
                 >
-                  {/* Form header */}
                   <div className="border-b border-gray-200 dark:border-gray-700 px-5 sm:px-7 py-3.5 flex justify-between items-center bg-gray-50/80 dark:bg-gray-950/80 gap-3 flex-wrap">
                     <span className="text-[9px] tracking-[0.25em] text-gray-600 dark:text-gray-400 uppercase font-bold">
                       Async Communication · {new Date().getFullYear()}
@@ -328,9 +285,8 @@ export default function Contact() {
                   </div>
 
                   <div className="px-5 sm:px-7 pt-8 pb-7 flex flex-col gap-9">
-
                     {/* 01 — Identity */}
-                    <div className="relative">
+                    <div className="relative z-10">
                       <div className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]" aria-hidden>
                         01
                       </div>
@@ -372,15 +328,27 @@ export default function Contact() {
                     </div>
 
                     {/* 02 — Reason */}
-                    <div className="relative">
+                    {/* Fixed stack order. Needs to be higher than z-10 so the dropdown covers the next section */}
+                    <div className="relative z-30"> 
                       <div className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]" aria-hidden>
                         02
                       </div>
                       <div className="relative z-10">
                         <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
-                          Reason for contact
+                          Reason for contact *
                         </div>
                         <div ref={reasonRef} className="relative">
+                          {/* Hidden input to hijack native form validation for the custom dropdown */}
+                          <input 
+                            type="text" 
+                            tabIndex={-1} 
+                            value={form.reason} 
+                            required 
+                            className="absolute opacity-0 w-0 h-0 pointer-events-none" 
+                            onChange={() => {}} 
+                            onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Please select a reason')}
+                            onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
+                          />
                           <button
                             type="button"
                             onClick={() => setReasonOpen((p) => !p)}
@@ -404,7 +372,7 @@ export default function Contact() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -6 }}
                                 transition={{ duration: 0.16 }}
-                                className="absolute left-0 right-0 top-full z-50 mt-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-xl dark:shadow-2xl overflow-hidden"
+                                className="absolute left-0 right-0 top-[105%] z-[99] mt-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-xl dark:shadow-2xl overflow-hidden max-h-[220px] overflow-y-auto"
                               >
                                 {REASONS.map((r) => (
                                   <button
@@ -428,22 +396,22 @@ export default function Contact() {
                     </div>
 
                     {/* 03 — Message */}
-                    <div className="relative">
+                    <div className="relative z-10">
                       <div className="font-['Bebas_Neue',sans-serif] text-[96px] leading-none absolute -top-6 -left-1.5 pointer-events-none select-none z-0 text-gray-900 dark:text-white opacity-[0.04]" aria-hidden>
                         03
                       </div>
                       <div className="relative z-10">
                         <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
-                          Message
+                          Message *
                         </div>
                         <label className="text-[10px] tracking-[0.15em] uppercase text-gray-700 dark:text-gray-300 block mb-2.5 font-bold" htmlFor="ct-msg">
-                          Describe your request{" "}
-                          <span className="normal-case tracking-normal text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
+                          Describe your request
                         </label>
                         <textarea
                           className="block w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-none px-3 py-3 font-mono text-[13px] font-semibold text-gray-900 dark:text-white outline-none transition-all focus:border-[#0077b3] focus:bg-white dark:focus:border-[#00d4ff] dark:focus:bg-gray-900 resize-none leading-loose placeholder:text-gray-400 dark:placeholder:text-gray-600 placeholder:font-normal"
                           id="ct-msg"
                           rows={4}
+                          required
                           placeholder="Describe your idea, project, or context…"
                           value={form.message}
                           onChange={upd("message")}
@@ -452,7 +420,6 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  {/* Submit */}
                   <button
                     type="submit"
                     disabled={status === "sending"}
@@ -479,26 +446,6 @@ export default function Contact() {
                     )}
                   </button>
 
-                  {/* Helper nudge */}
-                  <div className="px-5 sm:px-7 py-3.5 border-t border-gray-200 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-950/60 flex items-center justify-between gap-3 flex-wrap">
-                    <span className="text-[10px] text-gray-500 dark:text-gray-500 tracking-[0.04em]">
-                      For faster response, consider{" "}
-                      <a
-                        href={CAL_LINK}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[#0077b3] dark:text-[#00d4ff] font-bold hover:underline"
-                      >
-                        booking a demo call instead
-                      </a>
-                      .
-                    </span>
-                    <span className="text-[9px] text-gray-400 dark:text-gray-600 tracking-[0.08em] uppercase font-bold">
-                      &lt; 24h reply
-                    </span>
-                  </div>
-
-                  {/* Error */}
                   <AnimatePresence>
                     {status === "error" && (
                       <motion.div
@@ -515,16 +462,6 @@ export default function Contact() {
               )}
             </AnimatePresence>
           </motion.div>
-        </div>
-
-        {/* Footer bar */}
-        <div className="border-t border-gray-300 dark:border-gray-800 mt-16 pt-6 flex justify-between items-center flex-wrap gap-3">
-          <span className="text-[9px] tracking-[0.22em] text-gray-600 dark:text-gray-400 uppercase font-bold">
-            Wahb · Full-Stack Engineer · {new Date().getFullYear()}
-          </span>
-          <span className="text-[9px] tracking-[0.15em] text-gray-600 dark:text-gray-400 uppercase font-bold">
-            Available · Remote · Worldwide
-          </span>
         </div>
       </div>
     </section>

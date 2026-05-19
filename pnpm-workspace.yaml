@@ -1,10 +1,4 @@
 allowBuilds:
-  '@tsparticles/engine': true
-  sharp: true
-  unrs-resolver: true
-onlyBuiltDependencies:
-  - "@tsparticles/engine"
-  - react-tsparticles
-  - sharp
-  - tsparticles-engine
-  - unrs-resolver
+  '@tsparticles/engine': set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
