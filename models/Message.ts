@@ -29,13 +29,19 @@ const MessageSchema = new Schema<IMessage>(
       type: String,
       required: true,
       trim: true,
-      enum: [
-        "Full-Stack Web Application",
-        "Backend Development",
-        "SEO Optimization",
-        "E-commerce Store",
-        "Custom Web Solution",
-      ],
+      enum: {
+        values: [
+          "freelance",
+          "collaboration",
+          "hiring",
+          "hackathon",
+          "mentorship",
+          "bug_report",
+          "question",
+          "other",
+        ],
+        message: "{VALUE} is not supported",
+      },
     },
     budget: {
       type: String,
