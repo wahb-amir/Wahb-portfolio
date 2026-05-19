@@ -2,6 +2,7 @@ import { connectToDB } from "@/lib/db";
 import Message from "@/models/Message";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
+import nodemailer from "nodemailer";
 
 /* ─────────────────────────────────────────────────────────────
    ALLOWED ORIGINS
@@ -59,49 +60,6 @@ setInterval(
 );
 
 /* ─────────────────────────────────────────────────────────────
-   FIELD MAPS — Contact form display values → DB enum values
-   ───────────────────────────────────────────────────────────── */
-
-/**
- * Contact form sends: "Full-Stack Web App" | "Backend & APIs" |
- *   "SEO & Performance" | "E-Commerce Store" | "Custom Solution"
- * DB enum expects:    "Full-Stack Web Application" | "Backend Development" |
- *   "SEO Optimization" | "E-commerce Store" | "Custom Web Solution"
- */
-const SERVICE_MAP: Record<string, string> = {
-  "Full-Stack Web App": "Full-Stack Web Application",
-  "Backend & APIs": "Backend Development",
-  "SEO & Performance": "SEO Optimization",
-  "E-Commerce Store": "E-commerce Store",
-  "Custom Solution": "Custom Web Solution",
-};
-
-/**
- * Contact form sends full labels: "Under $1,000" | "$1,000–$3,000" |
- *   "$3,000–$8,000" | "$8,000+" | "Not sure yet"
- * DB enum expects slugs: "under-1k" | "1k-3k" | "3k-8k" | "8k-plus" | "not-sure"
- */
-const BUDGET_MAP: Record<string, string> = {
-  "Under $1,000": "under-1k",
-  "$1,000–$3,000": "1k-3k",
-  "$3,000–$8,000": "3k-8k",
-  "$8,000+": "8k-plus",
-  "Not sure yet": "not-sure",
-};
-
-/**
- * Contact form sends full labels: "ASAP" | "Within 1 month" |
- *   "1–3 months" | "Flexible"
- * DB enum expects slugs: "asap" | "1-month" | "1-3-months" | "flexible"
- */
-const TIMELINE_MAP: Record<string, string> = {
-  ASAP: "asap",
-  "Within 1 month": "1-month",
-  "1–3 months": "1-3-months",
-  Flexible: "flexible",
-};
-
-/* ─────────────────────────────────────────────────────────────
    VALIDATION HELPERS
    ───────────────────────────────────────────────────────────── */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -111,9 +69,6 @@ function sanitize(value: unknown, maxLength = 500): string {
   return value.trim().slice(0, maxLength);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   CORS HELPERS
-   ───────────────────────────────────────────────────────────── */
 function getCORSHeaders(origin: string | null): Record<string, string> {
   if (origin && ALLOWED_ORIGINS.has(origin)) {
     return {
@@ -132,14 +87,20 @@ function getCORSHeaders(origin: string | null): Record<string, string> {
 interface ContactRequestBody {
   name: string;
   email: string;
-  /** Display label from SERVICES array, e.g. "Full-Stack Web App" */
-  service: string;
-  /** Full budget label from BUDGET_FULL array, e.g. "Under $1,000" */
-  budget?: string;
-  /** Full timeline label from TIMELINE_FULL array, e.g. "Within 1 month" */
-  timeline?: string;
-  message?: string;
+  reason: string;
+  message: string;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   NODEMAILER CONFIG
+   ───────────────────────────────────────────────────────────── */
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
 /* ─────────────────────────────────────────────────────────────
    OPTIONS — CORS preflight
@@ -208,25 +169,16 @@ export async function POST(req: Request) {
   /* 5 ── Sanitise raw strings ──────────────────────────────── */
   const name = sanitize(body.name, 80);
   const email = sanitize(body.email, 254);
-  const service = sanitize(body.service, 100); // display label
-  const budget = sanitize(body.budget, 100); // display label
-  const timeline = sanitize(body.timeline, 100); // display label
-  const message = sanitize(body.message, 2000);
+  const reason = sanitize(body.reason, 100);
+  const message = sanitize(body.message, 3000);
 
-  /* 6 ── Map display labels → DB enum slugs ────────────────── */
-  const interest = SERVICE_MAP[service] ?? null;
-  const budgetSlug = BUDGET_MAP[budget] ?? "not-sure";
-  const timelineSlug = TIMELINE_MAP[timeline] ?? "flexible";
-
-  /* 7 ── Validate ──────────────────────────────────────────── */
+  /* 6 ── Validate ──────────────────────────────────────────── */
   const errors: string[] = [];
 
-  if (!name) errors.push("name is required");
-  if (name.length < 2) errors.push("name is too short");
-  if (!email) errors.push("email is required");
-  if (!EMAIL_RE.test(email)) errors.push("email is invalid");
-  if (!service) errors.push("service is required");
-  if (!interest) errors.push(`service "${service}" is not a recognised option`);
+  if (!name || name.length < 2) errors.push("Valid name is required");
+  if (!email || !EMAIL_RE.test(email)) errors.push("Valid email is required");
+  if (!reason) errors.push("Reason is required");
+  if (!message) errors.push("Message is required");
 
   if (errors.length > 0) {
     return NextResponse.json(
@@ -235,17 +187,74 @@ export async function POST(req: Request) {
     );
   }
 
-  /* 8 ── Persist to DB ─────────────────────────────────────── */
+  /* 7 ── Persist to DB & Send Email ────────────────────────── */
   try {
+    // 1. Save to MongoDB (assuming 'interest' can store the 'reason' value)
     await connectToDB();
-
     await Message.create({
       name,
       email,
-      interest, // mapped DB enum value
-      budget: budgetSlug,
-      timeline: timelineSlug,
-      message: message || "",
+      interest: reason, // Mapped to existing DB schema field
+      message,
+    });
+
+    // 2. High Quality HTML Email Template
+    const emailHtml = `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 40px 20px; color: #111827;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-top: 4px solid #0077b3; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+          <div style="padding: 30px;">
+            <p style="font-size: 11px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 20px;">
+              System Notification // Portfolio
+            </p>
+            <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 20px 0; color: #111827;">
+              New Contact Request
+            </h2>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+              <tbody>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #6b7280; width: 100px;">Name</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; font-weight: 600; color: #111827;">${name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #6b7280;">Email</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; font-weight: 600; color: #0077b3;">
+                    <a href="mailto:${email}" style="color: #0077b3; text-decoration: none;">${email}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #6b7280;">Reason</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; font-weight: 600; color: #111827; text-transform: capitalize;">
+                    <span style="background-color: #f3f4f6; padding: 4px 10px; border-radius: 12px; font-size: 12px;">${reason.replace('_', ' ')}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p style="font-size: 12px; font-weight: bold; text-transform: uppercase; color: #6b7280; margin-bottom: 10px; letter-spacing: 0.05em;">Message Body</p>
+            <div style="background-color: #f9fafb; padding: 20px; border-left: 3px solid #0077b3; font-size: 15px; line-height: 1.6; color: #374151; white-space: pre-wrap;">${message}</div>
+
+            <div style="margin-top: 40px; text-align: center;">
+              <a href="mailto:${email}" style="display: inline-block; background-color: #0077b3; color: #ffffff; padding: 12px 24px; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 4px; letter-spacing: 0.05em;">
+                REPLY TO INQUIRY
+              </a>
+            </div>
+          </div>
+          
+          <div style="background-color: #f9fafb; padding: 15px; text-align: center; border-top: 1px solid #e5e7eb; font-size: 12px; color: #9ca3af;">
+            Transmitted from wahb.space • ${new Date().toUTCString()}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 3. Dispatch Email
+    await transporter.sendMail({
+      from: `"Portfolio Alerts" <${process.env.GMAIL_USER}>`, // Send via authenticated email to avoid DMARC spam flags
+      replyTo: email, 
+      to: process.env.GMAIL_USER, // Send to yourself
+      subject: `[Portfolio] New message from ${name} - ${reason.replace('_', ' ')}`,
+      html: emailHtml,
     });
 
     return NextResponse.json(
@@ -253,7 +262,7 @@ export async function POST(req: Request) {
       { status: 200, headers: corsHeaders },
     );
   } catch (err) {
-    console.error("❌ Contact API – DB error:", err);
+    console.error("❌ Contact API - DB/Mail error:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500, headers: corsHeaders },
