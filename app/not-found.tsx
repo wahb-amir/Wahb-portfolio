@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, FolderOpen, Terminal } from "lucide-react";
-
+import { usePathname } from "next/navigation";
 // Typewriter hook — types a string one character at a time
 function useTypewriter(text: string, speed = 38, startDelay = 900) {
   const [displayed, setDisplayed] = useState("");
@@ -32,15 +32,16 @@ const SPRING = { type: "spring", stiffness: 320, damping: 28 } as const;
 const EASE = { duration: 0.5, ease: [0.22, 1, 0.36, 1] } as const;
 
 export default function NotFound() {
+  const pathname = usePathname();
   const terminalLine = useTypewriter(
-    "wahb@portfolio:~$ find . -name 'this-page'",
+    `find . -name '${pathname.slice(1)}'`,
     42,
-    700,
+    600,
   );
   const resultLine = useTypewriter(
-    "find: 'this-page': No such file or directory",
+    `find: '${pathname.slice(1)}': No such file or directory`,
     36,
-    2600,
+    1700,
   );
 
   return (
@@ -162,7 +163,7 @@ export default function NotFound() {
               </span>
               <span className="text-slate-500 dark:text-slate-500">:~$ </span>
               <span className="text-slate-800 dark:text-slate-200">
-                {terminalLine.replace("wahb@portfolio:~$ ", "")}
+                {terminalLine.replace("", "")}
               </span>
               {terminalLine.length <
                 "wahb@portfolio:~$ find . -name 'this-page'".length && (
