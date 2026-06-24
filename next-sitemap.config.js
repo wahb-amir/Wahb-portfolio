@@ -48,7 +48,12 @@ module.exports = {
       changefreq: "weekly",
       lastmod: new Date().toISOString(),
     },
-
+    {
+      loc: `${config.siteUrl}/projects/clearpath`,
+      priority: 0.9,
+      changefreq: "weekly",
+      lastmod: new Date().toISOString(),
+    },
     // ── Live projects ─────────────────────────────────────────────────────────
 
     // EcoLens — 3rd Place Hack for Humanity 2026
@@ -58,17 +63,17 @@ module.exports = {
       changefreq: "weekly",
       lastmod: new Date().toISOString(),
     },
+    // EconoQuest - Technical award hackonomics 2026
     {
       loc: `https://econoquest.wahb.space`,
       priority: 1.0,
       changefreq: "weekly",
       lastmod: new Date().toISOString(),
     },
-
-    // Client & Developer Collaboration Platform
+    // Clearpath - USAII 2026
     {
-      loc: `https://dashboard.wahb.space`,
-      priority: 0.9,
+      loc: `https://clearpath.wahb.space`,
+      priority: 1.0,
       changefreq: "weekly",
       lastmod: new Date().toISOString(),
     },
