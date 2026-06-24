@@ -4,12 +4,12 @@
     "title": "ClearPath — AI Document Intelligence Platform",
     "role": "Full-Stack Engineer & AI Pipeline Architect",
     "badge": {
-      "label": "Document Intelligence",
-      "sub": "Real-time AI Pipeline"
+      "label": "USAII 2026",
+      "sub": "Document Intelligence"
     },
     "images": [
+      "/Project/ClearPath/landing.png",
       "/Project/ClearPath/dashboard.png",
-      "/Project/ClearPath/verification-panel.png",
       "/Project/ClearPath/results.png"
     ],
     "tech": [
@@ -25,9 +25,9 @@
       "SSE"
     ],
     "short": "An AI-powered document intelligence platform that processes complex official documents through a 5-stage LLM pipeline, providing plain-English summaries, tracked deadlines, and extracted action items via real-time SSE.",
-    "liveLink": "https://clearpath.example.com",
+    "liveLink": "https://clearpath.wahb.space",
     "githubLink": {
-      "monorepo": "https://github.com/your-username/clearpath"
+      "monorepo": "https://github.com/wahb-amir/clearpath"
     },
     "problem": "Immigrants, refugees, and underserved communities struggle to understand complex official documents (notices, legal letters, benefit communications), risking missed deadlines and critical actions. Existing tools either hallucinate details or fail to provide legally grounded, actionable steps.",
     "process": [
