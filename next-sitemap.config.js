@@ -2,59 +2,17 @@
 module.exports = {
   siteUrl: "https://wahb.space",
   generateRobotsTxt: true,
-  exclude: [],
+
+  robotsTxtOptions: {
+    additionalSitemaps: [
+      "https://clearpath.wahb.space/sitemap.xml",
+      "https://eco.wahb.space/sitemap.xml",
+      "https://econoquest.wahb.space/sitemap.xml",
+      "https://boltform.wahb.space/sitemap.xml",
+    ],
+  },
+
   additionalPaths: async (config) => [
-    // ── Portfolio pages ───────────────────────────────────────────────────────
-
-    // Homepage — max priority
-    {
-      loc: `${config.siteUrl}/`,
-      priority: 1.0,
-      changefreq: "daily",
-      lastmod: new Date().toISOString(),
-    },
-
-    // All projects page
-    {
-      loc: `${config.siteUrl}/projects`,
-      priority: 0.9,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-    // ── Live projects ─────────────────────────────────────────────────────────
-
-    // EcoLens — 3rd Place Hack for Humanity 2026
-    {
-      loc: `https://eco.wahb.space`,
-      priority: 1.0,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-    // EconoQuest - Technical award hackonomics 2026
-    {
-      loc: `https://econoquest.wahb.space`,
-      priority: 1.0,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-    // Clearpath - USAII 2026
-    {
-      loc: `https://clearpath.wahb.space`,
-      priority: 1.0,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-
-    // Modern Online Store
-    {
-      loc: `https://boltform.wahb.space`,
-      priority: 0.9,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-
-    // ── LLM / AI metadata ─────────────────────────────────────────────────────
-
     {
       loc: `${config.siteUrl}/llms.txt`,
       priority: 0.7,
