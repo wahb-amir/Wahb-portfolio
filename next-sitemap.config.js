@@ -21,39 +21,6 @@ module.exports = {
       changefreq: "weekly",
       lastmod: new Date().toISOString(),
     },
-
-    // ── Individual project pages ──────────────────────────────────────────────
-
-    {
-      loc: `${config.siteUrl}/projects/ecolens`,
-      priority: 1.0,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-    {
-      loc: `${config.siteUrl}/projects/econoquest`,
-      priority: 1.0,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-    {
-      loc: `${config.siteUrl}/projects/client-dev-platform`,
-      priority: 0.9,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-    {
-      loc: `${config.siteUrl}/projects/ecom-1`,
-      priority: 0.9,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
-    {
-      loc: `${config.siteUrl}/projects/clearpath`,
-      priority: 0.9,
-      changefreq: "weekly",
-      lastmod: new Date().toISOString(),
-    },
     // ── Live projects ─────────────────────────────────────────────────────────
 
     // EcoLens — 3rd Place Hack for Humanity 2026
