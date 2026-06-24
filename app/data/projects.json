@@ -1,10 +1,133 @@
 [
   {
+    "id": "clearpath",
+    "title": "ClearPath — AI Document Intelligence Platform",
+    "role": "Full-Stack Engineer & AI Pipeline Architect",
+    "badge": {
+      "label": "Document Intelligence",
+      "sub": "Real-time AI Pipeline"
+    },
+    "images": [
+      "/Project/ClearPath/dashboard.png",
+      "/Project/ClearPath/verification-panel.png",
+      "/Project/ClearPath/results.png"
+    ],
+    "tech": [
+      "Next.js",
+      "Express",
+      "TypeScript",
+      "PostgreSQL",
+      "Supabase",
+      "BullMQ",
+      "Redis",
+      "Groq (Llama 3.3 70B)",
+      "Tavily API",
+      "SSE"
+    ],
+    "short": "An AI-powered document intelligence platform that processes complex official documents through a 5-stage LLM pipeline, providing plain-English summaries, tracked deadlines, and extracted action items via real-time SSE.",
+    "liveLink": "https://clearpath.example.com",
+    "githubLink": {
+      "monorepo": "https://github.com/your-username/clearpath"
+    },
+    "problem": "Immigrants, refugees, and underserved communities struggle to understand complex official documents (notices, legal letters, benefit communications), risking missed deadlines and critical actions. Existing tools either hallucinate details or fail to provide legally grounded, actionable steps.",
+    "process": [
+      "Designed a robust monorepo architecture with a Next.js frontend and an Express/TypeScript backend managing three concurrent processes (API, Dispatcher, Workers)",
+      "Engineered a resilient outbox pattern for reliable BullMQ job dispatching via PostgreSQL LISTEN/NOTIFY and polling fallbacks",
+      "Built a two-phase document analysis pipeline featuring a human-in-the-loop 'Extraction Verification Gate' to ensure OCR/text accuracy before AI processing",
+      "Implemented a 5-stage LLM pipeline (Understanding, Extraction, Grounding, Synthesis, Safety Review) utilizing Groq and Llama 3.3 70B",
+      "Integrated the Tavily Search API to cross-reference extracted facts against official .gov/.edu sources, eliminating LLM hallucinations",
+      "Developed a real-time Server-Sent Events (SSE) streaming architecture with Redis Pub/Sub and Postgres replay for lossless client reconnections",
+      "Secured the platform with custom JWT httpOnly cookie auth, prompt injection mitigations, and strict rule-based guardrails"
+    ],
+    "outcome": "Delivered a production-grade, fault-tolerant document intelligence platform. The system reliably transforms high-stakes legal and official documents into accessible, verified, and actionable insights while keeping the user informed in real-time.",
+    "stats": {
+      "architecture": "3-process backend (API, Outbox Dispatcher, BullMQ Workers)",
+      "pipeline": "5-stage LLM processing + Human-in-the-loop gate",
+      "realtime": "Lossless SSE streaming via Postgres + Redis Pub/Sub"
+    },
+    "category": "Platform",
+    "launch": {
+      "date": "June 2026"
+    },
+    "caseStudy": {
+      "tlDr": "Architected and built ClearPath, an AI document intelligence platform designed to decode complex official documents. Engineered a highly reliable 3-tier backend featuring a transactional outbox, BullMQ background processing, real-time SSE updates, and a 5-stage LLM pipeline grounded in official .gov/.edu sources to prevent hallucinations.",
+      "problem": "High-stakes documents like immigration notices or benefit letters are notoriously difficult to understand, especially for non-native speakers. A simple misunderstanding can lead to missed deadlines or legal peril. Standard LLM wrappers are too risky for this because they hallucinate facts and invent URLs. A reliable, grounded, and step-by-step pipeline was required.",
+      "constraints": "Zero tolerance for lost processing jobs if a server crashes, strict requirement for LLM accuracy/grounding, protection against malicious prompt injections inside user-uploaded PDFs, and the necessity to keep the client UI updated in real-time during a long-running multi-minute analysis process.",
+      "myRole": "Full-Stack Engineer & AI Pipeline Architect — designed and implemented the monorepo, database schema, custom JWT auth, BullMQ worker orchestration, SSE streaming layer, and the 5-stage AI pipeline.",
+      "responsibilities": [
+        "Designed the database schema utilizing Supabase PostgreSQL, including JSONB storage, event logs, and transactional outbox tables",
+        "Implemented a reliable Outbox Dispatcher using PostgreSQL LISTEN/NOTIFY alongside a polling fallback to guarantee BullMQ job delivery",
+        "Built the preprocessing worker that handles document extraction, noise removal, language detection, and pausing at the human verification gate",
+        "Constructed the 5-stage AI worker pipeline: Document Understanding, Candidate Extraction, Grounding & Verification (via Tavily), Synthesis, and Safety Review",
+        "Engineered the SSE (Server-Sent Events) infrastructure with Redis Pub/Sub for live updates and Postgres event replay to ensure clients never miss an event upon reconnecting",
+        "Developed the Next.js frontend with SWR caching, drag-and-drop file uploads, real-time timeline feeds, and interactive extraction verification panels"
+      ],
+      "approach": [
+        "Prioritize reliability: Use the outbox pattern so the database transaction and queue dispatch are fundamentally tied together, preventing lost jobs",
+        "Human-in-the-loop: Stop the pipeline after raw text extraction so the user can verify dates, contacts, and text before spending LLM tokens on analysis",
+        "Defensive LLM engineering: Every pipeline stage utilizes strict Zod schema validation with safe fallbacks, ensuring the pipeline gracefully degrades rather than crashing",
+        "Trust but verify: Force the LLM to verify extracted actions against real-time Tavily searches restricted to .gov and .edu domains"
+      ],
+      "technicalSolution": [
+        "Backend: Express 4, Node.js, TypeScript, raw pg connection pool, Custom JWT Auth (argon2 + httpOnly cookies)",
+        "Queue & Workers: BullMQ backed by Redis (ioredis) processing distinct queue jobs across isolated Node processes",
+        "AI & Processing: Groq API (llama-3.3-70b-versatile) for rapid inference, Tavily for grounding, custom fallback logic on schema validation failures",
+        "Real-time: @microsoft/fetch-event-source on the client communicating with custom SSE endpoints utilizing heartbeat intervals and Last-Event-ID restoration",
+        "Frontend: Next.js 14 App Router, Tailwind CSS, SWR for caching, Framer Motion for timeline animations"
+      ],
+      "architectureNotes": "ClearPath utilizes an event-driven, decoupled architecture. The API Server handles HTTP requests and SSE connections. State changes (like a new upload) are written to a PostgreSQL outbox. The Dispatcher process listens to these outbox inserts via Postgres NOTIFY and pushes them to Redis/BullMQ. Finally, Worker processes pull from BullMQ to execute heavy preprocessing and LLM tasks, publishing their progress back to Redis Pub/Sub (for active SSE clients) and Postgres (for historical log replay).",
+      "outcomes": {
+        "qualitative": "Achieved a highly resilient pipeline that survives process restarts and network drops without losing user documents or analysis states, successfully bridging the gap between raw, intimidating government notices and actionable, human-readable checklists."
+      },
+      "proofPoints": [
+        "Implemented deterministic transactional outbox pattern via Postgres LISTEN/NOTIFY.",
+        "Built a pipeline that survives LLM schema failures by utilizing graceful Zod fallbacks.",
+        "Eliminated dead-ends during reconnects by building a stateful SSE replay mechanism."
+      ],
+      "lessons": [
+        "LLMs will fail validation eventually. Building pipeline stages with safe fallbacks (e.g., returning 'needs_human_review' instead of crashing) is critical for production AI.",
+        "The Outbox pattern is essential when combining Postgres with Redis queues. Direct enqueuing from API routes leads to race conditions and lost jobs.",
+        "Real-time UX requires stateful backends. Relying strictly on live Pub/Sub means a 2-second client network blip loses pipeline events; storing events in Postgres and replaying via Last-Event-ID solves this."
+      ],
+      "callToAction": "Interested in seeing how to build resilient, fault-tolerant AI pipelines with human-in-the-loop verification? Review the architecture or reach out."
+    },
+    "systemDesign": {
+      "nodes": [
+        { "id": "frontend", "label": "Frontend (Next.js)", "type": "client" },
+        { "id": "api", "label": "API Server (Express)", "type": "server" },
+        { "id": "dispatcher", "label": "Outbox Dispatcher", "type": "service" },
+        { "id": "worker_pre", "label": "Preprocessing Worker", "type": "worker" },
+        { "id": "worker_ai", "label": "AI Analysis Worker", "type": "worker" },
+        { "id": "postgres", "label": "PostgreSQL (Supabase)", "type": "database" },
+        { "id": "redis", "label": "Redis (BullMQ + Pub/Sub)", "type": "cache" },
+        { "id": "llm", "label": "Groq API (Llama 3.3)", "type": "external" },
+        { "id": "tavily", "label": "Tavily Search API", "type": "external" }
+      ],
+      "edges": [
+        { "source": "frontend", "target": "api", "label": "Upload / SSE Stream" },
+        { "source": "api", "target": "postgres", "label": "Save State & Outbox" },
+        { "source": "postgres", "target": "dispatcher", "label": "LISTEN / NOTIFY" },
+        { "source": "dispatcher", "target": "redis", "label": "Enqueue Jobs" },
+        { "source": "redis", "target": "worker_pre", "label": "Consume Preprocessing" },
+        { "source": "redis", "target": "worker_ai", "label": "Consume AI Pipeline" },
+        { "source": "worker_pre", "target": "postgres", "label": "Awaiting Verification" },
+        { "source": "frontend", "target": "api", "label": "Confirm Extraction" },
+        { "source": "worker_ai", "target": "llm", "label": "5-Stage Inference" },
+        { "source": "worker_ai", "target": "tavily", "label": "Source Grounding" },
+        { "source": "worker_ai", "target": "postgres", "label": "Persist Results" },
+        { "source": "worker_pre", "target": "redis", "label": "Publish Events" },
+        { "source": "worker_ai", "target": "redis", "label": "Publish Events" },
+        { "source": "redis", "target": "api", "label": "Subscribe Events" },
+        { "source": "api", "target": "frontend", "label": "Push Real-time UI" }
+      ]
+    }
+  },
+  {
     "id": "econoquest",
     "title": "EconoQuest — AI Economics Simulator",
     "role": "Full-Stack Engineer, AI/RAG Architect & Simulation Designer",
     "badge": {
-      "label": "🏆 Hackonomics 2026 Submission",
+      "label": "🏆 Hackonomics 2026 - Technical Award",
       "sub": "Solo build · International hackathon"
     },
     "images": [
