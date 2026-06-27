@@ -23,16 +23,14 @@
 
 ## Project overview
 
-This repository powers **wahb.space** — a modern portfolio built on Next.js with serverless API routes and a small backend stack (Redis + MongoDB). The site is not just static: it uses caching, versioned updates, and internal routes to provide fast, consistent content to the client while allowing updates from a central database.
+This repository powers **wahb.space** — a modern portfolio built on Next.js. The site is optimized for speed and older device compatibility, utilizing static data generation and server-side rendering.
 
 Key features:
 
 - Server-rendered Next.js front-end (App Router)
-- Serverless API routes used as the backend layer
-- Redis caching layer for fast public reads
-- MongoDB as the source of truth for content
-- Versioned responses + client-side IndexedDB caching to avoid unnecessary data transfer
-- `/api/contact` route to handle contact form submissions
+- Statically generated project and about data for instant page loads
+- `/api/contact` route to handle contact form submissions, featuring rate-limiting, MongoDB persistence, and automated HTML email notifications via Nodemailer.
+- Optimized for older devices (iOS 14+ / Safari 14+) with automatic JavaScript transpilation and graceful CSS fallbacks.
 
 ---
 
@@ -40,33 +38,26 @@ Key features:
 
 - Frontend: Next.js (App Router)
 - Backend: Next.js API routes (serverless)
-- Database: MongoDB (e.g. Atlas)
-- Cache: Redis (e.g. Upstash, Redis Cloud)
-- Client offline caching: IndexedDB (frontend)
+- Database: MongoDB (e.g. Atlas) for storing contact messages and legacy data
+- Email: Nodemailer (SMTP integration for contact notifications)
 - Optional: SMTP/service for contact notifications (if configured)
 
 ---
 
 ## Architecture & data flow
 
-Below is a concise description of the update-check flow for `about` and `projects` content.
+The portfolio uses a **static-first approach** for its core content (Projects, About, Skills) to guarantee instant load times and zero network round-trips on page load. Data is imported at build time and bundled directly into the server modules.
+
+For interactive features like the Contact Form, the data flow is as follows:
 
 ```
 Client (browser)
-  └─ requests GET /api/updates/projects?version=<clientVersion>
-        ├─ Redis cache (public)
-        │    ├─ cache HIT → return { version, data } (200)
-        │    └─ cache MISS → call internal route (with secret) → fetch from MongoDB → populate Redis → return { version, data }
-        └─ If clientVersion === serverVersion → return 204 No Content (no body)
-
-Client stores received data in IndexedDB and updates its local version.
+  └─ submits POST /api/contact
+        ├─ Rate-limit check (in-memory)
+        ├─ Data sanitization & validation
+        ├─ Save message to MongoDB
+        └─ Dispatch HTML email via Nodemailer → Admin Inbox
 ```
-
-Notes:
-
-- The frontend should pass `?version=<localVersion>` when it has cached data. If version matches, the server returns no content (204) to save bandwidth.
-- Public routes read from Redis. If Redis doesn't have the key, the public route calls the internal route that has access to MongoDB (the internal route requires a secret token).
-- Internal routes are used for platform/meta support and for secure reads/writes that should not be public.
 
 ---
 
@@ -76,39 +67,24 @@ Notes:
 
 ### Public routes
 
-#### `GET /api/updates/projects[?version=xyz]`
-
-- Purpose: return project list and a `version` string (semver, timestamp, or hash).
-- Behavior (recommended / implemented flow):
-  - If the client sends `?version` and it **matches** the server version → `204 No Content` (no JSON body).
-  - If versions **differ** or `?version` is omitted → `200 OK` with JSON `{ version: "...", data: {...} }`.
-  - If Redis has cached data → return from Redis.
-  - If Redis misses → fetch from internal route (with secret token), write to Redis, return result.
-
-**Example (client asks for updates)**
-
-```bash
-curl "ORIGIN/api/updates/projects?version=1"
-# -> 204 No Content (if up to date) or
-# -> 200 { "version": "1", "data": [ ...projects... ] }
-```
-
-#### `GET /api/updates/about?version=xyz`
-
-- Same behavior as `/projects` but returns the "about" content.
-
 #### `POST /api/contact`
 
-- Purpose: handle contact form submissions.
-- Expected body: `{ name, email, message, [other fields] }` (JSON)
-- Action: validate payload, optionally persist to DB or push to an email/notification service, return `200`/`201` or validation errors.
+- Purpose: handle contact form submissions securely.
+- Expected body: `{ name, email, reason, message }` (JSON)
+- Flow:
+  1. **CORS & Rate Limiting**: Validates the origin and checks the requester's IP against an in-memory rate limiter to prevent spam.
+  2. **Sanitization & Validation**: Trims and sanitizes inputs, validating email formats and required fields.
+  3. **Database Persistence**: Stores the validated message into MongoDB using the `Message` model.
+  4. **Nodemailer Dispatch**: Generates a high-quality HTML email template containing the contact details and sends an email notification to the site owner via a configured Gmail account.
+- Returns: `200 OK` on success or validation errors / rate-limit responses.
 
 **Example**
 
 ```bash
 curl -X POST "ORIGIN/api/contact" \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Wahb","email":"wahb@example.com","interest":"backend"}'
+  -H 'Origin: https://wahb.space' \
+  -d '{"name":"Wahb","email":"wahb@example.com","reason":"project_inquiry","message":"Hello!"}'
 ```
 
 ### Internal / Protected routes
@@ -336,14 +312,12 @@ Below are the commonly required variables. Adapt names to what your code expects
 
 ```
 MONGODB_URI=your_mongodb_connection_string
-REDIS_URL=redis://:<password>@<host>:<port>
+GMAIL_USER=your_email@gmail.com
+GMAIL_APP_PASSWORD=your_gmail_app_password
 INTERNAL_API_SECRET=
 META_PLATFORM_ORIGIN=option for meta platform internal route
 NEXT_PUBLIC_SITE_URL=
-NEXT_PUBLIC_PROJECTS_API=localhost:3000/api/updates/projects
-NEXT_PUBLIC_ORIGIN=http://localhost:3000
-NEXT_PUBLIC_ABOUT_API=localhost:3000/api/updates/about
-NEXT_PUBLIC_PRODUCTION=0 for dev,1 for prod
+NEXT_PUBLIC_PRODUCTION=0 for dev, 1 for prod
 NEXT_PUBLIC_CONTACT_PLATFORM=Client-dev platform link
 WEBHOOK_SECRET=
 ```
@@ -364,14 +338,11 @@ WEBHOOK_SECRET=
 
 ## Testing & debugging tips
 
-- Test the update flow locally by:
-  1. Start MongoDB and Redis (or point env to hosted services).
-  2. Seed MongoDB with `about` and `projects` documents that include a `version` field.
-  3. Call the public `GET /api/updates/projects` endpoint. Confirm Redis is populated.
-  4. Call with `?version=<same-version>` and confirm `204`.
-
-- Inspect Redis keys via `redis-cli` to verify TTLs and stored payloads.
-- Use logs in the serverless function to show when internal route is called (cache miss), and when Redis is hit.
+- Test the contact flow locally by:
+  1. Start MongoDB (or point env to hosted services).
+  2. Add `GMAIL_USER` and `GMAIL_APP_PASSWORD` to your `.env.local`.
+  3. Submit a contact form from the frontend and verify that the message is saved in the database and an email is delivered to your inbox.
+- Check rate-limiting behavior by submitting multiple contact requests rapidly (the limit is 5 per hour per IP).
 
 ---
 
