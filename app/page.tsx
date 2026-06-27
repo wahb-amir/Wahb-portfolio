@@ -1,10 +1,7 @@
 import React, { Suspense } from "react";
 import dynamic from "next/dynamic";
 
-const Hero = dynamic(() => import("./Component/hero/Hero"), {
-  ssr: true,
-  loading: () => null,
-});
+import Hero from "./Component/hero/Hero";
 
 // ─── Skeleton fallbacks ────────────────────────────────────────────────────────
 function SectionSkeleton({ height = 400 }: { height?: number }) {

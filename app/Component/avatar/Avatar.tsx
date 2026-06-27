@@ -1,21 +1,9 @@
-"use client";
 import React from "react";
 import Image from "next/image";
 
 export default function Avatar() {
   return (
     <div className="relative group isolate">
-      <style>{`
-        @keyframes trophy-pop {
-          from { opacity: 0; transform: scale(0.5) rotate(-15deg); }
-          to   { opacity: 1; transform: scale(1)   rotate(0deg);   }
-        }
-        @keyframes trophy-pop-2 {
-          from { opacity: 0; transform: scale(0.5) rotate(15deg); }
-          to   { opacity: 1; transform: scale(1)   rotate(0deg);  }
-        }
-      `}</style>
-
       {/* Glow ring */}
       <div
         className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"
@@ -23,18 +11,21 @@ export default function Avatar() {
         aria-hidden="true"
       />
 
-      {/* Avatar image */}
+      {/* Avatar image — PNG so Next.js can serve AVIF/WebP; decoding=sync prevents render delay */}
       <figure
         className="relative mx-auto rounded-full p-1 bg-white dark:bg-slate-900 ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden"
         style={{ zIndex: 1 }}
       >
         <Image
-          src="/Avatar.svg"
+          src="/Avatar.png"
           alt="Wahb"
           width={300}
           height={300}
           priority
           fetchPriority="high"
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore — decoding="sync" is valid HTML; forces synchronous decode so LCP paints immediately
+          decoding="sync"
           className="rounded-full object-cover w-full h-full"
         />
       </figure>

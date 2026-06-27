@@ -1,9 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;700&display=swap");
 }
 .custom-scrollbar::-webkit-scrollbar {
   height: 4px;
