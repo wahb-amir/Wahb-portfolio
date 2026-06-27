@@ -96,26 +96,78 @@
         { "id": "frontend", "label": "Frontend (Next.js)", "type": "client" },
         { "id": "api", "label": "API Server (Express)", "type": "server" },
         { "id": "dispatcher", "label": "Outbox Dispatcher", "type": "service" },
-        { "id": "worker_pre", "label": "Preprocessing Worker", "type": "worker" },
+        {
+          "id": "worker_pre",
+          "label": "Preprocessing Worker",
+          "type": "worker"
+        },
         { "id": "worker_ai", "label": "AI Analysis Worker", "type": "worker" },
-        { "id": "postgres", "label": "PostgreSQL (Supabase)", "type": "database" },
+        {
+          "id": "postgres",
+          "label": "PostgreSQL (Supabase)",
+          "type": "database"
+        },
         { "id": "redis", "label": "Redis (BullMQ + Pub/Sub)", "type": "cache" },
         { "id": "llm", "label": "Groq API (Llama 3.3)", "type": "external" },
         { "id": "tavily", "label": "Tavily Search API", "type": "external" }
       ],
       "edges": [
-        { "source": "frontend", "target": "api", "label": "Upload / SSE Stream" },
-        { "source": "api", "target": "postgres", "label": "Save State & Outbox" },
-        { "source": "postgres", "target": "dispatcher", "label": "LISTEN / NOTIFY" },
+        {
+          "source": "frontend",
+          "target": "api",
+          "label": "Upload / SSE Stream"
+        },
+        {
+          "source": "api",
+          "target": "postgres",
+          "label": "Save State & Outbox"
+        },
+        {
+          "source": "postgres",
+          "target": "dispatcher",
+          "label": "LISTEN / NOTIFY"
+        },
         { "source": "dispatcher", "target": "redis", "label": "Enqueue Jobs" },
-        { "source": "redis", "target": "worker_pre", "label": "Consume Preprocessing" },
-        { "source": "redis", "target": "worker_ai", "label": "Consume AI Pipeline" },
-        { "source": "worker_pre", "target": "postgres", "label": "Awaiting Verification" },
-        { "source": "frontend", "target": "api", "label": "Confirm Extraction" },
-        { "source": "worker_ai", "target": "llm", "label": "5-Stage Inference" },
-        { "source": "worker_ai", "target": "tavily", "label": "Source Grounding" },
-        { "source": "worker_ai", "target": "postgres", "label": "Persist Results" },
-        { "source": "worker_pre", "target": "redis", "label": "Publish Events" },
+        {
+          "source": "redis",
+          "target": "worker_pre",
+          "label": "Consume Preprocessing"
+        },
+        {
+          "source": "redis",
+          "target": "worker_ai",
+          "label": "Consume AI Pipeline"
+        },
+        {
+          "source": "worker_pre",
+          "target": "postgres",
+          "label": "Awaiting Verification"
+        },
+        {
+          "source": "frontend",
+          "target": "api",
+          "label": "Confirm Extraction"
+        },
+        {
+          "source": "worker_ai",
+          "target": "llm",
+          "label": "5-Stage Inference"
+        },
+        {
+          "source": "worker_ai",
+          "target": "tavily",
+          "label": "Source Grounding"
+        },
+        {
+          "source": "worker_ai",
+          "target": "postgres",
+          "label": "Persist Results"
+        },
+        {
+          "source": "worker_pre",
+          "target": "redis",
+          "label": "Publish Events"
+        },
         { "source": "worker_ai", "target": "redis", "label": "Publish Events" },
         { "source": "redis", "target": "api", "label": "Subscribe Events" },
         { "source": "api", "target": "frontend", "label": "Push Real-time UI" }

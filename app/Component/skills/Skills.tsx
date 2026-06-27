@@ -21,7 +21,6 @@ import {
   SiNumpy,
   SiFastify,
   SiPytorch,
-  SiCplusplus,
   SiRust,
   SiOpencv,
   SiTypescript,
