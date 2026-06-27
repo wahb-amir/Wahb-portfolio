@@ -13,6 +13,7 @@
 
 ## Projects
 
+- [ClearPath — AI Document Intelligence Platform](https://clearpath.wahb.space): USAII 2026 submission. An AI-powered document intelligence platform that processes complex official documents through a 5-stage LLM pipeline, providing plain-English summaries, tracked deadlines, and extracted action items via real-time SSE. [Case Study](https://wahb.space/projects/clearpath) · [Code](https://github.com/wahb-amir/clearpath)
 - [EconoQuest — AI Economics Simulator](https://econoquest.wahb.space): Technical Award winner at Hackonomics 2026 (1481 participants). Browser-based economics simulation with full RAG advisory pipeline (99 chunks, 5 layers), Supabase pgvector, Groq Llama 3.3 70B, Fastify gateway, WebSocket streaming, pure-Python conflict detector, 7-archetype system, zero cloud spend. [Case Study](https://wahb.space/projects/econoquest) · [Frontend Code](https://github.com/wahb-amir/EconoQuest) · [Backend Code](https://github.com/wahb-amir/EconoQuestBackend)
 - [EcoLens — AI Waste Classifier](https://eco.wahb.space): 3rd place at Hack for Humanity 2026 (775 participants). AI-powered waste classifier, point a camera at any waste item to receive classification, CO₂/water/energy impact, and gamified points. Built solo in one month on zero paid API budget. [Case Study](https://wahb.space/projects/ecolens) · [Code](https://github.com/wahb-amir/ecolens)
 - [Client & Developer Collaboration Platform](https://dashboard.wahb.space): Unified workspace where clients request quotes, track progress, message developers, and see real-time GitHub-synced updates. GitHub Actions + webhooks automatically map commits and PRs to project tasks. [Case Study](https://wahb.space/projects/client-dev-platform) · [Code](https://github.com/wahb-amir/dashboard)
@@ -25,6 +26,7 @@
 - [GitHub — wahb-amir](https://github.com/wahb-amir)
 - [LinkedIn](https://www.linkedin.com/in/wahb-amir)
 - [Devpost](https://devpost.com/wahbamir2010)
+- [ClearPath Case Study](https://wahb.space/projects/clearpath)
 - [EconoQuest Case Study](https://wahb.space/projects/econoquest)
 - [EcoLens Case Study](https://wahb.space/projects/ecolens)
 - [Machine-readable identity (ai.json)](https://wahb.space/ai.json)

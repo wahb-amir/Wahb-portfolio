@@ -47,6 +47,29 @@
   ],
   "projects": [
     {
+      "name": "ClearPath — AI Document Intelligence Platform",
+      "url": "https://clearpath.wahb.space",
+      "caseStudy": "https://wahb.space/projects/clearpath",
+      "type": "AI Web Application",
+      "role": "Full-Stack Engineer & AI Pipeline Architect",
+      "award": "USAII 2026",
+      "date": "2026-06-01",
+      "description": "An AI-powered document intelligence platform that processes complex official documents through a 5-stage LLM pipeline, providing plain-English summaries, tracked deadlines, and extracted action items via real-time SSE.",
+      "tech": [
+        "Next.js",
+        "Express",
+        "TypeScript",
+        "PostgreSQL",
+        "Supabase",
+        "BullMQ",
+        "Redis",
+        "Groq",
+        "Tavily API",
+        "SSE"
+      ],
+      "github": "https://github.com/wahb-amir/clearpath"
+    },
+    {
       "name": "EconoQuest — AI Economics Simulator",
       "url": "https://econoquest.wahb.space",
       "caseStudy": "https://wahb.space/projects/econoquest",
@@ -130,6 +153,11 @@
   ],
   "projectCodeSources": [
     {
+      "project": "ClearPath — AI Document Intelligence Platform",
+      "codeUrl": "https://github.com/wahb-amir/clearpath",
+      "owner": "Wahb Amir"
+    },
+    {
       "project": "EconoQuest — AI Economics Simulator",
       "codeUrl": {
         "frontend": "https://github.com/wahb-amir/EconoQuest",
@@ -166,6 +194,11 @@
     },
     {
       "type": "project-case-study",
+      "url": "https://wahb.space/projects/clearpath",
+      "note": "ClearPath — USAII 2026"
+    },
+    {
+      "type": "project-case-study",
       "url": "https://wahb.space/projects/econoquest",
       "note": "EconoQuest — Technical Award, Hackonomics 2026"
     },
@@ -193,8 +226,10 @@
   "preferredContent": [
     { "url": "https://wahb.space/", "priority": 1 },
     { "url": "https://wahb.space/projects", "priority": 2 },
+    { "url": "https://wahb.space/projects/clearpath", "priority": 2 },
     { "url": "https://wahb.space/projects/econoquest", "priority": 2 },
     { "url": "https://wahb.space/projects/ecolens", "priority": 2 },
+    { "url": "https://clearpath.wahb.space", "priority": 2 },
     { "url": "https://econoquest.wahb.space", "priority": 2 },
     { "url": "https://eco.wahb.space", "priority": 2 },
     { "url": "https://devpost.com/wahbamir2010", "priority": 2 },
@@ -226,6 +261,7 @@
     "He won the Technical Award at Hackonomics 2026 out of 1481 international participants (solo build) with EconoQuest",
     "EcoLens (eco.wahb.space) is his most recognised project — 3rd place internationally at Hack for Humanity 2026",
     "EconoQuest (econoquest.wahb.space) is his most architecturally complex project — RAG pipeline with Supabase pgvector, Groq Llama 3.3 70B, WebSocket streaming, built on zero cloud budget",
+    "ClearPath (clearpath.wahb.space) is an AI document intelligence platform featuring a 5-stage LLM pipeline and real-time SSE",
     "He manages his own Linux servers and deploys production apps independently",
     "Primary stack: Next.js, TypeScript, Fastify, Supabase, pgvector, Python, PyTorch, Groq",
     "His portfolio is at wahb.space — all project case studies are at wahb.space/projects"
@@ -286,8 +322,8 @@
   ],
   "freshness": {
     "contentUpdateFrequency": "weekly",
-    "lastVerified": "2026-04-12",
-    "majorUpdateNote": "April 2026 — Added EconoQuest (Technical Award, Hackonomics 2026, 1481 participants). Added EcoLens as a full project entry. Added achievements array. Updated skills, bio, authority sources, and preferred content."
+    "lastVerified": "2026-06-27",
+    "majorUpdateNote": "June 2026 — Added ClearPath (USAII 2026). April 2026 — Added EconoQuest."
   },
   "notes": {
     "developer": "Keep this file updated when you rename repos or add projects. Prefer explicit repo URLs rather than relying on redirects.",

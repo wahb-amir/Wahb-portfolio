@@ -3,14 +3,17 @@ import { Metadata } from "next";
 export const siteMetadata: Metadata = {
   title: "Wahb Amir | Full-Stack Engineer & AI Developer",
   description:
-    "Wahb Amir (Wahb) is a full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems — Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026.",
+    "Wahb Amir (Wahb) is a full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems — Creator of ClearPath (USAII 2026) · Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026.",
   metadataBase: new URL("https://wahb.space"),
   keywords: [
     "Wahb Amir",
     "Wahb",
     "full-stack engineer",
+    "software engineer",
     "AI developer",
+    "AI engineer",
     "RAG pipeline",
+    "Document Intelligence",
     "LangChain",
     "Next.js",
     "React",
@@ -21,12 +24,15 @@ export const siteMetadata: Metadata = {
     "Supabase",
     "pgvector",
     "Groq",
+    "Llama 3",
     "WebSocket",
     "Tailwind CSS",
     "web performance",
     "machine learning",
+    "ClearPath AI",
     "EconoQuest",
     "EcoLens",
+    "USAII 2026",
     "Hackonomics 2026",
     "Hack for Humanity 2026",
     "portfolio",
@@ -56,7 +62,7 @@ export const siteMetadata: Metadata = {
   openGraph: {
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
-      "Portfolio of Wahb Amir — Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026. Building high-performance web apps, RAG pipelines, and scalable systems from idea to production.",
+      "Portfolio of Wahb Amir — Creator of ClearPath (USAII 2026) · Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026. Building high-performance web apps, RAG pipelines, and scalable systems from idea to production.",
     url: "https://wahb.space",
     siteName: "Wahb Amir Portfolio",
     images: [
@@ -76,7 +82,7 @@ export const siteMetadata: Metadata = {
     creator: "@wahbdev",
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
-      "Technical Award — Hackonomics 2026 · 3rd Place — Hack for Humanity 2026. Building high-performance web apps and practical AI tools.",
+      "USAII 2026 · Technical Award — Hackonomics 2026 · 3rd Place — Hack for Humanity 2026. Building high-performance web apps and practical AI tools.",
     images: ["https://wahb.space/og-image.png"],
   },
   icons: {

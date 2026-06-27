@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:css": "tailwindcss -i ./app/globals.css -o ./app/tailwind-out.css --watch",
-    "postbuild": "next-sitemap"
+    "build:css": "tailwindcss -i ./app/globals.css -o ./app/tailwind-out.css --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
