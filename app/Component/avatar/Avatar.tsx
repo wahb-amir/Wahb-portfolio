@@ -34,6 +34,7 @@ export default function Avatar() {
           width={300}
           height={300}
           priority
+          fetchPriority="high"
           className="rounded-full object-cover w-full h-full"
         />
       </figure>
@@ -72,10 +73,10 @@ export default function Avatar() {
           px-1.5 py-0.5
           rounded-full
           text-[10px] font-black leading-none
-          border border-blue-300/80 dark:border-blue-500/60
-          bg-blue-400 dark:bg-blue-500
-          text-blue-900
-          shadow-md shadow-blue-400/50
+          border border-blue-600/80 dark:border-blue-700/60
+          bg-blue-600 dark:bg-blue-700
+          text-white
+          shadow-md shadow-blue-600/50
           select-none pointer-events-none
         "
         style={{

@@ -231,7 +231,7 @@ function SkillChip({
           boxShadow: `inset 0 1px 0 ${iconColor}28`,
         }}
       >
-        <Icon style={{ color: iconColor, fontSize: "1.45rem" }} aria-hidden />
+        <Icon style={{ color: iconColor, fontSize: "1.45rem" }} aria-hidden="true" />
       </div>
 
       <span
@@ -292,12 +292,12 @@ function GroupCard({
               boxShadow: `0 0 8px ${group.accentColor}90, 0 0 16px ${group.accentColor}40`,
             }}
           />
-          <h4
+          <h3
             className={`${jakarta.className} text-[0.95rem] font-bold tracking-tight`}
             style={{ color: isDark ? "#f1f5f9" : "#0f172a" }}
           >
             {group.title}
-          </h4>
+          </h3>
         </div>
 
         <span

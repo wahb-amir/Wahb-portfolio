@@ -31,13 +31,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        {/* Preconnect for Google Fonts (already loaded via next/font above) */}
+        {/* Preload LCP image — makes it discoverable in initial HTML scan */}
         <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
+          rel="preload"
+          as="image"
+          href="/Avatar.svg"
+          // @ts-ignore fetchpriority is a valid HTML attribute
+          fetchpriority="high"
         />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div className="min-h-screen bg-white dark:bg-[#0b1220] transition-colors duration-500">

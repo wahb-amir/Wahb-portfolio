@@ -390,6 +390,8 @@ export default function Contact() {
                             tabIndex={-1}
                             value={form.reason}
                             required
+                            aria-label="Reason for contact"
+                            aria-hidden="true"
                             className="absolute opacity-0 w-0 h-0 pointer-events-none"
                             onChange={() => {}}
                             onInvalid={(e) =>

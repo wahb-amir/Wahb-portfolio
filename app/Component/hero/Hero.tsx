@@ -115,7 +115,7 @@ export default function Hero() {
       </a>
 
       {/* ── Root section ────────────────────────────────────────────── */}
-      <main
+      <section
         id="hero-section"
         className="
           relative flex flex-col items-center justify-start
@@ -126,7 +126,7 @@ export default function Hero() {
           bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
         "
         aria-label="Hero Section"
-        role="banner"
+        aria-labelledby="hero-heading"
       >
         {/* Ambient gradient — static, no JS */}
         <div
@@ -270,7 +270,7 @@ export default function Hero() {
 
         {/* Scroll hint */}
         <HeroScrollHint />
-      </main>
+      </section>
     </>
   );
 }

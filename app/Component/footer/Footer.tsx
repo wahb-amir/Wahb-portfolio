@@ -224,17 +224,23 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-2 text-sm font-medium w-fit text-slate-600 dark:text-slate-400 hover:text-sky-700 dark:hover:text-sky-400 transition-colors duration-150"
+                  aria-label={label}
                 >
                   {isFA ? (
                     <FontAwesomeIcon
                       icon={Icon}
                       className="w-3.5 h-3.5 flex-shrink-0 text-sky-700 dark:text-sky-400"
+                      aria-hidden={true}
                     />
                   ) : (
-                    <Icon className="w-3.5 h-3.5 flex-shrink-0 text-sky-700 dark:text-sky-400" />
+                    <Icon
+                      className="w-3.5 h-3.5 flex-shrink-0 text-sky-700 dark:text-sky-400"
+                      aria-label={label}
+                      role="img"
+                    />
                   )}
-                  {label}
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 text-sky-700 dark:text-sky-400" />
+                  <span aria-hidden="true">{label}</span>
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-200 -translate-x-1 group-hover:translate-x-0 text-sky-700 dark:text-sky-400" aria-hidden="true" />
                 </a>
               ))}
             </div>
@@ -253,7 +259,7 @@ export default function Footer() {
                     transition={{ duration: 0.35, delay: 0.3 + i * 0.07 }}
                     className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg border bg-white/55 dark:bg-sky-400/10 border-slate-200/70 dark:border-sky-400/20 text-slate-600 dark:text-slate-400"
                   >
-                    <SIcon className="w-3 h-3 text-sky-700 dark:text-sky-400" />
+                    <SIcon className="w-3 h-3 text-sky-700 dark:text-sky-400" aria-hidden={true} />
                     {label}
                   </motion.span>
                 ))}
