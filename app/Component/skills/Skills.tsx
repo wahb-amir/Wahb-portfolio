@@ -22,6 +22,7 @@ import {
   SiFastify,
   SiPytorch,
   SiCplusplus,
+  SiRust,
   SiOpencv,
   SiTypescript,
   SiPostgresql,
@@ -86,7 +87,7 @@ const SKILLS: Record<string, SkillDef> = {
     icon: SiPytorch,
     color: "#EE4C2C",
   },
-  cpp: { id: "cpp", name: "C++", icon: SiCplusplus, color: "#00599C" },
+  rust: { id: "rust", name: "Rust", icon: SiRust, color: "#B7410E" },
   opencv: { id: "opencv", name: "OpenCV", icon: SiOpencv, color: "#4C8BF5" },
   mongodb: {
     id: "mongodb",
@@ -131,7 +132,7 @@ const GROUPS: GroupDef[] = [
       "numpy",
       "fastify",
       "pytorch",
-      "cpp",
+      "rust",
     ],
   },
   {
