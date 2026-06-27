@@ -113,8 +113,7 @@ export default function MobileMenu({
               ease: "easeOut",
               backgroundColor: { duration: 0.4, ease: "easeInOut" },
             }}
-            style={{ height: "100dvh" }}
-            className="fixed inset-x-0 top-0 z-40 md:hidden backdrop-blur-2xl pt-28 pb-10 px-6 overflow-y-auto"
+            className="fixed inset-x-0 top-0 z-40 md:hidden backdrop-blur-2xl pt-28 pb-10 px-6 overflow-y-auto h-[100vh] supports-[height:100dvh]:h-[100dvh]"
           >
             <div className="flex flex-col gap-3 max-w-sm mx-auto">
               {/* Nav items */}

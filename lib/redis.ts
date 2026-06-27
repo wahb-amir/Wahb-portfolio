@@ -1,23 +1,5 @@
-import Redis from "ioredis";
-
-// Extend the Node.js global type to include 'redis'
-declare global {
-  var redis: Redis | undefined;
-}
-
-// Use the global redis instance if it exists
-let redisInstance: Redis;
-
-if (!global.redis) {
-  const redisUrl = process.env.REDIS_URL!;
-  global.redis = new Redis(redisUrl);
-  global.redis.on("connect", () => console.log("Redis connected"));
-  global.redis.on("error", (err) =>
-    console.error(`Redis error: ${redisUrl}`, err),
-  );
-}
-
-redisInstance = global.redis;
+// Redis is currently disabled, as we have shifted back to static content.
+let redisInstance: any = null;
 
 export async function clearProjectCache(redisClient = redisInstance) {
   try {
