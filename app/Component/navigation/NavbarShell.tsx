@@ -90,7 +90,7 @@ export default function NavbarShell({
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="Home"
                 fill
                 sizes="(max-width: 768px) 100vw, 200px"

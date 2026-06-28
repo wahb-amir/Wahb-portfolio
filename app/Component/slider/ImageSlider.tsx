@@ -35,13 +35,13 @@ export default function ProjectImage({
   if (!mounted) {
     if (serverPreview) {
       return (
-        <div className="w-full h-full bg-gray-50 dark:bg-slate-900">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        <div className="w-full h-full bg-gray-50 dark:bg-slate-900 relative">
+          <Image
             src={serverPreview}
             alt={`${title} preview`}
-            className="w-full h-full object-contain"
-            loading="lazy"
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 100vw, 50vw"
           />
         </div>
       );

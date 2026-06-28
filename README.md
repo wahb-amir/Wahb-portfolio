@@ -222,38 +222,38 @@ Paths under `app/api/updates/internal/*` and `app/api/updates/git/*` are interna
 ├── postcss.config.js
 ├── public
 │   ├── ai.json
-│   ├── apple-touch-icon.png
-│   ├── Avatar.png
+│   ├── apple-touch-icon.webp
+│   ├── Avatar.webp
 │   ├── Avatar.svg
-│   ├── favicon-96x96.png
+│   ├── favicon-96x96.webp
 │   ├── favicon.ico
 │   ├── favicon.svg
 │   ├── favicon.zip
 │   ├── llms.txt
-│   ├── logo.png
-│   ├── og-image.png
+│   ├── logo.webp
+│   ├── og-image.webp
 │   ├── Project
 │   │   ├── EcoLens
-│   │   │   ├── achivements.png
-│   │   │   ├── dashboard.png
+│   │   │   ├── achivements.webp
+│   │   │   ├── dashboard.webp
 │   │   │   └── leaderboard.jpg
 │   │   ├── Ecom
-│   │   │   ├── light-men.png
-│   │   │   ├── light-product.png
-│   │   │   ├── light-shop.png
-│   │   │   ├── light-women.png
-│   │   │   └── stripe.png
+│   │   │   ├── light-men.webp
+│   │   │   ├── light-product.webp
+│   │   │   ├── light-shop.webp
+│   │   │   ├── light-women.webp
+│   │   │   └── stripe.webp
 │   │   ├── EconoQuest
 │   │   │   ├── hall-of-fame.jpg
-│   │   │   ├── landing.png
-│   │   │   ├── nation-selection.png
+│   │   │   ├── landing.webp
+│   │   │   ├── nation-selection.webp
 │   │   │   ├── playground.jpg
 │   │   │   └── report.jpg
 │   │   └── Platform
-│   │       ├── Dashboard.png
-│   │       ├── home.png
-│   │       ├── projects.png
-│   │       └── Quote.png
+│   │       ├── Dashboard.webp
+│   │       ├── home.webp
+│   │       ├── projects.webp
+│   │       └── Quote.webp
 │   ├── robots.txt
 │   ├── sitemap-0.xml
 │   ├── sitemap.xml

@@ -17,7 +17,7 @@ export default function Avatar() {
         style={{ zIndex: 1 }}
       >
         <Image
-          src="/Avatar.png"
+          src="/Avatar.webp"
           alt="Wahb"
           width={300}
           height={300}

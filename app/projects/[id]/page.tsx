@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -957,15 +958,16 @@ export default async function ProjectPage({ params }: Props) {
 
           {images.length > 0 && (
             <div
-              className="fade-up fade-up-2 mb-8 flex items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 dark:border-slate-700/50 dark:bg-slate-900"
+              className="fade-up fade-up-2 mb-8 flex items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 dark:border-slate-700/50 dark:bg-slate-900 relative"
               style={{ minHeight: "220px", maxHeight: "400px" }}
             >
-              <img
+              <Image
                 src={images[0]}
                 alt={`${title} preview`}
-                className="h-full w-full object-contain"
-                style={{ maxHeight: "400px" }}
-                loading="eager"
+                fill
+                className="object-contain"
+                sizes="(max-width: 640px) 100vw, 80vw"
+                priority
               />
             </div>
           )}
@@ -1162,15 +1164,15 @@ export default async function ProjectPage({ params }: Props) {
                 {images.slice(1).map((src, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-gray-50 dark:border-slate-700/50 dark:bg-slate-900"
+                    className="flex items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-gray-50 dark:border-slate-700/50 dark:bg-slate-900 relative"
                     style={{ minHeight: "120px" }}
                   >
-                    <img
+                    <Image
                       src={src}
                       alt={`${title} screenshot ${i + 2}`}
-                      className="h-full w-full object-contain"
-                      style={{ maxHeight: "200px" }}
-                      loading="lazy"
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 640px) 50vw, 33vw"
                     />
                   </div>
                 ))}

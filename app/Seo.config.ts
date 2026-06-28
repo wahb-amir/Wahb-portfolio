@@ -67,7 +67,7 @@ export const siteMetadata: Metadata = {
     siteName: "Wahb Amir Portfolio",
     images: [
       {
-        url: "https://wahb.space/og-image.png",
+        url: "https://wahb.space/og-image.webp",
         width: 1200,
         height: 630,
         alt: "Wahb Amir — Full-Stack Engineer & AI Developer",
@@ -83,12 +83,12 @@ export const siteMetadata: Metadata = {
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
       "USAII 2026 · Technical Award — Hackonomics 2026 · 3rd Place — Hack for Humanity 2026. Building high-performance web apps and practical AI tools.",
-    images: ["https://wahb.space/og-image.png"],
+    images: ["https://wahb.space/og-image.webp"],
   },
   icons: {
     icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon-16x16.webp",
+    apple: "/apple-touch-icon.webp",
   },
   manifest: "/site.webmanifest",
 };

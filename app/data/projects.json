@@ -8,9 +8,9 @@
       "sub": "Document Intelligence"
     },
     "images": [
-      "/Project/ClearPath/landing.png",
-      "/Project/ClearPath/dashboard.png",
-      "/Project/ClearPath/results.png"
+      "/Project/ClearPath/landing.webp",
+      "/Project/ClearPath/dashboard.webp",
+      "/Project/ClearPath/results.webp"
     ],
     "tech": [
       "Next.js",
@@ -183,8 +183,8 @@
       "sub": "Solo build · International hackathon"
     },
     "images": [
-      "/Project/EconoQuest/landing.png",
-      "/Project/EconoQuest/nation-selection.png",
+      "/Project/EconoQuest/landing.webp",
+      "/Project/EconoQuest/nation-selection.webp",
       "/Project/EconoQuest/playground.jpg",
       "/Project/EconoQuest/report.jpg",
       "/Project/EconoQuest/hall-of-fame.jpg"
@@ -289,9 +289,9 @@
       "sub": "775 participants · Solo build · International"
     },
     "images": [
-      "/Project/EcoLens/dashboard.png",
+      "/Project/EcoLens/dashboard.webp",
       "/Project/EcoLens/leaderboard.jpg",
-      "/Project/EcoLens/achivements.png"
+      "/Project/EcoLens/achivements.webp"
     ],
     "tech": [
       "Next.js",
@@ -392,10 +392,10 @@
     "title": "Client & Developer Collaboration Platform",
     "role": "Full-Stack Engineer",
     "images": [
-      "/Project/Platform/home.png",
-      "/Project/Platform/Dashboard.png",
-      "/Project/Platform/projects.png",
-      "/Project/Platform/Quote.png"
+      "/Project/Platform/home.webp",
+      "/Project/Platform/Dashboard.webp",
+      "/Project/Platform/projects.webp",
+      "/Project/Platform/Quote.webp"
     ],
     "tech": [
       "Next.js",
@@ -475,11 +475,11 @@
     "title": "Modern Online Store",
     "role": "Full-Stack Developer",
     "images": [
-      "/Project/Ecom/light-shop.png",
-      "/Project/Ecom/light-men.png",
-      "/Project/Ecom/light-women.png",
-      "/Project/Ecom/light-product.png",
-      "/Project/Ecom/stripe.png"
+      "/Project/Ecom/light-shop.webp",
+      "/Project/Ecom/light-men.webp",
+      "/Project/Ecom/light-women.webp",
+      "/Project/Ecom/light-product.webp",
+      "/Project/Ecom/stripe.webp"
     ],
     "tech": ["Next.js", "Stripe", "Secure Login", "Tailwind", "MongoDB"],
     "short": "A clean, fast online store where users can browse products, add items to a cart, and check out — with a simple admin view for managing products safely.",
