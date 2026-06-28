@@ -31,11 +31,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        {/* Preload LCP image — PNG so Next.js converts it to AVIF/WebP */}
+        {/* Preload LCP image — WebP */}
         <link
           rel="preload"
           as="image"
-          href="/Avatar.png"
+          href="/Avatar.webp"
           // @ts-ignore fetchpriority is a valid HTML attribute
           fetchpriority="high"
         />
