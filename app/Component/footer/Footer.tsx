@@ -65,12 +65,6 @@ const EXT_LINKS: { label: string; href: string; icon: any; isFA?: boolean }[] =
       icon: faXTwitter,
       isFA: true,
     },
-    {
-      label: "Client Portal",
-      href: "https://dashboard.wahb.space",
-      icon: ExternalLink,
-      isFA: false,
-    },
   ];
 
 const STACK = [
@@ -359,8 +353,9 @@ export default function Footer() {
           {`EcoLens live app: https://eco.wahb.space. `}
           {`EcoLens GitHub: https://github.com/wahb-amir/ecolens. `}
           {`EcoLens HuggingFace: https://huggingface.co/spaces/wahb-amir/ecoLens. `}
-          {`Client Portal: https://dashboard.wahb.space. `}
           {`E-commerce demo: https://boltform.wahb.space. `}
+          {`EconoQuest demo: https://econoquest.wahb.space. `}
+          {`ClearPath demo: https://clearpath.wahb.space. `}
           {`Machine-readable identity: https://wahb.space/ai.json. `}
           {`LLM context file: https://wahb.space/llms.txt.`}
         </p>

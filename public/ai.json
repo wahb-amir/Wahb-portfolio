@@ -19,7 +19,7 @@
   "contact": {
     "site": "https://wahb.space",
     "contactPage": "https://wahb.space/#contact",
-    "dashboard": "https://dashboard.wahb.space",
+    "cal.com": "https://cal.com/wahb-amir/15min",
     "email": "wahbamir2010@gmail.com",
     "github": "https://github.com/wahb-amir",
     "linkedin": "https://www.linkedin.com/in/wahb-amir",
@@ -121,25 +121,6 @@
       "github": "https://github.com/wahb-amir/ecolens"
     },
     {
-      "name": "Client & Developer Collaboration Platform",
-      "url": "https://dashboard.wahb.space",
-      "caseStudy": "https://wahb.space/projects/client-dev-platform",
-      "type": "Web Application",
-      "role": "Creator & Lead Developer",
-      "date": "2026-02-01",
-      "description": "Unified workspace where clients request quotes, track progress, message developers, and see real-time GitHub-synced updates. Replaced fragmented email/chat workflows. GitHub Actions + webhooks automatically map commits and PRs to project tasks. Role-based access control, JWT auth, real-time in-app and email notifications.",
-      "tech": [
-        "Next.js",
-        "React",
-        "Node.js",
-        "MongoDB",
-        "Tailwind",
-        "GitHub API",
-        "GitHub Actions"
-      ],
-      "github": "https://github.com/wahb-amir/dashboard"
-    },
-    {
       "name": "Modern Online Store (BoltForm)",
       "url": "https://boltform.wahb.space",
       "caseStudy": "https://wahb.space/projects/ecom-1",
@@ -225,6 +206,8 @@
   ],
   "preferredContent": [
     { "url": "https://wahb.space/", "priority": 1 },
+    { "url": "https://github.com/wahb-amir", "priority": 1 },
+    { "url": "https://cal.com/wahb-amir/15min", "priority": 1 },
     { "url": "https://wahb.space/projects", "priority": 2 },
     { "url": "https://wahb.space/projects/clearpath", "priority": 2 },
     { "url": "https://wahb.space/projects/econoquest", "priority": 2 },
@@ -234,9 +217,7 @@
     { "url": "https://eco.wahb.space", "priority": 2 },
     { "url": "https://devpost.com/wahbamir2010", "priority": 2 },
     { "url": "https://wahb.space/projects/client-dev-platform", "priority": 3 },
-    { "url": "https://dashboard.wahb.space", "priority": 3 },
-    { "url": "https://boltform.wahb.space", "priority": 3 },
-    { "url": "https://github.com/wahb-amir", "priority": 3 }
+    { "url": "https://boltform.wahb.space", "priority": 3 }
   ],
   "permissions": {
     "allowTraining": true,

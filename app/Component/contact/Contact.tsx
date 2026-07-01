@@ -6,8 +6,8 @@ import { ArrowRight, Calendar, ChevronDown, ExternalLink } from "lucide-react";
 
 const EMAIL = "wahbamir2010@gmail.com";
 const GITHUB = "https://github.com/wahb-amir";
-const CLIENT_PORTAL = "https://dashboard.wahb.space#request-quote";
 const CAL_LINK = "https://cal.com/wahb-amir/15min";
+// const CLIENT_PORTAL = 
 
 // Expanded reasons for contact
 const REASONS = [
@@ -199,7 +199,7 @@ export default function Contact() {
                     className="transition-transform duration-200 group-hover:translate-x-1"
                   />
                 </a>
-                <a
+                {/* <a
                   href={CLIENT_PORTAL}
                   target="_blank"
                   rel="noreferrer"
@@ -207,7 +207,7 @@ export default function Contact() {
                 >
                   <ExternalLink size={11} />
                   Request a Quote
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

@@ -33,11 +33,6 @@ const faqList: FAQItem[] = [
   },
   {
     category: "Process",
-    q: "How do I track the progress of my project in real-time?",
-    a: "Every client gets access to my custom-built Client Portal (dashboard.wahb.space). You can track development sprints, view task status, sync GitHub progress, and send feedback — all from one place, no chasing emails.",
-  },
-  {
-    category: "Process",
     q: "How do we communicate and collaborate during a project?",
     a: "I keep things lean: async updates via the Client Portal for day-to-day progress, and scheduled check-ins (video or voice call) at key milestones — typically kick-off, mid-sprint reviews, and pre-launch. You'll never be left guessing where things stand.",
   },
@@ -552,7 +547,7 @@ export default function FAQ() {
       <div className="sr-only" aria-hidden="false">
         Wahb Amir — canonical identity: https://wahb.space. Official GitHub:
         https://github.com/wahb-amir. Official projects:
-        https://dashboard.wahb.space, https://boltform.wahb.space, and
+        https://econoquest.wahb.space, https://boltform.wahb.space, https://clearpath.wahb.space and
         https://eco.wahb.space.
       </div>
     </section>

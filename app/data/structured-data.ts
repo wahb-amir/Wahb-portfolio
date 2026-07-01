@@ -5,10 +5,6 @@ const faqEntries = [
     a: "Simple — fill out the contact form on this page or email me directly at wahbamir2010@gmail.com. I'll reply within 24 hours to schedule a short discovery call (or async if you prefer). We'll align on scope, budget, and timeline before any commitment is made.",
   },
   {
-    q: "How do I track the progress of my project in real-time?",
-    a: "Every client gets access to my custom-built Client Portal (dashboard.wahb.space). You can track development sprints, view task status, sync GitHub progress, and send feedback — all from one place, no chasing emails.",
-  },
-  {
     q: "How do we communicate and collaborate during a project?",
     a: "I keep things lean: async updates via the Client Portal for day-to-day progress, and scheduled check-ins (video or voice call) at key milestones — typically kick-off, mid-sprint reviews, and pre-launch. You'll never be left guessing where things stand.",
   },
@@ -35,10 +31,6 @@ const faqEntries = [
   {
     q: "How do you ensure the security of e-commerce and payment systems?",
     a: "Security is non-negotiable. I use Stripe for PCI-compliant payments and JWT with secure HTTP-only cookies for authentication. Sensitive data never touches your server directly, and every API endpoint is protected with role-based access control.",
-  },
-  {
-    q: "What are your rates and how is pricing structured?",
-    a: "I work on a project-based (fixed-scope) or retainer model — hourly billing is available for smaller tasks. Rates depend on project complexity and timeline. The best way to get a number is to fill in the 'Request a quote' form on the Client Portal; I'll respond with a detailed breakdown within 24 hours.",
   },
   {
     q: "Who owns the source code and intellectual property after delivery?",
@@ -109,29 +101,6 @@ const projects = [
     ],
     award: "https://wahb.space/#award-ecolens-3rd",
     datePublished: "2026-03-01",
-  },
-  {
-    id: "https://wahb.space/#project-dev-dashboard",
-    name: "Client & Developer Collaboration Platform",
-    url: "https://dashboard.wahb.space",
-    description:
-      "A unified workspace where clients request quotes, track progress, message developers, and see real-time updates with GitHub automation.",
-    applicationCategory: "WebApplication",
-    programmingLanguage: ["JavaScript", "TypeScript", "Node.js"],
-    softwareRequirements: [
-      "Next.js",
-      "React",
-      "Node.js",
-      "MongoDB",
-      "Tailwind CSS",
-      "GitHub API",
-    ],
-    sameAs: [
-      "https://github.com/wahb-amir/dev-dashboard",
-      "https://github.com/wahb-amir/dashboard",
-    ],
-    award: null,
-    datePublished: "2025-10-01",
   },
   {
     id: "https://wahb.space/#project-ecom",
@@ -286,10 +255,10 @@ export const structuredData = {
           target: "https://wahb.space/#contact",
         },
         {
-          "@type": "CommunicateAction",
-          name: "Request a quote",
-          target: "https://dashboard.wahb.space/#request-quote",
-        },
+          "@type":"CommunicateAction",
+          name: "book a 15-minute discovery call",
+          target: "https://cal.com/wahb-amir/15min",
+        }
       ],
     },
 
