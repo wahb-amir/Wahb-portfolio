@@ -25,17 +25,15 @@ body,
 html,
 #__next {
   background-color: transparent;
-  transition:
-    padding 0.3s ease,
-    background-color 0.3s ease;
 }
 @media (max-width: 850px) {
   .project-card {
     width: 100%;
   }
 }
-svg {
-  background: transparent !important;
+/* Keep SVG backgrounds transparent */
+svg:not([data-bg]) {
+  background: transparent;
 }
 .max-w-screen {
   max-width: 100dvw;
@@ -80,4 +78,23 @@ svg {
 * {
   scrollbar-width: thin;
   scrollbar-color: #2d2d2d transparent;
+}
+
+/* Mobile drawer nav item entrance animation */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Promote toggle knob layer on mobile for compositor-only animation */
+@media (max-width: 767px) {
+  .day-night-knob {
+    will-change: transform;
+  }
 }

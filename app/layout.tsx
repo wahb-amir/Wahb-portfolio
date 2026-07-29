@@ -41,14 +41,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div className="min-h-screen bg-white dark:bg-[#0b1220] transition-colors duration-500">
+        <div className="min-h-screen bg-white dark:bg-[#0b1220]">
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <Navbar />
             <main
               className="pt-20 md:pt-24 bg-[#f9fafb] dark:bg-[#0f172a]
                 bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44] rounded-lg
-                border-t-4 border-cyan-500/50 text-black dark:text-white
-                transition-colors duration-500"
+                border-t-4 border-cyan-500/50 text-black dark:text-white"
             >
               {children}
             </main>
