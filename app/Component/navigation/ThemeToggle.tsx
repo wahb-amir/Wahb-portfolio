@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 import {
   faGithub,
   faLinkedin,
@@ -10,6 +9,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { useClientTheme } from "@/app/hooks/useClientTheme";
 import { LINKEDIN_URL } from "./navConfig";
+import DayNightToggle from "./DayNightToggle";
 
 interface Props {
   githubUrl: string;
@@ -42,47 +42,17 @@ export default function ThemeToggle({ githubUrl, xUrl }: Props) {
         <FontAwesomeIcon icon={faXTwitter} className="text-lg" />
       </IconButton>
 
-      <IconButton
-        label={
-          mounted
-            ? isDark
-              ? "Switch to light mode"
-              : "Switch to dark mode"
-            : "Toggle theme"
-        }
-        onClick={toggleTheme}
-      >
-        <span
-          className="relative flex items-center justify-center w-[1em] h-[1em]"
-          suppressHydrationWarning
-        >
-          {!mounted && (
-            <FontAwesomeIcon
-              icon={faMoon}
-              className="text-lg opacity-0"
-              aria-hidden
-            />
-          )}
-
-          <AnimatePresence mode="wait" initial={false}>
-            {mounted && (
-              <motion.span
-                key={isDark ? "sun" : "moon"}
-                initial={{ opacity: 0, rotate: -30, scale: 0.7 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: 30, scale: 0.7 }}
-                transition={{ duration: 0.18, ease: "easeInOut" }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <FontAwesomeIcon
-                  icon={isDark ? faSun : faMoon}
-                  className="text-lg"
-                />
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </span>
-      </IconButton>
+      {/* ── Day / Night pill toggle ───────────────────────────────────── */}
+      {mounted ? (
+        <DayNightToggle isDark={isDark} onToggle={toggleTheme} />
+      ) : (
+        /* SSR placeholder – exact same pill dimensions so layout doesn't shift */
+        <div
+          className="shrink-0 rounded-full bg-black/5 dark:bg-white/5 border border-white/10"
+          style={{ width: 88, height: 44 }}
+          aria-hidden
+        />
+      )}
     </>
   );
 }
