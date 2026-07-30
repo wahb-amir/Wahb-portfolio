@@ -112,7 +112,7 @@ export default function Contact() {
       id="contact"
       className="relative min-h-screen  dark:bg-transparent dark:from-transparent dark:to-transparent text-gray-900 dark:text-gray-100 overflow-hidden font-mono"
     >
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(#0088cc22_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#00b1ff15_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
+      
 
       <div
         className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm"
