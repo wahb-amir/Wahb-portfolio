@@ -73,8 +73,7 @@ interface DustMote {
 // ---------------------------------------------------------------------------
 // Generation — all seeded so SSR matches client
 // ---------------------------------------------------------------------------
-const highResSeed = Math.floor(performance.now() * 1000);
-const SEED_DUST   = highResSeed;
+const SEED_DUST = Date.now() + Math.floor(performance.now());
 const SEED_TWINK  = 137;
 const SEED_MOTE   = 999;
 
