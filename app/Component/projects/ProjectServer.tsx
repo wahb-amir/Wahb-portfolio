@@ -391,7 +391,7 @@ export default function ProjectServer() {
 
       <section
         id="project-section"
-        className="relative flex flex-col justify-start items-center px-4 xs:px-6 text-center pb-[6.25rem] text-black overflow-hidden pt-[env(safe-area-inset-top)]  dark:text-white "
+        className="relative flex flex-col justify-start items-center px-4 xs:px-6 text-center py-12 gap-8 text-slate-800 overflow-hidden pt-[env(safe-area-inset-top)] dark:text-white bg-white/40 backdrop-blur-md border border-slate-200/60 rounded-2xl shadow-sm dark:bg-slate-900/40 dark:border-slate-800/60 dark:shadow-none my-12 mx-4 md:mx-auto max-w-7xl"
         style={{ overflowX: "hidden" }}
         role="region"
         aria-labelledby="projects-heading"

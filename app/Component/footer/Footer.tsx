@@ -271,14 +271,14 @@ export default function Footer() {
           className="flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           {/* Copyright */}
-          <p className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start text-xs font-medium text-white dark:text-white">
+          <p className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start text-xs font-medium text-slate-700 dark:text-white">
             <Code2 className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
             <span>© {year} Wahb Amir.</span>
             <span>Designed &amp; built by me, for me.</span>
           </p>
 
           {/* Sign-off */}
-          <p className="flex items-center gap-1.5 text-xs font-medium text-white dark:text-white">
+          <p className="flex items-center gap-1.5 text-xs font-medium text-slate-700 dark:text-white">
             Made with
             <motion.span
               animate={{ scale: [1, 1.3, 1] }}
@@ -319,7 +319,7 @@ export default function Footer() {
           </button>
         </motion.div>
 
-        <p className="mt-6 text-center text-[10px] select-none font-medium text-slate-900/30 dark:text-white/15">
+        <p className="mt-6 text-center text-[10px] select-none font-medium text-slate-500 dark:text-white/20">
           wahb.space · v2.0 · {year}
         </p>
 

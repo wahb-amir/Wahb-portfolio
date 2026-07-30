@@ -85,7 +85,7 @@
   max-width: 980px;
   margin: 24px auto;
   box-sizing: border-box;
-  background: var(--gh-bg);
+  background: rgba(255, 255, 255, 0.8); /* bg-white/80 for light mode */
   border: 1px solid var(--gh-border);
   border-radius: 20px;
   backdrop-filter: blur(16px);
@@ -94,6 +94,38 @@
   position: relative;
   box-shadow: var(--gh-card-shadow);
   animation: gh-fade-up 0.5s ease both;
+}
+
+.dark .gh-card {
+  background: transparent; /* dark:bg-transparent */
+}
+
+/* Override pure black background and neon green for the React Activity Calendar in light mode */
+html:not(.dark) .react-activity-calendar,
+html:not(.dark) .react-activity-calendar svg {
+  background: transparent !important;
+}
+
+/* Target the neon green SVG rects and map them to light mode greens or transparent */
+html:not(.dark) .react-activity-calendar svg rect[fill="#161b22"],
+html:not(.dark) .react-activity-calendar svg rect[data-level="0"] {
+  fill: #ebedf0 !important;
+}
+html:not(.dark) .react-activity-calendar svg rect[fill="#0e4429"],
+html:not(.dark) .react-activity-calendar svg rect[data-level="1"] {
+  fill: #9be9a8 !important;
+}
+html:not(.dark) .react-activity-calendar svg rect[fill="#006d32"],
+html:not(.dark) .react-activity-calendar svg rect[data-level="2"] {
+  fill: #40c463 !important;
+}
+html:not(.dark) .react-activity-calendar svg rect[fill="#26a641"],
+html:not(.dark) .react-activity-calendar svg rect[data-level="3"] {
+  fill: #30a14e !important;
+}
+html:not(.dark) .react-activity-calendar svg rect[fill="#39d353"],
+html:not(.dark) .react-activity-calendar svg rect[data-level="4"] {
+  fill: #216e39 !important;
 }
 
 /* Reserve calendar height — prevents CLS when data arrives */

@@ -79,7 +79,7 @@ const SEED_MOTE   = 999;
 
 const DUST_STAR_COUNT  = 185;
 const TWINKLE_COUNT    = 70;
-const DUST_MOTE_COUNT  = 50;
+const DUST_MOTE_COUNT  = 35;
 
 function generateDustStars(): DustStar[] {
   const rng = createPrng(SEED_DUST);
@@ -117,9 +117,9 @@ function generateDustMotes(): DustMote[] {
     id: i,
     x: rng() * 100,
     y: rng() * 100,
-    size: 1 + Math.floor(rng() * 3),
-    delay: rng() * 12,
-    duration: 5 + rng() * 5,
+    size: 20 + Math.floor(rng() * 40), // 20px - 60px
+    delay: rng() * 30, // 0-30s start delay
+    duration: 15 + rng() * 15, // 15s - 30s animation cycle
   }));
 }
 
@@ -139,13 +139,11 @@ const DARK_KEYFRAMES = `
 
 const LIGHT_KEYFRAMES = `
 @keyframes sfb-mote-drift {
-  0%,100% { opacity: 0;               transform: translateY(0) scale(1);   }
-  25%     { opacity: var(--m-opacity); }
-  60%     { opacity: var(--m-opacity); transform: translateY(-8px) scale(1.12); }
-}
-@keyframes sfb-mote-shimmer {
-  0%,100% { opacity: 0;    }
-  50%     { opacity: 0.08; }
+  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+  20% { opacity: var(--m-opacity); }
+  50% { transform: translate(30px, -100px) scale(1.1); }
+  80% { opacity: var(--m-opacity); }
+  100% { transform: translate(-20px, -200px) scale(1); opacity: 0; }
 }
 `;
 
@@ -227,14 +225,13 @@ function MoteDot({
           width: mote.size,
           height: mote.size,
           borderRadius: "50%",
-          // Warm slate-blue to match the light-mode sky palette
-          backgroundColor: "rgba(100,116,139,0.55)",
-          "--m-opacity": "0.22",
+          backgroundColor: "#ffffff",
+          "--m-opacity": (0.1 + (mote.size % 10) * 0.01).toFixed(2), // 0.10 to 0.19
           opacity: 0,
           animation: reduced
             ? "none"
             : `sfb-mote-drift ${mote.duration.toFixed(2)}s ease-in-out ${mote.delay.toFixed(2)}s infinite`,
-          filter: "blur(0.6px)",
+          filter: mote.size > 40 ? "blur(24px)" : "blur(16px)", // blur-2xl / blur-xl
           willChange: "opacity, transform",
         } as React.CSSProperties
       }
@@ -311,21 +308,16 @@ export default function StarfieldBackground() {
         {/* ══════════════ LIGHT MODE ══════════════ */}
         {!isDark && (
           <>
-            {/* Subtle top-down atmospheric gradient — daytime sky */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(170deg, rgba(186,210,235,0.22) 0%, rgba(226,232,240,0.08) 60%, transparent 100%)",
-              }}
-            />
+            {/* Base Sky Gradient — "Polarized Stratosphere" */}
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-200 via-slate-100 to-zinc-50" />
 
-            {/* Soft shimmer wash across upper third */}
+            {/* Sunlight Flare (Top Right) */}
             <div
-              className="absolute inset-0"
+              className="absolute top-0 right-0 w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] pointer-events-none"
               style={{
-                background:
-                  "radial-gradient(ellipse 80% 35% at 50% 0%, rgba(148,163,184,0.12) 0%, transparent 70%)",
+                background: "radial-gradient(circle at 75% 25%, rgba(253,230,138,0.3) 0%, rgba(251,146,60,0.05) 45%, transparent 70%)",
+                transform: "translate(20%, -20%)",
+                filter: "blur(60px)",
               }}
             />
 
