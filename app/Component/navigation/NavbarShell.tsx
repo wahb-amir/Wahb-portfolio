@@ -83,21 +83,26 @@ export default function NavbarShell({
         >
           {/* LEFT – Logo */}
           <div className="flex-1 flex justify-start">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative w-10 h-10 cursor-pointer"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            <a
+              href={process.env.NEXT_PUBLIC_SITE_URL}
+              aria-label="Home"
+              className="relative w-10 h-10"
             >
-              <Image
-                src="/logo.webp"
-                alt="Home"
-                fill
-                sizes="(max-width: 768px) 100vw, 200px"
-                priority
-                className="rounded-full object-cover border-2 border-cyan-400 shadow-md"
-              />
-            </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative w-10 h-10 cursor-pointer"
+              >
+                <Image
+                  src="/logo.webp"
+                  alt="Home"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 200px"
+                  priority
+                  className="rounded-full object-cover border-2 border-cyan-400 shadow-md"
+                />
+              </motion.div>
+            </a>
           </div>
 
           {/* CENTER – Desktop nav links */}
