@@ -5,6 +5,8 @@ import { ThemeProvider } from "next-themes";
 import Navbar from "./Component/navigation/Navbar";
 import { siteMetadata } from "./Seo.config";
 import { structuredData } from "./data/structured-data";
+// Client-boundary wrapper that safely defers the starfield with ssr:false
+import StarfieldBackground from "./Component/effects/StarfieldBackgroundClient";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -41,14 +43,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div className="min-h-screen bg-white dark:bg-[#0b1220]">
+        <div className="relative z-0 min-h-screen bg-slate-100 dark:bg-[#080e1a]">
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+            {/* Fixed starfield — client-only, z-index:-1, pointer-events:none */}
+            <StarfieldBackground />
             <Navbar />
-            <main
-              className="pt-20 md:pt-24 bg-[#f9fafb] dark:bg-[#0f172a]
-                bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44] rounded-lg
-                border-t-4 border-cyan-500/50 text-black dark:text-white"
-            >
+            <main className="pt-20 md:pt-24 bg-transparent text-black dark:text-white">
               {children}
             </main>
           </ThemeProvider>

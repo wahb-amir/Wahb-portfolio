@@ -334,18 +334,18 @@ export default function ProjectServer() {
       <style>{`
         /* ── Top glow — light / dark ── */
         #project-section .ps-glow-top {
-          background: radial-gradient(ellipse at center, rgba(34,211,238,0.10) 0%, transparent 70%);
+          background: transparent;
         }
         .dark #project-section .ps-glow-top {
-          background: radial-gradient(ellipse at center, rgba(34,211,238,0.08) 0%, transparent 70%);
+          background: transparent;
         }
 
         /* ── Bottom fade ── */
         #project-section .ps-fade-bottom {
-          background: linear-gradient(to top, #f0f9ff, transparent);
+          background: transparent;
         }
         .dark #project-section .ps-fade-bottom {
-          background: linear-gradient(to top, #0a1628, transparent);
+          background: transparent;
         }
 
         /* ── Grid layout ── */
@@ -391,7 +391,7 @@ export default function ProjectServer() {
 
       <section
         id="project-section"
-        className="relative flex flex-col justify-start items-center px-4 xs:px-6 text-center pb-[6.25rem] text-black overflow-hidden pt-[env(safe-area-inset-top)] dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]"
+        className="relative flex flex-col justify-start items-center px-4 xs:px-6 text-center pb-[6.25rem] text-black overflow-hidden pt-[env(safe-area-inset-top)]  dark:text-white "
         style={{ overflowX: "hidden" }}
         role="region"
         aria-labelledby="projects-heading"

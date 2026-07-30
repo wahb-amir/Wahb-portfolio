@@ -45,8 +45,8 @@ export default function Contribution() {
   return (
     <section
       id="contributions"
-      className={`relative flex flex-col items-center justify-center min-h-[60vh] px-6 py-16 text-center overflow-hidden bg-[#f9fafb] dark:bg-[#0f172a]
-        bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+      className={`relative flex flex-col items-center justify-center min-h-[60vh] px-6 py-16 text-center overflow-hidden  
+        
         text-black dark:text-white
          pt-[env(safe-area-inset-top)]
         `}

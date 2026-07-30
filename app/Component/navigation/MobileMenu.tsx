@@ -110,7 +110,7 @@ export default function MobileMenu({
                Background colour handled by CSS class (instant via .dark class toggle) ── */
             className="fixed inset-x-0 top-0 z-40 md:hidden
                        backdrop-blur-md
-                       bg-white/95 dark:bg-[#02061700]/97
+                       bg-white/95 /97
                        pt-24 pb-10 px-6 overflow-y-auto
                        h-[100vh] supports-[height:100dvh]:h-[100dvh]"
             style={{ backgroundColor: isDark ? "rgba(2,6,23,0.97)" : "rgba(255,255,255,0.97)" }}

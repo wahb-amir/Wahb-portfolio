@@ -204,14 +204,13 @@ function SkillChip({
     <div
       className="chip-item relative flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border cursor-default select-none overflow-hidden"
       style={{
-        // CSS variable drives the stagger delay — no JS timer
         ["--chip-i" as string]: index,
-        background: isDark ? "rgba(5,16,36,0.8)" : "rgba(255,255,255,0.9)",
-        borderColor: isDark ? "rgba(255,255,255,0.09)" : "rgba(15,23,42,0.1)",
+        background: isDark ? "rgba(5,14,28,0.55)" : "rgba(255,255,255,0.62)",
+        borderColor: isDark ? "rgba(255,255,255,0.09)" : "rgba(15,23,42,0.09)",
         boxShadow: isDark
-          ? "0 2px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)"
-          : "0 2px 10px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,1)",
-        // NO backdropFilter here — it was creating a GPU composite layer per chip
+          ? "0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05)"
+          : "0 2px 10px rgba(15,23,42,0.07), inset 0 1px 0 rgba(255,255,255,0.9)",
+        // NO backdropFilter here — kept off chips to avoid per-chip compositor layers
       }}
     >
       {/* Hover glow — CSS-only via .chip-item:hover .chip-glow */}
@@ -263,13 +262,13 @@ function GroupCard({
       animate={inView ? "show" : "hidden"}
       className="rounded-2xl border overflow-hidden"
       style={{
-        background: isDark ? "rgba(7,18,40,0.78)" : "rgba(255,255,255,0.82)",
+        background: isDark ? "rgba(8,14,26,0.45)" : "rgba(255,255,255,0.42)",
         borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.1)",
         boxShadow: isDark
-          ? `0 4px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04), 0 0 0 1px ${group.accentColor}14`
-          : `0 4px 24px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,1), 0 0 0 1px ${group.accentColor}12`,
-        backdropFilter: "blur(18px)", // kept on card — one composite layer per card (4 total) is fine
-        WebkitBackdropFilter: "blur(18px)",
+          ? `0 4px 28px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.04), 0 0 0 1px ${group.accentColor}14`
+          : `0 4px 24px rgba(15,23,42,0.07), inset 0 1px 0 rgba(255,255,255,0.8), 0 0 0 1px ${group.accentColor}12`,
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
       }}
     >
       {/* Card header */}
@@ -350,7 +349,7 @@ export default function SkillsGrouped() {
     <section
       id="skills"
       className={`${jakarta.className} relative flex flex-col items-center px-4 sm:px-6 py-20 overflow-hidden
-        bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]`}
+        `}
     >
       <style>{`
         /* ── Heading lines ── */
@@ -401,13 +400,11 @@ export default function SkillsGrouped() {
         }
       `}</style>
 
-      {/* Scrim */}
+      {/* Scrim — transparent to let the global starfield show through */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none z-0"
-        style={{
-          background: isDark ? "rgba(4,10,24,0.5)" : "rgba(244,249,255,0.46)",
-        }}
+        style={{ background: "transparent" }}
       />
 
       {/* Blobs */}

@@ -110,12 +110,12 @@ export default function Contact() {
     <section
       ref={ref}
       id="contact"
-      className="relative min-h-screen bg-gradient-to-b from-[#00b1ff15] to-[#00bfff05] dark:bg-transparent dark:from-transparent dark:to-transparent text-gray-900 dark:text-gray-100 overflow-hidden font-mono"
+      className="relative min-h-screen  dark:bg-transparent dark:from-transparent dark:to-transparent text-gray-900 dark:text-gray-100 overflow-hidden font-mono"
     >
       <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(#0088cc22_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#00b1ff15_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
 
       <div
-        className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm"
+        className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm"
         aria-hidden
       >
         <div className="inline-flex whitespace-nowrap animate-[ticker_36s_linear_infinite] hover:[animation-play-state:paused] py-2.5 font-mono text-[10px] font-bold tracking-[0.18em] text-gray-600 dark:text-gray-400">
@@ -126,7 +126,7 @@ export default function Contact() {
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-8 py-16 pb-20">
         <motion.div {...fd(0)} className="mb-14">
           <div className="flex items-center gap-2.5 mb-6">
-            <div className="w-[7px] h-[7px] rounded-full shrink-0 bg-[#0088cc] dark:bg-[#00d4ff] animate-[pulse-ring_2.5s_ease-in-out_infinite]" />
+            <div className="w-[7px] h-[7px] rounded-full shrink-0 bg-[#0088cc]  animate-[pulse-ring_2.5s_ease-in-out_infinite]" />
             <span className="text-[10px] uppercase tracking-[0.22em] text-[#0077b3] dark:text-[#00d4ff] font-bold">
               Available for new projects
             </span>
@@ -161,7 +161,7 @@ export default function Contact() {
           <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
             — Preferred: Schedule a call
           </div>
-          <div className="border border-[#0077b3]/30 dark:border-[#00d4ff]/25 bg-[#0077b3]/5 dark:bg-[#00d4ff]/8 p-6 sm:p-8 relative overflow-hidden">
+          <div className="border border-[#0077b3]/30 dark:border-[#00d4ff]/25 bg-[#0077b3]/5 /8 p-6 sm:p-8 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-5 h-5 border-t-[1.5px] border-l-[1.5px] border-[#0077b3] dark:border-[#00d4ff]" />
             <div className="absolute bottom-0 right-0 w-5 h-5 border-b-[1.5px] border-r-[1.5px] border-[#0077b3] dark:border-[#00d4ff]" />
 
@@ -176,7 +176,7 @@ export default function Contact() {
                 </p>
                 <div className="flex items-center gap-4 mt-4">
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] text-[#0077b3] dark:text-[#00d4ff] uppercase">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0077b3] dark:bg-[#00d4ff] animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0077b3]  animate-pulse" />
                     Slots available this week
                   </span>
                   <span className="text-[10px] text-gray-500 dark:text-gray-500 tracking-[0.08em]">
@@ -190,7 +190,7 @@ export default function Contact() {
                   href={CAL_LINK}
                   target="_blank"
                   rel="noreferrer"
-                  className="group inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#0077b3] dark:bg-[#00d4ff] text-white dark:text-[#0b1220] font-mono font-bold text-[12px] tracking-[0.12em] uppercase border-none transition-all duration-200 hover:bg-[#005f8f] dark:hover:bg-[#33ddff] hover:tracking-[0.18em] shadow-[0_4px_20px_rgba(0,119,179,0.35)] dark:shadow-[0_4px_20px_rgba(0,212,255,0.25)] hover:shadow-[0_6px_28px_rgba(0,119,179,0.5)] dark:hover:shadow-[0_6px_28px_rgba(0,212,255,0.35)]"
+                  className="group inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#0077b3]  text-white dark:text-[#0b1220] font-mono font-bold text-[12px] tracking-[0.12em] uppercase border-none transition-all duration-200 hover:bg-[#005f8f] dark:hover:bg-[#33ddff] hover:tracking-[0.18em] shadow-[0_4px_20px_rgba(0,119,179,0.35)] dark:shadow-[0_4px_20px_rgba(0,212,255,0.25)] hover:shadow-[0_6px_28px_rgba(0,119,179,0.5)] dark:hover:shadow-[0_6px_28px_rgba(0,212,255,0.35)]"
                 >
                   <Calendar size={13} />
                   Schedule Now
@@ -229,7 +229,7 @@ export default function Contact() {
               <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
                 — Status
               </div>
-              <div className="border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 overflow-hidden">
+              <div className="border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm overflow-hidden">
                 {TERMINAL_ROWS.map(([k, v, accent]) => (
                   <div
                     key={k}
@@ -288,7 +288,7 @@ export default function Contact() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="relative border border-gray-300 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md px-6 sm:px-10 py-[72px] text-center"
+                  className="relative border border-gray-300 dark:border-gray-700 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md px-6 sm:px-10 py-[72px] text-center"
                 >
                   <div className="absolute -top-1.5 -left-1.5 w-4 h-4 border-t-[1.5px] border-l-[1.5px] border-[#0077b3] dark:border-[#00d4ff]" />
                   <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-[1.5px] border-r-[1.5px] border-[#0077b3] dark:border-[#00d4ff]" />
@@ -306,10 +306,10 @@ export default function Contact() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="border border-gray-300 dark:border-gray-700 bg-white/95 dark:bg-gray-900/90 backdrop-blur-md shadow-sm dark:shadow-xl relative z-10"
+                  className="border border-gray-300 dark:border-gray-700 bg-white/55 dark:bg-gray-900/55 backdrop-blur-md shadow-sm dark:shadow-xl relative z-10"
                   aria-busy={status === "sending"}
                 >
-                  <div className="border-b border-gray-200 dark:border-gray-700 px-5 sm:px-7 py-3.5 flex justify-between items-center bg-gray-50/80 dark:bg-gray-950/80 gap-3 flex-wrap">
+                  <div className="border-b border-gray-200 dark:border-gray-700 px-5 sm:px-7 py-3.5 flex justify-between items-center bg-white/30 dark:bg-gray-950/60 gap-3 flex-wrap">
                     <span className="text-[9px] tracking-[0.25em] text-gray-600 dark:text-gray-400 uppercase font-bold">
                       Async Communication · {new Date().getFullYear()}
                     </span>
@@ -441,7 +441,7 @@ export default function Contact() {
                                     onClick={() => selectReason(r.value)}
                                     className={`block w-full text-left px-4 py-3 font-mono text-[12px] font-semibold tracking-[0.04em] transition-all ${
                                       form.reason === r.value
-                                        ? "bg-[#0077b3] dark:bg-[#00d4ff] text-white dark:text-[#0b1220]"
+                                        ? "bg-[#0077b3]  text-white dark:text-[#0b1220]"
                                         : "text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-[#0077b3] dark:hover:text-[#00d4ff]"
                                     }`}
                                   >
@@ -492,7 +492,7 @@ export default function Contact() {
                     className={`w-full p-[22px] font-mono text-[13px] font-bold tracking-[0.14em] uppercase flex items-center justify-center gap-3 border-none transition-all duration-300 ${
                       status === "sending"
                         ? "bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                        : "bg-[#0077b3] text-white dark:bg-[#00d4ff] dark:text-[#0b1220] cursor-pointer hover:tracking-[0.22em] hover:bg-[#005f8f] dark:hover:bg-[#33ddff]"
+                        : "bg-[#0077b3] text-white  dark:text-[#0b1220] cursor-pointer hover:tracking-[0.22em] hover:bg-[#005f8f] dark:hover:bg-[#33ddff]"
                     }`}
                   >
                     {status === "sending" ? (

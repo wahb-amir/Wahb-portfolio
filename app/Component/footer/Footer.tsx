@@ -110,7 +110,7 @@ export default function Footer() {
       animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: 0.6 }}
       className={`${dmSans.className} relative w-full overflow-hidden
-        bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+        
         dark:from-[#00bfff18] dark:to-[#0078aa2e]
         text-black dark:text-white`}
       role="contentinfo"

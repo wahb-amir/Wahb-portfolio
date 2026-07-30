@@ -109,27 +109,30 @@ export default function About({ data }: { data: AboutContent }) {
     <section
       id="about"
       aria-labelledby="about-heading"
-      className="about-section relative w-full min-h-screen overflow-hidden   text-black  dark:text-white bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]"
+      className="about-section relative w-full min-h-screen overflow-hidden   text-black  dark:text-white "
     >
       <style>{`
         /* ── Section background — CSS only, no JS ── */
         
         .dark .about-scrim,
         :is(.dark) .about-scrim {
-          background: rgba(5,12,24,0.45);
+          background: transparent;
+        }
+        .about-scrim {
+          background: transparent;
         }
 
         /* ── Glassmorphism cards ── */
         .about-glass {
-          background: rgba(255,255,255,0.75);
+          background: rgba(255,255,255,0.45);
           border-color: rgba(0,0,0,0.08);
-          box-shadow: 0 4px 32px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.6);
+          box-shadow: 0 4px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
         }
         .dark .about-glass,
         :is(.dark) .about-glass {
-          background: rgba(5,15,30,0.75);
+          background: rgba(5,14,28,0.42);
           border-color: rgba(255,255,255,0.08);
-          box-shadow: 0 4px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+          box-shadow: 0 4px 32px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.06);
         }
 
         /* ── Bio text ── */
@@ -143,15 +146,15 @@ export default function About({ data }: { data: AboutContent }) {
 
         /* ── Quick-facts card ── */
         .about-facts-card {
-          background: rgba(255,255,255,0.65);
+          background: rgba(255,255,255,0.40);
           border-color: rgba(0,0,0,0.07);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+          box-shadow: 0 4px 24px rgba(0,0,0,0.06);
         }
         .dark .about-facts-card,
         :is(.dark) .about-facts-card {
-          background: rgba(5,15,30,0.65);
+          background: rgba(5,14,28,0.38);
           border-color: rgba(255,255,255,0.08);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.24);
+          box-shadow: 0 4px 24px rgba(0,0,0,0.20);
         }
 
         /* ── Fact pill base ── */
@@ -186,15 +189,15 @@ export default function About({ data }: { data: AboutContent }) {
 
         /* ── Timeline card ── */
         .about-tl-card {
-          background: rgba(255,255,255,0.65);
+          background: rgba(255,255,255,0.40);
           border-color: rgba(0,0,0,0.07);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+          box-shadow: 0 4px 24px rgba(0,0,0,0.06);
         }
         .dark .about-tl-card,
         :is(.dark) .about-tl-card {
-          background: rgba(5,15,30,0.65);
+          background: rgba(5,14,28,0.38);
           border-color: rgba(255,255,255,0.08);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.24);
+          box-shadow: 0 4px 24px rgba(0,0,0,0.20);
         }
 
         /* ── Timeline item divider ── */
@@ -236,14 +239,14 @@ export default function About({ data }: { data: AboutContent }) {
 
         /* ── Quote card ── */
         .about-quote-card {
-          background: rgba(255,255,255,0.80);
+          background: rgba(255,255,255,0.48);
           border-color: rgba(0,229,195,0.25);
-          box-shadow: 0 0 60px -20px rgba(0,229,195,0.15), 0 4px 24px rgba(0,0,0,0.10);
+          box-shadow: 0 0 60px -20px rgba(0,229,195,0.12), 0 4px 24px rgba(0,0,0,0.08);
         }
         .dark .about-quote-card,
         :is(.dark) .about-quote-card {
-          background: linear-gradient(135deg, rgba(2,18,32,0.82), rgba(0,30,40,0.78));
-          box-shadow: 0 0 60px -20px rgba(0,229,195,0.15), 0 4px 24px rgba(0,0,0,0.28);
+          background: linear-gradient(135deg, rgba(2,14,28,0.50), rgba(0,24,36,0.46));
+          box-shadow: 0 0 60px -20px rgba(0,229,195,0.13), 0 4px 24px rgba(0,0,0,0.22);
         }
 
         /* ── Quote text ── */

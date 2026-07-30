@@ -351,7 +351,7 @@ export default function FAQ() {
     <section
       id="faq"
       aria-labelledby="faq-heading"
-      className="relative w-full min-h-screen py-24 px-6 flex flex-col items-center justify-center overflow-hidden text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-t from-[#00bfff44] to-[#00b1ff88]"
+      className="relative w-full min-h-screen py-24 px-6 flex flex-col items-center justify-center overflow-hidden text-black  dark:text-white "
       style={{ fontFamily: "'Poppins', 'Inter', system-ui, sans-serif" }}
     >
       {/* ── Background ── */}
@@ -360,8 +360,7 @@ export default function FAQ() {
         style={{
           background:
             "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(14,165,233,0.10) 0%, transparent 70%)," +
-            "radial-gradient(ellipse 60% 40% at 80% 90%, rgba(99,102,241,0.08) 0%, transparent 70%)," +
-            "#f8fafc",
+            "radial-gradient(ellipse 60% 40% at 80% 90%, rgba(99,102,241,0.08) 0%, transparent 70%)",
         }}
       />
       <div
@@ -372,7 +371,6 @@ export default function FAQ() {
           backgroundSize: "28px 28px",
         }}
       />
-      <div className="absolute inset-0 -z-20 bg-slate-950 hidden dark:block" />
 
       <div className="relative z-10 max-w-3xl w-full mx-auto">
         {/* ── Header ── */}

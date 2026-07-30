@@ -34,7 +34,7 @@ export default function BackgroundEffect() {
           ${pulseClass}
           z-[-10]
           transition-colors duration-1000
-          bg-[#7f5af033] dark:bg-[#00bfff33]
+          bg-[#7f5af033] 
         `}
         style={{ animationDuration: "6s" }}
       />
@@ -49,7 +49,7 @@ export default function BackgroundEffect() {
           ${pulseClass}
           z-[-10]
           transition-colors duration-1000
-          bg-[#00dfd8aa] dark:bg-[#00dfd8]
+          bg-[#00dfd8aa] 
         `}
         style={{ animationDuration: "5s" }}
       />

@@ -123,7 +123,7 @@ export default function Hero() {
           px-4 xs:px-6 text-center
           pb-28 overflow-hidden
           pt-[env(safe-area-inset-top)]
-          bg-white text-black dark:bg-[#0b1220] dark:text-white bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+          text-black dark:text-white
         "
         aria-label="Hero Section"
         aria-labelledby="hero-heading"
@@ -132,21 +132,14 @@ export default function Hero() {
         <div
           aria-hidden="true"
           className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(160deg, rgba(0,191,255,0.07) 0%, rgba(0,112,243,0.12) 60%, transparent 100%)",
-          }}
+          style={{ background: "transparent" }}
         />
 
         {/* Decorative circle blur — pure CSS depth */}
         <div
           aria-hidden="true"
           className="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
+          style={{ background: "transparent" }}
         />
 
         {/* ── Content ─────────────────────────────────────────────── */}

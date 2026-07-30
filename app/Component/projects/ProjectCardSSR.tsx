@@ -127,15 +127,15 @@ export default function ProjectCardSSR({
         className="project-card group relative rounded-2xl overflow-hidden border transition-all duration-300
           hover:-translate-y-1 hover:shadow-2xl focus-within:shadow-2xl
           w-full max-w-full flex flex-col
-          border-gray-100/80 bg-white
-          dark:border-slate-700/60 dark:bg-slate-800/50
-          backdrop-blur-sm shadow-sm"
+          border-white/40 bg-white/40
+          dark:border-slate-700/40 dark:bg-slate-900/40
+          backdrop-blur-md shadow-sm"
         style={{ boxSizing: "border-box", minWidth: 0 }}
         aria-labelledby={`project-${safeId}`}
         data-project-id={project.id ?? safeId}
       >
         {/* ── IMAGE AREA ── */}
-        <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-gray-50 dark:bg-slate-900">
+        <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-slate-200/40 dark:bg-slate-800/30">
           {/* Bottom gradient overlay */}
           <div
             className="absolute bottom-0 inset-x-0 h-16 z-10 pointer-events-none"

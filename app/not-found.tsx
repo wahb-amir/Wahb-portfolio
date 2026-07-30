@@ -48,8 +48,7 @@ export default function NotFound() {
     <div
       className="
         relative min-h-screen w-full flex flex-col items-center justify-center
-        bg-[#f9fafb] dark:bg-[#0f172a]
-        bg-gradient-to-b from-[#00bfff44] to-[#00b1ff88]
+        bg-transparent dark:bg-transparent
         text-black dark:text-white
         overflow-hidden
         pt-[env(safe-area-inset-top)]
