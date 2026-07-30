@@ -73,12 +73,13 @@ interface DustMote {
 // ---------------------------------------------------------------------------
 // Generation — all seeded so SSR matches client
 // ---------------------------------------------------------------------------
-const SEED_DUST   = 42;
+const highResSeed = Math.floor(performance.now() * 1000);
+const SEED_DUST   = highResSeed;
 const SEED_TWINK  = 137;
 const SEED_MOTE   = 999;
 
-const DUST_STAR_COUNT  = 185;
-const TWINKLE_COUNT    = 70;
+const DUST_STAR_COUNT  = 1500;
+const TWINKLE_COUNT    = 500;
 const DUST_MOTE_COUNT  = 35;
 
 function generateDustStars(): DustStar[] {
