@@ -791,12 +791,6 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <>
       <style>{`
-        .page-bg {
-          background: linear-gradient(to bottom, #f0f9ff, #ffffff);
-        }
-        .dark .page-bg {
-          background: linear-gradient(to bottom, #0b1220, #0d1627);
-        }
         @keyframes fade-up {
           from { opacity: 0; transform: translateY(16px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -817,9 +811,8 @@ export default async function ProjectPage({ params }: Props) {
       <main
         className="
           relative flex min-h-[65vh] flex-col items-center justify-start
-          overflow-hidden bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
-          bg-white px-4 pb-28 pt-[env(safe-area-inset-top)]
-          text-center text-black dark:bg-[#0b1220] dark:text-white
+          overflow-hidden bg-transparent px-4 pb-28 pt-[env(safe-area-inset-top)]
+          text-center text-black dark:text-white
           sm:min-h-[72vh] sm:px-6
         "
       >

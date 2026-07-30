@@ -132,12 +132,6 @@ export default function ProjectsPage() {
           box-sizing: border-box;
           animation: ps-card-enter 0.45s ease both;
         }
-        .projects-page-bg {
-          background: linear-gradient(to bottom, #f0f9ff, #ffffff);
-        }
-        .dark .projects-page-bg {
-          background: linear-gradient(to bottom, #0b1220, #0d1627);
-        }
       `}</style>
 
       <main
@@ -148,8 +142,7 @@ export default function ProjectsPage() {
           px-4 xs:px-6 text-center
           pb-28 overflow-hidden
           pt-[env(safe-area-inset-top)]
-          bg-white text-black dark:bg-[#0b1220] dark:text-white
-          bg-gradient-to-b from-[#00b1ff88] to-[#00bfff44]
+          bg-transparent text-black dark:text-white
         "
         role="main"
         aria-label="All Projects"

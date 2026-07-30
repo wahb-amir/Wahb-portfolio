@@ -98,3 +98,10 @@ svg:not([data-bg]) {
     will-change: transform;
   }
 }
+
+/* Custom premium focus indicator for TV Remote/D-Pad navigation */
+*:focus-visible {
+  outline: 3px solid #06b6d4 !important; /* cyan-500 */
+  outline-offset: 3px !important;
+  border-radius: 4px;
+}
