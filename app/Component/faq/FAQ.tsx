@@ -363,14 +363,7 @@ export default function FAQ() {
             "radial-gradient(ellipse 60% 40% at 80% 90%, rgba(99,102,241,0.08) 0%, transparent 70%)",
         }}
       />
-      <div
-        className="absolute inset-0 -z-10 opacity-[0.3] dark:opacity-[0.1]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, #94a3b8 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
+      
 
       <div className="relative z-10 max-w-3xl w-full mx-auto">
         {/* ── Header ── */}

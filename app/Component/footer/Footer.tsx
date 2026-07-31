@@ -16,14 +16,12 @@ import {
   SiMongodb,
 } from "react-icons/si";
 import {
-  faGithub,
   faLinkedin,
   faXTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ArrowUpRight,
-  ExternalLink,
   Heart,
   MapPin,
   Coffee,
@@ -37,10 +35,7 @@ const playfair = Playfair_Display({
 });
 const dmSans = DM_Sans({ subsets: ["latin"] });
 
-const LazyBackgroundEffect = dynamic(
-  () => import("../effects/BackgroundEffect"),
-  { ssr: false, loading: () => null },
-);
+
 
 const NAV_LINKS = [
   { label: "Skills", id: "skills" },
@@ -116,10 +111,6 @@ export default function Footer() {
       role="contentinfo"
       aria-label="Site footer"
     >
-      {/* Background effect */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <LazyBackgroundEffect />
-      </div>
 
       {/* Grain */}
       <div
