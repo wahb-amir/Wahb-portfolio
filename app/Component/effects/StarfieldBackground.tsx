@@ -438,7 +438,8 @@ function drawMotesFrame(
   reduced: boolean
 ) {
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#ffffff";
+  // Atmospheric motes: warm pearl / soft sky-white palette
+  const MOTE_COLORS = ["#f8fafc", "#f1f5f9", "#e2e8f0", "#fffbf0", "#fef9ec"];
 
   for (const m of DUST_MOTES) {
     const cycle = reduced
@@ -461,7 +462,9 @@ function drawMotesFrame(
     const r     = (m.size * scale) / 2;
 
     ctx.globalAlpha = alpha;
-    ctx.filter = m.size > 38 ? "blur(22px)" : "blur(14px)";
+    ctx.filter = m.size > 38 ? "blur(24px)" : "blur(16px)";
+    // Pick a warm atmospheric mote color
+    ctx.fillStyle = MOTE_COLORS[Math.floor(m.size % MOTE_COLORS.length)];
     ctx.beginPath();
     ctx.arc(m.x * w + dx, m.y * h + dy, r, 0, Math.PI * 2);
     ctx.fill();
@@ -585,13 +588,39 @@ export default function StarfieldBackground() {
       {/* ══════════════ LIGHT MODE ══════════════ */}
       {!isDark && (
         <>
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-200 via-slate-100 to-zinc-50" />
+          {/* Stratospheric atmospheric gradient — multi-stop, no harsh white */}
           <div
-            className="absolute top-0 right-0 w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] pointer-events-none"
+            className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle at 75% 25%, rgba(253,230,138,0.3) 0%, rgba(251,146,60,0.05) 45%, transparent 70%)",
-              transform: "translate(20%, -20%)",
+                "linear-gradient(180deg, #dde6f0 0%, #e8eef5 18%, #edf2f7 42%, #f1f5f9 68%, #f5f8fc 85%, #f8fafc 100%)",
+            }}
+          />
+          {/* Solar glare — top-right corner warm sun */}
+          <div
+            className="absolute top-0 right-0 w-[700px] h-[700px] sm:w-[900px] sm:h-[900px] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at 72% 22%, rgba(253,244,202,0.55) 0%, rgba(253,230,138,0.30) 18%, rgba(251,191,96,0.12) 38%, rgba(248,159,60,0.04) 58%, transparent 72%)",
+              transform: "translate(22%, -22%)",
+              filter: "blur(40px)",
+            }}
+          />
+          {/* Secondary cold blue horizon ambient — bottom-left */}
+          <div
+            className="absolute bottom-0 left-0 w-[500px] h-[400px] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse at 20% 90%, rgba(186,210,235,0.35) 0%, rgba(203,223,240,0.15) 45%, transparent 70%)",
+              filter: "blur(50px)",
+            }}
+          />
+          {/* Subtle upper-left cool atmosphere fill */}
+          <div
+            className="absolute top-0 left-0 w-[600px] h-[500px] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse at 10% 5%, rgba(200,220,240,0.25) 0%, transparent 60%)",
               filter: "blur(60px)",
             }}
           />

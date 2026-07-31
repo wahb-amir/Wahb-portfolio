@@ -127,9 +127,9 @@ export default function ProjectCardSSR({
         className="project-card group relative rounded-2xl overflow-hidden border transition-all duration-300
           hover:-translate-y-1 hover:shadow-2xl focus-within:shadow-2xl
           w-full max-w-full flex flex-col
-          border-white/40 bg-white/40
+          border-slate-200/80 bg-white/72
           dark:border-slate-700/40 dark:bg-slate-900/40
-          backdrop-blur-md shadow-sm"
+          backdrop-blur-md shadow-sm shadow-slate-200/50 dark:shadow-none"
         style={{ boxSizing: "border-box", minWidth: 0 }}
         aria-labelledby={`project-${safeId}`}
         data-project-id={project.id ?? safeId}
@@ -214,9 +214,9 @@ export default function ProjectCardSSR({
                   key={`${String(t).slice(0, 20)}-${i}`}
                   title={String(t)}
                   className="text-[11px] px-2.5 py-0.5 rounded-full font-medium
-                    bg-gray-100 text-gray-600
+                    bg-slate-100 text-slate-700
                     dark:bg-slate-700/70 dark:text-slate-300
-                    border border-gray-200/60 dark:border-slate-600/40
+                    border border-slate-200/80 dark:border-slate-600/40
                     truncate max-w-[100px]"
                 >
                   {t}

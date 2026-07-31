@@ -4,22 +4,22 @@
    ─────────────────────────────────────────────── */
 
 :root {
-  --gh-bg: rgba(248, 250, 253, 0.92);
-  --gh-border: rgba(0, 0, 0, 0.06);
+  --gh-bg: rgba(255, 255, 255, 0.72);
+  --gh-border: rgba(148, 163, 184, 0.45);
   --gh-heading: #0f172a;
-  --gh-sub: #9ca3af;
-  --gh-badge-bg: rgba(48, 161, 78, 0.09);
-  --gh-badge-clr: #216e39;
+  --gh-sub: #64748b;
+  --gh-badge-bg: rgba(16, 185, 129, 0.10);
+  --gh-badge-clr: #065f46;
   --gh-tip-bg: #ffffff;
   --gh-tip-clr: #0f172a;
   --gh-tip-shadow:
-    0 8px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.06);
+    0 8px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(148, 163, 184, 0.20);
   --gh-card-shadow:
-    0 2px 20px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --gh-skel-base: #e8edf2;
-  --gh-skel-shine: #f4f7fa;
+    0 4px 24px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.90);
+  --gh-skel-base: #e2e8f0;
+  --gh-skel-shine: #f1f5f9;
   --gh-skel-dot: #30a14e;
-  --gh-dot-idle: #d1d8e0;
+  --gh-dot-idle: #cbd5e1;
 }
 
 .dark {
@@ -85,8 +85,8 @@
   max-width: 980px;
   margin: 24px auto;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.8); /* bg-white/80 for light mode */
-  border: 1px solid var(--gh-border);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.40);
   border-radius: 20px;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -97,7 +97,7 @@
 }
 
 .dark .gh-card {
-  background: transparent; /* dark:bg-transparent */
+  background: transparent;
 }
 
 /* Override pure black background and neon green for the React Activity Calendar in light mode */

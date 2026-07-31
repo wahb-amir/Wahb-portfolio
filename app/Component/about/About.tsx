@@ -124,9 +124,9 @@ export default function About({ data }: { data: AboutContent }) {
 
         /* ── Glassmorphism cards ── */
         .about-glass {
-          background: rgba(255,255,255,0.45);
-          border-color: rgba(0,0,0,0.08);
-          box-shadow: 0 4px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
+          background: rgba(255,255,255,0.68);
+          border-color: rgba(148,163,184,0.50);
+          box-shadow: 0 4px 28px rgba(15,23,42,0.07), inset 0 1px 0 rgba(255,255,255,0.90);
         }
         .dark .about-glass,
         :is(.dark) .about-glass {
@@ -146,9 +146,9 @@ export default function About({ data }: { data: AboutContent }) {
 
         /* ── Quick-facts card ── */
         .about-facts-card {
-          background: rgba(255,255,255,0.40);
-          border-color: rgba(0,0,0,0.07);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+          background: rgba(255,255,255,0.65);
+          border-color: rgba(148,163,184,0.45);
+          box-shadow: 0 4px 20px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.85);
         }
         .dark .about-facts-card,
         :is(.dark) .about-facts-card {
@@ -160,8 +160,8 @@ export default function About({ data }: { data: AboutContent }) {
         /* ── Fact pill base ── */
         .fact-pill {
           transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
-          background: rgba(15,23,42,0.06);
-          border-color: rgba(15,23,42,0.12);
+          background: rgba(248,250,252,0.85);
+          border-color: rgba(148,163,184,0.45);
           color: #1e293b;
         }
         .dark .fact-pill,
@@ -172,7 +172,7 @@ export default function About({ data }: { data: AboutContent }) {
         }
         .fact-pill:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 16px rgba(0,229,195,0.2);
+          box-shadow: 0 4px 16px rgba(14,165,233,0.15);
         }
 
         /* ── Fact pill accent (every 3rd) ── */
@@ -189,9 +189,9 @@ export default function About({ data }: { data: AboutContent }) {
 
         /* ── Timeline card ── */
         .about-tl-card {
-          background: rgba(255,255,255,0.40);
-          border-color: rgba(0,0,0,0.07);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+          background: rgba(255,255,255,0.65);
+          border-color: rgba(148,163,184,0.45);
+          box-shadow: 0 4px 20px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.85);
         }
         .dark .about-tl-card,
         :is(.dark) .about-tl-card {
@@ -239,9 +239,9 @@ export default function About({ data }: { data: AboutContent }) {
 
         /* ── Quote card ── */
         .about-quote-card {
-          background: rgba(255,255,255,0.48);
-          border-color: rgba(0,229,195,0.25);
-          box-shadow: 0 0 60px -20px rgba(0,229,195,0.12), 0 4px 24px rgba(0,0,0,0.08);
+          background: rgba(255,255,255,0.70);
+          border-color: rgba(148,163,184,0.40);
+          box-shadow: 0 0 60px -20px rgba(14,165,233,0.10), 0 4px 24px rgba(15,23,42,0.07);
         }
         .dark .about-quote-card,
         :is(.dark) .about-quote-card {
@@ -329,11 +329,10 @@ export default function About({ data }: { data: AboutContent }) {
 
               <motion.div
                 variants={fadeUp}
-                className={`${mono.className} mt-5 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border`}
+                className={`${mono.className} mt-5 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border backdrop-blur-sm`}
                 style={{
-                  background: "rgba(2,18,28,0.7)",
+                  background: "rgba(15,23,42,0.82)",
                   borderColor: "rgba(0,229,195,0.35)",
-                  backdropFilter: "blur(12px)",
                 }}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />

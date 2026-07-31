@@ -77,8 +77,8 @@ export default function NavbarShell({
         <div
           className={`mx-auto max-w-6xl flex items-center justify-between transition-all duration-300 rounded-2xl border backdrop-blur-xl ${
             compact
-              ? "py-2 px-4 shadow-lg bg-white/70 dark:bg-slate-900/80 border-slate-200/50 dark:border-white/10"
-              : "py-3 px-6 bg-white/10 dark:bg-white/5 border-white/20 dark:border-white/10"
+              ? "py-2 px-4 shadow-lg bg-white/82 dark:bg-slate-900/80 border-slate-200/70 dark:border-white/10 shadow-slate-200/60 dark:shadow-none"
+              : "py-3 px-6 bg-white/20 dark:bg-white/5 border-slate-300/40 dark:border-white/10"
           }`}
         >
           {/* LEFT – Logo */}

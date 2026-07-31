@@ -115,7 +115,7 @@ export default function Contact() {
       
 
       <div
-        className="overflow-hidden border-b border-gray-300 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm"
+        className="overflow-hidden border-b border-slate-200/80 dark:border-gray-800 bg-white/55 dark:bg-gray-900/40 backdrop-blur-sm"
         aria-hidden
       >
         <div className="inline-flex whitespace-nowrap animate-[ticker_36s_linear_infinite] hover:[animation-play-state:paused] py-2.5 font-mono text-[10px] font-bold tracking-[0.18em] text-gray-600 dark:text-gray-400">
@@ -229,7 +229,7 @@ export default function Contact() {
               <div className="text-[9px] tracking-[0.25em] uppercase text-gray-600 dark:text-gray-400 mb-5 font-bold">
                 — Status
               </div>
-              <div className="border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm overflow-hidden">
+              <div className="border border-slate-200/80 dark:border-gray-800 bg-white/72 dark:bg-gray-900/50 backdrop-blur-sm overflow-hidden shadow-sm dark:shadow-none">
                 {TERMINAL_ROWS.map(([k, v, accent]) => (
                   <div
                     key={k}
@@ -306,7 +306,7 @@ export default function Contact() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="border border-gray-300 dark:border-gray-700 bg-white/55 dark:bg-gray-900/55 backdrop-blur-md shadow-sm dark:shadow-xl relative z-10"
+                  className="border border-slate-200/80 dark:border-gray-700 bg-white/68 dark:bg-gray-900/55 backdrop-blur-md shadow-sm dark:shadow-xl relative z-10"
                   aria-busy={status === "sending"}
                 >
                   <div className="border-b border-gray-200 dark:border-gray-700 px-5 sm:px-7 py-3.5 flex justify-between items-center bg-white/30 dark:bg-gray-950/60 gap-3 flex-wrap">

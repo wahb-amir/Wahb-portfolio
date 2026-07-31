@@ -194,8 +194,8 @@ function FAQCard({
         "group relative rounded-2xl border overflow-hidden",
         "transition-shadow duration-300",
         isOpen
-          ? "border-sky-300/50 dark:border-sky-700/40 bg-white/90 dark:bg-slate-800/70 shadow-[0_4px_24px_-4px_rgba(14,165,233,0.12)]"
-          : "border-slate-200/80 dark:border-slate-700/40 bg-white/55 dark:bg-slate-900/40 hover:shadow-[0_2px_12px_-2px_rgba(14,165,233,0.07)]",
+          ? "border-sky-300/60 dark:border-sky-700/40 bg-sky-50/90 dark:bg-slate-800/70 shadow-[0_4px_24px_-4px_rgba(14,165,233,0.15)]"
+          : "border-slate-200/90 dark:border-slate-700/40 bg-white/72 dark:bg-slate-900/40 hover:shadow-[0_2px_14px_-2px_rgba(14,165,233,0.10)] shadow-sm dark:shadow-none",
       )}
     >
       <motion.div
@@ -309,7 +309,7 @@ function CategoryPill({
         "transition-colors duration-200 overflow-hidden",
         active
           ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm"
-          : "bg-white/70 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-sky-300 dark:hover:border-sky-700",
+          : "bg-white/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-300/80 dark:border-slate-700 hover:border-sky-400/60 dark:hover:border-sky-700",
       )}
     >
       {active && (

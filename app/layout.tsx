@@ -43,7 +43,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div className="relative z-0 min-h-screen bg-slate-100 dark:bg-[#080e1a]">
+        <div className="relative z-0 min-h-screen bg-transparent dark:bg-[#080e1a]">
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <StarfieldBackground />
             <SpatialNavigation />

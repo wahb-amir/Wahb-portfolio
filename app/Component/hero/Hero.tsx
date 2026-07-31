@@ -171,7 +171,7 @@ export default function Hero() {
           </div>
 
           {/* ── Availability badge ── */}
-          <div className="h-fade-up h-d2 mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-300/60 dark:border-emerald-700/50 bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400">
+          <div className="h-fade-up h-d2 mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-400/60 dark:border-emerald-700/50 bg-white/75 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 shadow-sm dark:shadow-none backdrop-blur-sm">
             <span
               className="avail-dot w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"
               aria-hidden="true"
@@ -193,7 +193,7 @@ export default function Hero() {
           </h1>
 
           {/* ── H2: Value prop ── */}
-          <h2 className="h-fade-up h-d4 mt-3 text-base xs:text-lg sm:text-xl font-semibold text-slate-700 dark:text-slate-200 max-w-md mx-auto leading-snug">
+          <h2 className="h-fade-up h-d4 mt-3 text-base xs:text-lg sm:text-xl font-semibold text-slate-800 dark:text-slate-200 max-w-md mx-auto leading-snug">
             I build AI-powered SaaS and real-time apps that run in production.
           </h2>
 
@@ -205,7 +205,7 @@ export default function Hero() {
             {STACK.map((tech) => (
               <span
                 key={tech}
-                className="stack-chip px-3 py-1 text-xs font-semibold rounded-full border border-blue-200/70 dark:border-blue-700/50 text-blue-700 dark:text-cyan-300 bg-blue-50/80 dark:bg-blue-950/40 select-none"
+                className="stack-chip px-3 py-1 text-xs font-semibold rounded-full border border-sky-300/80 dark:border-blue-700/50 text-sky-800 dark:text-cyan-300 bg-white/75 dark:bg-blue-950/40 shadow-sm dark:shadow-none backdrop-blur-sm select-none"
               >
                 {tech}
               </span>
@@ -215,7 +215,7 @@ export default function Hero() {
           {/* ── Hackathon trophy badge ── */}
           <a
             href="#project-section"
-            className="h-fade-up h-d6 trophy-badge mt-5 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-yellow-300/70 dark:border-yellow-600/50 bg-yellow-50/80 dark:bg-yellow-950/30 text-yellow-800 dark:text-yellow-300 no-underline"
+            className="h-fade-up h-d6 trophy-badge mt-5 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-amber-300/80 dark:border-yellow-600/50 bg-white/75 dark:bg-yellow-950/30 text-amber-900 dark:text-yellow-300 no-underline shadow-sm dark:shadow-none backdrop-blur-sm"
             aria-label="View EcoLens — 3rd Place Hack for Humanity 2026"
           >
             {/* Trophy icon */}
