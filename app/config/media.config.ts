@@ -19,7 +19,7 @@ export const media = {
   logo: "/logo.webp",
 
   /** Open Graph / Twitter card image (1200×630) */
-  ogImage: "https://wahb.space/og-image.webp",
+  ogImage: "https://wahb.space/og-image.png",
 
   /** Apple Touch Icon (180×180) */
   appleTouchIcon: "/apple-touch-icon.webp",
@@ -36,10 +36,7 @@ export const media = {
 
 export type MediaKey = keyof typeof media;
 
-// ── Project screenshot galleries ──────────────────────────────────────────────
-// Keyed by project id (matches app/data/projects.json → id field).
-// These are read by project card / case study components.
-// ⚠️  Run `pnpm blob:upload` to replace these with Vercel Blob CDN URLs.
+
 export const projectMedia: Record<string, string[]> = {
   /** ClearPath — AI Document Intelligence Platform */
   "clearpath": [

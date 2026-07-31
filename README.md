@@ -231,7 +231,7 @@ Paths under `app/api/updates/internal/*` and `app/api/updates/git/*` are interna
 │   ├── favicon.zip
 │   ├── llms.txt
 │   ├── logo.webp
-│   ├── og-image.webp
+│   ├── og-image.png
 │   ├── Project
 │   │   ├── EcoLens
 │   │   │   ├── achivements.webp

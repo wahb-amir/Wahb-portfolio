@@ -67,7 +67,7 @@ export const siteMetadata: Metadata = {
     siteName: "Wahb Amir Portfolio",
     images: [
       {
-        url: "https://wahb.space/og-image.webp",
+        url: "https://wahb.space/og-image.png",
         width: 1200,
         height: 630,
         alt: "Wahb Amir — Full-Stack Engineer & AI Developer",
