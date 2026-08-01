@@ -162,7 +162,6 @@ export default function Hero() {
                   "linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #6366f1 100%)",
               }}
             >
-              {/* Removed 'overflow-hidden' from this div */}
               <div className="relative w-full h-full rounded-full bg-white dark:bg-slate-900">
                 <Avatar />
               </div>

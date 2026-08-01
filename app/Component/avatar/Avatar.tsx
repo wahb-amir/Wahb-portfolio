@@ -11,7 +11,7 @@ export default function Avatar() {
         aria-hidden="true"
       />
 
-      {/* Avatar image — PNG so Next.js can serve AVIF/WebP; decoding=sync prevents render delay */}
+  
       <figure
         className="relative mx-auto rounded-full p-1 bg-white dark:bg-slate-900 ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden"
         style={{ zIndex: 1 }}
@@ -24,7 +24,6 @@ export default function Avatar() {
           priority
           fetchPriority="high"
           sizes="(max-width: 480px) 120px, 150px"
-          decoding="sync"
           className="rounded-full object-cover w-full h-full"
         />
       </figure>
