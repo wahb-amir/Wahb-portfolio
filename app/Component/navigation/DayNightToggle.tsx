@@ -84,24 +84,30 @@ export default function DayNightToggle({
             }}
           />
 
-          {/* ── Concentric atmosphere rings – CSS transition on cx & stroke ── */}
+          {/* ── Concentric atmosphere rings — GPU translateX instead of cx ── */}
           {[0, 1, 2, 3, 4].map((i) => {
             const ringR = R * (i + 1) * 1.05;
             const lightColors = ["#bfdbfe","#93c5fd","#60a5fa","#3b82f6","#2563eb"];
             const darkColors  = ["#1e293b","#0f172a","#020617","#111827","#0a0a14"];
+            const offsetX = isDark ? W - R - R : 0;
             return (
-              <circle
+              <g
                 key={i}
-                cy={H / 2}
-                r={ringR}
-                fill="none"
-                strokeWidth={ringR * 0.55}
                 style={{
-                  cx: isDark ? W - R : R,
-                  stroke: isDark ? darkColors[i] : lightColors[i],
-                  transition: "cx 0.45s ease, stroke 0.45s ease",
+                  transform: `translateX(${offsetX}px)`,
+                  transition: "transform 0.45s ease",
                 }}
-              />
+              >
+                <circle
+                  cx={R}
+                  cy={H / 2}
+                  r={ringR}
+                  fill="none"
+                  strokeWidth={ringR * 0.55}
+                  stroke={isDark ? darkColors[i] : lightColors[i]}
+                  style={{ transition: "stroke 0.45s ease" }}
+                />
+              </g>
             );
           })}
 

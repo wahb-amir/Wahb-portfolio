@@ -1,13 +1,10 @@
-import dynamic from "next/dynamic";
 import Avatar from "../avatar/Avatar";
-import HeroCTAs from "./HeroCTAs";
-import HeroScrollHint from "./HeroScrollHint";
-import HeroProof from "./HeroProof";
-
-const GitHubActivity = dynamic(() => import("../github/index"), {
-  ssr: true,
-  loading: () => null,
-});
+import {
+  HeroCTAs,
+  HeroProof,
+  HeroScrollHint,
+  GitHubActivity,
+} from "./HeroClient";
 
 const STACK = [
   "Next.js",
@@ -35,16 +32,16 @@ export default function Hero() {
           100% { background-position:  200% center; }
         }
         @keyframes hero-pulse-ring {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.35); }
-          50%       { box-shadow: 0 0 0 10px rgba(59,130,246,0);  }
+          0%, 100% { opacity: 0.85; transform: scale(1); }
+          50%       { opacity: 1; transform: scale(1.03); }
         }
         @keyframes hero-dot-pulse {
           0%, 100% { opacity: 1; }
           50%       { opacity: 0.4; }
         }
         @keyframes trophy-glow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(234,179,8,0.3); }
-          50%       { box-shadow: 0 0 12px 3px rgba(234,179,8,0.18); }
+          0%, 100% { opacity: 0.92; transform: scale(1); }
+          50%       { opacity: 1; transform: scale(1.02); }
         }
 
         .h-fade-up  { animation: hero-fade-up  0.65s cubic-bezier(0.22,1,0.36,1) both; }
@@ -66,16 +63,17 @@ export default function Hero() {
             0 0 72px rgba(59,130,246,0.18);
         }
 
-        /* Avatar ring pulse */
+        /* Avatar ring pulse — compositor-only */
         .avatar-ring {
           animation: hero-pulse-ring 2.8s ease-in-out infinite;
+          will-change: transform, opacity;
         }
 
         /* Chip hover shimmer */
         .stack-chip {
           position: relative;
           overflow: hidden;
-          transition: border-color 0.2s, transform 0.2s;
+          transition: border-color 0.2s, transform 0.2s, opacity 0.2s;
         }
         .stack-chip::after {
           content: '';
@@ -101,7 +99,8 @@ export default function Hero() {
         /* Trophy badge */
         .trophy-badge {
           animation: trophy-glow 3s ease-in-out infinite;
-          transition: transform 0.2s;
+          transition: transform 0.2s, opacity 0.2s;
+          will-change: transform, opacity;
         }
         .trophy-badge:hover { transform: translateY(-1px) scale(1.02); }
       `}</style>

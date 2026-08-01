@@ -76,7 +76,7 @@ export default function HeroProof() {
       <p
         ref={ref}
         // className is now 100% static — no isDark branching, no mismatch
-        className="proof-text mt-4 text-sm font-medium tracking-wide select-none transition-all duration-700 ease-out"
+        className="proof-text mt-4 text-sm font-medium tracking-wide select-none transition-[opacity,transform] duration-700 ease-out"
         // opacity/translate driven by inline style so the static className
         // stays identical between server and client
         style={{

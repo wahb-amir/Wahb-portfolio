@@ -190,7 +190,7 @@ export default function Footer() {
                 }
                 className="group flex items-center gap-2 text-sm font-medium w-fit text-slate-600 dark:text-slate-400 hover:text-sky-700 dark:hover:text-sky-400 transition-colors duration-150"
               >
-                <span className="h-px w-3.5 group-hover:w-5 transition-all duration-200 bg-sky-700 dark:bg-sky-400 block flex-shrink-0" />
+                <span className="h-px w-3.5 origin-left scale-x-100 group-hover:scale-x-[1.43] transition-transform duration-200 bg-sky-700 dark:bg-sky-400 block flex-shrink-0" />
                 {label}
               </button>
             ))}

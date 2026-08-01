@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
-import { useReducedMotion } from "framer-motion";
 
 // ---------------------------------------------------------------------------
 // Mulberry32 PRNG
@@ -96,63 +95,78 @@ const SEED_NEBULA = 777;
 const SEED_TWINK  = 137;
 const SEED_MOTE   = 999;
 
-// Dust stars use a PER-LOAD random seed so the field is different every visit
-const SEED_DUST_RUNTIME = (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
-
 // ---------------------------------------------------------------------------
-// Generators — all called once at module initialisation
+// Lazy data — generated on first mount (not at module parse) to avoid blocking
+// the main thread during initial JS evaluation.
 // ---------------------------------------------------------------------------
+type StarfieldData = {
+  dustStars: DustStar[];
+  twinkleStars: TwinkleStar[];
+  dustMotes: DustMote[];
+  nebulaClouds: NebulaCloud[];
+  milkyWayPts: MilkyWayPoint[];
+};
 
-function generateDustStars(): DustStar[] {
-  const rng = createPrng(SEED_DUST_RUNTIME);
-  return Array.from({ length: DUST_STAR_COUNT }, () => {
-    const layerRoll = rng();
-    const layer: 0 | 1 | 2 = layerRoll < 0.5 ? 0 : layerRoll < 0.82 ? 1 : 2;
-    // ~30% chance to be a dust mote (warm grey-brown, slightly higher opacity)
-    const isDust = rng() < 0.30;
-    const colorIdx = isDust
-      ? PALETTE_LEN - Math.floor(rng() * 2) - 1  // pick last 2 (dust entries)
-      : Math.floor(rng() * (PALETTE_LEN - 2));    // pick any stellar colour
-    // Dust particles are a bit more opaque to simulate density
-    const opacity = isDust
-      ? 0.14 + rng() * 0.26 // 0.14–0.40
-      : 0.08 + rng() * 0.18; // 0.08–0.26
-    return { x: rng(), y: rng(), opacity, colorIdx, layer };
-  });
+let cachedStarfieldData: StarfieldData | null = null;
+
+function getStarCounts() {
+  const mobile =
+    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+  return {
+    dust: mobile ? 550 : DUST_STAR_COUNT,
+    twinkle: mobile ? 170 : TWINKLE_COUNT,
+    bright: mobile ? 8 : BRIGHT_COUNT,
+    motes: mobile ? 14 : DUST_MOTE_COUNT,
+    nebula: mobile ? 5 : NEBULA_COUNT,
+    milkyWay: mobile ? 70 : MILKY_WAY_PTS_N,
+  };
 }
 
-function generateTwinkleStars(): TwinkleStar[] {
-  const rng = createPrng(SEED_TWINK);
-  const stars: TwinkleStar[] = [];
+function buildStarfieldData(): StarfieldData {
+  const counts = getStarCounts();
+  const seedDust = (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
 
-  // Regular twinkling stars
-  for (let i = 0; i < TWINKLE_COUNT; i++) {
-    const base     = 0.22 + rng() * 0.42; // 0.22–0.64  (was 0.28–0.76)
-    const size: 1 | 2 = rng() < 0.15 ? 2 : 1;
-    const duration = 2.5 + rng() * 4.5;
-    const layerRoll = rng();
+  const dustRng = createPrng(seedDust);
+  const dustStars: DustStar[] = Array.from({ length: counts.dust }, () => {
+    const layerRoll = dustRng();
     const layer: 0 | 1 | 2 = layerRoll < 0.5 ? 0 : layerRoll < 0.82 ? 1 : 2;
-    stars.push({
-      x: rng(), y: rng(),
+    const isDust = dustRng() < 0.30;
+    const colorIdx = isDust
+      ? PALETTE_LEN - Math.floor(dustRng() * 2) - 1
+      : Math.floor(dustRng() * (PALETTE_LEN - 2));
+    const opacity = isDust
+      ? 0.14 + dustRng() * 0.26
+      : 0.08 + dustRng() * 0.18;
+    return { x: dustRng(), y: dustRng(), opacity, colorIdx, layer };
+  });
+
+  const twinkleRng = createPrng(SEED_TWINK);
+  const twinkleStars: TwinkleStar[] = [];
+  for (let i = 0; i < counts.twinkle; i++) {
+    const base = 0.22 + twinkleRng() * 0.42;
+    const size: 1 | 2 = twinkleRng() < 0.15 ? 2 : 1;
+    const duration = 2.5 + twinkleRng() * 4.5;
+    const layerRoll = twinkleRng();
+    const layer: 0 | 1 | 2 = layerRoll < 0.5 ? 0 : layerRoll < 0.82 ? 1 : 2;
+    twinkleStars.push({
+      x: twinkleRng(), y: twinkleRng(),
       size,
-      phase: rng() * Math.PI * 2,
+      phase: twinkleRng() * Math.PI * 2,
       speed: (2 * Math.PI) / duration,
       opacityMin: +(base * 0.14).toFixed(3),
       opacityMax: +base.toFixed(3),
-      colorIdx: Math.floor(rng() * PALETTE_LEN),
+      colorIdx: Math.floor(twinkleRng() * PALETTE_LEN),
       isBright: false,
       layer,
     });
   }
-
-  // Bright featured stars — smaller, dimmer, fewer
   const bRng = createPrng(SEED_TWINK + 1);
-  for (let i = 0; i < BRIGHT_COUNT; i++) {
-    const base     = 0.48 + bRng() * 0.28; // 0.48–0.76  (was 0.70–1.0)
+  for (let i = 0; i < counts.bright; i++) {
+    const base = 0.48 + bRng() * 0.28;
     const duration = 4 + bRng() * 4;
-    stars.push({
+    twinkleStars.push({
       x: bRng(), y: bRng(),
-      size: 2,                              // was 3, now capped at 2
+      size: 2,
       phase: bRng() * Math.PI * 2,
       speed: (2 * Math.PI) / duration,
       opacityMin: +(base * 0.25).toFixed(3),
@@ -163,60 +177,47 @@ function generateTwinkleStars(): TwinkleStar[] {
     });
   }
 
-  return stars;
-}
-
-function generateDustMotes(): DustMote[] {
-  const rng = createPrng(SEED_MOTE);
-  return Array.from({ length: DUST_MOTE_COUNT }, () => ({
-    x: rng(), y: rng(),
-    size: 18 + Math.floor(rng() * 36),
-    delay: rng() * 30,
-    duration: 14 + rng() * 16,
+  const moteRng = createPrng(SEED_MOTE);
+  const dustMotes: DustMote[] = Array.from({ length: counts.motes }, () => ({
+    x: moteRng(), y: moteRng(),
+    size: 18 + Math.floor(moteRng() * 36),
+    delay: moteRng() * 30,
+    duration: 14 + moteRng() * 16,
   }));
-}
 
-function generateNebulaClouds(): NebulaCloud[] {
-  const rng = createPrng(SEED_NEBULA);
-  // Mix emission nebulae (vivid) + dark absorption nebulae (muted)
-  const palette: Array<[number,number,number]> = [
-    [100,  60, 200], // violet emission
-    [ 60,  90, 200], // deep blue emission
-    [ 20, 130, 210], // cyan-blue emission
-    [200,  60, 100], // rose / H-alpha emission
-    [ 80,  60, 180], // indigo
-    [ 60, 140, 180], // teal
-    [ 70,  55,  45], // dark absorption nebula — warm brown-black
+  const nebulaRng = createPrng(SEED_NEBULA);
+  const palette: Array<[number, number, number]> = [
+    [100, 60, 200], [60, 90, 200], [20, 130, 210],
+    [200, 60, 100], [80, 60, 180], [60, 140, 180], [70, 55, 45],
   ];
-  return Array.from({ length: NEBULA_COUNT }, (_, i) => {
+  const nebulaClouds: NebulaCloud[] = Array.from({ length: counts.nebula }, (_, i) => {
     const [r, g, b] = palette[i % palette.length];
-    const isDark = i === 6; // last one is the dark nebula
+    const isDark = i === 6;
     return {
-      cx: 0.05 + rng() * 0.90, cy: 0.05 + rng() * 0.90,
-      rx: 0.09 + rng() * 0.20, ry: 0.05 + rng() * 0.12,
+      cx: 0.05 + nebulaRng() * 0.90, cy: 0.05 + nebulaRng() * 0.90,
+      rx: 0.09 + nebulaRng() * 0.20, ry: 0.05 + nebulaRng() * 0.12,
       r, g, b,
-      // Emission: 0.030–0.060  |  Dark absorption: 0.018–0.035
-      opacity: isDark ? 0.018 + rng() * 0.017 : 0.030 + rng() * 0.030,
-      angle: rng() * Math.PI,
+      opacity: isDark ? 0.018 + nebulaRng() * 0.017 : 0.030 + nebulaRng() * 0.030,
+      angle: nebulaRng() * Math.PI,
     };
   });
-}
 
-function generateMilkyWayPoints(): MilkyWayPoint[] {
-  const rng = createPrng(SEED_NEBULA + 1);
-  return Array.from({ length: MILKY_WAY_PTS_N }, () => ({
-    t: rng(),
-    perpOffset: (rng() * 2 - 1) * 0.5,
-    opacity: 0.007 + rng() * 0.014,
+  const mwRng = createPrng(SEED_NEBULA + 1);
+  const milkyWayPts: MilkyWayPoint[] = Array.from({ length: counts.milkyWay }, () => ({
+    t: mwRng(),
+    perpOffset: (mwRng() * 2 - 1) * 0.5,
+    opacity: 0.007 + mwRng() * 0.014,
   }));
+
+  return { dustStars, twinkleStars, dustMotes, nebulaClouds, milkyWayPts };
 }
 
-// Module-level data — allocated once, never reallocated
-const DUST_STARS    = generateDustStars();
-const TWINKLE_STARS = generateTwinkleStars();
-const DUST_MOTES    = generateDustMotes();
-const NEBULA_CLOUDS = generateNebulaClouds();
-const MILKY_WAY_PTS = generateMilkyWayPoints();
+function getStarfieldData(): StarfieldData {
+  if (!cachedStarfieldData) {
+    cachedStarfieldData = buildStarfieldData();
+  }
+  return cachedStarfieldData;
+}
 
 // Parallax speeds per layer (fraction of scrollY added as vertical offset)
 // Layer 0 = far (barely moves), Layer 1 = mid, Layer 2 = near
@@ -241,7 +242,12 @@ function sizeCanvas(
 // Static layer: Milky Way + nebula clouds + dust stars
 // Re-drawn only on mount / resize.
 // ---------------------------------------------------------------------------
-function drawStaticLayer(ctx: CanvasRenderingContext2D, w: number, h: number) {
+function drawStaticLayer(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  data: StarfieldData,
+) {
   ctx.clearRect(0, 0, w, h);
 
   // ── Milky Way diagonal band ──────────────────────────────────────────────
@@ -251,7 +257,7 @@ function drawStaticLayer(ctx: CanvasRenderingContext2D, w: number, h: number) {
   const bandW = Math.min(w, h) * 0.17;
 
   ctx.save();
-  for (const pt of MILKY_WAY_PTS) {
+  for (const pt of data.milkyWayPts) {
     const tx = pt.t * w * 1.3 - w * 0.15;
     const ty = pt.t * h * 1.3 - h * 0.15;
     const bx = tx * cos - ty * sin * 0.3 + w * 0.10;
@@ -273,7 +279,7 @@ function drawStaticLayer(ctx: CanvasRenderingContext2D, w: number, h: number) {
   ctx.restore();
 
   // ── Nebula clouds ────────────────────────────────────────────────────────
-  for (const cloud of NEBULA_CLOUDS) {
+  for (const cloud of data.nebulaClouds) {
     const cx = cloud.cx * w, cy = cloud.cy * h;
     const rx = cloud.rx * w, ry = cloud.ry * h;
     ctx.save();
@@ -294,7 +300,7 @@ function drawStaticLayer(ctx: CanvasRenderingContext2D, w: number, h: number) {
   // ── Dust stars (temperature-colored, 1×1 px) ────────────────────────────
   // Note: static canvas doesn't scroll — dust stars in layer 0 go here.
   // Layers 1 & 2 are drawn in the animated canvas so they can be offset.
-  for (const s of DUST_STARS) {
+  for (const s of data.dustStars) {
     if (s.layer !== 0) continue;
     const [r, g, b] = PALETTE_TABLE[s.colorIdx];
     ctx.globalAlpha = s.opacity;
@@ -337,15 +343,17 @@ function drawSpikes(
 // ---------------------------------------------------------------------------
 function drawTwinkleFrame(
   ctx: CanvasRenderingContext2D,
-  w: number, h: number,
+  w: number,
+  h: number,
   tSec: number,
   scrollY: number,
-  reduced: boolean
+  reduced: boolean,
+  data: StarfieldData,
 ) {
   ctx.clearRect(0, 0, w, h);
 
   // ── Moving dust stars (layers 1 & 2) ─────────────────────────────────────
-  for (const s of DUST_STARS) {
+  for (const s of data.dustStars) {
     if (s.layer === 0) continue; // layer 0 is on the static canvas
     const [r, g, b] = PALETTE_TABLE[s.colorIdx];
     const offset = reduced ? 0 : scrollY * PARALLAX_SPEED[s.layer];
@@ -356,8 +364,8 @@ function drawTwinkleFrame(
   }
 
   // ── Twinkling stars ───────────────────────────────────────────────────────
-  for (let i = 0; i < TWINKLE_STARS.length; i++) {
-    const s = TWINKLE_STARS[i];
+  for (let i = 0; i < data.twinkleStars.length; i++) {
+    const s = data.twinkleStars[i];
     const wave  = reduced ? 0.65 : (Math.sin(tSec * s.speed + s.phase) + 1) / 2;
     const alpha = s.opacityMin + (s.opacityMax - s.opacityMin) * wave;
     const scale = reduced ? 1 : 1 + 0.08 * wave;
@@ -433,15 +441,17 @@ function drawTwinkleFrame(
 // ---------------------------------------------------------------------------
 function drawMotesFrame(
   ctx: CanvasRenderingContext2D,
-  w: number, h: number,
+  w: number,
+  h: number,
   tSec: number,
-  reduced: boolean
+  reduced: boolean,
+  data: StarfieldData,
 ) {
   ctx.clearRect(0, 0, w, h);
   // Atmospheric motes: warm pearl / soft sky-white palette
   const MOTE_COLORS = ["#f8fafc", "#f1f5f9", "#e2e8f0", "#fffbf0", "#fef9ec"];
 
-  for (const m of DUST_MOTES) {
+  for (const m of data.dustMotes) {
     const cycle = reduced
       ? 0.5
       : (((tSec - m.delay) % m.duration) + m.duration) % m.duration;
@@ -479,49 +489,89 @@ function drawMotesFrame(
 // ---------------------------------------------------------------------------
 export default function StarfieldBackground() {
   const { resolvedTheme } = useTheme();
-  const reduced = useReducedMotion() ?? false;
-  const isDark  = resolvedTheme === "dark";
+  const [reduced, setReduced] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
+  const isDark = resolvedTheme === "dark";
 
   const staticCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const animCanvasRef   = useRef<HTMLCanvasElement | null>(null);
-  const rafRef          = useRef<number | undefined>(undefined);
-
-  // scrollY stored in a ref — written by a passive listener, read in rAF.
-  // Using a ref avoids React state re-renders and guarantees the latest value
-  // is always available inside the animation loop with zero overhead.
+  const animCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | undefined>(undefined);
   const scrollYRef = useRef(0);
+  const visibleRef = useRef(true);
+  const dataRef = useRef<StarfieldData | null>(null);
 
   useEffect(() => {
-    // Passive scroll listener — cannot block scrolling
-    function onScroll() { scrollYRef.current = window.scrollY; }
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // Defer canvas init until after first paint / idle time
+  useEffect(() => {
+    const start = () => {
+      dataRef.current = getStarfieldData();
+      setCanvasReady(true);
+    };
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(start, { timeout: 1800 });
+      return () => window.cancelIdleCallback(id);
+    } else {
+      const t = window.setTimeout(start, 120);
+      return () => window.clearTimeout(t);
+    }
+  }, []);
+
+  useEffect(() => {
+    function onScroll() {
+      scrollYRef.current = window.scrollY;
+    }
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
+    const onVis = () => {
+      visibleRef.current = document.visibilityState === "visible";
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  useEffect(() => {
+    if (!canvasReady || !dataRef.current) return;
+
+    const data = dataRef.current;
     const animCanvas = animCanvasRef.current;
     if (!animCanvas) return;
     const animCtx = animCanvas.getContext("2d");
     if (!animCtx) return;
 
     const staticCanvas = isDark ? staticCanvasRef.current : null;
-    const staticCtx    = staticCanvas ? staticCanvas.getContext("2d") : null;
+    const staticCtx = staticCanvas ? staticCanvas.getContext("2d") : null;
 
-    let width  = 0;
+    let width = 0;
     let height = 0;
-    const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
+    const frameBudget = mobile ? 33 : 16;
+    let lastFrameMs = 0;
 
     function resize() {
-      width  = window.innerWidth;
+      width = window.innerWidth;
       height = window.innerHeight;
       sizeCanvas(animCanvas as HTMLCanvasElement, animCtx as CanvasRenderingContext2D, width, height, dpr);
       if (staticCanvas && staticCtx) {
         sizeCanvas(staticCanvas, staticCtx, width, height, dpr);
-        drawStaticLayer(staticCtx, width, height);
+        drawStaticLayer(staticCtx, width, height, data);
       }
       if (reduced) {
-        if (isDark) drawTwinkleFrame(animCtx as CanvasRenderingContext2D, width, height, 0, 0, true);
-        else        drawMotesFrame  (animCtx as CanvasRenderingContext2D, width, height, 0, true);
+        if (isDark) {
+          drawTwinkleFrame(animCtx as CanvasRenderingContext2D, width, height, 0, 0, true, data);
+        } else {
+          drawMotesFrame(animCtx as CanvasRenderingContext2D, width, height, 0, true, data);
+        }
       }
     }
 
@@ -535,16 +585,29 @@ export default function StarfieldBackground() {
     window.addEventListener("resize", onResize);
 
     function frame(timeMs: number) {
+      if (!visibleRef.current) {
+        rafRef.current = requestAnimationFrame(frame);
+        return;
+      }
+      if (timeMs - lastFrameMs < frameBudget) {
+        rafRef.current = requestAnimationFrame(frame);
+        return;
+      }
+      lastFrameMs = timeMs;
+
       const t = timeMs / 1000;
       if (isDark) {
         drawTwinkleFrame(
           animCtx as CanvasRenderingContext2D,
-          width, height, t,
+          width,
+          height,
+          t,
           scrollYRef.current,
-          false
+          reduced,
+          data,
         );
       } else {
-        drawMotesFrame(animCtx as CanvasRenderingContext2D, width, height, t, false);
+        drawMotesFrame(animCtx as CanvasRenderingContext2D, width, height, t, reduced, data);
       }
       rafRef.current = requestAnimationFrame(frame);
     }
@@ -558,7 +621,7 @@ export default function StarfieldBackground() {
       window.removeEventListener("resize", onResize);
       if (rafRef.current !== undefined) cancelAnimationFrame(rafRef.current);
     };
-  }, [isDark, reduced]);
+  }, [isDark, reduced, canvasReady]);
 
   return (
     <div

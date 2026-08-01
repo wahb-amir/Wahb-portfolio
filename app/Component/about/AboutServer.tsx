@@ -1,6 +1,7 @@
 // components/AboutServer.tsx
 import getLatestAboutPayload from "@/lib/aboutService";
 import About from "./About";
+import JsonLdScript from "../shared/JsonLdScript";
 export default async function AboutServer() {
   const { payload } = await getLatestAboutPayload({
     clientVersion: null,
@@ -29,12 +30,7 @@ export default async function AboutServer() {
 
   return (
     <>
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
+      {jsonLd && <JsonLdScript id="about-jsonld" data={jsonLd} />}
 
       {/* Changed payload to about */}
       <About data={about} />

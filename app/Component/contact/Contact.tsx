@@ -190,7 +190,7 @@ export default function Contact() {
                   href={CAL_LINK}
                   target="_blank"
                   rel="noreferrer"
-                  className="group inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#0077b3]  text-white dark:text-[#0b1220] font-mono font-bold text-[12px] tracking-[0.12em] uppercase border-none transition-all duration-200 hover:bg-[#005f8f] dark:hover:bg-[#33ddff] hover:tracking-[0.18em] shadow-[0_4px_20px_rgba(0,119,179,0.35)] dark:shadow-[0_4px_20px_rgba(0,212,255,0.25)] hover:shadow-[0_6px_28px_rgba(0,119,179,0.5)] dark:hover:shadow-[0_6px_28px_rgba(0,212,255,0.35)]"
+                  className="group inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#0077b3]  text-white dark:text-[#0b1220] font-mono font-bold text-[12px] tracking-[0.12em] uppercase border-none transition-[background-color,transform,box-shadow] duration-200 hover:bg-[#005f8f] dark:hover:bg-[#33ddff] hover:scale-[1.02] shadow-[0_4px_20px_rgba(0,119,179,0.35)] dark:shadow-[0_4px_20px_rgba(0,212,255,0.25)] hover:shadow-[0_6px_28px_rgba(0,119,179,0.5)] dark:hover:shadow-[0_6px_28px_rgba(0,212,255,0.35)]"
                 >
                   <Calendar size={13} />
                   Schedule Now
@@ -492,7 +492,7 @@ export default function Contact() {
                     className={`w-full p-[22px] font-mono text-[13px] font-bold tracking-[0.14em] uppercase flex items-center justify-center gap-3 border-none transition-all duration-300 ${
                       status === "sending"
                         ? "bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                        : "bg-[#0077b3] text-white  dark:text-[#0b1220] cursor-pointer hover:tracking-[0.22em] hover:bg-[#005f8f] dark:hover:bg-[#33ddff]"
+                        : "bg-[#0077b3] text-white  dark:text-[#0b1220] cursor-pointer hover:scale-[1.01] hover:bg-[#005f8f] dark:hover:bg-[#33ddff]"
                     }`}
                   >
                     {status === "sending" ? (

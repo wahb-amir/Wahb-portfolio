@@ -53,7 +53,7 @@ export default function NavLinks({ items }: Props) {
         <li key={item.id}>
           <button
             onClick={() => scrollTo(item.id)}
-            className="relative px-4 py-2 text-sm font-bold transition-all group rounded-lg"
+            className="relative px-4 py-2 text-sm font-bold transition-[color,transform] group rounded-lg"
           >
             <span className="relative z-10 text-slate-800 dark:text-slate-100 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors">
               {item.name}

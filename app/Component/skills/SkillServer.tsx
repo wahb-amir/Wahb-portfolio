@@ -1,6 +1,6 @@
 // SkillServer.tsx (server component)
 import Skills from "./Skills";
-import React from "react";
+import JsonLdScript from "../shared/JsonLdScript";
 
 const name = "Wahb Amir";
 const siteUrl = "https://wahb.space";
@@ -55,10 +55,7 @@ const jsonLd = {
 export default function SkillServer() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLdScript id="skills-jsonld" data={jsonLd} />
       <Skills />
     </>
   );

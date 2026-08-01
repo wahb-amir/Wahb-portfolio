@@ -23,8 +23,7 @@ export default function Avatar() {
           height={300}
           priority
           fetchPriority="high"
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore — decoding="sync" is valid HTML; forces synchronous decode so LCP paints immediately
+          sizes="(max-width: 480px) 120px, 150px"
           decoding="sync"
           className="rounded-full object-cover w-full h-full"
         />

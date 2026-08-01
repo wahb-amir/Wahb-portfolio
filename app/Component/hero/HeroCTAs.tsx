@@ -118,7 +118,7 @@ export default function HeroCTAs() {
       {/* PRIMARY: Book a Demo */}
       <button
         onClick={() => setModalOpen(true)}
-        className="group relative inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 shadow-[0_4px_20px_rgba(37,99,235,0.25)] hover:shadow-[0_4px_24px_rgba(37,99,235,0.4)] transition-all duration-200 active:scale-[0.98] overflow-hidden"
+        className="group relative inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 shadow-[0_4px_20px_rgba(37,99,235,0.25)] hover:shadow-[0_4px_24px_rgba(37,99,235,0.4)] transition-[background-color,transform,box-shadow] duration-200 active:scale-[0.98] overflow-hidden"
         aria-label="Book a demo call"
       >
         {/* Subtle Google-style high-tech gloss line overlay */}
@@ -180,7 +180,7 @@ export default function HeroCTAs() {
           e.preventDefault();
           scrollTo("project-section");
         }}
-        className="group inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/80 text-slate-900 border border-slate-300 hover:bg-slate-100 dark:bg-zinc-900/40 dark:hover:bg-zinc-800/60 dark:border-zinc-800 dark:hover:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-all duration-200 active:scale-[0.98]"
+        className="group inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/80 text-slate-900 border border-slate-300 hover:bg-slate-100 dark:bg-zinc-900/40 dark:hover:bg-zinc-800/60 dark:border-zinc-800 dark:hover:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-[background-color,border-color,color,transform] duration-200 active:scale-[0.98]"
         aria-label="See my work"
       >
         <svg

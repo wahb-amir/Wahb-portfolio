@@ -25,7 +25,8 @@ module.exports = {
         "screen-min-850": { min: "850px" },
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["var(--font-geist-sans)", "Inter", "sans-serif"],
+        mono: ["var(--font-fira-code)", "ui-monospace", "monospace"],
       },
       keyframes: {
         float: {

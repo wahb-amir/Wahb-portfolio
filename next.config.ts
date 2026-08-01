@@ -11,7 +11,14 @@ const nextConfig = {
     contentDispositionType: "inline",
   },
   experimental: {
-    optimizePackageImports: ["framer-motion", "lucide-react", "react-icons"],
+    optimizePackageImports: [
+      "framer-motion",
+      "lucide-react",
+      "react-icons",
+      "@fortawesome/react-fontawesome",
+      "@fortawesome/free-brands-svg-icons",
+      "@fortawesome/free-solid-svg-icons",
+    ],
   },
 };
 

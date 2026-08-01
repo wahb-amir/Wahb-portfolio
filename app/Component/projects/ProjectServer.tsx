@@ -7,6 +7,7 @@ import ProjectCardSSR from "./ProjectCardSSR";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
 import Arrow from "../navigation/Arrow";
 import Link from "next/link";
+import JsonLdScript from "../shared/JsonLdScript";
 
 type ProjectsPayload<T = unknown> = {
   version: string | number | null;
@@ -318,10 +319,7 @@ async function ProjectsGrid() {
       )}
 
       {graph?.length > 0 && jsonLdGraph && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdGraph) }}
-        />
+        <JsonLdScript id="projects-jsonld" data={jsonLdGraph} />
       )}
     </>
   );

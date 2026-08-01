@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
 import NavLinks from "./NavLinks";
-import ThemeToggle from "./ThemeToggle";
-import MobileMenu from "./MobileMenu";
 import type { NavItem } from "./navConfig";
+
+const ThemeToggle = dynamic(() => import("./ThemeToggle"), { ssr: false });
+const MobileMenu = dynamic(() => import("./MobileMenu"), { ssr: false });
 
 interface Props {
   navItems: NavItem[];
@@ -70,12 +72,12 @@ export default function NavbarShell({
     <>
       <nav
         aria-label="Main navigation"
-        className={`fixed left-0 w-full z-50 transition-all duration-500 ease-in-out px-4 py-4 ${
+        className={`fixed left-0 w-full z-50 transition-[transform,opacity] duration-500 ease-in-out px-4 py-4 ${
           visible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
         <div
-          className={`mx-auto max-w-6xl flex items-center justify-between transition-all duration-300 rounded-2xl border backdrop-blur-xl ${
+          className={`mx-auto max-w-6xl flex items-center justify-between transition-[background-color,box-shadow,border-color,transform] duration-300 rounded-2xl border backdrop-blur-xl ${
             compact
               ? "py-2 px-4 shadow-lg bg-white/82 dark:bg-slate-900/80 border-slate-200/70 dark:border-white/10 shadow-slate-200/60 dark:shadow-none"
               : "py-3 px-6 bg-white/20 dark:bg-white/5 border-slate-300/40 dark:border-white/10"

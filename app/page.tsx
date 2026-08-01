@@ -1,7 +1,12 @@
 import React, { Suspense } from "react";
-import dynamic from "next/dynamic";
 
 import Hero from "./Component/hero/Hero";
+import SkillsServer from "./Component/skills/SkillServer";
+import ProjectServer from "./Component/projects/ProjectServer";
+import AboutServer from "./Component/about/AboutServer";
+import ContactForm from "./Component/contact/ContactClient";
+import FAQ from "./Component/faq/FAQ";
+import Footer from "./Component/footer/Footer";
 
 // ─── Skeleton fallbacks ────────────────────────────────────────────────────────
 function SectionSkeleton({ height = 400 }: { height?: number }) {
@@ -12,34 +17,6 @@ function SectionSkeleton({ height = 400 }: { height?: number }) {
     />
   );
 }
-
-const SkillsServer = dynamic(() => import("./Component/skills/SkillServer"), {
-  loading: () => <SectionSkeleton height={320} />,
-});
-
-const ProjectServer = dynamic(
-  () => import("./Component/projects/ProjectServer"),
-  {
-    loading: () => <SectionSkeleton height={600} />,
-  },
-);
-
-const AboutServer = dynamic(() => import("./Component/about/AboutServer"), {
-  loading: () => <SectionSkeleton height={400} />,
-});
-
-const ContactForm = dynamic(() => import("./Component/contact/Contact"), {
-  ssr: true,
-  loading: () => <SectionSkeleton height={480} />,
-});
-
-const FAQ = dynamic(() => import("./Component/faq/FAQ"), {
-  loading: () => <SectionSkeleton height={320} />,
-});
-
-const Footer = dynamic(() => import("./Component/footer/Footer"), {
-  loading: () => <SectionSkeleton height={120} />,
-});
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
