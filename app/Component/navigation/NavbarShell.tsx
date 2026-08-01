@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 import NavLinks from "./NavLinks";
 import type { NavItem } from "./navConfig";
@@ -85,26 +85,20 @@ export default function NavbarShell({
         >
           {/* LEFT – Logo */}
           <div className="flex-1 flex justify-start">
-            <a
-              href={process.env.NEXT_PUBLIC_SITE_URL}
+            <Link
+              href="/"
               aria-label="Home"
-              className="relative w-10 h-10"
+              className="relative w-10 h-10 group cursor-pointer"
             >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="relative w-10 h-10 cursor-pointer"
-              >
-                <Image
-                  src="/logo.webp"
-                  alt="Home"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 200px"
-                  priority
-                  className="rounded-full object-cover border-2 border-cyan-400 shadow-md"
-                />
-              </motion.div>
-            </a>
+              <Image
+                src="/logo.webp"
+                alt="Home"
+                fill
+                sizes="(max-width: 768px) 100vw, 200px"
+                priority
+                className="rounded-full object-cover border-2 border-cyan-400 shadow-md transition-transform duration-200 ease-out hover:scale-105 active:scale-95"
+              />
+            </Link>
           </div>
 
           {/* CENTER – Desktop nav links */}
