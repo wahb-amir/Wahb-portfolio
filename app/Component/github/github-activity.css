@@ -7,7 +7,7 @@
   --gh-bg: rgba(255, 255, 255, 0.72);
   --gh-border: rgba(148, 163, 184, 0.45);
   --gh-heading: #0f172a;
-  --gh-sub: #64748b;
+  --gh-sub: #000000;
   --gh-badge-bg: rgba(16, 185, 129, 0.10);
   --gh-badge-clr: #065f46;
   --gh-tip-bg: #ffffff;
@@ -26,7 +26,7 @@
   --gh-bg: rgba(13, 19, 33, 0.75);
   --gh-border: rgba(255, 255, 255, 0.07);
   --gh-heading: #c9d8eb;
-  --gh-sub: #4a6380;
+  --gh-sub: #eeeff0;
   --gh-badge-bg: rgba(38, 166, 65, 0.14);
   --gh-badge-clr: #39d353;
   --gh-tip-bg: #0b1320;

@@ -84,7 +84,7 @@ const Legend = memo(function Legend({ isDark }: { isDark: boolean }) {
     <div
       style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12 }}
     >
-      <span className="gh-sub">Less</span>
+      <span className="gh-sub ">Less</span>
       <div style={{ display: "flex", gap: 4 }}>
         {pal.map((c, i) => (
           <div
