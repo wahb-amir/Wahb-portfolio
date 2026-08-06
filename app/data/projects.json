@@ -1,6 +1,7 @@
 [
   {
     "id": "clearpath",
+    "status": "working-in-progress",
     "title": "ClearPath — AI Document Intelligence Platform",
     "role": "Full-Stack Engineer & AI Pipeline Architect",
     "badge": {
@@ -176,6 +177,7 @@
   },
   {
     "id": "econoquest",
+    "status":"offline",
     "title": "EconoQuest — AI Economics Simulator",
     "role": "Full-Stack Engineer, AI/RAG Architect & Simulation Designer",
     "badge": {
@@ -282,6 +284,7 @@
   },
   {
     "id": "ecolens",
+    "status":"live",
     "title": "EcoLens — AI Waste Classifier",
     "role": "Full-Stack Engineer & ML Integrator",
     "badge": {
@@ -389,6 +392,7 @@
   },
   {
     "id": "ecom-1",
+    "status":"offline",
     "title": "Modern Online Store",
     "role": "Full-Stack Developer",
     "images": [
