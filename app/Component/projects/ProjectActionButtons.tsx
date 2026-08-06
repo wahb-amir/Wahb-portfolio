@@ -72,6 +72,10 @@ export default function ProjectActionButtons({
       setIsClosing(false);
     }, 180);
   };
+  const requestContinue = () => {
+    window.open(liveLink || '', '_blank', 'noopener,noreferrer');
+    requestClose();
+  }
 
   const shouldShowModal = isModalOpen || isClosing;
 
@@ -166,7 +170,7 @@ export default function ProjectActionButtons({
             <div className="mt-5 flex justify-end">
               <button
                 type="button"
-                onClick={requestClose}
+                onClick={requestContinue}
                 className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-700"
               >
                 Continue anyway
