@@ -260,6 +260,7 @@ export default function ProjectCardSSR({
                 title={title}
                 liveLink={liveLink}
                 repoLinks={repoLinks}
+                status={project.status}
               />
             </div>
             <div className="flex items-center gap-2">
