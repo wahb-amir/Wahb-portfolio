@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 80],
@@ -10,7 +11,10 @@ const nextConfig = {
     // Inline images below 8KB to save a round-trip
     contentDispositionType: "inline",
   },
+  // Next.js 16.3: PPR now lives under cacheComponents
+  cacheComponents: true,
   experimental: {
+    // Tree-shake icon libraries to only ship icons that are actually used
     optimizePackageImports: [
       "framer-motion",
       "lucide-react",
@@ -18,8 +22,9 @@ const nextConfig = {
       "@fortawesome/react-fontawesome",
       "@fortawesome/free-brands-svg-icons",
       "@fortawesome/free-solid-svg-icons",
+      "@heroicons/react",
     ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
