@@ -3,6 +3,7 @@
 // Zero JS theme branching = zero flash, zero hydration mismatch.
 
 import React, { Suspense } from "react";
+import { cacheLife } from "next/cache";
 import ProjectCardSSR from "./ProjectCardSSR";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
 import Arrow from "../navigation/Arrow";
@@ -125,7 +126,11 @@ function ProjectsGridSkeleton() {
 
 // ─── Async data component ─────────────────────────────────────────────────────
 async function ProjectsGrid() {
+  "use cache";
+  cacheLife("hours");
+
   let payload: ProjectsPayload = { version: null, data: null };
+
 
   try {
     const { payload: svcPayload } = await getLatestProjectsPayload({
@@ -286,6 +291,7 @@ async function ProjectsGrid() {
         >
           <Link
             href="/projects"
+            prefetch={true}
             className="
               group inline-flex items-center gap-2.5
               px-6 py-3 rounded-full

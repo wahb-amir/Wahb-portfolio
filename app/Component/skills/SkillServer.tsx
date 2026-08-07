@@ -1,4 +1,5 @@
 // SkillServer.tsx (server component)
+import { cacheLife } from "next/cache";
 import Skills from "./Skills";
 import JsonLdScript from "../shared/JsonLdScript";
 
@@ -52,7 +53,10 @@ const jsonLd = {
   },
 };
 
-export default function SkillServer() {
+export default async function SkillServer() {
+  "use cache";
+  cacheLife("hours");
+
   return (
     <>
       <JsonLdScript id="skills-jsonld" data={jsonLd} />
