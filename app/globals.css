@@ -2,85 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+body {}
+
+/* ── Scrollbar — consolidated (was duplicated 3×) ──────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  {
+  background: linear-gradient(180deg, #2d2d2d, #1a1a1a);
+  border-radius: 9999px;
 }
-.custom-scrollbar::-webkit-scrollbar {
-  height: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb:hover { background: #3d3d3d; }
+
+.custom-scrollbar::-webkit-scrollbar        { height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track  { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb  {
   background: rgba(156, 163, 175, 0.3);
   border-radius: 10px;
 }
+
+/* Firefox */
+* { scrollbar-width: thin; scrollbar-color: #94a3b8 transparent; }
+
+/* Keep SVG backgrounds transparent */
+svg:not([data-bg]) { background: transparent; }
+
+.max-w-screen { max-width: 100dvw; }
+
 .neon-glow {
   text-shadow:
     0 0 8px #00ffff,
     0 0 16px #00bfff,
     0 0 24px #00aaff;
 }
-body,
-html,
-#__next {
-  background-color: transparent;
-}
-@media (max-width: 850px) {
-  .project-card {
-    width: 100%;
-  }
-}
-/* Keep SVG backgrounds transparent */
-svg:not([data-bg]) {
-  background: transparent;
-}
-.max-w-screen {
-  max-width: 100dvw;
-}
-/* globals.css */
-::-webkit-scrollbar {
-  width: 6px;
-}
 
-::-webkit-scrollbar-thumb {
-  background-color: #9ca3af; /* gray-400 */
-  border-radius: 9999px;
-}
+body, html, #__next { background-color: transparent; }
 
-.dark ::-webkit-scrollbar-thumb {
-  background-color: #4b5563; /* gray-600 */
-}
+@media (max-width: 850px) { .project-card { width: 100%; } }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-/* Thin & modern dark scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #2d2d2d, #1a1a1a);
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #3d3d3d; /* slightly lighter on hover */
-}
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #94a3b8 transparent;
-}
-
-/* ── Light Mode Glass Deck card utility ─────────────────────────────── */
-/* Used on section cards to provide a consistent glassmorphic surface   */
+/* ── Light Mode Glass Deck card utility ───────────────────────────────── */
 .lm-glass {
   background: rgba(255, 255, 255, 0.62);
   backdrop-filter: blur(12px);
@@ -103,26 +62,16 @@ svg:not([data-bg]) {
 
 /* Mobile drawer nav item entrance animation */
 @keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 /* Promote toggle knob layer on mobile for compositor-only animation */
-@media (max-width: 767px) {
-  .day-night-knob {
-    will-change: transform;
-  }
-}
+@media (max-width: 767px) { .day-night-knob { will-change: transform; } }
 
 /* Custom premium focus indicator for TV Remote/D-Pad navigation */
 *:focus-visible {
-  outline: 3px solid #06b6d4 !important; /* cyan-500 */
+  outline: 3px solid #06b6d4 !important;
   outline-offset: 3px !important;
   border-radius: 4px;
 }
