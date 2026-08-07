@@ -542,13 +542,18 @@ export default function StarfieldBackground() {
   useEffect(() => {
     if (!canvasReady || !dataRef.current) return;
 
+    // ── Light mode: CSS fallback in StarfieldBackgroundClient already
+    //    provides the visual. Running rAF here causes ctx.filter="blur(...)"
+    //    on every frame → forced reflow → TBT spike. Skip entirely.
+    if (!isDark) return;
+
     const data = dataRef.current;
     const animCanvas = animCanvasRef.current;
     if (!animCanvas) return;
     const animCtx = animCanvas.getContext("2d");
     if (!animCtx) return;
 
-    const staticCanvas = isDark ? staticCanvasRef.current : null;
+    const staticCanvas = staticCanvasRef.current;
     const staticCtx = staticCanvas ? staticCanvas.getContext("2d") : null;
 
     let width = 0;
@@ -567,11 +572,7 @@ export default function StarfieldBackground() {
         drawStaticLayer(staticCtx, width, height, data);
       }
       if (reduced) {
-        if (isDark) {
-          drawTwinkleFrame(animCtx as CanvasRenderingContext2D, width, height, 0, 0, true, data);
-        } else {
-          drawMotesFrame(animCtx as CanvasRenderingContext2D, width, height, 0, true, data);
-        }
+        drawTwinkleFrame(animCtx as CanvasRenderingContext2D, width, height, 0, 0, true, data);
       }
     }
 
@@ -595,20 +596,15 @@ export default function StarfieldBackground() {
       }
       lastFrameMs = timeMs;
 
-      const t = timeMs / 1000;
-      if (isDark) {
-        drawTwinkleFrame(
-          animCtx as CanvasRenderingContext2D,
-          width,
-          height,
-          t,
-          scrollYRef.current,
-          reduced,
-          data,
-        );
-      } else {
-        drawMotesFrame(animCtx as CanvasRenderingContext2D, width, height, t, reduced, data);
-      }
+      drawTwinkleFrame(
+        animCtx as CanvasRenderingContext2D,
+        width,
+        height,
+        timeMs / 1000,
+        scrollYRef.current,
+        reduced,
+        data,
+      );
       rafRef.current = requestAnimationFrame(frame);
     }
 
@@ -629,7 +625,9 @@ export default function StarfieldBackground() {
       className="fixed inset-0 overflow-hidden pointer-events-none"
       style={{ zIndex: -1 }}
     >
-      {/* ══════════════ DARK MODE ══════════════ */}
+      {/* ══════════════ DARK MODE only ══════════════
+          Light-mode gradients live entirely in StarfieldBackgroundClient
+          (pure CSS, no JS, no canvas, no DOM overhead here). */}
       {isDark && (
         <>
           {/* Ambient nebula glow — pure CSS */}
@@ -645,53 +643,10 @@ export default function StarfieldBackground() {
           />
           {/* Layer 0: static (Milky Way + nebulae + far dust) — drawn once */}
           <canvas ref={staticCanvasRef} className="absolute inset-0" />
+          {/* Layer 1+2: animated — twinkling + mid/near parallax dust */}
+          <canvas ref={animCanvasRef} className="absolute inset-0" />
         </>
       )}
-
-      {/* ══════════════ LIGHT MODE ══════════════ */}
-      {!isDark && (
-        <>
-          {/* Stratospheric atmospheric gradient — multi-stop, no harsh white */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, #dde6f0 0%, #e8eef5 18%, #edf2f7 42%, #f1f5f9 68%, #f5f8fc 85%, #f8fafc 100%)",
-            }}
-          />
-          {/* Solar glare — top-right corner warm sun */}
-          <div
-            className="absolute top-0 right-0 w-[700px] h-[700px] sm:w-[900px] sm:h-[900px] pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle at 72% 22%, rgba(253,244,202,0.55) 0%, rgba(253,230,138,0.30) 18%, rgba(251,191,96,0.12) 38%, rgba(248,159,60,0.04) 58%, transparent 72%)",
-              transform: "translate(22%, -22%)",
-              filter: "blur(40px)",
-            }}
-          />
-          {/* Secondary cold blue horizon ambient — bottom-left */}
-          <div
-            className="absolute bottom-0 left-0 w-[500px] h-[400px] pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse at 20% 90%, rgba(186,210,235,0.35) 0%, rgba(203,223,240,0.15) 45%, transparent 70%)",
-              filter: "blur(50px)",
-            }}
-          />
-          {/* Subtle upper-left cool atmosphere fill */}
-          <div
-            className="absolute top-0 left-0 w-[600px] h-[500px] pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse at 10% 5%, rgba(200,220,240,0.25) 0%, transparent 60%)",
-              filter: "blur(60px)",
-            }}
-          />
-        </>
-      )}
-
-      {/* Layer 1+2: animated — twinkling + mid/near parallax dust */}
-      <canvas ref={animCanvasRef} className="absolute inset-0" />
     </div>
   );
 }
