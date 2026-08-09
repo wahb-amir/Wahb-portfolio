@@ -1,4 +1,5 @@
 import Avatar from "../avatar/Avatar";
+import IdleMounted from "../shared/IdleMounted";
 import {
   HeroCTAs,
   HeroProof,
@@ -23,10 +24,6 @@ export default function Hero() {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0);    }
         }
-        @keyframes hero-scale-in {
-          from { opacity: 0; transform: scale(0.85); }
-          to   { opacity: 1; transform: scale(1);    }
-        }
         @keyframes hero-shimmer {
           0%   { background-position: -200% center; }
           100% { background-position:  200% center; }
@@ -45,9 +42,7 @@ export default function Hero() {
         }
 
         .h-fade-up  { animation: hero-fade-up  0.65s cubic-bezier(0.22,1,0.36,1) both; }
-        .h-scale-in { animation: hero-scale-in 0.55s cubic-bezier(0.22,1,0.36,1) both; }
 
-        .h-d1  { animation-delay: 0.05s; }
         .h-d2  { animation-delay: 0.15s; }
         .h-d3  { animation-delay: 0.28s; }
         .h-d4  { animation-delay: 0.42s; }
@@ -150,7 +145,7 @@ export default function Hero() {
         >
           {/* ── Avatar ── */}
           <div
-            className="h-scale-in h-d1 avatar-ring rounded-full"
+            className="avatar-ring rounded-full"
             style={{ width: 150, height: 150 }}
             role="img"
             aria-label="Portrait of Wahb"
@@ -256,8 +251,10 @@ export default function Hero() {
           <HeroCTAs />
         </div>
 
-        {/* GitHub activity strip */}
-        <GitHubActivity />
+        {/* GitHub activity strip — deferred past LCP via requestIdleCallback */}
+        <IdleMounted>
+          <GitHubActivity />
+        </IdleMounted>
 
         {/* Scroll hint */}
         <HeroScrollHint />

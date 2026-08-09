@@ -34,6 +34,17 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Same-origin preconnect — speeds up the very first request. */}
+        <link rel="preconnect" href="https://wahb.space" crossOrigin="anonymous" />
+        {/* LCP image preload — browser starts fetching before HTML parses. */}
+        <link
+          rel="preload"
+          as="image"
+          href="/Avatar.webp"
+          fetchPriority="high"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable}`}
       >

@@ -1,9 +1,23 @@
 import React from "react";
-import Image from "next/image";
 
 export default function Avatar() {
   return (
     <div className="relative group isolate">
+      {/* Keyframes for the trophy badge "pop" — kept local so they don't
+          depend on globals from Hero.tsx and don't flicker on hydration. */}
+      <style>{`
+        @keyframes trophy-pop {
+          0%   { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+          60%  { opacity: 1; transform: scale(1.15) rotate(4deg); }
+          100% { opacity: 1; transform: scale(1)    rotate(0deg); }
+        }
+        @keyframes trophy-pop-2 {
+          0%   { opacity: 0; transform: scale(0.4) rotate(12deg); }
+          60%  { opacity: 1; transform: scale(1.15) rotate(-4deg); }
+          100% { opacity: 1; transform: scale(1)     rotate(0deg); }
+        }
+      `}</style>
+
       {/* Glow ring */}
       <div
         className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"
@@ -15,14 +29,21 @@ export default function Avatar() {
         className="relative mx-auto rounded-full p-1 bg-white dark:bg-slate-900 ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden"
         style={{ zIndex: 1 }}
       >
-        <Image
+        {/*
+          Plain <img> for the LCP element — bypasses Next.js's image optimizer
+          (saves a server round-trip on first visit) and lets the browser
+          paint the moment the bitmap decodes. The matching <link rel="preload">
+          in app/layout.tsx tells the browser to start fetching before the
+          HTML even parses.
+        */}
+        <img
           src="/Avatar.webp"
           alt="Wahb"
-          width={300}
-          height={300}
-          priority
+          width={150}
+          height={150}
+          decoding="async"
           fetchPriority="high"
-          sizes="(max-width: 480px) 120px, 150px"
+          loading="eager"
           className="rounded-full object-cover w-full h-full"
         />
       </figure>

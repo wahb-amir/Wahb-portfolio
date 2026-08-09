@@ -19,8 +19,21 @@ import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
 import { Syne, DM_Mono } from "next/font/google";
 
-const syne = Syne({ subsets: ["latin"], weight: ["700", "800"] });
-const mono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"] });
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  // Below-the-fold section — don't block LCP on its woff2.
+  preload: false,
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+const mono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  preload: false,
+  display: "swap",
+  fallback: ["ui-monospace", "SFMono-Regular", "monospace"],
+});
 
 const LazyBackgroundEffect = dynamic(
   () => import("../effects/BackgroundEffect"),

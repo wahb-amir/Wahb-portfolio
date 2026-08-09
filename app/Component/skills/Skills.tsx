@@ -36,8 +36,18 @@ import type { IconType } from "react-icons";
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
+  // Below-the-fold section — don't block LCP on its woff2.
+  preload: false,
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
-const mono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"] });
+const mono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  preload: false,
+  display: "swap",
+  fallback: ["ui-monospace", "SFMono-Regular", "monospace"],
+});
 
 /* ─── types ─────────────────────────────────────────────────────────── */
 type SkillDef = { id: string; name: string; icon: IconType; color: string };

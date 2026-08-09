@@ -32,8 +32,17 @@ import {
 const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "700", "900"],
+  // Footer is below the fold — don't block LCP/FCP on its woff2.
+  preload: false,
+  display: "swap",
+  fallback: ["Georgia", "ui-serif", "serif"],
 });
-const dmSans = DM_Sans({ subsets: ["latin"] });
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  preload: false,
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
 
 
 
