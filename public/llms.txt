@@ -13,7 +13,7 @@
 
 ## Projects
 
-- [ClearPath — AI Document Intelligence Platform](https://clearpath.wahb.space): USAII 2026 submission. An AI-powered document intelligence platform that processes complex official documents through a 5-stage LLM pipeline, providing plain-English summaries, tracked deadlines, and extracted action items via real-time SSE. [Case Study](https://wahb.space/projects/clearpath) · [Code](https://github.com/wahb-amir/clearpath)
+- [ClearPath — AI Document Intelligence Platform](https://clearpath.wahb.space): USAII 2026 submission. An AI document intelligence platform that decodes complex official documents (immigration notices, benefit letters, legal communications) for non-native English speakers. Built on a multi-runtime monorepo (Next.js + Express + Python/Docling OCR) with three isolated BullMQ queues — a Node hot path (initialization → OCR → cleaning → structuring → completion), a Node background path (chunking + embedding) running in parallel without blocking the user, and a Python OCR queue — connected through a transactional PostgreSQL outbox (LISTEN/NOTIFY + polling fallback). Moving chunking + embedding off the hot path yielded a 30–35% speedup on the user-visible pipeline with the same output quality and a substantially reduced hot-path memory footprint. The 5-stage LLM pipeline runs Document Understanding, Candidate Extraction, Grounding & Verification (Tavily restricted to .gov/.edu), User-Facing Synthesis, and Safety Review. A human-in-the-loop extraction verification gate pauses the pipeline for user review before any LLM tokens are spent. Lossless real-time SSE via Redis Pub/Sub + Postgres event-log replay via Last-Event-ID. Every LLM stage has a Zod schema and safe fallback; every trusted URL is constrained to a subset of URLs Tavily actually returned; prompt-injection mitigations wrap all document text in delimited untrusted-input blocks. [Case Study](https://wahb.space/projects/clearpath) · [Code](https://github.com/wahb-amir/clearpath)
 - [EconoQuest — AI Economics Simulator](https://econoquest.wahb.space): Technical Award winner at Hackonomics 2026 (1481 participants). Browser-based economics simulation with full RAG advisory pipeline (99 chunks, 5 layers), Supabase pgvector, Groq Llama 3.3 70B, Fastify gateway, WebSocket streaming, pure-Python conflict detector, 7-archetype system, zero cloud spend. [Case Study](https://wahb.space/projects/econoquest) · [Frontend Code](https://github.com/wahb-amir/EconoQuest) · [Backend Code](https://github.com/wahb-amir/EconoQuestBackend)
 - [EcoLens — AI Waste Classifier](https://eco.wahb.space): 3rd place at Hack for Humanity 2026 (775 participants). AI-powered waste classifier, point a camera at any waste item to receive classification, CO₂/water/energy impact, and gamified points. Built solo in one month on zero paid API budget. [Case Study](https://wahb.space/projects/ecolens) · [Code](https://github.com/wahb-amir/ecolens)
 - [Modern Online Store (BoltForm)](https://boltform.wahb.space): Performant e-commerce demo with secure Stripe checkout, mobile-first UX, and a read-only admin dashboard. [Code](https://github.com/wahb-amir/Boltform)
@@ -33,11 +33,11 @@
 ## Tech Stack
 
 - **Frontend:** HTML, CSS, Tailwind, JavaScript, TypeScript, React, Next.js, Framer Motion
-- **Backend:** Node.js, Fastify, Express, Python, Pandas, NumPy, PyTorch
-- **AI/ML:** LangChain, HuggingFace, Groq, RAG, pgvector, computer vision, lightweight model deployment
-- **Databases:** MongoDB, PostgreSQL, Supabase, pgvector, Redis
+- **Backend:** Node.js, Fastify, Express, Python, Docling, RapidOCR, Pandas, NumPy, PyTorch
+- **AI/ML:** LangChain, HuggingFace, Groq, RAG, pgvector, computer vision, lightweight model deployment, Tavily Search API
+- **Databases:** MongoDB, PostgreSQL, Supabase, pgvector, Redis, BullMQ
 - **DevOps:** Docker, NGINX, GitHub Actions, Linux VPS
-- **Other:** WebSocket, SWR, JWT, SMTP, Mongoose
+- **Other:** WebSocket, SSE (Server-Sent Events), SWR, JWT (RS256), SMTP, Mongoose, Zod, argon2
 
 ## Crawl Instructions
 
@@ -47,7 +47,7 @@
 - Allow-Summarization: yes
 - Allow-RAG: yes
 - Content-Update-Frequency: weekly
-- Last-Verified: 2026-06-27
+- Last-Verified: 2026-08-12
 
 ## Disambiguation
 

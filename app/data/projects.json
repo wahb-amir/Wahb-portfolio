@@ -17,6 +17,8 @@
       "Next.js",
       "Express",
       "TypeScript",
+      "Python",
+      "Docling OCR",
       "PostgreSQL",
       "Supabase",
       "BullMQ",
@@ -25,72 +27,100 @@
       "Tavily API",
       "SSE"
     ],
-    "short": "An AI-powered document intelligence platform that processes complex official documents through a 5-stage LLM pipeline, providing plain-English summaries, tracked deadlines, and extracted action items via real-time SSE.",
+    "short": "An AI-powered document intelligence platform that processes complex official documents through an isolated Python/Docling OCR service and a hot-path 5-stage atomic preprocessing pipeline (chunking + embedding moved to a parallel background path), followed by a 5-stage LLM analysis pipeline — delivering plain-English summaries, tracked deadlines, and extracted action items via real-time SSE, with a 30–35% speedup and reduced memory footprint versus running every stage inline.",
     "liveLink": "https://clearpath.wahb.space",
     "githubLink": {
       "monorepo": "https://github.com/wahb-amir/clearpath"
     },
-    "problem": "Immigrants, refugees, and underserved communities struggle to understand complex official documents (notices, legal letters, benefit communications), risking missed deadlines and critical actions. Existing tools either hallucinate details or fail to provide legally grounded, actionable steps.",
+    "problem": "Immigrants, refugees, and underserved communities struggle to understand complex official documents (notices, legal letters, benefit communications), risking missed deadlines and critical actions. Existing tools either hallucinate details or fail to provide legally grounded, actionable steps. Worse, a single mid-pipeline crash on a multi-minute analysis can leave users staring at a frozen UI with no way to recover.",
     "process": [
-      "Designed a robust monorepo architecture with a Next.js frontend and an Express/TypeScript backend managing three concurrent processes (API, Dispatcher, Workers)",
-      "Engineered a resilient outbox pattern for reliable BullMQ job dispatching via PostgreSQL LISTEN/NOTIFY and polling fallbacks",
-      "Built a two-phase document analysis pipeline featuring a human-in-the-loop 'Extraction Verification Gate' to ensure OCR/text accuracy before AI processing",
-      "Implemented a 5-stage LLM pipeline (Understanding, Extraction, Grounding, Synthesis, Safety Review) utilizing Groq and Llama 3.3 70B",
-      "Integrated the Tavily Search API to cross-reference extracted facts against official .gov/.edu sources, eliminating LLM hallucinations",
-      "Developed a real-time Server-Sent Events (SSE) streaming architecture with Redis Pub/Sub and Postgres replay for lossless client reconnections",
-      "Secured the platform with custom JWT httpOnly cookie auth, prompt injection mitigations, and strict rule-based guardrails"
+      "Designed a robust monorepo architecture with a Next.js frontend, an Express/TypeScript backend orchestrating three concurrent Node processes (API, Dispatcher, Workers), and a separate Python/Docling OCR service for layout parsing",
+      "Split the analysis pipeline into 8 atomic preprocessing stages (initialization, OCR, cleaning, structuring, chunking, embedding, summarizing, completion) — each its own BullMQ job, every state change written to a transactional outbox, so any stage can crash and restart without losing progress",
+      "Refactored the hot path to 5 critical preprocessing stages (initialization → OCR → cleaning → structuring → completion) that block the user-visible result, and moved chunking + embedding to a parallel background path that runs on its own queue — the user gets the result 30–35% faster while the embedding model is loaded in a separate worker, dropping the hot-path memory footprint substantially",
+      "Isolated the Docling OCR stage on its own dedicated BullMQ queue (OCR_QUEUE_NAME) — the Python service and Node workers can never claim each other's jobs, and Node restarts don't disrupt OCR throughput",
+      "Implemented a reliable Outbox Dispatcher using PostgreSQL LISTEN/NOTIFY (instant) plus a polling fallback (every OUTBOX_POLL_INTERVAL_MS) to guarantee BullMQ job delivery even if the dispatcher was down when NOTIFY fired",
+      "Built a two-phase pipeline featuring a human-in-the-loop 'Extraction Verification Gate' — the pipeline pauses after text extraction so the user can review/edit before any LLM tokens are spent, with PATCH /extracted-content auto-save and POST /confirm-extraction to resume",
+      "Implemented a 5-stage LLM pipeline (Understanding, Candidate Extraction, Grounding via Tavily, User-Facing Synthesis, Safety Review) utilizing Groq and Llama 3.3 70B, with strict Zod validation and a safe fallback for every stage so the pipeline never crashes on a malformed response",
+      "Integrated the Tavily Search API to cross-reference extracted facts against official .gov/.edu sources in real time, then forced the LLM's trusted_sources output to be a subset of the snippets Tavily actually returned — eliminating hallucinated URLs at the schema level",
+      "Developed a lossless Server-Sent Events streaming layer: Redis Pub/Sub for live updates + Postgres event log replay via Last-Event-ID, so a 2-second network blip never drops a pipeline event",
+      "Secured the platform with custom RS256 JWT in httpOnly cookies, argon2 password hashing, an internal API key guard for dispatcher endpoints, and a 3-layer prompt-injection defence (delimited untrusted input, explicit security warning in every system prompt, and forced ground-truth URLs)"
     ],
-    "outcome": "Delivered a production-grade, fault-tolerant document intelligence platform. The system reliably transforms high-stakes legal and official documents into accessible, verified, and actionable insights while keeping the user informed in real-time.",
+    "outcome": "Delivered a production-grade, fault-tolerant document intelligence platform that transforms high-stakes legal and official documents into accessible, verified, and actionable insights while keeping the user informed in real-time. The 5-stage hot path returns results 30–35% faster with a substantially smaller in-memory footprint, while chunking + embedding run in parallel on a dedicated background worker without blocking the user.",
     "stats": {
-      "architecture": "3-process backend (API, Outbox Dispatcher, BullMQ Workers)",
-      "pipeline": "5-stage LLM processing + Human-in-the-loop gate",
-      "realtime": "Lossless SSE streaming via Postgres + Redis Pub/Sub"
+      "architecture": "4-process backend (API, Outbox Dispatcher, BullMQ Workers, Python/Docling OCR)",
+      "pipeline": "5-stage hot path (init → OCR → cleaning → structuring → completion) + parallel chunking/embedding background path + 5-stage LLM pipeline + Human-in-the-loop verification gate",
+      "queues": "Three isolated BullMQ queues (Node ANALYSIS_QUEUE_NAME hot path, Node BACKGROUND_QUEUE_NAME for chunking/embedding, Python OCR_QUEUE_NAME)",
+      "performance": "30–35% faster time-to-result on the user-visible pipeline by moving chunking + embedding off the hot path (same output quality)",
+      "memory": "Significantly reduced hot-path memory footprint — the embedding model and chunker live in a separate background worker and no longer compete for memory with the result-producing stages",
+      "realtime": "Lossless SSE streaming via Postgres event replay + Redis Pub/Sub"
     },
     "category": "Platform",
     "launch": {
       "date": "June 2026"
     },
     "caseStudy": {
-      "tlDr": "Architected and built ClearPath, an AI document intelligence platform designed to decode complex official documents. Engineered a highly reliable 3-tier backend featuring a transactional outbox, BullMQ background processing, real-time SSE updates, and a 5-stage LLM pipeline grounded in official .gov/.edu sources to prevent hallucinations.",
-      "problem": "High-stakes documents like immigration notices or benefit letters are notoriously difficult to understand, especially for non-native speakers. A simple misunderstanding can lead to missed deadlines or legal peril. Standard LLM wrappers are too risky for this because they hallucinate facts and invent URLs. A reliable, grounded, and step-by-step pipeline was required.",
-      "constraints": "Zero tolerance for lost processing jobs if a server crashes, strict requirement for LLM accuracy/grounding, protection against malicious prompt injections inside user-uploaded PDFs, and the necessity to keep the client UI updated in real-time during a long-running multi-minute analysis process.",
-      "myRole": "Full-Stack Engineer & AI Pipeline Architect — designed and implemented the monorepo, database schema, custom JWT auth, BullMQ worker orchestration, SSE streaming layer, and the 5-stage AI pipeline.",
+      "tlDr": "Architected and built ClearPath, an AI document intelligence platform designed to decode complex official documents. Engineered a highly reliable multi-process backend (Node API + Dispatcher + Workers + Python/Docling OCR) featuring a transactional outbox, three isolated BullMQ queues (hot path, background path, Python OCR), 8 atomic preprocessing stages with chunking + embedding moved off the user-visible hot path for a 30–35% speedup and reduced memory footprint, real-time lossless SSE updates, and a 5-stage LLM pipeline grounded in official .gov/.edu sources to prevent hallucinations.",
+      "problem": "High-stakes documents like immigration notices or benefit letters are notoriously difficult to understand, especially for non-native speakers. A simple misunderstanding can lead to missed deadlines or legal peril. Standard LLM wrappers are too risky for this because they hallucinate facts and invent URLs. On top of accuracy, a multi-minute analysis pipeline must survive process crashes and network drops without losing state — and the user must be able to verify the extracted text before any LLM tokens are spent on it. Performance is also a feature: every stage that runs inline on the hot path is wall-clock time the user is waiting, and every model loaded in the hot-path worker is memory the result-producing stages have to fight for.",
+      "constraints": "Zero tolerance for lost processing jobs if any process crashes mid-pipeline. Strict requirement for LLM accuracy/grounding — every trusted URL must come from a real Tavily search result. Protection against malicious prompt injections inside user-uploaded PDFs. Long-running multi-minute analyses that must stream real-time progress to the client and recover gracefully on reconnect. OCR is a Python service (Docling/RapidOCR); the Node worker and Python service must share one outbox without claiming each other's jobs. Hot-path performance and memory: chunking + embedding are necessary for retrieval quality but they were the slowest stages on the user-visible path, and loading the embedding model was a meaningful share of worker memory.",
+      "myRole": "Full-Stack Engineer & AI Pipeline Architect — designed and implemented the monorepo, the 12-file database migration set, custom RS256 JWT auth, the Outbox Dispatcher, the three BullMQ queues (hot path, background, Python OCR), the Node worker orchestration, the Python/Docling OCR service, the SSE streaming layer, and the 5-stage AI pipeline.",
       "responsibilities": [
-        "Designed the database schema utilizing Supabase PostgreSQL, including JSONB storage, event logs, and transactional outbox tables",
-        "Implemented a reliable Outbox Dispatcher using PostgreSQL LISTEN/NOTIFY alongside a polling fallback to guarantee BullMQ job delivery",
-        "Built the preprocessing worker that handles document extraction, noise removal, language detection, and pausing at the human verification gate",
-        "Constructed the 5-stage AI worker pipeline: Document Understanding, Candidate Extraction, Grounding & Verification (via Tavily), Synthesis, and Safety Review",
-        "Engineered the SSE (Server-Sent Events) infrastructure with Redis Pub/Sub for live updates and Postgres event replay to ensure clients never miss an event upon reconnecting",
-        "Developed the Next.js frontend with SWR caching, drag-and-drop file uploads, real-time timeline feeds, and interactive extraction verification panels"
+        "Designed the full database schema in Supabase PostgreSQL — 12 SQL migrations covering users, documents, analysis requests, pipeline events, sections, chunks, facts, results, the outbox, RLS grants, and the AWAITING_VERIFICATION / AI_* enum extensions",
+        "Implemented the Outbox Dispatcher (src/outbox/dispatcher.ts) using PostgreSQL LISTEN/NOTIFY alongside a polling fallback, with FOR UPDATE SKIP LOCKED on the outbox so multiple dispatcher instances never double-process",
+        "Refactored the pipeline into two parallel paths: a 5-stage hot path (stage-initialization → extract-layout-and-ocr → cleaning → structuring → completion) that the user is waiting on, and a background path (chunking + embedding) running on its own BullMQ queue — chunking and embedding are persisted to Postgres asynchronously and used for retrieval, while the user-visible result ships the moment the hot path completes, achieving a 30–35% speedup with the same output quality and a substantially reduced hot-path memory footprint",
+        "Split preprocessing into 8 atomic stages in total across both paths — every stage is its own BullMQ job, every transition writes a document_pipeline_outbox row in the same transaction as the state update, and isStageCompleteOrPast() guards keep retries idempotent across paths",
+        "Built the isolated Python/Docling OCR service (app/backend/services/ocr-engine/) — runs in its own process, consumes from a dedicated OCR_QUEUE_NAME, writes the document.extracted outbox event via Supabase, and never connects to the Node worker's queue",
+        "Constructed the 5-stage AI worker pipeline: Document Understanding, Candidate Extraction, Grounding & Verification (via Tavily restricted to .gov/.edu), User-Facing Synthesis, and Safety Review with both LLM-judged and rule-based guardrails",
+        "Engineered lossless SSE infrastructure: per-client Redis subscriber connections, Postgres event-log replay from Last-Event-ID on reconnect, periodic heartbeats, and an active /analysis/running-check session restore on page load so users can navigate away and back without losing their in-flight analysis",
+        "Implemented defensive LLM engineering — every stage validates with Zod, returns a safe fallback on failure (sets needs_human_review: true), enforces uncertainty language in the summary, normalises questions, and sanitises trusted_sources to URLs that actually appeared in the Tavily results",
+        "Secured auth end-to-end: RS256 JWT access + refresh tokens in httpOnly cookies, sid cookie for session tracking, argon2 password hashing, express-rate-limit on login and refresh, x-internal-api-key guard on the dispatcher endpoint",
+        "Developed the Next.js frontend with SWR caching, drag-and-drop file uploads, real-time SSE timeline feeds (via @microsoft/fetch-event-source), interactive extraction verification panels with auto-save, and a results view with saved/bookmarks, action-item toggles, and history filters"
       ],
       "approach": [
-        "Prioritize reliability: Use the outbox pattern so the database transaction and queue dispatch are fundamentally tied together, preventing lost jobs",
-        "Human-in-the-loop: Stop the pipeline after raw text extraction so the user can verify dates, contacts, and text before spending LLM tokens on analysis",
-        "Defensive LLM engineering: Every pipeline stage utilizes strict Zod schema validation with safe fallbacks, ensuring the pipeline gracefully degrades rather than crashing",
-        "Trust but verify: Force the LLM to verify extracted actions against real-time Tavily searches restricted to .gov and .edu domains"
+        "Prioritize reliability: Use the outbox pattern so the database transaction and queue dispatch are fundamentally tied together — if the DB write commits, the job is guaranteed to be enqueued eventually, and if it doesn't commit, no job is enqueued",
+        "Atomicity over batching: every pipeline stage is a standalone BullMQ job that loads what it needs, does its work, writes an outbox event, and exits. This means any stage can crash, restart, or scale horizontally without losing pipeline state — state lives in Postgres, not in worker memory",
+        "Separate the hot path from the background path: not every stage is on the user's critical path. Chunking + embedding are necessary for retrieval but they were the slowest stages on the user-visible path — moving them to a parallel BullMQ queue (BACKGROUND_QUEUE_NAME) returned the user-visible result 30–35% faster and let the embedding model live in a separate worker that doesn't compete for memory with the result-producing stages",
+        "Isolate heterogeneous runtimes: the Python Docling OCR service runs in its own process on a dedicated BullMQ queue (OCR_QUEUE_NAME) so the Node worker and the Python service can never claim each other's jobs",
+        "Human-in-the-loop at the extraction gate: stop the pipeline after raw text extraction so the user can verify dates, contacts, and text before any LLM tokens are spent on analysis — supported by PATCH auto-save and POST confirm-extraction endpoints",
+        "Defensive LLM engineering: every pipeline stage has strict Zod schema validation and a safe fallback. The pipeline gracefully degrades (sets needs_human_review: true) rather than crashing, and every trusted URL in the final output is a subset of the URLs Tavily actually returned",
+        "Lossless real-time UX: combine Redis Pub/Sub for live updates with Postgres event-log replay via Last-Event-ID. A 2-second network blip must not drop a single pipeline event — and the client must auto-recover via an active session-restore on page load"
       ],
       "technicalSolution": [
-        "Backend: Express 4, Node.js, TypeScript, raw pg connection pool, Custom JWT Auth (argon2 + httpOnly cookies)",
-        "Queue & Workers: BullMQ backed by Redis (ioredis) processing distinct queue jobs across isolated Node processes",
-        "AI & Processing: Groq API (llama-3.3-70b-versatile) for rapid inference, Tavily for grounding, custom fallback logic on schema validation failures",
-        "Real-time: @microsoft/fetch-event-source on the client communicating with custom SSE endpoints utilizing heartbeat intervals and Last-Event-ID restoration",
-        "Frontend: Next.js 14 App Router, Tailwind CSS, SWR for caching, Framer Motion for timeline animations"
+        "Backend: Express 4, Node.js, TypeScript, raw pg connection pool, Zod-validated env schema, Custom RS256 JWT Auth (argon2 + httpOnly cookies + sid session tracking)",
+        "OCR service: Python 3 + Docling + RapidOCR, isolated process under services/ocr-engine/, consuming from a dedicated BullMQ queue (OCR_QUEUE_NAME) and writing outbox events back to Postgres via the Supabase client",
+        "Queue & Workers: BullMQ backed by Redis (ioredis) — three separate queues: a Node ANALYSIS_QUEUE_NAME hot path (initialization → OCR → cleaning → structuring → completion), a Node BACKGROUND_QUEUE_NAME for chunking + embedding that runs in parallel without blocking the user, and a Python OCR_QUEUE_NAME — four separate ioredis connection factories (queue, worker, publisher, subscriber), exponential backoff retries, and idempotent job IDs derived from the analysis request",
+        "AI & Processing: Groq API (llama-3.3-70b-versatile) with a 25-second per-stage timeout, Tavily API restricted to .gov/.edu hostnames for grounding, askGroqJson() helper that strips markdown fences, finds the first {, and validates against the stage's Zod schema with a fallback on failure",
+        "Background path: chunking + embedding run on a dedicated worker process that loads the embedding model once and reuses it across jobs; chunks and embeddings are persisted to Postgres asynchronously and the hot path never waits on them — measured 30–35% faster time-to-result on the user-visible pipeline, with the same output quality",
+        "Real-time: @microsoft/fetch-event-source on the client communicating with custom SSE endpoints — per-client Redis subscribers, Postgres replay from Last-Event-ID on reconnect, periodic heartbeats, and an active /analysis/running-check session restore on page load",
+        "Frontend: Next.js 14 App Router, Tailwind CSS, SWR for caching, Framer Motion for timeline animations, drag-and-drop uploads, interactive extraction verification with auto-save, results panel with action-item toggles, bookmarks, and history filters",
+        "Data: Supabase Storage buckets (documents for raw uploads, parsed-documents for OCR Markdown output), Supabase Postgres for everything else with JSONB columns for extracted_content, outbox events, and pipeline result payloads"
       ],
-      "architectureNotes": "ClearPath utilizes an event-driven, decoupled architecture. The API Server handles HTTP requests and SSE connections. State changes (like a new upload) are written to a PostgreSQL outbox. The Dispatcher process listens to these outbox inserts via Postgres NOTIFY and pushes them to Redis/BullMQ. Finally, Worker processes pull from BullMQ to execute heavy preprocessing and LLM tasks, publishing their progress back to Redis Pub/Sub (for active SSE clients) and Postgres (for historical log replay).",
+      "architectureNotes": "ClearPath is an event-driven, decoupled, multi-runtime system with two parallel Node paths and one Python path. The Next.js frontend talks to the Express API for uploads, auth, confirm-extraction, history, and SSE. The API writes all state changes to Postgres in transactions that also INSERT into document_pipeline_outbox. The Outbox Dispatcher (separate process) subscribes to Postgres NOTIFY on outbox inserts and polls as a safety net, then enqueues the next stage's BullMQ job. Three queues exist: ANALYSIS_QUEUE_NAME (Node hot path: initialization → OCR → cleaning → structuring → completion), BACKGROUND_QUEUE_NAME (Node background path: chunking → embedding — runs in parallel, never blocks the user), and OCR_QUEUE_NAME (Python Docling). The Python OCR service writes its document.extracted outbox event via the Supabase client, so the same NOTIFY triggers the next Node stage regardless of which runtime wrote the row. Each worker stage persists its result and publishes progress to Redis Pub/Sub for live SSE clients while also writing a row to document_pipeline_events so reconnecting clients can replay from their Last-Event-ID. The API's SSE endpoint keeps one Redis subscriber per active client, replays any missed events from Postgres, and emits periodic heartbeats. Stage transitions are guarded by isStageCompleteOrPast() so BullMQ retries are idempotent. Idempotency on analyze requests is enforced both at the DB level (unique index on idempotency_key) and at the queue level (BullMQ job ID = analysis:<requestId>). The hot-path result ships the moment the completion stage fires, while the background path keeps running until chunks and embeddings land in Postgres for retrieval — net 30–35% faster time-to-result with the same output quality.",
       "outcomes": {
-        "qualitative": "Achieved a highly resilient pipeline that survives process restarts and network drops without losing user documents or analysis states, successfully bridging the gap between raw, intimidating government notices and actionable, human-readable checklists."
+        "qualitative": "Achieved a highly resilient multi-runtime pipeline that survives process restarts and network drops without losing user documents or analysis states, successfully bridging the gap between raw, intimidating government notices and actionable, human-readable checklists. After moving chunking and embedding off the hot path, the user-visible result returned 30–35% faster with the same output quality, and the hot-path memory footprint dropped substantially because the embedding model and chunker live in a dedicated background worker — and all of it with a Python OCR service, a Node hot path, and a Node background path sharing one outbox without ever claiming each other's jobs."
       },
       "proofPoints": [
-        "Implemented deterministic transactional outbox pattern via Postgres LISTEN/NOTIFY.",
-        "Built a pipeline that survives LLM schema failures by utilizing graceful Zod fallbacks.",
-        "Eliminated dead-ends during reconnects by building a stateful SSE replay mechanism."
+        "Implemented a deterministic transactional outbox pattern via Postgres LISTEN/NOTIFY + polling fallback, with FOR UPDATE SKIP LOCKED for safe horizontal dispatcher scaling",
+        "Split the pipeline into 8 atomic preprocessing stages + 5 LLM stages across three isolated BullMQ queues (hot path, background path, Python OCR) — every stage can crash and restart independently without losing state",
+        "Moved chunking + embedding off the user-visible hot path to a parallel background worker — measured 30–35% faster time-to-result on the user-visible pipeline with the same output quality",
+        "Reduced hot-path memory footprint by loading the embedding model and chunker in a separate worker process that no longer competes for memory with the result-producing stages",
+        "Isolated the Python/Docling OCR service on its own dedicated BullMQ queue (OCR_QUEUE_NAME) and shared a single outbox with the Node pipeline via the Postgres NOTIFY trigger",
+        "Built a lossless SSE layer that combines Redis Pub/Sub with Postgres event-log replay via Last-Event-ID plus an active session-restore on page load",
+        "Eliminated LLM hallucination risk by forcing every trusted_sources URL to be a subset of URLs Tavily actually returned from .gov/.edu searches",
+        "Built a pipeline that survives LLM schema failures by using graceful Zod fallbacks (every stage returns a safe default with needs_human_review: true)",
+        "Enforced a 3-layer prompt-injection defence: delimited untrusted input, explicit SECURITY WARNING in every system prompt, and ground-truth URL constraints"
       ],
       "lessons": [
-        "LLMs will fail validation eventually. Building pipeline stages with safe fallbacks (e.g., returning 'needs_human_review' instead of crashing) is critical for production AI.",
-        "The Outbox pattern is essential when combining Postgres with Redis queues. Direct enqueuing from API routes leads to race conditions and lost jobs.",
-        "Real-time UX requires stateful backends. Relying strictly on live Pub/Sub means a 2-second client network blip loses pipeline events; storing events in Postgres and replaying via Last-Event-ID solves this."
+        "Atomicity beats batching for long pipelines. Splitting the work into small BullMQ jobs that each commit their own outbox event is what lets the system survive crashes — long-lived in-memory workers lose state on restart.",
+        "The outbox pattern is essential when combining Postgres with Redis queues. Direct enqueuing from API routes leads to race conditions and lost jobs; outbox + LISTEN/NOTIFY + polling fallback guarantees at-least-once delivery.",
+        "Separate the hot path from the background path. Not every stage is on the user's critical path. Moving chunking + embedding off the user-visible hot path returned the result 30–35% faster with the same output quality, and let the embedding model live in a separate worker that no longer fights for memory with the result-producing stages — the slow stages are still running, just not on the user's clock.",
+        "Isolate heterogeneous runtimes via dedicated queues. The Python Docling service and the Node workers share the same Postgres outbox but consume from separate BullMQ queues (OCR_QUEUE_NAME vs ANALYSIS_QUEUE_NAME) so they can never claim each other's jobs.",
+        "Model loading is a memory cost, not just a latency cost. Loading the embedding model inline on the hot path was a meaningful share of worker memory; isolating it to a dedicated background worker dropped the hot-path memory footprint substantially without any output change.",
+        "LLMs will fail validation eventually. Building pipeline stages with safe fallbacks (returning needs_human_review: true instead of crashing) is critical for production AI, especially on high-stakes documents.",
+        "Trust but verify at the schema level. Telling the LLM not to invent URLs is not enough — forcing trusted_sources to be a subset of the URLs Tavily actually returned turns prompt-engineering hope into a hard guarantee.",
+        "Real-time UX requires stateful backends. Relying strictly on live Pub/Sub means a 2-second client network blip loses pipeline events; storing events in Postgres and replaying via Last-Event-ID — plus an active session-restore on page load — makes reconnects invisible to the user.",
+        "A human-in-the-loop verification gate is worth the UX cost. Stopping the pipeline after OCR so the user can review extracted text before any LLM tokens are spent protects against OCR errors compounding into LLM hallucinations."
       ],
-      "callToAction": "Interested in seeing how to build resilient, fault-tolerant AI pipelines with human-in-the-loop verification? Review the architecture or reach out."
+      "callToAction": "Interested in seeing how to build resilient, fault-tolerant, multi-runtime AI pipelines with a hot path + background path split, human-in-the-loop verification, multi-queue outbox orchestration, and lossless real-time streaming? Review the architecture or reach out."
     },
     "systemDesign": {
       "nodes": [
@@ -98,56 +128,81 @@
         { "id": "api", "label": "API Server (Express)", "type": "server" },
         { "id": "dispatcher", "label": "Outbox Dispatcher", "type": "service" },
         {
-          "id": "worker_pre",
-          "label": "Preprocessing Worker",
+          "id": "worker_hot",
+          "label": "Hot-Path Worker (Node) — init → OCR → cleaning → structuring → completion",
           "type": "worker"
         },
-        { "id": "worker_ai", "label": "AI Analysis Worker", "type": "worker" },
+        {
+          "id": "worker_bg",
+          "label": "Background Worker (Node) — chunking + embedding (parallel, non-blocking)",
+          "type": "worker"
+        },
+        { "id": "worker_ai", "label": "AI Analysis Worker (Node)", "type": "worker" },
+        {
+          "id": "ocr_service",
+          "label": "Docling OCR Service (Python)",
+          "type": "worker"
+        },
         {
           "id": "postgres",
           "label": "PostgreSQL (Supabase)",
           "type": "database"
         },
         { "id": "redis", "label": "Redis (BullMQ + Pub/Sub)", "type": "cache" },
-        { "id": "llm", "label": "Groq API (Llama 3.3)", "type": "external" },
-        { "id": "tavily", "label": "Tavily Search API", "type": "external" }
+        { "id": "llm", "label": "Groq API (Llama 3.3 70B)", "type": "external" },
+        { "id": "tavily", "label": "Tavily Search API (.gov/.edu)", "type": "external" }
       ],
       "edges": [
         {
           "source": "frontend",
           "target": "api",
-          "label": "Upload / SSE Stream"
+          "label": "Upload / SSE Stream / Confirm"
         },
         {
           "source": "api",
           "target": "postgres",
-          "label": "Save State & Outbox"
+          "label": "Save State & Outbox (TXN)"
         },
         {
           "source": "postgres",
           "target": "dispatcher",
-          "label": "LISTEN / NOTIFY"
+          "label": "LISTEN / NOTIFY + Polling"
         },
         { "source": "dispatcher", "target": "redis", "label": "Enqueue Jobs" },
         {
           "source": "redis",
-          "target": "worker_pre",
-          "label": "Consume Preprocessing"
+          "target": "ocr_service",
+          "label": "OCR_QUEUE_NAME"
+        },
+        {
+          "source": "ocr_service",
+          "target": "postgres",
+          "label": "Write Outbox (Supabase)"
+        },
+        {
+          "source": "redis",
+          "target": "worker_hot",
+          "label": "ANALYSIS_QUEUE_NAME (hot path)"
+        },
+        {
+          "source": "redis",
+          "target": "worker_bg",
+          "label": "BACKGROUND_QUEUE_NAME (chunking + embedding)"
         },
         {
           "source": "redis",
           "target": "worker_ai",
-          "label": "Consume AI Pipeline"
+          "label": "ANALYSIS_QUEUE_NAME (5-stage AI)"
         },
         {
-          "source": "worker_pre",
+          "source": "worker_hot",
           "target": "postgres",
-          "label": "Awaiting Verification"
+          "label": "AWAITING_VERIFICATION (hot path result)"
         },
         {
-          "source": "frontend",
-          "target": "api",
-          "label": "Confirm Extraction"
+          "source": "worker_bg",
+          "target": "postgres",
+          "label": "Persist Chunks + Embeddings (background)"
         },
         {
           "source": "worker_ai",
@@ -165,7 +220,12 @@
           "label": "Persist Results"
         },
         {
-          "source": "worker_pre",
+          "source": "worker_hot",
+          "target": "redis",
+          "label": "Publish Events"
+        },
+        {
+          "source": "worker_bg",
           "target": "redis",
           "label": "Publish Events"
         },

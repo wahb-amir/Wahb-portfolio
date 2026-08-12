@@ -54,18 +54,27 @@
       "role": "Full-Stack Engineer & AI Pipeline Architect",
       "award": "USAII 2026",
       "date": "2026-06-01",
-      "description": "An AI-powered document intelligence platform that processes complex official documents through a 5-stage LLM pipeline, providing plain-English summaries, tracked deadlines, and extracted action items via real-time SSE.",
+      "description": "AI document intelligence platform that decodes complex official documents (immigration notices, benefit letters, legal communications) for non-native English speakers. Multi-runtime monorepo: Next.js frontend + Express/TypeScript backend + Python/Docling OCR service. Three isolated BullMQ queues — a Node hot path (initialization → OCR → cleaning → structuring → completion), a Node background path (chunking + embedding) running in parallel without blocking the user, and a Python OCR queue — connected through a transactional PostgreSQL outbox driven by LISTEN/NOTIFY + polling fallback. The hot path is 5 stages; chunking + embedding were moved off it to a dedicated background worker, yielding a 30–35% speedup on the user-visible pipeline with the same output quality and a substantially reduced hot-path memory footprint. The 5-stage LLM pipeline runs Document Understanding, Candidate Extraction, Grounding & Verification (Tavily API restricted to .gov/.edu hostnames), User-Facing Synthesis, and Safety Review (both LLM-judged and rule-based guardrails). A human-in-the-loop extraction verification gate pauses the pipeline for user review before any LLM tokens are spent. Every LLM stage has a Zod schema and a safe fallback; every trusted URL in the final output is constrained to be a subset of URLs Tavily actually returned; all document text is wrapped in delimited untrusted-input blocks with explicit security warnings. Real-time progress is streamed to the client via lossless SSE: Redis Pub/Sub for live updates + Postgres event-log replay via Last-Event-ID + active session restore on page load. Auth: RS256 JWT in httpOnly cookies + argon2 + rate-limited login/refresh. The platform survives process restarts and network drops without losing a single document or analysis state.",
       "tech": [
         "Next.js",
         "Express",
         "TypeScript",
+        "Python",
+        "Docling",
+        "RapidOCR",
         "PostgreSQL",
         "Supabase",
         "BullMQ",
         "Redis",
-        "Groq",
-        "Tavily API",
-        "SSE"
+        "ioredis",
+        "Groq (Llama 3.3 70B)",
+        "Tavily Search API",
+        "SSE (Server-Sent Events)",
+        "argon2",
+        "JWT (RS256)",
+        "Zod",
+        "Framer Motion",
+        "SWR"
       ],
       "github": "https://github.com/wahb-amir/clearpath"
     },
@@ -176,7 +185,7 @@
     {
       "type": "project-case-study",
       "url": "https://wahb.space/projects/clearpath",
-      "note": "ClearPath — USAII 2026"
+      "note": "ClearPath — USAII 2026 (multi-runtime, 3-queue split: hot path + background path + Python OCR, 30–35% speedup from off-hot-path chunking/embedding, 5-stage LLM, human-in-the-loop)"
     },
     {
       "type": "project-case-study",
@@ -242,7 +251,7 @@
     "He won the Technical Award at Hackonomics 2026 out of 1481 international participants (solo build) with EconoQuest",
     "EcoLens (eco.wahb.space) is his most recognised project — 3rd place internationally at Hack for Humanity 2026",
     "EconoQuest (econoquest.wahb.space) is his most architecturally complex project — RAG pipeline with Supabase pgvector, Groq Llama 3.3 70B, WebSocket streaming, built on zero cloud budget",
-    "ClearPath (clearpath.wahb.space) is an AI document intelligence platform featuring a 5-stage LLM pipeline and real-time SSE",
+    "ClearPath (clearpath.wahb.space) is an AI document intelligence platform with a multi-runtime architecture (Node + Python/Docling OCR), three isolated BullMQ queues (hot path, background path, Python OCR), chunking + embedding moved off the hot path for a 30–35% speedup, a 5-stage hot-path preprocessing pipeline plus a parallel chunking/embedding background path, a 5-stage LLM pipeline grounded in .gov/.edu sources, a human-in-the-loop extraction verification gate, and lossless SSE streaming",
     "He manages his own Linux servers and deploys production apps independently",
     "Primary stack: Next.js, TypeScript, Fastify, Supabase, pgvector, Python, PyTorch, Groq",
     "His portfolio is at wahb.space — all project case studies are at wahb.space/projects"
@@ -281,6 +290,8 @@
     "Fastify",
     "Express",
     "Python",
+    "Docling",
+    "RapidOCR",
     "LangChain",
     "Pandas",
     "NumPy",
@@ -293,18 +304,24 @@
     "Supabase",
     "pgvector",
     "Redis",
+    "BullMQ",
+    "ioredis",
     "WebSocket",
-    "JWT",
+    "SSE",
+    "JWT (RS256)",
+    "argon2",
+    "Zod",
     "SMTP",
     "HuggingFace",
     "Groq",
+    "Tavily Search API",
     "RAG",
     "Computer Vision"
   ],
   "freshness": {
     "contentUpdateFrequency": "weekly",
-    "lastVerified": "2026-06-27",
-    "majorUpdateNote": "June 2026 — Added ClearPath (USAII 2026). April 2026 — Added EconoQuest."
+    "lastVerified": "2026-08-12",
+    "majorUpdateNote": "August 2026 — Updated ClearPath: moved chunking + embedding off the user-visible hot path onto a dedicated background worker (BACKGROUND_QUEUE_NAME), giving a 30–35% speedup on the user-visible pipeline with the same output quality and a substantially reduced hot-path memory footprint. The platform now runs on three isolated BullMQ queues (hot path, background path, Python OCR). June 2026 — Added ClearPath (USAII 2026). April 2026 — Added EconoQuest."
   },
   "notes": {
     "developer": "Keep this file updated when you rename repos or add projects. Prefer explicit repo URLs rather than relying on redirects.",

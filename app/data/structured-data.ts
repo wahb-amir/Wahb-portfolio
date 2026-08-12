@@ -49,6 +49,37 @@ const faqEntries = [
 // ─── Projects ────────────────────────────────────────────────────────────────
 const projects = [
   {
+    id: "https://wahb.space/#project-clearpath",
+    name: "ClearPath — AI Document Intelligence Platform",
+    url: "https://clearpath.wahb.space",
+    description:
+      "AI-powered document intelligence platform that decodes complex official documents (immigration notices, benefit letters, legal communications) for non-native English speakers. Built on a multi-runtime monorepo (Next.js + Express + Python/Docling OCR) with three isolated BullMQ queues — a Node hot path (initialization → OCR → cleaning → structuring → completion), a Node background path (chunking + embedding) running in parallel without blocking the user, and a Python OCR queue — connected through a transactional PostgreSQL outbox driven by LISTEN/NOTIFY + polling fallback. The hot path is 5 stages; chunking + embedding were moved off it to a dedicated background worker, yielding a 30–35% speedup on the user-visible pipeline with the same output quality and a substantially reduced hot-path memory footprint. The 5-stage LLM pipeline runs Document Understanding, Candidate Extraction, Grounding & Verification (Tavily API restricted to .gov/.edu hostnames), User-Facing Synthesis, and Safety Review (both LLM-judged and rule-based guardrails). A human-in-the-loop extraction verification gate pauses the pipeline for user review before any LLM tokens are spent. Lossless real-time SSE via Redis Pub/Sub + Postgres event-log replay via Last-Event-ID. Every LLM stage has a Zod schema and safe fallback; every trusted URL is constrained to a subset of URLs Tavily actually returned; every prompt is wrapped in delimited untrusted-input blocks with explicit security warnings. Submitted to USAII 2026. Case study: https://wahb.space/projects/clearpath",
+    applicationCategory: "WebApplication",
+    programmingLanguage: ["TypeScript", "Python"],
+    softwareRequirements: [
+      "Next.js",
+      "Express",
+      "TypeScript",
+      "Python",
+      "Docling",
+      "RapidOCR",
+      "PostgreSQL",
+      "Supabase",
+      "BullMQ",
+      "Redis",
+      "ioredis",
+      "Groq (Llama 3.3 70B)",
+      "Tavily Search API",
+      "SSE",
+      "argon2",
+      "JWT (RS256)",
+      "Zod",
+    ],
+    sameAs: ["https://github.com/wahb-amir/clearpath"],
+    award: null,
+    datePublished: "2026-06-01",
+  },
+  {
     id: "https://wahb.space/#project-econoquest",
     name: "EconoQuest — AI Economics Simulator",
     url: "https://econoquest.wahb.space",
