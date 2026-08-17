@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://wahb.buttnetworks.com/:path*",
+      "permanent": true
+    }
+  ]
+}
