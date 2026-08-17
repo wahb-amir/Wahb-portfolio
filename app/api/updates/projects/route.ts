@@ -1,8 +1,9 @@
-// app/api/updates/projects/route.ts (public)
 import { NextResponse } from "next/server";
+import { connection } from "next/server";
 import { getLatestProjectsPayload } from "@/lib/projectsService";
 
 export async function GET(req: Request) {
+  await connection();
   try {
     const url = new URL(req.url);
     const clientVersion = url.searchParams.has("version")

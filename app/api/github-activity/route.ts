@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { connection } from "next/server";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // store in .env.local
 const ACCOUNT_CREATION_DATE = "2025-05-11T00:00:00Z";
@@ -21,6 +22,7 @@ const query = `
 `;
 
 export async function GET(req: NextRequest) {
+  await connection();
   const username = "wahb-amir";
 
   try {
