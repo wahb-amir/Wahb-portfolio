@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import projects from '@/app/data/projects.json';
 
 export async function GET() {
-  const baseUrl = "https://wahb.space";
-  
+  const baseUrl = "https://wahb.buttnetworks.com"; 
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"

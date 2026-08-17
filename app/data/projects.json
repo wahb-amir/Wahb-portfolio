@@ -28,7 +28,7 @@
       "SSE"
     ],
     "short": "An AI-powered document intelligence platform that processes complex official documents through an isolated Python/Docling OCR service and a hot-path 5-stage atomic preprocessing pipeline (chunking + embedding moved to a parallel background path), followed by a 5-stage LLM analysis pipeline — delivering plain-English summaries, tracked deadlines, and extracted action items via real-time SSE, with a 30–35% speedup and reduced memory footprint versus running every stage inline.",
-    "liveLink": "https://clearpath.wahb.space",
+    "liveLink": "https://clearpath.buttnetworks.com",
     "githubLink": {
       "monorepo": "https://github.com/wahb-amir/clearpath"
     },
@@ -50,7 +50,7 @@
       "architecture": "4-process backend (API, Outbox Dispatcher, BullMQ Workers, Python/Docling OCR)",
       "pipeline": "5-stage hot path (init → OCR → cleaning → structuring → completion) + parallel chunking/embedding background path + 5-stage LLM pipeline + Human-in-the-loop verification gate",
       "queues": "Three isolated BullMQ queues (Node ANALYSIS_QUEUE_NAME hot path, Node BACKGROUND_QUEUE_NAME for chunking/embedding, Python OCR_QUEUE_NAME)",
-      "performance": "30–35% faster time-to-result on the user-visible pipeline by moving chunking + embedding off the hot path (same output quality)",
+      "performance": "30 to 35% faster time-to-result on the user-visible pipeline by moving chunking + embedding off the hot path (same output quality)",
       "memory": "Significantly reduced hot-path memory footprint — the embedding model and chunker live in a separate background worker and no longer compete for memory with the result-producing stages",
       "realtime": "Lossless SSE streaming via Postgres event replay + Redis Pub/Sub"
     },
@@ -266,7 +266,7 @@
       "JWT"
     ],
     "short": "Govern a nation across 7–8 fiscal years, adjusting 8 real policy levers and watching 10 economic metrics respond — guided by a Socratic AI advisor powered by a full RAG pipeline, not generic hints.",
-    "liveLink": "https://econoquest.wahb.space",
+    "liveLink": "https://econoquest.buttnetworks.com",
     "githubLink": {
       "backend": "https://github.com/wahb-amir/EconoQuest",
       "frontend": "https://github.com/wahb-amir/EconoQuestBackend"
@@ -367,7 +367,7 @@
       "Tailwind"
     ],
     "short": "Point your camera at any waste item and instantly get an AI classification, real environmental impact data, and points toward a global leaderboard — turning recycling from a one-off action into a measurable habit.",
-    "liveLink": "https://eco.wahb.space",
+    "liveLink": "https://eco.buttnetworks.com",
     "githubLink": {
       "": "https://github.com/wahb-amir/ecolens"
     },
@@ -464,7 +464,7 @@
     ],
     "tech": ["Next.js", "Stripe", "Secure Login", "Tailwind", "MongoDB"],
     "short": "A clean, fast online store where users can browse products, add items to a cart, and check out — with a simple admin view for managing products safely.",
-    "liveLink": "https://boltform.wahb.space/",
+    "liveLink": "https://boltform.buttnetworks.com/",
     "githubLink": {
       "": "https://github.com/wahb-amir/Boltform"
     },
