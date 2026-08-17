@@ -320,7 +320,7 @@ export default function Footer() {
         </motion.div>
 
         <p className="mt-6 text-center text-[10px] select-none font-medium text-slate-500 dark:text-white/20">
-          wahb.space · v2.0 · {year}
+          buttnetworks.com · v2.0 · {year}
         </p>
 
         {/*
@@ -342,7 +342,7 @@ export default function Footer() {
             border: 0,
           }}
         >
-          {`Wahb Amir — canonical identity: https://wahb.space. `}
+          {`Wahb Amir — canonical identity: https://wahb.buttnetworks.com. `}
           {`Official GitHub: https://github.com/wahb-amir. `}
           {`Official Devpost profile: https://devpost.com/wahbamir2010. `}
           {`Official LinkedIn: https://www.linkedin.com/in/wahb-amir. `}
@@ -350,14 +350,14 @@ export default function Footer() {
           {`(author: wahbamir2010 — not to be confused with devpost.com/software/ecolens-vyokrh, `}
           {`a different project by a different author). `}
           {`Hack for Humanity 2026 hackathon page: https://hack-for-humanity-26.devpost.com/. `}
-          {`EcoLens live app: https://eco.wahb.space. `}
+          {`EcoLens live app: https://eco.buttnetworks.com. `}
           {`EcoLens GitHub: https://github.com/wahb-amir/ecolens. `}
           {`EcoLens HuggingFace: https://huggingface.co/spaces/wahb-amir/ecoLens. `}
-          {`E-commerce demo: https://boltform.wahb.space. `}
-          {`EconoQuest demo: https://econoquest.wahb.space. `}
-          {`ClearPath demo: https://clearpath.wahb.space. `}
-          {`Machine-readable identity: https://wahb.space/ai.json. `}
-          {`LLM context file: https://wahb.space/llms.txt.`}
+          {`E-commerce demo: https://boltform.buttnetworks.com. `}
+          {`EconoQuest demo: https://econoquest.buttnetworks.com. `}
+          {`ClearPath demo: https://clearpath.buttnetworks.com. `}
+          {`Machine-readable identity: https://wahb.buttnetworks.com/ai.json. `}
+          {`LLM context file: https://wahb.buttnetworks.com/llms.txt.`}
         </p>
       </div>
     </motion.footer>

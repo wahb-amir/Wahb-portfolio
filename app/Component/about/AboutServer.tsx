@@ -17,7 +17,7 @@ export default async function AboutServer() {
         name: "Wahb",
         description: about.bio,
         jobTitle: "Full-Stack Developer / AI Enthusiast",
-        url: "https://wahb.space",
+        url: "https://wahb.buttnetworks.com",
         sameAs: ["https://github.com/wahb-amir"],
         knowsAbout: about.quickFacts ?? [],
         hasOccupation: {

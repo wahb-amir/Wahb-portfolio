@@ -37,7 +37,7 @@ type Project = {
   [k: string]: any;
 };
 
-const SITE_URL = "https://wahb.space";
+const SITE_URL = "https://wahb.buttnetworks.com";
 const PERSON_ID = `${SITE_URL}/#person`;
 
 function cleanObject<T extends Record<string, any>>(obj: T): any {

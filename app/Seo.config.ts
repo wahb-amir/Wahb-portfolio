@@ -4,7 +4,7 @@ export const siteMetadata: Metadata = {
   title: "Wahb Amir | Full-Stack Engineer & AI Developer",
   description:
     "Wahb Amir (Wahb) is a full-stack engineer and AI developer building high-performance web applications, RAG pipelines, and production-ready systems — Creator of ClearPath (USAII 2026) · Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026.",
-  metadataBase: new URL("https://wahb.space"),
+  metadataBase: new URL("https://wahb.buttnetworks.com"),
   keywords: [
     "Wahb Amir",
     "Wahb",
@@ -37,7 +37,7 @@ export const siteMetadata: Metadata = {
     "Hack for Humanity 2026",
     "portfolio",
   ],
-  authors: [{ name: "Wahb Amir", url: "https://wahb.space" }],
+  authors: [{ name: "Wahb Amir", url: "https://wahb.buttnetworks.com" }],
   creator: "Wahb Amir",
   applicationName: "Wahb Amir Portfolio",
   robots: {
@@ -53,21 +53,21 @@ export const siteMetadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://wahb.space/",
+    canonical: "https://wahb.buttnetworks.com/",
     languages: {
-      "en-US": "https://wahb.space/",
-      en: "https://wahb.space/",
+      "en-US": "https://wahb.buttnetworks.com/",
+      en: "https://wahb.buttnetworks.com/",
     },
   },
   openGraph: {
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
       "Portfolio of Wahb Amir — Creator of ClearPath (USAII 2026) · Technical Award at Hackonomics 2026 · 3rd Place at Hack for Humanity 2026. Building high-performance web apps, RAG pipelines, and scalable systems from idea to production.",
-    url: "https://wahb.space",
+    url: "https://wahb.buttnetworks.com",
     siteName: "Wahb Amir Portfolio",
     images: [
       {
-        url: "https://wahb.space/og-image.png",
+        url: "https://wahb.buttnetworks.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "Wahb Amir — Full-Stack Engineer & AI Developer",
@@ -83,7 +83,7 @@ export const siteMetadata: Metadata = {
     title: "Wahb Amir | Full-Stack Engineer & AI Developer",
     description:
       "USAII 2026 · Technical Award — Hackonomics 2026 · 3rd Place — Hack for Humanity 2026. Building high-performance web apps and practical AI tools.",
-    images: ["https://wahb.space/og-image.webp"],
+    images: ["https://wahb.buttnetworks.com/og-image.webp"],
   },
   icons: {
     icon: "/favicon.ico",

@@ -290,7 +290,7 @@ export default function NotFound() {
         </p>
       </motion.div>
 
-      {/* ── Corner: wahb.space attribution ────────────────────────────────── */}
+      {/* ── Corner: wahb.buttnetworks.com attribution ────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -298,7 +298,7 @@ export default function NotFound() {
         className="absolute bottom-8 right-8 hidden md:block"
       >
         <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600 font-mono">
-          wahb.space
+          wahb.buttnetworks.com
         </p>
       </motion.div>
     </div>

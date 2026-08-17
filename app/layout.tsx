@@ -36,7 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Same-origin preconnect — speeds up the very first request. */}
-        <link rel="preconnect" href="https://wahb.space" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://wahb.buttnetworks.com" crossOrigin="anonymous" />
         {/* LCP image preload — browser starts fetching before HTML parses. */}
         <link
           rel="preload"

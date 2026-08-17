@@ -4,7 +4,7 @@ import Skills from "./Skills";
 import JsonLdScript from "../shared/JsonLdScript";
 
 const name = "Wahb Amir";
-const siteUrl = "https://wahb.space";
+const siteUrl = "https://wahb.buttnetworks.com";
 
 const skills = [
   "HTML",

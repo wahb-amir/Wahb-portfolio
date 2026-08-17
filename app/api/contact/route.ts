@@ -8,8 +8,8 @@ import nodemailer from "nodemailer";
    ALLOWED ORIGINS
    ───────────────────────────────────────────────────────────── */
 const ALLOWED_ORIGINS = new Set([
-  "https://wahb.space",
-  "https://www.wahb.space",
+  "https://wahb.buttnetworks.com",
+  "https://www.wahb.buttnetworks.com",
   ...(process.env.PRODUCTION === "development"
     ? ["http://localhost:3000"]
     : []),
@@ -243,7 +243,7 @@ export async function POST(req: Request) {
           </div>
           
           <div style="background-color: #f9fafb; padding: 15px; text-align: center; border-top: 1px solid #e5e7eb; font-size: 12px; color: #9ca3af;">
-            Transmitted from wahb.space • ${new Date().toUTCString()}
+            Transmitted from wahb.buttnetworks.com • ${new Date().toUTCString()}
           </div>
         </div>
       </div>

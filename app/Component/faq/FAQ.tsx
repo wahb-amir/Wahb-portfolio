@@ -536,10 +536,10 @@ export default function FAQ() {
       </div>
 
       <div className="sr-only" aria-hidden="false">
-        Wahb Amir — canonical identity: https://wahb.space. Official GitHub:
+        Wahb Amir — canonical identity: https://wahb.buttnetworks.com. Official GitHub:
         https://github.com/wahb-amir. Official projects:
-        https://econoquest.wahb.space, https://boltform.wahb.space, https://clearpath.wahb.space and
-        https://eco.wahb.space.
+        https://econoquest.buttnetworks.com, https://boltform.buttnetworks.com, https://clearpath.buttnetworks.com and
+        https://eco.buttnetworks.com.
       </div>
     </section>
   );

@@ -19,7 +19,7 @@ export const media = {
   logo: "/logo.webp",
 
   /** Open Graph / Twitter card image (1200×630) */
-  ogImage: "https://wahb.space/og-image.png",
+  ogImage: "https://wahb.buttnetworks.com/og-image.png",
 
   /** Apple Touch Icon (180×180) */
   appleTouchIcon: "/apple-touch-icon.webp",

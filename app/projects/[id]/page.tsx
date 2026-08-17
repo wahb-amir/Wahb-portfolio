@@ -40,7 +40,7 @@ function formatKey(input: string) {
 function toAbsoluteUrl(url?: string) {
   if (!url) return "";
   if (/^https?:\/\//i.test(url)) return url;
-  return `https://wahb.space${url.startsWith("/") ? "" : "/"}${url}`;
+  return `https://wahb.buttnetworks.com${url.startsWith("/") ? "" : "/"}${url}`;
 }
 
 function normalizeRepoLinks(githubLink: unknown): RepoLink[] {
@@ -142,10 +142,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${title} — Wahb Amir`,
       description,
-      url: `https://wahb.space/projects/${id}`,
+      url: `https://wahb.buttnetworks.com/projects/${id}`,
       images: firstImage ? [{ url: toAbsoluteUrl(firstImage) }] : [],
     },
-    alternates: { canonical: `https://wahb.space/projects/${id}` },
+    alternates: { canonical: `https://wahb.buttnetworks.com/projects/${id}` },
   };
 }
 
@@ -695,7 +695,7 @@ function JudgeScoresChart({ judgeScores }: { judgeScores: JudgeScores }) {
 
 function ProjectJsonLd({ project, id }: { project: any; id: string }) {
   const title = project.title ?? project.name ?? "Project";
-  const url = project.liveLink ?? `https://wahb.space/projects/${id}`;
+  const url = project.liveLink ?? `https://wahb.buttnetworks.com/projects/${id}`;
   const sameAs = normalizeRepoLinks(project.githubLink).map((repo) => repo.url);
 
   const jsonLd = {
@@ -703,7 +703,7 @@ function ProjectJsonLd({ project, id }: { project: any; id: string }) {
     "@graph": [
       {
         "@type": "SoftwareApplication",
-        "@id": `https://wahb.space/projects/${id}#app`,
+        "@id": `https://wahb.buttnetworks.com/projects/${id}#app`,
         name: title,
         url,
         description: project.caseStudy?.tlDr ?? project.short,
@@ -714,7 +714,7 @@ function ProjectJsonLd({ project, id }: { project: any; id: string }) {
         operatingSystem: "Web",
         author: {
           "@type": "Person",
-          "@id": "https://wahb.space/#person",
+          "@id": "https://wahb.buttnetworks.com/#person",
           name: "Wahb Amir",
         },
         ...(project.badge?.label && { award: project.badge.label }),
@@ -732,19 +732,19 @@ function ProjectJsonLd({ project, id }: { project: any; id: string }) {
             "@type": "ListItem",
             position: 1,
             name: "Home",
-            item: "https://wahb.space",
+            item: "https://wahb.buttnetworks.com",
           },
           {
             "@type": "ListItem",
             position: 2,
             name: "Projects",
-            item: "https://wahb.space/projects",
+            item: "https://wahb.buttnetworks.com/projects",
           },
           {
             "@type": "ListItem",
             position: 3,
             name: title,
-            item: `https://wahb.space/projects/${id}`,
+            item: `https://wahb.buttnetworks.com/projects/${id}`,
           },
         ],
       },
