@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGithub,
@@ -21,28 +20,25 @@ export default function ThemeToggle({ githubUrl, xUrl }: Props) {
 
   return (
     <>
-      <IconButton
-        label="GitHub"
-        onClick={() => window.open(githubUrl, "_blank")}
-      >
+      {/*
+       * Social links rendered as plain <a> tags — fully SSR-safe.
+       * Googlebot will crawl and index these outbound links.
+       * motion.button was removed: it added framer-motion JS weight and
+       * prevented SSR (framer-motion reads window during initialisation).
+       */}
+      <SocialLink label="GitHub" href={githubUrl} aria-label="GitHub profile">
         <FontAwesomeIcon icon={faGithub} className="text-lg" />
-      </IconButton>
+      </SocialLink>
 
-      <IconButton
-        label="LinkedIn"
-        onClick={() => window.open(LINKEDIN_URL, "_blank")}
-      >
+      <SocialLink label="LinkedIn" href={LINKEDIN_URL} aria-label="LinkedIn profile">
         <FontAwesomeIcon icon={faLinkedin} className="text-lg" />
-      </IconButton>
+      </SocialLink>
 
-      <IconButton
-        label="X / Twitter"
-        onClick={() => window.open(xUrl, "_blank")}
-      >
+      <SocialLink label="X / Twitter" href={xUrl} aria-label="X (Twitter) profile">
         <FontAwesomeIcon icon={faXTwitter} className="text-lg" />
-      </IconButton>
+      </SocialLink>
 
-      {/* ── Day / Night pill toggle ───────────────────────────────────── */}
+      {/* ── Day / Night pill toggle — client-only, needs mounted guard ── */}
       {mounted ? (
         <DayNightToggle isDark={isDark} onToggle={toggleTheme} />
       ) : (
@@ -57,24 +53,24 @@ export default function ThemeToggle({ githubUrl, xUrl }: Props) {
   );
 }
 
-function IconButton({
+function SocialLink({
   children,
-  onClick,
+  href,
   label,
 }: {
   children: React.ReactNode;
-  onClick: () => void;
+  href: string;
   label: string;
 }) {
   return (
-    <motion.button
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label={label}
-      whileHover={{ scale: 1.1, backgroundColor: "rgba(6, 182, 212, 0.2)" }}
-      whileTap={{ scale: 0.9 }}
-      onClick={onClick}
-      className="w-10 h-10 flex items-center justify-center rounded-xl bg-black/5 dark:bg-white/5 border border-white/10 transition-colors duration-300"
+      className="w-10 h-10 flex items-center justify-center rounded-xl bg-black/5 dark:bg-white/5 border border-white/10 transition-[background-color,transform] duration-200 hover:bg-cyan-500/20 hover:scale-110 active:scale-90"
     >
       {children}
-    </motion.button>
+    </a>
   );
 }

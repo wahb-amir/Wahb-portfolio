@@ -21,34 +21,33 @@ function SectionSkeleton({ height = 400 }: { height?: number }) {
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
   return (
-    <Suspense fallback={null}>
-      <main>
-        <Hero />
-        <Suspense fallback={<SectionSkeleton height={320} />}>
-          <SkillsServer />
-        </Suspense>
-        <Suspense fallback={<SectionSkeleton height={600} />}>
-          <ProjectServer />
-        </Suspense>
+    <main>
+      <Hero />
+      <Suspense fallback={<SectionSkeleton height={320} />}>
+        <SkillsServer />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton height={600} />}>
+        <ProjectServer />
+      </Suspense>
 
-        <Suspense fallback={<SectionSkeleton height={400} />}>
-          <AboutServer />
-        </Suspense>
+      <Suspense fallback={<SectionSkeleton height={400} />}>
+        <AboutServer />
+      </Suspense>
 
-        <Suspense fallback={<SectionSkeleton height={480} />}>
-          <ContactForm />
-        </Suspense>
+      <Suspense fallback={<SectionSkeleton height={480} />}>
+        <ContactForm />
+      </Suspense>
 
-        <Suspense fallback={<SectionSkeleton height={320} />}>
-          <FAQ />
-        </Suspense>
-      </main>
+      <Suspense fallback={<SectionSkeleton height={320} />}>
+        <FAQ />
+      </Suspense>
 
       <footer className="h-fit overflow-hidden">
         <Suspense fallback={<SectionSkeleton height={120} />}>
           <Footer />
         </Suspense>
       </footer>
-    </Suspense>
+    </main>
   );
 }
+

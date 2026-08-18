@@ -2,28 +2,14 @@
 
 import dynamic from "next/dynamic";
 
-export const HeroCTAs = dynamic(() => import("./HeroCTAs"), {
-  ssr: false,
-  loading: () => (
-    <div
-      className="h-fade-up h-d7 mt-8 flex flex-wrap justify-center gap-3 min-h-[44px]"
-      aria-hidden
-    />
-  ),
-});
+// SSR enabled — content must be in server HTML for Google indexing.
+// These components only use window/document inside useEffect / event handlers,
+// so they are safe to server-render.
+export { default as HeroCTAs } from "./HeroCTAs";
+export { default as HeroProof } from "./HeroProof";
+export { default as HeroScrollHint } from "./HeroScrollHint";
 
-export const HeroProof = dynamic(() => import("./HeroProof"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-fade-up h-d7 mt-4 min-h-[24px]" aria-hidden />
-  ),
-});
-
-export const HeroScrollHint = dynamic(() => import("./HeroScrollHint"), {
-  ssr: false,
-  loading: () => null,
-});
-
+// GitHub activity: deferred past LCP via requestIdleCallback — keep ssr:false.
 export const GitHubActivity = dynamic(() => import("../github/index"), {
   ssr: false,
   loading: () => null,

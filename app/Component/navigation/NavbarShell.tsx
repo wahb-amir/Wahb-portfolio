@@ -8,8 +8,9 @@ import Image from "next/image";
 import NavLinks from "./NavLinks";
 import type { NavItem } from "./navConfig";
 
-const ThemeToggle = dynamic(() => import("./ThemeToggle"), { ssr: false });
+import ThemeToggle from "./ThemeToggle";
 const MobileMenu = dynamic(() => import("./MobileMenu"), { ssr: false });
+
 
 interface Props {
   navItems: NavItem[];
