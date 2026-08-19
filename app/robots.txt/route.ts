@@ -3,11 +3,7 @@ export async function GET() {
   return new Response(
 `User-agent: *
 Allow: /
-
-Disallow: /_next/
 Disallow: /api/
-Disallow: /drafts/
-Disallow: /private/
 
 Sitemap: https://wahb.buttnetworks.com/sitemap.xml
 Sitemap: https://clearpath.buttnetworks.com/sitemap.xml
