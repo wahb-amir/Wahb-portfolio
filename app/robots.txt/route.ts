@@ -3,6 +3,7 @@ export async function GET() {
   return new Response(
 `User-agent: *
 Allow: /
+Allow: /api/github-activity
 Disallow: /api/
 
 Sitemap: https://wahb.buttnetworks.com/sitemap.xml
